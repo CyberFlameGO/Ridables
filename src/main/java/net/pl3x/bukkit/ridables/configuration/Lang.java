@@ -17,6 +17,8 @@ public class Lang {
     public static String RIDE_NO_PERMISSION;
     public static String SHOOT_NO_PERMISSION;
 
+    public static String DISABLED_COMMANDS_WHILE_RIDING;
+
     public static String WATER_BUCKET_NAME;
     public static final List<String> WATER_BUCKET_LORE = new ArrayList<>();
 
@@ -34,6 +36,8 @@ public class Lang {
         COLLECT_NO_PERMISSION = config.getString("collect-no-permission", "&cYou do not have permission to collect dolphins!");
         RIDE_NO_PERMISSION = config.getString("ride-no-permission", "&cYou do not have permission to ride!");
         SHOOT_NO_PERMISSION = config.getString("shoot-no-permission", "&cYou do not have permission to shoot!");
+
+        DISABLED_COMMANDS_WHILE_RIDING = config.getString("disabled-commands-while-riding", "&cCommands are disabled while riding!");
 
         WATER_BUCKET_NAME = config.getString("bucket-name", "&bBucket of {creature}");
         String lore = config.getString("bucket-lore", "This bucket contains a {creature}!\nRight click in water to place");

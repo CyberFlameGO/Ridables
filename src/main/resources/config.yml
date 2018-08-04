@@ -4,6 +4,12 @@ language-file: lang-en.yml
 # Enabled the update checker (does not actually download updates!)
 update-checker: true
 
+# When players teleport for any reason, unmount from any creature they are riding
+"unmount-on-teleport": true
+
+# While player is riding a creature, disable commands for them
+"cancel-commands-while-riding": false
+
 # Dolphin options
 dolphin:
   speed: 1.0         # riding speed modifier

@@ -8,6 +8,9 @@ public class Config {
 
     public static boolean CHECK_FOR_UPDATES = true;
 
+    public static boolean UMNOUNT_ON_TELEPORT = true;
+    public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
+
     public static float DOLPHIN_SPEED = 1.0F;
     public static boolean DOLPHIN_BOUNCE = true;
     public static boolean DOLPHIN_BUBBLES = true;
@@ -36,6 +39,9 @@ public class Config {
         LANGUAGE_FILE = config.getString("language-file", "lang-en.yml");
 
         CHECK_FOR_UPDATES = config.getBoolean("update-checker", true);
+
+        UMNOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
+        CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
 
         DOLPHIN_SPEED = (float) config.getDouble("dolphin.speed", 1.0D);
         DOLPHIN_BOUNCE = config.getBoolean("dolphin.bounce", true);
