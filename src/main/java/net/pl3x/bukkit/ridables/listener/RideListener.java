@@ -28,7 +28,7 @@ public class RideListener implements Listener {
         }
 
         Entity creature = event.getRightClicked();
-        if (!plugin.creatures().isEnabled(creature.getType())) {
+        if (!plugin.creatures().isEnabled(creature)) {
             return; // not a valid creature
         }
 
@@ -62,7 +62,7 @@ public class RideListener implements Listener {
 
         Player player = event.getPlayer();
         Entity creature = player.getVehicle();
-        if (!plugin.creatures().isEnabled(creature.getType())) {
+        if (!plugin.creatures().isEnabled(creature)) {
             return; // not a valid creature
         }
 
@@ -78,7 +78,7 @@ public class RideListener implements Listener {
 
         Player player = event.getPlayer();
         Entity creature = player.getVehicle();
-        if (!plugin.creatures().isEnabled(creature.getType())) {
+        if (!plugin.creatures().isEnabled(creature)) {
             return; // not a valid creature
         }
 

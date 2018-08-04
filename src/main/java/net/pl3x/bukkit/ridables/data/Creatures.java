@@ -2,13 +2,14 @@ package net.pl3x.bukkit.ridables.data;
 
 import net.minecraft.server.v1_13_R1.EntityLiving;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
 
 public class Creatures extends HashMap<EntityType, Class<? extends EntityLiving>> {
-    public boolean isEnabled(EntityType entityType) {
-        return containsKey(entityType);
+    public boolean isEnabled(Entity entity) {
+        return entity != null && containsKey(entity.getType());
     }
 
     public void putCreature(EntityType entityType, Class<? extends EntityLiving> entityLiving) {
