@@ -77,10 +77,20 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>org.bstats:bstats-bukkit**</include>
+                            <include>org.inventivetalent.spiget-update:bukkit**</include>
+                        </includes>
+                    </artifactSet>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>net.pl3x.bukkit.ridables</shadedPattern>
+                            <pattern>org.bstats.bukkit</pattern>
+                            <shadedPattern>net.pl3x.bukkit.ridables.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.inventivetalent.update.spiget</pattern>
+                            <shadedPattern>net.pl3x.bukkit.ridables.spiget</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
