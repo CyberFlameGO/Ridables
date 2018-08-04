@@ -65,7 +65,7 @@ public class EntityRidablePhantom extends EntityPhantom {
                 fallDistance = 0;
             }
 
-            // move
+            // moveOnLand
             a(strafe, vertical, forward, 0.025F * Config.PHANTOM_SPEED); // moveRelative
             move(EnumMoveType.PLAYER, motX, motY, motZ);
             return;

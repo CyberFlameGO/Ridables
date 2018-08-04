@@ -1,6 +1,10 @@
 package net.pl3x.bukkit.ridables.util;
 
+import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
+import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
+import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
+import net.pl3x.bukkit.ridables.entity.EntityRidableWolf;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -45,11 +49,13 @@ public class Utils {
     public static boolean isFood(EntityType entityType, ItemStack item) {
         switch (entityType) {
             case DOLPHIN:
-                return Tag.ITEMS_FISHES.isTagged(item.getType());
+                return EntityRidableDolphin.isFood(item);
             case OCELOT:
-                return EntityRidableOcelot.FOOD.contains(item.getType());
+                return EntityRidableOcelot.isFood(item);
             case TURTLE:
-                return item.getType() == Material.SEAGRASS;
+                return EntityRidableTurtle.isFood(item);
+            case WOLF:
+                return EntityRidableWolf.isFood(item);
             case PHANTOM:
                 // cant feed a phantom
             default:

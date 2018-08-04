@@ -13,7 +13,9 @@ import net.minecraft.server.v1_13_R1.WorldServer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import org.bukkit.Location;
+import org.bukkit.Tag;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
@@ -40,6 +42,10 @@ public class EntityRidableDolphin extends EntityDolphin {
             } catch (NoSuchFieldException ignore) {
             }
         }
+    }
+
+    public static boolean isFood(ItemStack itemstack) {
+        return Tag.ITEMS_FISHES.isTagged(itemstack.getType());
     }
 
     protected boolean isTypeNotPersistent() {
@@ -83,7 +89,7 @@ public class EntityRidableDolphin extends EntityDolphin {
                 }
             }
 
-            // only move when in water
+            // only moveOnLand when in water
             if (isInWater()) {
                 float forward = rider.bj; // forward motion
                 float vertical = -(rider.pitch / 90); // vertical motion
@@ -122,7 +128,7 @@ public class EntityRidableDolphin extends EntityDolphin {
                     }
                 }
 
-                // move it
+                // moveOnLand it
                 a(strafe, vertical * 2F, forward, cJ() * 0.15F * Config.DOLPHIN_SPEED * (dashing ? Config.DOLPHIN_DASH_BOOST : 1));
                 move(EnumMoveType.PLAYER, this.motX * 0.75F, motY, motZ * 0.75F);
 

@@ -2,28 +2,26 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityOcelot;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R1.EntityWolf;
+import net.minecraft.server.v1_13_R1.Item;
+import net.minecraft.server.v1_13_R1.ItemFood;
 import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.Mover;
-import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
-public class EntityRidableOcelot extends EntityOcelot {
-    private static final List<Material> FOOD = Arrays.asList(Material.COD, Material.SALMON, Material.TROPICAL_FISH, Material.PUFFERFISH);
-
+public class EntityRidableWolf extends EntityWolf {
     private static Field jumping;
     private boolean isJumping = false;
 
-    public EntityRidableOcelot(World world) {
+    public EntityRidableWolf(World world) {
         super(world);
 
         if (jumping == null) {
@@ -36,7 +34,8 @@ public class EntityRidableOcelot extends EntityOcelot {
     }
 
     public static boolean isFood(ItemStack itemstack) {
-        return FOOD.contains(itemstack.getType());
+        Item item = CraftItemStack.asNMSCopy(itemstack).getItem();
+        return item instanceof ItemFood && ((ItemFood) item).d();
     }
 
     // travel(strafe, vertical, forward)
@@ -77,7 +76,7 @@ public class EntityRidableOcelot extends EntityOcelot {
             }
 
             if (isJumping && onGround) { // !isJumping
-                motY = (double) Config.OCELOT_JUMP_POWER;
+                motY = (double) Config.WOLF_JUMP_POWER;
                 MobEffect jump = getEffect(MobEffects.JUMP);
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
@@ -85,13 +84,13 @@ public class EntityRidableOcelot extends EntityOcelot {
                 isJumping = true; // setJumping
                 impulse = true;
                 if (forward > 0.0F) {
-                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.OCELOT_JUMP_POWER);
-                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.OCELOT_JUMP_POWER);
+                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.WOLF_JUMP_POWER);
+                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.WOLF_JUMP_POWER);
                 }
             }
 
             // moveOnLand
-            Mover.moveOnLand(this, strafe, f1, forward, Config.OCELOT_SPEED);
+            Mover.moveOnLand(this, strafe, f1, forward, Config.WOLF_SPEED);
 
             if (onGround) {
                 isJumping = false;

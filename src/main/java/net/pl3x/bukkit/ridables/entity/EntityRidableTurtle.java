@@ -10,11 +10,17 @@ import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableTurtle extends EntityTurtle {
     public EntityRidableTurtle(World world) {
         super(world);
         persistent = true; // we want persistence
+    }
+
+    public static boolean isFood(ItemStack itemstack) {
+        return itemstack.getType() == Material.SEAGRASS;
     }
 
     @Override
@@ -36,7 +42,7 @@ public class EntityRidableTurtle extends EntityTurtle {
             float strafe = rider.bh;
             float vertical = forward == 0 ? 0 : -(rider.pitch / 90);
 
-            // move
+            // moveOnLand
             customMove(strafe, vertical, forward);
             return;
         }

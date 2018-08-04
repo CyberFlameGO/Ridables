@@ -49,3 +49,8 @@ turtle:
   speed:
     on-land: 1.0     # riding speed modifier on land
     in-water: 1.0    # riding speed modifier in water
+
+# Wolf options
+wolf:
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)

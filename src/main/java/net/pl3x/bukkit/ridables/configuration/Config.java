@@ -38,6 +38,9 @@ public class Config {
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
 
+    public static float WOLF_SPEED = 1.0F;
+    public static float WOLF_JUMP_POWER = 0.5F;
+
     public static void reload() {
         Ridables plugin = Ridables.getPlugin(Ridables.class);
         plugin.saveDefaultConfig();
@@ -77,5 +80,8 @@ public class Config {
 
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
         TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
+
+        WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
+        WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
     }
 }

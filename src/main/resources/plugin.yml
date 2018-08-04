@@ -40,7 +40,7 @@ permissions:
         description: Allow to ride dolphins
         default: op
       allow.ride.ocelot:
-        description: Allow to ride ocelots
+        description: Allow to ride tamed ocelots
         default: op
       allow.ride.phantom:
         description: Allow to ride phantoms
@@ -50,6 +50,9 @@ permissions:
         default: op
       allow.ride.turtle:
         description: Allow to ride turtles
+        default: op
+      allow.ride.wolf:
+        description: Allow to ride tamed wolves
         default: op
   allow.shoot.*:
     description: Allow to make all supported creatures shoot

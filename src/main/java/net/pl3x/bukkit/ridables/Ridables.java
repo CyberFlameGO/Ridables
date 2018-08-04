@@ -12,6 +12,7 @@ import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
 import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
+import net.pl3x.bukkit.ridables.entity.EntityRidableWolf;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
@@ -106,6 +107,12 @@ public class Ridables extends JavaPlugin implements Listener {
         if (serverType == ServerType.PAPER) {
             buckets.createBucket(EntityType.TURTLE);
         }
+
+        // setup wolf
+        RegistryHax.injectReplacementEntityTypes("wolf", EntityTypes.WOLF,
+                EntityTypes.a.a(EntityRidableWolf.class, EntityRidableWolf::new),
+                Material.WOLF_SPAWN_EGG);
+        creatures.putCreature(EntityType.WOLF, EntityRidableWolf.class);
     }
 
     @Override
