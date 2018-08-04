@@ -30,6 +30,10 @@ public class Config {
     public static boolean PHANTOM_FALL_DAMAGE = true;
     public static boolean PHANTOM_BURN_IN_SUNLIGHT = true;
 
+    public static float POLAR_BEAR_SPEED = 1.0F;
+    public static float POLAR_BEAR_JUMP_POWER = 0.5F;
+    public static float POLAR_BEAR_STEP_HEIGHT = 1.0F;
+
     public static void reload() {
         Ridables plugin = Ridables.getPlugin(Ridables.class);
         plugin.saveDefaultConfig();
@@ -61,5 +65,9 @@ public class Config {
         PHANTOM_GRAVITY = config.getDouble("phantom.gravity", 0.05D);
         PHANTOM_FALL_DAMAGE = config.getBoolean("phantom.fall-damage", true);
         PHANTOM_BURN_IN_SUNLIGHT = config.getBoolean("phantom.burn-in-sun", true);
+
+        POLAR_BEAR_SPEED = (float) config.getDouble("polar-bear.speed", 1.0D);
+        POLAR_BEAR_JUMP_POWER = (float) config.getDouble("polar-bear.jump-power", 0.5D);
+        POLAR_BEAR_STEP_HEIGHT = (float) config.getDouble("polar-bear.step-height", 1.0D);
     }
 }

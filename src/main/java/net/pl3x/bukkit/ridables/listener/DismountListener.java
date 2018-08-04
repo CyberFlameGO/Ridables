@@ -64,8 +64,6 @@ public class DismountListener implements Listener {
         // ensure player unmounts creature so it doesn't despawn with player
         override.add(player.getUniqueId());
         player.leaveVehicle();
-
-        plugin.getServer().getScheduler().runTaskLater(plugin,
-                () -> override.remove(player.getUniqueId()), 10);
+        override.remove(player.getUniqueId());
     }
 }

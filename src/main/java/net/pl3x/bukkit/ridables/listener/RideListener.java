@@ -14,8 +14,13 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public class RideListener implements Listener {
     private final Ridables plugin;
+    private final Set<UUID> override = new HashSet<>();
 
     public RideListener(Ridables plugin) {
         this.plugin = plugin;
@@ -51,7 +56,9 @@ public class RideListener implements Listener {
         }
 
         // add player as rider
+        override.add(player.getUniqueId());
         creature.addPassenger(player);
+        override.remove(player.getUniqueId());
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -61,6 +68,10 @@ public class RideListener implements Listener {
         }
 
         Player player = event.getPlayer();
+        if (override.contains(player.getUniqueId())) {
+            return; // overridden
+        }
+
         Entity creature = player.getVehicle();
         if (!plugin.creatures().isEnabled(creature)) {
             return; // not a valid creature

@@ -10,13 +10,8 @@ import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 
 public class EntityRidableTurtle extends EntityTurtle {
-    public EntityRidableTurtle(org.bukkit.World world) {
-        this(((CraftWorld) world).getHandle());
-    }
-
     public EntityRidableTurtle(World world) {
         super(world);
         persistent = true; // we want persistence

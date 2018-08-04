@@ -9,6 +9,7 @@ import net.pl3x.bukkit.ridables.data.Creatures;
 import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
+import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
 import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
@@ -92,6 +93,12 @@ public class Ridables extends JavaPlugin implements Listener {
                 EntityTypes.a.a(EntityRidablePhantom.class, EntityRidablePhantom::new),
                 Material.PHANTOM_SPAWN_EGG);
         creatures.putCreature(EntityType.PHANTOM, EntityRidablePhantom.class);
+
+        // setup polar bear
+        RegistryHax.injectReplacementEntityTypes("polar_bear", EntityTypes.POLAR_BEAR,
+                EntityTypes.a.a(EntityRidablePolarBear.class, EntityRidablePolarBear::new),
+                Material.POLAR_BEAR_SPAWN_EGG);
+        creatures.putCreature(EntityType.POLAR_BEAR, EntityRidablePolarBear.class);
     }
 
     @Override

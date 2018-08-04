@@ -13,7 +13,6 @@ import net.minecraft.server.v1_13_R1.WorldServer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
@@ -29,10 +28,6 @@ public class EntityRidableDolphin extends EntityDolphin {
 
     private boolean dashing = false;
     private int dashCounter = 0;
-
-    public EntityRidableDolphin(org.bukkit.World world) {
-        this(((CraftWorld) world).getHandle());
-    }
 
     public EntityRidableDolphin(World world) {
         super(world);
