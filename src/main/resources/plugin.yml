@@ -25,6 +25,9 @@ permissions:
       allow.ride.phantom:
         description: Allow to ride phantoms
         default: op
+      allow.ride.polar_bear:
+        description: Allow to ride polar bears
+        default: op
       allow.ride.turtle:
         description: Allow to ride turtles
         default: op
