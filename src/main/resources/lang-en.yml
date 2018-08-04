@@ -1,0 +1,6 @@
+command-no-permission: "&cYou do not have permission for that command!"
+collect-no-permission: "&cYou do not have permission to collect that creature!"
+ride-no-permission: "&cYou do not have permission to ride that creature!"
+shoot-no-permission: "&cYou do not have permission to shoot!"
+bucket-name: "&bBucket of {creature}"
+bucket-lore: "This bucket contains a {creature}!\nRight click in water to place"
