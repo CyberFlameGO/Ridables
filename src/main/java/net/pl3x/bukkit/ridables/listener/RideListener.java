@@ -4,6 +4,7 @@ import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.util.Utils;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
@@ -56,7 +57,8 @@ public class RideListener implements Listener {
         }
 
         if (creature instanceof Tameable) {
-            if (!player.getUniqueId().equals(((Tameable) creature).getOwnerUniqueId())) {
+            AnimalTamer owner = ((Tameable) creature).getOwner();
+            if (owner == null || !player.getUniqueId().equals(owner.getUniqueId())) {
                 return; // player doesnt own this creature
             }
         }
