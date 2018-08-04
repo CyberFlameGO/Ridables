@@ -8,7 +8,7 @@ public class Config {
 
     public static boolean CHECK_FOR_UPDATES = true;
 
-    public static boolean UMNOUNT_ON_TELEPORT = true;
+    public static boolean UNMOUNT_ON_TELEPORT = true;
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
 
     public static float DOLPHIN_SPEED = 1.0F;
@@ -22,8 +22,8 @@ public class Config {
     public static float DOLPHIN_DASH_BOOST = 1.5F;
     public static int DOLPHIN_DASH_DURATION = 20;
 
-    public static float TURTLE_SPEED_LAND = 1.0F;
-    public static float TURTLE_SPEED_WATER = 1.0F;
+    public static float OCELOT_SPEED = 1.0F;
+    public static float OCELOT_JUMP_POWER = 0.5F;
 
     public static float PHANTOM_SPEED = 1.0F;
     public static double PHANTOM_GRAVITY = 0.05D;
@@ -35,6 +35,9 @@ public class Config {
     public static float POLAR_BEAR_JUMP_POWER = 0.5F;
     public static float POLAR_BEAR_STEP_HEIGHT = 1.0F;
 
+    public static float TURTLE_SPEED_LAND = 1.0F;
+    public static float TURTLE_SPEED_WATER = 1.0F;
+
     public static void reload() {
         Ridables plugin = Ridables.getPlugin(Ridables.class);
         plugin.saveDefaultConfig();
@@ -45,7 +48,7 @@ public class Config {
 
         CHECK_FOR_UPDATES = config.getBoolean("update-checker", true);
 
-        UMNOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
+        UNMOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
 
         DOLPHIN_SPEED = (float) config.getDouble("dolphin.speed", 1.0D);
@@ -59,8 +62,8 @@ public class Config {
         DOLPHIN_DASH_BOOST = (float) config.getDouble("dolphin.dash.boost", 1.5D);
         DOLPHIN_DASH_DURATION = (int) config.getDouble("dolphin.dash.duration", 20);
 
-        TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
-        TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
+        OCELOT_SPEED = (float) config.getDouble("ocelot.speed", 1.0D);
+        OCELOT_JUMP_POWER = (float) config.getDouble("ocelot.jump-power", 0.5D);
 
         PHANTOM_SPEED = (float) config.getDouble("phantom.speed", 1.0D);
         PHANTOM_GRAVITY = config.getDouble("phantom.gravity", 0.05D);
@@ -71,5 +74,8 @@ public class Config {
         POLAR_BEAR_SPEED = (float) config.getDouble("polar-bear.speed", 1.0D);
         POLAR_BEAR_JUMP_POWER = (float) config.getDouble("polar-bear.jump-power", 0.5D);
         POLAR_BEAR_STEP_HEIGHT = (float) config.getDouble("polar-bear.step-height", 1.0D);
+
+        TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
+        TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
     }
 }

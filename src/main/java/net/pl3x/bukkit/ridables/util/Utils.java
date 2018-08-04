@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.util;
 
+import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -45,6 +46,8 @@ public class Utils {
         switch (entityType) {
             case DOLPHIN:
                 return Tag.ITEMS_FISHES.isTagged(item.getType());
+            case OCELOT:
+                return EntityRidableOcelot.FOOD.contains(item.getType());
             case TURTLE:
                 return item.getType() == Material.SEAGRASS;
             case PHANTOM:

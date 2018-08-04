@@ -71,7 +71,7 @@ public class EntityRidableDolphin extends EntityDolphin {
                                 shoot(rider);
                             } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
                                 spacebarCooldown = Config.DOLPHIN_DASH_COOLDOWN;
-                                if (!dashing && rider.getBukkitEntity().hasPermission("allow.dolphin.dash")) {
+                                if (!dashing && rider.getBukkitEntity().hasPermission("allow.dash.dolphin")) {
                                     dashing = true;
                                     dashCounter = 0;
                                     playSound(SoundEffects.ENTITY_DOLPHIN_JUMP);

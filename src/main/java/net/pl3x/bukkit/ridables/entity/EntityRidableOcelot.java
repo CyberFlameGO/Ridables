@@ -3,25 +3,28 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityLiving;
+import net.minecraft.server.v1_13_R1.EntityOcelot;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityPolarBear;
 import net.minecraft.server.v1_13_R1.EnumMoveType;
 import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import org.bukkit.Material;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
-public class EntityRidablePolarBear extends EntityPolarBear {
+public class EntityRidableOcelot extends EntityOcelot {
+    public static final List<Material> FOOD = Arrays.asList(Material.COD, Material.SALMON, Material.TROPICAL_FISH, Material.PUFFERFISH);
+
     private static Field jumping;
     private boolean isJumping = false;
 
-    public EntityRidablePolarBear(World world) {
+    public EntityRidableOcelot(World world) {
         super(world);
-        Q = Config.POLAR_BEAR_STEP_HEIGHT; // stepHeight
-        persistent = true;
 
         if (jumping == null) {
             try {
@@ -32,17 +35,14 @@ public class EntityRidablePolarBear extends EntityPolarBear {
         }
     }
 
-    @Override
-    protected boolean isTypeNotPersistent() {
-        return false; // we definitely want persistence
-    }
-
     // travel(strafe, vertical, forward)
     @Override
     public void a(float f, float f1, float f2) {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            Q = Config.POLAR_BEAR_STEP_HEIGHT; // stepHeight
+            if (isSitting()) {
+                setSitting(false);
+            }
 
             // do not target anything while being ridden
             setGoalTarget(null, null, false);
@@ -73,7 +73,7 @@ public class EntityRidablePolarBear extends EntityPolarBear {
             }
 
             if (isJumping && onGround) { // !isJumping
-                motY = (double) Config.POLAR_BEAR_JUMP_POWER;
+                motY = (double) Config.OCELOT_JUMP_POWER;
                 MobEffect jump = getEffect(MobEffects.JUMP);
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
@@ -81,8 +81,8 @@ public class EntityRidablePolarBear extends EntityPolarBear {
                 isJumping = true; // setJumping
                 impulse = true;
                 if (forward > 0.0F) {
-                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.POLAR_BEAR_JUMP_POWER);
-                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.POLAR_BEAR_JUMP_POWER);
+                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.OCELOT_JUMP_POWER);
+                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.OCELOT_JUMP_POWER);
                 }
             }
 
@@ -119,7 +119,7 @@ public class EntityRidablePolarBear extends EntityPolarBear {
         try {
             float blockFriction = onGround ? world.getType(blockposition_b).getBlock().n() * 0.91F : 0.91F;
             float friction = 0.16277137F / (blockFriction * blockFriction * blockFriction);
-            a(strafe, vertical, forward, (onGround ? cK() * friction : aU) * Config.POLAR_BEAR_SPEED); // moveRelative
+            a(strafe, vertical, forward, (onGround ? cK() * friction : aU) * Config.OCELOT_SPEED); // moveRelative
             blockFriction = onGround ? world.getType(blockposition_b.e(locX, getBoundingBox().b - 1.0D, locZ)).getBlock().n() * 0.91F : 0.91F;
             if (z_()) { // isOnLadder
                 motX = MathHelper.a(motX, -0.15D, 0.15D);

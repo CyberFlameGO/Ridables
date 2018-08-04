@@ -25,11 +25,10 @@ dolphin:
     boost: 1.5       # riding speed multiplier boost
     duration: 20     # ticks boost lasts for with each spacebar press
 
-# Turtle options
-turtle:
-  speed:
-    on-land: 1.0     # riding speed modifier on land
-    in-water: 1.0    # riding speed modifier in water
+# Ocelot options
+ocelot:
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Phantom options
 phantom:
@@ -44,3 +43,9 @@ polar-bear:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
+
+# Turtle options
+turtle:
+  speed:
+    on-land: 1.0     # riding speed modifier on land
+    in-water: 1.0    # riding speed modifier in water

@@ -8,6 +8,7 @@ import net.pl3x.bukkit.ridables.data.Buckets;
 import net.pl3x.bukkit.ridables.data.Creatures;
 import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
+import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
 import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
@@ -79,14 +80,11 @@ public class Ridables extends JavaPlugin implements Listener {
             }
         }
 
-        // setup turtle
-        RegistryHax.injectReplacementEntityTypes("turtle", EntityTypes.TURTLE,
-                EntityTypes.a.a(EntityRidableTurtle.class, EntityRidableTurtle::new),
-                Material.TURTLE_SPAWN_EGG);
-        creatures.putCreature(EntityType.TURTLE, EntityRidableTurtle.class);
-        if (serverType == ServerType.PAPER) {
-            buckets.createBucket(EntityType.TURTLE);
-        }
+        // setup ocelot
+        RegistryHax.injectReplacementEntityTypes("ocelot", EntityTypes.OCELOT,
+                EntityTypes.a.a(EntityRidableOcelot.class, EntityRidableOcelot::new),
+                Material.OCELOT_SPAWN_EGG);
+        creatures.putCreature(EntityType.OCELOT, EntityRidableOcelot.class);
 
         // setup phantom
         RegistryHax.injectReplacementEntityTypes("phantom", EntityTypes.PHANTOM,
@@ -99,6 +97,15 @@ public class Ridables extends JavaPlugin implements Listener {
                 EntityTypes.a.a(EntityRidablePolarBear.class, EntityRidablePolarBear::new),
                 Material.POLAR_BEAR_SPAWN_EGG);
         creatures.putCreature(EntityType.POLAR_BEAR, EntityRidablePolarBear.class);
+
+        // setup turtle
+        RegistryHax.injectReplacementEntityTypes("turtle", EntityTypes.TURTLE,
+                EntityTypes.a.a(EntityRidableTurtle.class, EntityRidableTurtle::new),
+                Material.TURTLE_SPAWN_EGG);
+        creatures.putCreature(EntityType.TURTLE, EntityRidableTurtle.class);
+        if (serverType == ServerType.PAPER) {
+            buckets.createBucket(EntityType.TURTLE);
+        }
     }
 
     @Override

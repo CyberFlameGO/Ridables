@@ -15,22 +15,6 @@ commands:
     - ridable
 
 permissions:
-  allow.ride.*:
-    description: Allow to ride all supported creatures
-    default: op
-    children:
-      allow.ride.dolphin:
-        description: Allow to ride dolphins
-        default: op
-      allow.ride.phantom:
-        description: Allow to ride phantoms
-        default: op
-      allow.ride.polar_bear:
-        description: Allow to ride polar bears
-        default: op
-      allow.ride.turtle:
-        description: Allow to ride turtles
-        default: op
   allow.collect.*:
     description: Allow to collect all supported creatures in water buckets
     default: op
@@ -40,6 +24,32 @@ permissions:
         default: op
       allow.collect.turtle:
         description: Allow to collect turtles in water buckets
+        default: op
+  allow.dash.*:
+    description: Allow to make all supported creatures dash
+    default: op
+    children:
+      allow.dash.dolphin:
+        description: Allow to make dolphins dash
+        default: op
+  allow.ride.*:
+    description: Allow to ride all supported creatures
+    default: op
+    children:
+      allow.ride.dolphin:
+        description: Allow to ride dolphins
+        default: op
+      allow.ride.ocelot:
+        description: Allow to ride ocelots
+        default: op
+      allow.ride.phantom:
+        description: Allow to ride phantoms
+        default: op
+      allow.ride.polar_bear:
+        description: Allow to ride polar bears
+        default: op
+      allow.ride.turtle:
+        description: Allow to ride turtles
         default: op
   allow.shoot.*:
     description: Allow to make all supported creatures shoot

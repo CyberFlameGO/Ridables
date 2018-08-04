@@ -6,6 +6,7 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.util.Utils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,12 +43,22 @@ public class RideListener implements Listener {
         }
 
         Player player = event.getPlayer();
+        if (player.isSneaking()) {
+            return; // player is holding shift
+        }
+
         if (player.getVehicle() != null) {
             return; // player already riding something
         }
 
         if (Utils.isFood(creature.getType(), Utils.getItem(player, event.getHand()))) {
             return; // feed creature instead of riding it
+        }
+
+        if (creature instanceof Tameable) {
+            if (!player.getUniqueId().equals(((Tameable) creature).getOwnerUniqueId())) {
+                return; // player doesnt own this creature
+            }
         }
 
         if (!player.hasPermission("allow.ride." + creature.getType().name().toLowerCase())) {
@@ -63,7 +74,7 @@ public class RideListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (!Config.UMNOUNT_ON_TELEPORT) {
+        if (!Config.UNMOUNT_ON_TELEPORT) {
             return; // disabled feature
         }
 
