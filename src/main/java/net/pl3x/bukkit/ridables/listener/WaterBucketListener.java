@@ -2,14 +2,15 @@ package net.pl3x.bukkit.ridables.listener;
 
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.util.Utils;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -23,7 +24,7 @@ public class WaterBucketListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onCollectCreature(PlayerInteractAtEntityEvent event) {
         Entity creature = event.getRightClicked();
         if (creature.isDead() || !creature.isValid()) {
@@ -40,7 +41,7 @@ public class WaterBucketListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        ItemStack hand = getItem(player, event.getHand());
+        ItemStack hand = Utils.getItem(player, event.getHand());
         if (hand == null || hand.getType() != Material.WATER_BUCKET) {
             return; // not a water bucket
         }
@@ -59,7 +60,7 @@ public class WaterBucketListener implements Listener {
         creature.remove();
 
         // give player creature's bucket
-        setItem(player, bucket.clone(), event.getHand());
+        Utils.setItem(player, bucket.clone(), event.getHand());
 
         // prevent water from placing
         event.setCancelled(true);
@@ -87,11 +88,10 @@ public class WaterBucketListener implements Listener {
 
         // spawn the creature
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        if (plugin.creatures().spawn(entityType, buildLocation(block.getLocation(), player.getLocation()))) {
+        if (plugin.creatures().spawn(entityType, Utils.buildLocation(block.getLocation(), player.getLocation()))) {
             // handle the bucket in hand
             if (player.getGameMode() != GameMode.CREATIVE) {
-                bucket.setAmount(Math.max(0, bucket.getAmount() - 1));
-                setItem(player, bucket, hand);
+                Utils.setItem(player, Utils.subtract(bucket), hand);
             }
 
             // place water at location
@@ -100,30 +100,5 @@ public class WaterBucketListener implements Listener {
 
         // do not spawn a cod!
         event.setCancelled(true);
-    }
-
-    // methods to help spigot compatibility
-
-    private ItemStack getItem(Player player, EquipmentSlot hand) {
-        return hand == EquipmentSlot.OFF_HAND ?
-                player.getInventory().getItemInOffHand() :
-                player.getInventory().getItemInMainHand();
-    }
-
-    private void setItem(Player player, ItemStack itemStack, EquipmentSlot hand) {
-        if (hand == EquipmentSlot.OFF_HAND) {
-            player.getInventory().setItemInOffHand(itemStack);
-        } else {
-            player.getInventory().setItemInMainHand(itemStack);
-        }
-    }
-
-    private Location buildLocation(Location loc, Location pLoc) {
-        loc.setX(loc.getBlockX() + 0.5);
-        loc.setY(loc.getBlockY() + 0.5);
-        loc.setZ(loc.getBlockZ() + 0.5);
-        loc.setYaw(pLoc.getYaw());
-        loc.setPitch(pLoc.getPitch());
-        return loc;
     }
 }

@@ -21,7 +21,7 @@ public class DismountListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDismountCreature(EntityDismountEvent event) {
         Entity creature = event.getDismounted();
         switch (creature.getType()) {
@@ -61,7 +61,7 @@ public class DismountListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        // ensure player exits vehicle so it doesn't despawn with player
+        // ensure player unmounts creature so it doesn't despawn with player
         override.add(player.getUniqueId());
         player.leaveVehicle();
 
