@@ -55,6 +55,10 @@ public class EntityRidablePhantom extends EntityPhantom {
             vertical = forward == 0 ? 0 : -(rider.pitch / 45); // vertical motion
             strafe = rider.bh; // sideways motion
 
+            if (locY > Config.PHANTOM_MAX_Y) {
+                forward = 0;
+            }
+
             if (forward == 0) {
                 motY -= Config.PHANTOM_GRAVITY;
             } else {

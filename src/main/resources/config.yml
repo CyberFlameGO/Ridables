@@ -37,6 +37,7 @@ phantom:
   gravity: 0.05      # amount of gravity while not in motion
   fall-damage: true  # damage if fall too quickly
   burn-in-sun: true  # burn in sunlight
+  max-y: 256         # max Y height the phantom can be controlled to
 
 # Polar bear options
 polar-bear:
