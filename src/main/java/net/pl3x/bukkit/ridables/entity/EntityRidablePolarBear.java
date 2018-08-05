@@ -7,9 +7,12 @@ import net.minecraft.server.v1_13_R1.EntityPolarBear;
 import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
+import net.minecraft.server.v1_13_R1.SoundEffects;
 import net.minecraft.server.v1_13_R1.World;
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.Mover;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
 
@@ -67,17 +70,24 @@ public class EntityRidablePolarBear extends EntityPolarBear {
             if (jumping != null && !isJumping) {
                 try {
                     isJumping = jumping.getBoolean(rider);
+                    if (Config.POLAR_BEAR_STAND && isJumping && onGround && !isStanding() && forward == 0 && strafe == 0) {
+                        isJumping = false;
+                        setStanding(true);
+                        this.a(SoundEffects.ENTITY_POLAR_BEAR_WARNING, 1.0F, 1.0F);
+                        Bukkit.getServer().getScheduler().runTaskLater(
+                                Ridables.getPlugin(Ridables.class),
+                                () -> setStanding(false), 20);
+                    }
                 } catch (IllegalAccessException ignore) {
                 }
             }
 
-            if (isJumping && onGround) { // !isJumping
+            if (isJumping && onGround && !isStanding()) {
                 motY = (double) Config.POLAR_BEAR_JUMP_POWER;
                 MobEffect jump = getEffect(MobEffects.JUMP);
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
                 }
-                isJumping = true; // setJumping
                 impulse = true;
                 if (forward > 0.0F) {
                     motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.POLAR_BEAR_JUMP_POWER);
@@ -104,5 +114,13 @@ public class EntityRidablePolarBear extends EntityPolarBear {
             }
         }
         return null; // aww, lonely turtle is lonely
+    }
+
+    private boolean isStanding() {
+        return dA();
+    }
+
+    private void setStanding(boolean standing) {
+        s(standing);
     }
 }

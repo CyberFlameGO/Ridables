@@ -47,6 +47,7 @@ public class Config {
     public static float POLAR_BEAR_SPEED = 1.0F;
     public static float POLAR_BEAR_JUMP_POWER = 0.5F;
     public static float POLAR_BEAR_STEP_HEIGHT = 1.0F;
+    public static boolean POLAR_BEAR_STAND = true;
 
     public static boolean TURTLE_ENABLED = true;
     public static float TURTLE_SPEED_LAND = 1.0F;
@@ -105,6 +106,7 @@ public class Config {
         POLAR_BEAR_SPEED = (float) config.getDouble("polar-bear.speed", 1.0D);
         POLAR_BEAR_JUMP_POWER = (float) config.getDouble("polar-bear.jump-power", 0.5D);
         POLAR_BEAR_STEP_HEIGHT = (float) config.getDouble("polar-bear.step-height", 1.0D);
+        POLAR_BEAR_STAND = config.getBoolean("polar-bear.stand", true);
 
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", true);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
