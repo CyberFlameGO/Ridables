@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class DismountListener implements Listener {
     private final Ridables plugin;
-    private final Set<UUID> override = new HashSet<>();
+    public static final Set<UUID> override = new HashSet<>();
 
     public DismountListener(Ridables plugin) {
         this.plugin = plugin;

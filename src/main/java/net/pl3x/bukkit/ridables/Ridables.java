@@ -9,6 +9,7 @@ import net.pl3x.bukkit.ridables.data.Creatures;
 import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
+import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
@@ -94,6 +95,16 @@ public class Ridables extends JavaPlugin implements Listener {
             creatures.putCreature(EntityType.ENDER_DRAGON, EntityRidableEnderDragon.class);
         } else {
             Logger.info("Dragon disabled. Skipping..");
+        }
+
+        // setup llama
+        if (Config.LLAMA_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("llama", EntityTypes.LLAMA,
+                    EntityTypes.a.a(EntityRidableLlama.class, EntityRidableLlama::new),
+                    Material.LLAMA_SPAWN_EGG);
+            creatures.putCreature(EntityType.LLAMA, EntityRidableLlama.class);
+        } else {
+            Logger.info("Llama disabled. Skipping..");
         }
 
         // setup ocelot

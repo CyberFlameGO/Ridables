@@ -32,6 +32,13 @@ dragon:
   speed: 1.0         # riding speed modifier
   max-y: 256         # max Y height the dragon can be controlled to
 
+# Llama options
+llama:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  caravan: true      # create caravan while riding llama
+
 # Ocelot options
 ocelot:
   enabled: true      # enable custom ridable entity

@@ -5,11 +5,11 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
 import net.pl3x.bukkit.ridables.util.Utils;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 public class RideListener implements Listener {
     private final Ridables plugin;
-    private final Set<UUID> override = new HashSet<>();
+    public static final Set<UUID> override = new HashSet<>();
 
     public RideListener(Ridables plugin) {
         this.plugin = plugin;
@@ -39,15 +40,19 @@ public class RideListener implements Listener {
         }
 
         Entity creature = event.getRightClicked();
-        if (creature.getType() == EntityType.COMPLEX_PART) {
-            creature = ((ComplexEntityPart) creature).getParent();
-            if (!(((CraftEntity)creature).getHandle() instanceof EntityRidableEnderDragon)) {
-                return; // not a controllable dragon!
-            }
-        } else {
-            if (!plugin.creatures().isEnabled(creature)) {
-                return; // not a valid creature
-            }
+        switch (creature.getType()) {
+            case COMPLEX_PART:
+                creature = ((ComplexEntityPart) creature).getParent();
+                if (!(((CraftEntity) creature).getHandle() instanceof EntityRidableEnderDragon)) {
+                    return; // not a controllable dragon!
+                }
+                break;
+            case LLAMA:
+                return; // do not force mount
+        }
+
+        if (!plugin.creatures().isEnabled(creature)) {
+            return; // not a valid creature
         }
 
         if (!creature.getPassengers().isEmpty()) {
@@ -63,7 +68,12 @@ public class RideListener implements Listener {
             return; // player already riding something
         }
 
-        if (Utils.isFood(creature.getType(), Utils.getItem(player, event.getHand()))) {
+        ItemStack item = Utils.getItem(player, event.getHand());
+        if (item.getType() == Material.LEAD) {
+            return; // do not ride when trying to leash
+        }
+
+        if (Utils.isFood(creature.getType(), item)) {
             return; // feed creature instead of riding it
         }
 

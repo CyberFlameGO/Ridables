@@ -27,6 +27,11 @@ public class Config {
     public static float DRAGON_SPEED = 1.0F;
     public static int DRAGON_MAX_Y = 256;
 
+    public static boolean LLAMA_ENABLED = true;
+    public static float LLAMA_SPEED = 1.0F;
+    public static float LLAMA_JUMP_POWER = 0.5F;
+    public static boolean LLAMA_CARAVAN = true;
+
     public static boolean OCELOT_ENABLED = true;
     public static float OCELOT_SPEED = 1.0F;
     public static float OCELOT_JUMP_POWER = 0.5F;
@@ -79,6 +84,11 @@ public class Config {
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
         DRAGON_MAX_Y = (int) config.getDouble("dragon.max-y", 256);
+
+        LLAMA_ENABLED = config.getBoolean("llama.enabled", true);
+        LLAMA_SPEED = (float) config.getDouble("llama.speed", 1.0D);
+        LLAMA_JUMP_POWER = (float) config.getDouble("llama.jump-power", 0.5D);
+        LLAMA_CARAVAN = config.getBoolean("llama.caravan", true);
 
         OCELOT_ENABLED = config.getBoolean("ocelot.enabled", true);
         OCELOT_SPEED = (float) config.getDouble("ocelot.speed", 1.0D);
