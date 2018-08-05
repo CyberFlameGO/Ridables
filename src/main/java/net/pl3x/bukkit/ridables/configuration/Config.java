@@ -11,6 +11,7 @@ public class Config {
     public static boolean UNMOUNT_ON_TELEPORT = true;
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
 
+    public static boolean DOLPHIN_ENABLED = true;
     public static float DOLPHIN_SPEED = 1.0F;
     public static boolean DOLPHIN_BOUNCE = true;
     public static boolean DOLPHIN_BUBBLES = true;
@@ -22,22 +23,31 @@ public class Config {
     public static float DOLPHIN_DASH_BOOST = 1.5F;
     public static int DOLPHIN_DASH_DURATION = 20;
 
+    public static boolean DRAGON_ENABLED = false;
+    public static float DRAGON_SPEED = 1.0F;
+    public static int DRAGON_MAX_Y = 256;
+
+    public static boolean OCELOT_ENABLED = true;
     public static float OCELOT_SPEED = 1.0F;
     public static float OCELOT_JUMP_POWER = 0.5F;
 
+    public static boolean PHANTOM_ENABLED = true;
     public static float PHANTOM_SPEED = 1.0F;
     public static double PHANTOM_GRAVITY = 0.05D;
     public static boolean PHANTOM_FALL_DAMAGE = true;
     public static boolean PHANTOM_BURN_IN_SUNLIGHT = true;
     public static int PHANTOM_MAX_Y = 256;
 
+    public static boolean POLAR_BEAR_ENABLED = true;
     public static float POLAR_BEAR_SPEED = 1.0F;
     public static float POLAR_BEAR_JUMP_POWER = 0.5F;
     public static float POLAR_BEAR_STEP_HEIGHT = 1.0F;
 
+    public static boolean TURTLE_ENABLED = true;
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
 
+    public static boolean WOLF_ENABLED = true;
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
 
@@ -54,6 +64,7 @@ public class Config {
         UNMOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
 
+        DOLPHIN_ENABLED = config.getBoolean("dolphin.enabled", true);
         DOLPHIN_SPEED = (float) config.getDouble("dolphin.speed", 1.0D);
         DOLPHIN_BOUNCE = config.getBoolean("dolphin.bounce", true);
         DOLPHIN_BUBBLES = config.getBoolean("dolphin.bubbles", true);
@@ -65,22 +76,31 @@ public class Config {
         DOLPHIN_DASH_BOOST = (float) config.getDouble("dolphin.dash.boost", 1.5D);
         DOLPHIN_DASH_DURATION = (int) config.getDouble("dolphin.dash.duration", 20);
 
+        DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
+        DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
+        DRAGON_MAX_Y = (int) config.getDouble("dragon.max-y", 256);
+
+        OCELOT_ENABLED = config.getBoolean("ocelot.enabled", true);
         OCELOT_SPEED = (float) config.getDouble("ocelot.speed", 1.0D);
         OCELOT_JUMP_POWER = (float) config.getDouble("ocelot.jump-power", 0.5D);
 
+        PHANTOM_ENABLED = config.getBoolean("phantom.enabled", true);
         PHANTOM_SPEED = (float) config.getDouble("phantom.speed", 1.0D);
         PHANTOM_GRAVITY = config.getDouble("phantom.gravity", 0.05D);
         PHANTOM_FALL_DAMAGE = config.getBoolean("phantom.fall-damage", true);
         PHANTOM_BURN_IN_SUNLIGHT = config.getBoolean("phantom.burn-in-sun", true);
         PHANTOM_MAX_Y = (int) config.getDouble("phantom.max-y", 256);
 
+        POLAR_BEAR_ENABLED = config.getBoolean("polar-bear.enabled", true);
         POLAR_BEAR_SPEED = (float) config.getDouble("polar-bear.speed", 1.0D);
         POLAR_BEAR_JUMP_POWER = (float) config.getDouble("polar-bear.jump-power", 0.5D);
         POLAR_BEAR_STEP_HEIGHT = (float) config.getDouble("polar-bear.step-height", 1.0D);
 
+        TURTLE_ENABLED = config.getBoolean("turtle.enabled", true);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
         TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
 
+        WOLF_ENABLED = config.getBoolean("wolf.enabled", true);
         WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
         WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
     }

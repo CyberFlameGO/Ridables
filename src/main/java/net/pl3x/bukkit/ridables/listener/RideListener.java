@@ -3,9 +3,13 @@ package net.pl3x.bukkit.ridables.listener;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
 import net.pl3x.bukkit.ridables.util.Utils;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
@@ -35,8 +39,15 @@ public class RideListener implements Listener {
         }
 
         Entity creature = event.getRightClicked();
-        if (!plugin.creatures().isEnabled(creature)) {
-            return; // not a valid creature
+        if (creature.getType() == EntityType.COMPLEX_PART) {
+            creature = ((ComplexEntityPart) creature).getParent();
+            if (!(((CraftEntity)creature).getHandle() instanceof EntityRidableEnderDragon)) {
+                return; // not a controllable dragon!
+            }
+        } else {
+            if (!plugin.creatures().isEnabled(creature)) {
+                return; // not a valid creature
+            }
         }
 
         if (!creature.getPassengers().isEmpty()) {

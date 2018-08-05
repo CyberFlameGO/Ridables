@@ -12,6 +12,7 @@ update-checker: true
 
 # Dolphin options
 dolphin:
+  enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   bounce: true       # enable small up/down bouncing motion when still
   bubbles: true      # enable bubble trail when in motion
@@ -25,13 +26,21 @@ dolphin:
     boost: 1.5       # riding speed multiplier boost
     duration: 20     # ticks boost lasts for with each spacebar press
 
+# Ender Dragon options
+dragon:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  max-y: 256         # max Y height the dragon can be controlled to
+
 # Ocelot options
 ocelot:
+  enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Phantom options
 phantom:
+  enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   gravity: 0.05      # amount of gravity while not in motion
   fall-damage: true  # damage if fall too quickly
@@ -40,17 +49,20 @@ phantom:
 
 # Polar bear options
 polar-bear:
+  enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
 
 # Turtle options
 turtle:
+  enabled: true      # enable custom ridable entity
   speed:
     on-land: 1.0     # riding speed modifier on land
     in-water: 1.0    # riding speed modifier in water
 
 # Wolf options
 wolf:
+  enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)

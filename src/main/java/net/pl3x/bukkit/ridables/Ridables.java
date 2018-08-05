@@ -8,6 +8,7 @@ import net.pl3x.bukkit.ridables.data.Buckets;
 import net.pl3x.bukkit.ridables.data.Creatures;
 import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
+import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
@@ -69,50 +70,82 @@ public class Ridables extends JavaPlugin implements Listener {
         }
 
         // setup dolphin
-        if (serverType != ServerType.CRAFTBUKKIT) {
-            RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit",
-                    EntityTypes.a.a(EntityDolphinSpit.class, EntityDolphinSpit::new));
-            RegistryHax.injectReplacementEntityTypes("dolphin", EntityTypes.DOLPHIN,
-                    EntityTypes.a.a(EntityRidableDolphin.class, EntityRidableDolphin::new),
-                    Material.DOLPHIN_SPAWN_EGG);
-            creatures.putCreature(EntityType.DOLPHIN, EntityRidableDolphin.class);
-            if (serverType == ServerType.PAPER) {
+        if (Config.DOLPHIN_ENABLED) {
+            if (serverType != ServerType.CRAFTBUKKIT) {
+                RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit",
+                        EntityTypes.a.a(EntityDolphinSpit.class, EntityDolphinSpit::new));
+                RegistryHax.injectReplacementEntityTypes("dolphin", EntityTypes.DOLPHIN,
+                        EntityTypes.a.a(EntityRidableDolphin.class, EntityRidableDolphin::new),
+                        Material.DOLPHIN_SPAWN_EGG);
+                creatures.putCreature(EntityType.DOLPHIN, EntityRidableDolphin.class);
                 buckets.createBucket(EntityType.DOLPHIN);
+            } else {
+                Logger.error("Dolphin cannot be enabled on CraftBukkit servers!");
             }
+        } else {
+            Logger.info("Dolphin disabled. Skipping..");
+        }
+
+        // setup ender_dragon
+        if (Config.DRAGON_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("ender_dragon", EntityTypes.ENDER_DRAGON,
+                    EntityTypes.a.a(EntityRidableEnderDragon.class, EntityRidableEnderDragon::new),
+                    null);
+            creatures.putCreature(EntityType.ENDER_DRAGON, EntityRidableEnderDragon.class);
+        } else {
+            Logger.info("Dragon disabled. Skipping..");
         }
 
         // setup ocelot
-        RegistryHax.injectReplacementEntityTypes("ocelot", EntityTypes.OCELOT,
-                EntityTypes.a.a(EntityRidableOcelot.class, EntityRidableOcelot::new),
-                Material.OCELOT_SPAWN_EGG);
-        creatures.putCreature(EntityType.OCELOT, EntityRidableOcelot.class);
+        if (Config.OCELOT_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("ocelot", EntityTypes.OCELOT,
+                    EntityTypes.a.a(EntityRidableOcelot.class, EntityRidableOcelot::new),
+                    Material.OCELOT_SPAWN_EGG);
+            creatures.putCreature(EntityType.OCELOT, EntityRidableOcelot.class);
+        } else {
+            Logger.info("Ocelot disabled. Skipping..");
+        }
 
         // setup phantom
-        RegistryHax.injectReplacementEntityTypes("phantom", EntityTypes.PHANTOM,
-                EntityTypes.a.a(EntityRidablePhantom.class, EntityRidablePhantom::new),
-                Material.PHANTOM_SPAWN_EGG);
-        creatures.putCreature(EntityType.PHANTOM, EntityRidablePhantom.class);
+        if (Config.PHANTOM_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("phantom", EntityTypes.PHANTOM,
+                    EntityTypes.a.a(EntityRidablePhantom.class, EntityRidablePhantom::new),
+                    Material.PHANTOM_SPAWN_EGG);
+            creatures.putCreature(EntityType.PHANTOM, EntityRidablePhantom.class);
+        } else {
+            Logger.info("Phantom disabled. Skipping..");
+        }
 
         // setup polar bear
-        RegistryHax.injectReplacementEntityTypes("polar_bear", EntityTypes.POLAR_BEAR,
-                EntityTypes.a.a(EntityRidablePolarBear.class, EntityRidablePolarBear::new),
-                Material.POLAR_BEAR_SPAWN_EGG);
-        creatures.putCreature(EntityType.POLAR_BEAR, EntityRidablePolarBear.class);
+        if (Config.POLAR_BEAR_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("polar_bear", EntityTypes.POLAR_BEAR,
+                    EntityTypes.a.a(EntityRidablePolarBear.class, EntityRidablePolarBear::new),
+                    Material.POLAR_BEAR_SPAWN_EGG);
+            creatures.putCreature(EntityType.POLAR_BEAR, EntityRidablePolarBear.class);
+        } else {
+            Logger.info("Polar Bear disabled. Skipping..");
+        }
 
         // setup turtle
-        RegistryHax.injectReplacementEntityTypes("turtle", EntityTypes.TURTLE,
-                EntityTypes.a.a(EntityRidableTurtle.class, EntityRidableTurtle::new),
-                Material.TURTLE_SPAWN_EGG);
-        creatures.putCreature(EntityType.TURTLE, EntityRidableTurtle.class);
-        if (serverType == ServerType.PAPER) {
+        if (Config.TURTLE_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("turtle", EntityTypes.TURTLE,
+                    EntityTypes.a.a(EntityRidableTurtle.class, EntityRidableTurtle::new),
+                    Material.TURTLE_SPAWN_EGG);
+            creatures.putCreature(EntityType.TURTLE, EntityRidableTurtle.class);
             buckets.createBucket(EntityType.TURTLE);
+        } else {
+            Logger.info("Turtle disabled. Skipping..");
         }
 
         // setup wolf
-        RegistryHax.injectReplacementEntityTypes("wolf", EntityTypes.WOLF,
-                EntityTypes.a.a(EntityRidableWolf.class, EntityRidableWolf::new),
-                Material.WOLF_SPAWN_EGG);
-        creatures.putCreature(EntityType.WOLF, EntityRidableWolf.class);
+        if (Config.WOLF_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("wolf", EntityTypes.WOLF,
+                    EntityTypes.a.a(EntityRidableWolf.class, EntityRidableWolf::new),
+                    Material.WOLF_SPAWN_EGG);
+            creatures.putCreature(EntityType.WOLF, EntityRidableWolf.class);
+        } else {
+            Logger.info("Wolf disabled. Skipping..");
+        }
     }
 
     @Override

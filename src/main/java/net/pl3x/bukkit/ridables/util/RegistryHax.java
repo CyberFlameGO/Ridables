@@ -97,10 +97,12 @@ public class RegistryHax {
             modifiers.setAccessible(true);
             modifiers.setInt(types_field, types_field.getModifiers() & ~Modifier.FINAL);
             types_field.set(null, newType);
-            Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
-            Field item_d = ItemMonsterEgg.class.getDeclaredField("d");
-            item_d.setAccessible(true);
-            item_d.set(spawnEgg, newType);
+            if (spawnEggMaterial != null) {
+                Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
+                Field item_d = ItemMonsterEgg.class.getDeclaredField("d");
+                item_d.setAccessible(true);
+                item_d.set(spawnEgg, newType);
+            }
             Logger.info("Successfully injected replacement entity: " + Logger.ANSI_GREEN + name);
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             Logger.error("Could not inject new ridable entity to registry!");

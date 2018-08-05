@@ -39,6 +39,9 @@ permissions:
       allow.ride.dolphin:
         description: Allow to ride dolphins
         default: op
+      allow.ride.ender_dragon:
+        description: Allow to ride ender dragon
+        default: op
       allow.ride.ocelot:
         description: Allow to ride tamed ocelots
         default: op

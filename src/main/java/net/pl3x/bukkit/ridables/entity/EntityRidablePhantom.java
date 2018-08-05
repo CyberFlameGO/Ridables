@@ -43,6 +43,7 @@ public class EntityRidablePhantom extends EntityPhantom {
             // eject rider if in water or lava
             if (isInWater() || ax()) {
                 ejectPassengers();
+                rider.stopRiding();
                 return;
             }
 
@@ -65,7 +66,7 @@ public class EntityRidablePhantom extends EntityPhantom {
                 fallDistance = 0;
             }
 
-            // moveOnLand
+            // move
             a(strafe, vertical, forward, 0.025F * Config.PHANTOM_SPEED); // moveRelative
             move(EnumMoveType.PLAYER, motX, motY, motZ);
             return;
