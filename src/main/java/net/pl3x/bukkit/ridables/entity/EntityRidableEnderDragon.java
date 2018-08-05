@@ -119,7 +119,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely turtle is lonely
+        return null; // aww, lonely dragon is lonely
     }
 
     // writeEntityToNBT

@@ -10,6 +10,12 @@ update-checker: true
 # While player is riding a creature, disable commands for them
 "cancel-commands-while-riding": false
 
+# Chicken options
+chicken:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power
+
 # Dolphin options
 dolphin:
   enabled: true      # enable custom ridable entity

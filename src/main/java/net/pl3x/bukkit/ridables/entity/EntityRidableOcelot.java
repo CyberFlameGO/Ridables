@@ -82,7 +82,6 @@ public class EntityRidableOcelot extends EntityOcelot {
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
                 }
-                isJumping = true; // setJumping
                 impulse = true;
                 if (forward > 0.0F) {
                     motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.OCELOT_JUMP_POWER);
@@ -90,7 +89,7 @@ public class EntityRidableOcelot extends EntityOcelot {
                 }
             }
 
-            // moveOnLand
+            // move
             Mover.moveOnLand(this, strafe, f1, forward, Config.OCELOT_SPEED);
 
             if (onGround) {
@@ -108,6 +107,6 @@ public class EntityRidableOcelot extends EntityOcelot {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely turtle is lonely
+        return null; // aww, lonely ocelot is lonely
     }
 }

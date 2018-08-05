@@ -80,7 +80,6 @@ public class EntityRidableLlama extends EntityLlama {
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
                 }
-                isJumping = true; // setJumping
                 impulse = true;
                 if (forward > 0.0F) {
                     motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.LLAMA_JUMP_POWER);
@@ -88,7 +87,7 @@ public class EntityRidableLlama extends EntityLlama {
                 }
             }
 
-            // moveOnLand
+            // move
             Mover.moveOnLand(this, strafe, f1, forward, Config.LLAMA_SPEED);
 
             if (onGround) {
@@ -106,7 +105,7 @@ public class EntityRidableLlama extends EntityLlama {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely turtle is lonely
+        return null; // aww, lonely llama is lonely
     }
 
     protected void initAttributes() {

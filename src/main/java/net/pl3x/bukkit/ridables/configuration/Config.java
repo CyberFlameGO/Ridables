@@ -11,6 +11,10 @@ public class Config {
     public static boolean UNMOUNT_ON_TELEPORT = true;
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
 
+    public static boolean CHICKEN_ENABLED = true;
+    public static float CHICKEN_SPEED = 1.0F;
+    public static float CHICKEN_JUMP_POWER = 0.5F;
+
     public static boolean DOLPHIN_ENABLED = true;
     public static float DOLPHIN_SPEED = 1.0F;
     public static boolean DOLPHIN_BOUNCE = true;
@@ -69,6 +73,10 @@ public class Config {
 
         UNMOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
+
+        CHICKEN_ENABLED = config.getBoolean("chicken.enabled", true);
+        CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);
+        CHICKEN_JUMP_POWER = (float) config.getDouble("chicken.jump-power", 0.5D);
 
         DOLPHIN_ENABLED = config.getBoolean("dolphin.enabled", true);
         DOLPHIN_SPEED = (float) config.getDouble("dolphin.speed", 1.0D);

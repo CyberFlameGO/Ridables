@@ -42,7 +42,7 @@ public class EntityRidableTurtle extends EntityTurtle {
             float strafe = rider.bh;
             float vertical = forward == 0 ? 0 : -(rider.pitch / 90);
 
-            // moveOnLand
+            // move
             customMove(strafe, vertical, forward);
             return;
         }

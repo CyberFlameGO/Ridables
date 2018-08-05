@@ -89,7 +89,7 @@ public class EntityRidableDolphin extends EntityDolphin {
                 }
             }
 
-            // only moveOnLand when in water
+            // only move when in water
             if (isInWater()) {
                 float forward = rider.bj; // forward motion
                 float vertical = -(rider.pitch / 90); // vertical motion
@@ -128,7 +128,7 @@ public class EntityRidableDolphin extends EntityDolphin {
                     }
                 }
 
-                // moveOnLand it
+                // move it
                 a(strafe, vertical * 2F, forward, cJ() * 0.15F * Config.DOLPHIN_SPEED * (dashing ? Config.DOLPHIN_DASH_BOOST : 1));
                 move(EnumMoveType.PLAYER, this.motX * 0.75F, motY, motZ * 0.75F);
 

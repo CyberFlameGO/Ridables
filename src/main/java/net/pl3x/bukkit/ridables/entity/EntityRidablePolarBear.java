@@ -95,7 +95,7 @@ public class EntityRidablePolarBear extends EntityPolarBear {
                 }
             }
 
-            // moveOnLand
+            // move
             Mover.moveOnLand(this, strafe, f1, forward, Config.POLAR_BEAR_SPEED);
 
             if (onGround) {
@@ -113,7 +113,7 @@ public class EntityRidablePolarBear extends EntityPolarBear {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely turtle is lonely
+        return null; // aww, lonely bear is lonely
     }
 
     private boolean isStanding() {

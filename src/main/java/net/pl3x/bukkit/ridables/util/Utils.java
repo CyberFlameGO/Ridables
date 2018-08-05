@@ -1,13 +1,12 @@
 package net.pl3x.bukkit.ridables.util;
 
-import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
+import net.pl3x.bukkit.ridables.entity.EntityRidableChicken;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
+import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
 import net.pl3x.bukkit.ridables.entity.EntityRidableWolf;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -48,16 +47,24 @@ public class Utils {
 
     public static boolean isFood(EntityType entityType, ItemStack item) {
         switch (entityType) {
+            case CHICKEN:
+                return EntityRidableChicken.isFood(item);
             case DOLPHIN:
                 return EntityRidableDolphin.isFood(item);
+            case ENDER_DRAGON:
+                return false;
+            case LLAMA:
+                return EntityRidableLlama.isFood(item);
             case OCELOT:
                 return EntityRidableOcelot.isFood(item);
+            case PHANTOM:
+                return false;
+            case POLAR_BEAR:
+                return false;
             case TURTLE:
                 return EntityRidableTurtle.isFood(item);
             case WOLF:
                 return EntityRidableWolf.isFood(item);
-            case PHANTOM:
-                // cant feed a phantom
             default:
                 return false;
         }

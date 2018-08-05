@@ -7,6 +7,7 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.Buckets;
 import net.pl3x.bukkit.ridables.data.Creatures;
 import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
+import net.pl3x.bukkit.ridables.entity.EntityRidableChicken;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
@@ -68,6 +69,16 @@ public class Ridables extends JavaPlugin implements Listener {
             } catch (Exception e2) {
                 serverType = ServerType.CRAFTBUKKIT;
             }
+        }
+
+        // setup ocelot
+        if (Config.CHICKEN_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("chicken", EntityTypes.CHICKEN,
+                    EntityTypes.a.a(EntityRidableChicken.class, EntityRidableChicken::new),
+                    Material.CHICKEN_SPAWN_EGG);
+            creatures.putCreature(EntityType.CHICKEN, EntityRidableChicken.class);
+        } else {
+            Logger.info("Chicken disabled. Skipping..");
         }
 
         // setup dolphin

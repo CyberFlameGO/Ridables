@@ -36,6 +36,9 @@ permissions:
     description: Allow to ride all supported creatures
     default: op
     children:
+      allow.ride.chicken:
+        description: Allow to ride chickens
+        default: op
       allow.ride.dolphin:
         description: Allow to ride dolphins
         default: op
