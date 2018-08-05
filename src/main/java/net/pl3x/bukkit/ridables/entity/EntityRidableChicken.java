@@ -10,16 +10,12 @@ import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.Mover;
-import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
-public class EntityRidableChicken extends EntityChicken {
-    private static final List<Material> FOOD = Arrays.asList(Material.WHEAT_SEEDS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS, Material.BEETROOT_SEEDS);
-
+public class EntityRidableChicken extends EntityChicken implements RidableEntity {
     private static Field jumping;
     private boolean isJumping = false;
 
@@ -35,8 +31,8 @@ public class EntityRidableChicken extends EntityChicken {
         }
     }
 
-    public static boolean isFood(ItemStack itemstack) {
-        return FOOD.contains(itemstack.getType());
+    public boolean isFood(ItemStack itemstack) {
+        return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
     // travel(strafe, vertical, forward)

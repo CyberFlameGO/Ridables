@@ -3,13 +3,14 @@ package net.pl3x.bukkit.ridables.listener;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
@@ -40,21 +41,20 @@ public class RideListener implements Listener {
         }
 
         Entity creature = event.getRightClicked();
-        switch (creature.getType()) {
-            case COMPLEX_PART:
-                creature = ((ComplexEntityPart) creature).getParent();
-                if (!(((CraftEntity) creature).getHandle() instanceof EntityRidableEnderDragon)) {
-                    return; // not a controllable dragon!
-                }
-                break;
-            case LLAMA:
-                return; // do not force mount
+        if (creature.getType() == EntityType.COMPLEX_PART) {
+            creature = ((ComplexEntityPart) creature).getParent();
         }
 
-        if (!plugin.creatures().isEnabled(creature)) {
+        if (creature.getType() == EntityType.LLAMA) {
+            return; // do not force mount llamas
+        }
+
+        net.minecraft.server.v1_13_R1.Entity craftEntity = ((CraftEntity) creature).getHandle();
+        if (!(craftEntity instanceof RidableEntity)) {
             return; // not a valid creature
         }
 
+        RidableEntity ridableEntity = (RidableEntity) craftEntity;
         if (!creature.getPassengers().isEmpty()) {
             return; // creature already has rider
         }
@@ -73,7 +73,7 @@ public class RideListener implements Listener {
             return; // do not ride when trying to leash
         }
 
-        if (Utils.isFood(creature.getType(), item)) {
+        if (ridableEntity.isFood(item)) {
             return; // feed creature instead of riding it
         }
 

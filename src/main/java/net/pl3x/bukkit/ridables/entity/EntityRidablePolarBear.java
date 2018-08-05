@@ -13,10 +13,12 @@ import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.Mover;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
-public class EntityRidablePolarBear extends EntityPolarBear {
+public class EntityRidablePolarBear extends EntityPolarBear implements RidableEntity {
     private static Field jumping;
     private boolean isJumping = false;
 
@@ -32,6 +34,10 @@ public class EntityRidablePolarBear extends EntityPolarBear {
             } catch (NoSuchFieldException ignore) {
             }
         }
+    }
+
+    public boolean isFood(ItemStack itemstack) {
+        return false;
     }
 
     @Override

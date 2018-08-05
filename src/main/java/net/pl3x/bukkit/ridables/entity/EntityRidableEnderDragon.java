@@ -13,10 +13,12 @@ import net.minecraft.server.v1_13_R1.NBTTagCompound;
 import net.minecraft.server.v1_13_R1.Vec3D;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
-public class EntityRidableEnderDragon extends EntityEnderDragon {
+public class EntityRidableEnderDragon extends EntityEnderDragon implements RidableEntity {
     private static Field bS;
     private static Field bg;
 
@@ -33,6 +35,10 @@ public class EntityRidableEnderDragon extends EntityEnderDragon {
             } catch (NoSuchFieldException ignore) {
             }
         }
+    }
+
+    public boolean isFood(ItemStack itemstack) {
+        return false;
     }
 
     private void setPhase(DragonControllerPhase phase) {

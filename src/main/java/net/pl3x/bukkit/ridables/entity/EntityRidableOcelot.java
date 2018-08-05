@@ -10,16 +10,12 @@ import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.Mover;
-import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
-public class EntityRidableOcelot extends EntityOcelot {
-    private static final List<Material> FOOD = Arrays.asList(Material.COD, Material.SALMON, Material.TROPICAL_FISH, Material.PUFFERFISH);
-
+public class EntityRidableOcelot extends EntityOcelot implements RidableEntity {
     private static Field jumping;
     private boolean isJumping = false;
 
@@ -35,8 +31,8 @@ public class EntityRidableOcelot extends EntityOcelot {
         }
     }
 
-    public static boolean isFood(ItemStack itemstack) {
-        return FOOD.contains(itemstack.getType());
+    public boolean isFood(ItemStack itemstack) {
+        return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
     // travel(strafe, vertical, forward)

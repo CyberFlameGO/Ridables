@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
 
-public class EntityRidableDolphin extends EntityDolphin {
+public class EntityRidableDolphin extends EntityDolphin implements RidableEntity {
     private static Field jumping;
 
     private int bounceCounter = 0;
@@ -44,7 +44,7 @@ public class EntityRidableDolphin extends EntityDolphin {
         }
     }
 
-    public static boolean isFood(ItemStack itemstack) {
+    public boolean isFood(ItemStack itemstack) {
         return Tag.ITEMS_FISHES.isTagged(itemstack.getType());
     }
 

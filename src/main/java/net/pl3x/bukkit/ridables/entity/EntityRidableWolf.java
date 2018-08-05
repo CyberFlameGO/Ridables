@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
-public class EntityRidableWolf extends EntityWolf {
+public class EntityRidableWolf extends EntityWolf implements RidableEntity {
     private static Field jumping;
     private boolean isJumping = false;
 
@@ -33,9 +33,8 @@ public class EntityRidableWolf extends EntityWolf {
         }
     }
 
-    public static boolean isFood(ItemStack itemstack) {
-        Item item = CraftItemStack.asNMSCopy(itemstack).getItem();
-        return item instanceof ItemFood && ((ItemFood) item).d();
+    public boolean isFood(ItemStack itemstack) {
+        return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
     // travel(strafe, vertical, forward)

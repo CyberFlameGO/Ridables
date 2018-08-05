@@ -11,11 +11,12 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.Mover;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
-public class EntityRidableCow extends EntityCow {
+public class EntityRidableCow extends EntityCow implements RidableEntity {
     private static Field jumping;
     private boolean isJumping = false;
 
@@ -31,8 +32,8 @@ public class EntityRidableCow extends EntityCow {
         }
     }
 
-    public static boolean isFood(ItemStack itemstack) {
-        return itemstack.getType() == Material.WHEAT;
+    public boolean isFood(ItemStack itemstack) {
+        return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
     // travel(strafe, vertical, forward)

@@ -11,16 +11,17 @@ import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityRidableTurtle extends EntityTurtle {
+public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
     public EntityRidableTurtle(World world) {
         super(world);
         persistent = true; // we want persistence
     }
 
-    public static boolean isFood(ItemStack itemstack) {
-        return itemstack.getType() == Material.SEAGRASS;
+    public boolean isFood(ItemStack itemstack) {
+        return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
     @Override
