@@ -51,6 +51,9 @@ permissions:
       allow.ride.llama:
         description: Allow to ride llamas
         default: op
+      allow.ride.mooshroom:
+        description: Allow to ride mooshrooms
+        default: op
       allow.ride.ocelot:
         description: Allow to ride tamed ocelots
         default: op

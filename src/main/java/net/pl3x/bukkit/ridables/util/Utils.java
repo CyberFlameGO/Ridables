@@ -4,6 +4,7 @@ import net.pl3x.bukkit.ridables.entity.EntityRidableChicken;
 import net.pl3x.bukkit.ridables.entity.EntityRidableCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
+import net.pl3x.bukkit.ridables.entity.EntityRidableMushroomCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
 import net.pl3x.bukkit.ridables.entity.EntityRidableWolf;
@@ -58,6 +59,8 @@ public class Utils {
                 return false;
             case LLAMA:
                 return EntityRidableLlama.isFood(item);
+            case MUSHROOM_COW:
+                return EntityRidableMushroomCow.isFood(item);
             case OCELOT:
                 return EntityRidableOcelot.isFood(item);
             case PHANTOM:

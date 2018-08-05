@@ -12,6 +12,7 @@ import net.pl3x.bukkit.ridables.entity.EntityRidableCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
+import net.pl3x.bukkit.ridables.entity.EntityRidableMushroomCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
@@ -127,6 +128,16 @@ public class Ridables extends JavaPlugin implements Listener {
             creatures.putCreature(EntityType.LLAMA, EntityRidableLlama.class);
         } else {
             Logger.info("Llama disabled. Skipping..");
+        }
+
+        // setup mooshroom
+        if (Config.MOOSHROOM_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("mooshroom", EntityTypes.MOOSHROOM,
+                    EntityTypes.a.a(EntityRidableMushroomCow.class, EntityRidableMushroomCow::new),
+                    Material.MOOSHROOM_SPAWN_EGG);
+            creatures.putCreature(EntityType.MUSHROOM_COW, EntityRidableMushroomCow.class);
+        } else {
+            Logger.info("Mooshroom disabled. Skipping..");
         }
 
         // setup ocelot

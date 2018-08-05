@@ -51,6 +51,12 @@ llama:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   caravan: true      # create caravan while riding llama
 
+# Mooshroom (Mushroom Cow) options
+mooshroom:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power
+
 # Ocelot options
 ocelot:
   enabled: true      # enable custom ridable entity
