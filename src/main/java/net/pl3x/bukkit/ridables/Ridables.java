@@ -16,6 +16,7 @@ import net.pl3x.bukkit.ridables.entity.EntityRidableMushroomCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
 import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
+import net.pl3x.bukkit.ridables.entity.EntityRidableSheep;
 import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
 import net.pl3x.bukkit.ridables.entity.EntityRidableWolf;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
@@ -168,6 +169,16 @@ public class Ridables extends JavaPlugin implements Listener {
             creatures.putCreature(EntityType.POLAR_BEAR, EntityRidablePolarBear.class);
         } else {
             Logger.info("Polar Bear disabled. Skipping..");
+        }
+
+        // setup sheep
+        if (Config.SHEEP_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("sheep", EntityTypes.SHEEP,
+                    EntityTypes.a.a(EntityRidableSheep.class, EntityRidableSheep::new),
+                    Material.SHEEP_SPAWN_EGG);
+            creatures.putCreature(EntityType.SHEEP, EntityRidableSheep.class);
+        } else {
+            Logger.info("Sheep disabled. Skipping..");
         }
 
         // setup turtle
