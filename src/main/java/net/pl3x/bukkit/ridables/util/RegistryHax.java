@@ -23,44 +23,40 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
 public class RegistryHax {
-    private static Field a;
-    private static Field materials_a;
-    private static Field registry_a;
-    private static Field registry_b;
-    private static Field registry_c;
-    private static Field registry_d;
-    private static Field materials_b;
-    private static Field simple_c;
-    private static Field modifiers;
-    private static Field item_d;
-    private static Method method_d;
+    private static Field entitytypes_field_a;
+    private static Field materials_field_a;
+    private static Field registry_field_b;
+    private static Field registry_field_c;
+    private static Field registry_field_d;
+    private static Field materials_field_b;
+    private static Field simple_field_c;
+    private static Field field_modifiers;
+    private static Field item_field_d;
+    private static Method registry_method_d;
 
     static {
         try {
-            a = EntityTypes.a.class.getDeclaredField("a");
-            a.setAccessible(true);
-            materials_a = RegistryMaterials.class.getDeclaredField("a");
-            materials_a.setAccessible(true);
-            registry_a = RegistryID.class.getDeclaredField("a");
-            registry_a.setAccessible(true);
-            registry_b = RegistryID.class.getDeclaredField("b");
-            registry_b.setAccessible(true);
-            registry_c = RegistryID.class.getDeclaredField("c");
-            registry_c.setAccessible(true);
-            registry_d = RegistryID.class.getDeclaredField("d");
-            registry_d.setAccessible(true);
-            materials_b = RegistryMaterials.class.getDeclaredField("b");
-            materials_b.setAccessible(true);
-            simple_c = RegistrySimple.class.getDeclaredField("c");
-            simple_c.setAccessible(true);
-            modifiers = Field.class.getDeclaredField("modifiers");
-            modifiers.setAccessible(true);
-            item_d = ItemMonsterEgg.class.getDeclaredField("d");
-            item_d.setAccessible(true);
-            method_d = RegistryID.class.getDeclaredMethod("d", Object.class);
-            method_d.setAccessible(true);
+            entitytypes_field_a = EntityTypes.a.class.getDeclaredField("a");
+            entitytypes_field_a.setAccessible(true);
+            materials_field_a = RegistryMaterials.class.getDeclaredField("a");
+            materials_field_a.setAccessible(true);
+            registry_field_b = RegistryID.class.getDeclaredField("b");
+            registry_field_b.setAccessible(true);
+            registry_field_c = RegistryID.class.getDeclaredField("c");
+            registry_field_c.setAccessible(true);
+            registry_field_d = RegistryID.class.getDeclaredField("d");
+            registry_field_d.setAccessible(true);
+            materials_field_b = RegistryMaterials.class.getDeclaredField("b");
+            materials_field_b.setAccessible(true);
+            simple_field_c = RegistrySimple.class.getDeclaredField("c");
+            simple_field_c.setAccessible(true);
+            field_modifiers = Field.class.getDeclaredField("modifiers");
+            field_modifiers.setAccessible(true);
+            item_field_d = ItemMonsterEgg.class.getDeclaredField("d");
+            item_field_d.setAccessible(true);
+            registry_method_d = RegistryID.class.getDeclaredMethod("d", Object.class);
+            registry_method_d.setAccessible(true);
         } catch (NoSuchFieldException | NoSuchMethodException ignore) {
         }
     }
@@ -77,11 +73,11 @@ public class RegistryHax {
             MinecraftKey key = new MinecraftKey(name);
             EntityTypes<?> newType = entityTypes_a.a(name);
 
-            RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_a.get(EntityTypes.REGISTRY);
+            RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_field_a.get(EntityTypes.REGISTRY);
             int id = registry.getId(entityTypes);
 
-            Object[] array_b = (Object[]) registry_b.get(registry);
-            Object[] array_d = (Object[]) registry_d.get(registry);
+            Object[] array_b = (Object[]) registry_field_b.get(registry);
+            Object[] array_d = (Object[]) registry_field_d.get(registry);
 
             if (id < 0) {
                 for (int i = 0; i < array_d.length; i++) {
@@ -102,7 +98,7 @@ public class RegistryHax {
             }
 
             if (oldIndex < 0) {
-                array_b = (Object[]) registry_b.get(registry);
+                array_b = (Object[]) registry_field_b.get(registry);
                 for (int i = 0; i < array_b.length; i++) {
                     if (array_b[i] == entityTypes) {
                         array_b[i] = null;
@@ -112,41 +108,40 @@ public class RegistryHax {
                 }
             }
 
-            int newIndex = (int) method_d.invoke(registry, newType);
+            int newIndex = (int) registry_method_d.invoke(registry, newType);
             array_b[newIndex] = newType;
             array_d[id] = newType;
 
-            int[] array_c = (int[]) registry_c.get(registry);
+            int[] array_c = (int[]) registry_field_c.get(registry);
             if (oldIndex >= 0) {
                 array_c[oldIndex] = 0;
             }
             array_c[newIndex] = id;
 
-            Map<EntityTypes<?>, MinecraftKey> map_b_old = (Map<EntityTypes<?>, MinecraftKey>) materials_b.get(EntityTypes.REGISTRY);
+            Map<EntityTypes<?>, MinecraftKey> map_b_old = (Map<EntityTypes<?>, MinecraftKey>) materials_field_b.get(EntityTypes.REGISTRY);
             Map<EntityTypes<?>, MinecraftKey> map_b_new = HashBiMap.create();
             for (Map.Entry<EntityTypes<?>, MinecraftKey> entry : map_b_old.entrySet()) {
                 if (entry.getKey() != entityTypes) map_b_new.put(entry.getKey(), entry.getValue());
                 else map_b_new.put(newType, key);
             }
 
-            Map<MinecraftKey, EntityTypes<?>> map_c = (Map<MinecraftKey, EntityTypes<?>>) simple_c.get(EntityTypes.REGISTRY);
+            Map<MinecraftKey, EntityTypes<?>> map_c = (Map<MinecraftKey, EntityTypes<?>>) simple_field_c.get(EntityTypes.REGISTRY);
             map_c.put(key, newType);
 
             Field types_field = getField(entityTypes);
             types_field.setAccessible(true);
-            modifiers.setInt(types_field, types_field.getModifiers() & ~Modifier.FINAL);
+            field_modifiers.setInt(types_field, types_field.getModifiers() & ~Modifier.FINAL);
             types_field.set(null, newType);
 
-            registry_b.set(registry, array_b);
-            registry_c.set(registry, array_c);
-            registry_d.set(registry, array_d);
-            materials_a.set(EntityTypes.REGISTRY, registry);
-            materials_b.set(EntityTypes.REGISTRY, map_b_new);
-            simple_c.set(EntityTypes.REGISTRY, map_c);
+            registry_field_b.set(registry, array_b);
+            registry_field_c.set(registry, array_c);
+            registry_field_d.set(registry, array_d);
+            materials_field_a.set(EntityTypes.REGISTRY, registry);
+            materials_field_b.set(EntityTypes.REGISTRY, map_b_new);
+            simple_field_c.set(EntityTypes.REGISTRY, map_c);
 
             try {
-                a.setAccessible(true);
-                Class<? extends Entity> clazz = (Class<? extends Entity>) a.get(entityTypes_a);
+                Class<? extends Entity> clazz = (Class<? extends Entity>) entitytypes_field_a.get(entityTypes_a);
                 // these fields are only available on Paper
                 EntityTypes.clsToKeyMap.put(clazz, key);
                 EntityTypes.clsToTypeMap.put(clazz, EntityType.fromName(name));
@@ -155,7 +150,7 @@ public class RegistryHax {
 
             if (spawnEggMaterial != null) {
                 Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
-                item_d.set(spawnEgg, newType);
+                item_field_d.set(spawnEgg, newType);
             }
             Logger.info("Successfully injected replacement entity: " + Logger.ANSI_GREEN + name);
         } catch (IllegalAccessException | InvocationTargetException | ArrayIndexOutOfBoundsException e) {
