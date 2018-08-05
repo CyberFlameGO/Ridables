@@ -8,6 +8,7 @@ import net.pl3x.bukkit.ridables.data.Buckets;
 import net.pl3x.bukkit.ridables.data.Creatures;
 import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.EntityRidableChicken;
+import net.pl3x.bukkit.ridables.entity.EntityRidableCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
@@ -71,7 +72,7 @@ public class Ridables extends JavaPlugin implements Listener {
             }
         }
 
-        // setup ocelot
+        // setup chicken
         if (Config.CHICKEN_ENABLED) {
             RegistryHax.injectReplacementEntityTypes("chicken", EntityTypes.CHICKEN,
                     EntityTypes.a.a(EntityRidableChicken.class, EntityRidableChicken::new),
@@ -79,6 +80,16 @@ public class Ridables extends JavaPlugin implements Listener {
             creatures.putCreature(EntityType.CHICKEN, EntityRidableChicken.class);
         } else {
             Logger.info("Chicken disabled. Skipping..");
+        }
+
+        // setup cow
+        if (Config.COW_ENABLED) {
+            RegistryHax.injectReplacementEntityTypes("cow", EntityTypes.COW,
+                    EntityTypes.a.a(EntityRidableCow.class, EntityRidableCow::new),
+                    Material.COW_SPAWN_EGG);
+            creatures.putCreature(EntityType.COW, EntityRidableCow.class);
+        } else {
+            Logger.info("Cow disabled. Skipping..");
         }
 
         // setup dolphin

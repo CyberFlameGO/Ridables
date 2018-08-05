@@ -1,7 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityChicken;
+import net.minecraft.server.v1_13_R1.EntityCow;
 import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.MathHelper;
@@ -14,16 +14,12 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
-public class EntityRidableChicken extends EntityChicken {
-    private static final List<Material> FOOD = Arrays.asList(Material.WHEAT_SEEDS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS, Material.BEETROOT_SEEDS);
-
+public class EntityRidableCow extends EntityCow {
     private static Field jumping;
     private boolean isJumping = false;
 
-    public EntityRidableChicken(World world) {
+    public EntityRidableCow(World world) {
         super(world);
 
         if (jumping == null) {
@@ -36,7 +32,7 @@ public class EntityRidableChicken extends EntityChicken {
     }
 
     public static boolean isFood(ItemStack itemstack) {
-        return FOOD.contains(itemstack.getType());
+        return itemstack.getType() == Material.WHEAT;
     }
 
     // travel(strafe, vertical, forward)
@@ -73,20 +69,20 @@ public class EntityRidableChicken extends EntityChicken {
             }
 
             if (isJumping && onGround) {
-                motY = (double) Config.CHICKEN_JUMP_POWER;
+                motY = (double) Config.COW_JUMP_POWER;
                 MobEffect jump = getEffect(MobEffects.JUMP);
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
                 }
                 impulse = true;
                 if (forward > 0.0F) {
-                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.CHICKEN_JUMP_POWER);
-                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.CHICKEN_JUMP_POWER);
+                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.COW_JUMP_POWER);
+                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.COW_JUMP_POWER);
                 }
             }
 
             // move
-            Mover.moveOnLand(this, strafe, f1, forward, 0.5F * Config.CHICKEN_SPEED);
+            Mover.moveOnLand(this, strafe, f1, forward, Config.COW_SPEED);
 
             if (onGround) {
                 isJumping = false;
@@ -103,6 +99,6 @@ public class EntityRidableChicken extends EntityChicken {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely chicken is lonely
+        return null; // aww, lonely cow is lonely
     }
 }

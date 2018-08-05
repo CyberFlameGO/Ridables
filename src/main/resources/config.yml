@@ -16,6 +16,12 @@ chicken:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power
 
+# Cow options
+cow:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power
+
 # Dolphin options
 dolphin:
   enabled: true      # enable custom ridable entity

@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.util;
 
 import net.pl3x.bukkit.ridables.entity.EntityRidableChicken;
+import net.pl3x.bukkit.ridables.entity.EntityRidableCow;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
 import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
@@ -49,6 +50,8 @@ public class Utils {
         switch (entityType) {
             case CHICKEN:
                 return EntityRidableChicken.isFood(item);
+            case COW:
+                return EntityRidableCow.isFood(item);
             case DOLPHIN:
                 return EntityRidableDolphin.isFood(item);
             case ENDER_DRAGON:
