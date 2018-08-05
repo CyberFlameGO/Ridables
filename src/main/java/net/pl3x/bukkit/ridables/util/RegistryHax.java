@@ -64,19 +64,15 @@ public class RegistryHax {
                     break;
                 }
             }
-            registry_b.set(registry, array_b);
             Field registry_c = RegistryID.class.getDeclaredField("c");
             registry_c.setAccessible(true);
             int[] array_c = (int[]) registry_c.get(registry);
             array_c[oldIndex] = 0;
             array_c[newIndex] = id;
-            registry_c.set(registry, array_c);
             Field registry_d = RegistryID.class.getDeclaredField("d");
             registry_d.setAccessible(true);
             Object[] array_d = (Object[]) registry_d.get(registry);
             array_d[id] = newType;
-            registry_d.set(registry, array_d);
-            materials_a.set(EntityTypes.REGISTRY, registry);
             Field materials_b = RegistryMaterials.class.getDeclaredField("b");
             materials_b.setAccessible(true);
             Map<EntityTypes<?>, MinecraftKey> map_b_old = (Map<EntityTypes<?>, MinecraftKey>) materials_b.get(EntityTypes.REGISTRY);
@@ -85,17 +81,21 @@ public class RegistryHax {
                 if (entry.getKey() != entityTypes) map_b_new.put(entry.getKey(), entry.getValue());
                 else map_b_new.put(newType, key);
             }
-            materials_b.set(EntityTypes.REGISTRY, map_b_new);
             Field simple_c = RegistrySimple.class.getDeclaredField("c");
             simple_c.setAccessible(true);
             Map<MinecraftKey, EntityTypes<?>> map_c = (Map<MinecraftKey, EntityTypes<?>>) simple_c.get(EntityTypes.REGISTRY);
             map_c.put(key, newType);
-            simple_c.set(EntityTypes.REGISTRY, map_c);
             Field types_field = getField(entityTypes);
             types_field.setAccessible(true);
             Field modifiers = Field.class.getDeclaredField("modifiers");
             modifiers.setAccessible(true);
             modifiers.setInt(types_field, types_field.getModifiers() & ~Modifier.FINAL);
+            registry_b.set(registry, array_b);
+            registry_c.set(registry, array_c);
+            registry_d.set(registry, array_d);
+            materials_a.set(EntityTypes.REGISTRY, registry);
+            materials_b.set(EntityTypes.REGISTRY, map_b_new);
+            simple_c.set(EntityTypes.REGISTRY, map_c);
             types_field.set(null, newType);
             if (spawnEggMaterial != null) {
                 Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
@@ -104,8 +104,8 @@ public class RegistryHax {
                 item_d.set(spawnEgg, newType);
             }
             Logger.info("Successfully injected replacement entity: " + Logger.ANSI_GREEN + name);
-        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            Logger.error("Could not inject new ridable entity to registry!");
+        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException | ArrayIndexOutOfBoundsException e) {
+            Logger.error("Could not inject new ridable entity to registry! Restart your server to try again! (" + Logger.ANSI_YELLOW + name + Logger.ANSI_RED + ")");
             e.printStackTrace();
         }
     }
