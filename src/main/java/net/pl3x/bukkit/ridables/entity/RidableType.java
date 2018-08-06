@@ -67,7 +67,7 @@ public class RidableType {
                 return ridableTypes;
             }
         } else {
-            Logger.info("Chicken disabled. Skipping..");
+            Logger.info("Skipping disabled entity: " + Logger.ANSI_GREEN + name);
         }
         return null;
     }
