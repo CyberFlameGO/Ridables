@@ -4,6 +4,7 @@ import com.google.common.collect.HashBiMap;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.server.v1_13_R1.DataConverterRegistry;
 import net.minecraft.server.v1_13_R1.DataConverterTypes;
+import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.Item;
 import net.minecraft.server.v1_13_R1.ItemMonsterEgg;
@@ -11,6 +12,8 @@ import net.minecraft.server.v1_13_R1.MinecraftKey;
 import net.minecraft.server.v1_13_R1.RegistryID;
 import net.minecraft.server.v1_13_R1.RegistryMaterials;
 import net.minecraft.server.v1_13_R1.RegistrySimple;
+import net.minecraft.server.v1_13_R1.World;
+import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.function.Function;
 
 public class RegistryHax {
     private static Field materials_field_a;
@@ -56,13 +60,13 @@ public class RegistryHax {
         }
     }
 
-    public static void injectNewEntityTypes(String name, String extend_from, EntityTypes.a<?> entityTypes_a) {
+    public static void injectNewEntityTypes(String name, String extend_from, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function) {
         Logger.debug("Attempting to inject new entity: " + Logger.ANSI_CYAN + name);
         Logger.debug("Injecting new datatypes");
         Map<Object, Type<?>> dataTypes = (Map<Object, Type<?>>) DataConverterRegistry.a().getSchema(15190).findChoiceType(DataConverterTypes.n).types();
         dataTypes.put("minecraft:" + name, dataTypes.get("minecraft:" + extend_from));
         Logger.debug("Injecting new EntityTypes");
-        EntityTypes.a(name, entityTypes_a);
+        EntityTypes.a(name, EntityTypes.a.a(clazz, function));
         Logger.info("Successfully injected new entity: " + Logger.ANSI_GREEN + name);
     }
 

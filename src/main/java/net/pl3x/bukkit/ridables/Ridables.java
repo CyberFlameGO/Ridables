@@ -3,11 +3,13 @@ package net.pl3x.bukkit.ridables;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
+import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -58,6 +60,9 @@ public class Ridables extends JavaPlugin implements Listener {
 
         // setup creatures by calling something in the class
         RidableType.getRidable(EntityType.DOLPHIN);
+
+        // inject new entities
+        RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", EntityDolphinSpit.class, EntityDolphinSpit::new);
     }
 
     @Override
