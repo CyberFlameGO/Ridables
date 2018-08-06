@@ -1,6 +1,9 @@
 # Language file (for translations)
 language-file: lang-en.yml
 
+# Debug mode. Enable this before reporting any issues, please
+debug-mode: false
+
 # Enabled the update checker (does not actually download updates!)
 update-checker: true
 

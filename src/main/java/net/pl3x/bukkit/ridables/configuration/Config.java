@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
+    public static boolean DEBUG_MODE = false;
 
     public static boolean CHECK_FOR_UPDATES = true;
 
@@ -80,6 +81,7 @@ public class Config {
         FileConfiguration config = plugin.getConfig();
 
         LANGUAGE_FILE = config.getString("language-file", "lang-en.yml");
+        DEBUG_MODE = config.getBoolean("debug-mode", false);
 
         CHECK_FOR_UPDATES = config.getBoolean("update-checker", true);
 
