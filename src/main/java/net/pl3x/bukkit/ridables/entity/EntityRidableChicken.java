@@ -69,7 +69,7 @@ public class EntityRidableChicken extends EntityChicken implements RidableEntity
             }
 
             if (isJumping && onGround) {
-                motY = (double) Config.CHICKEN_JUMP_POWER;
+                motY = (double) Config.CHICKEN_JUMP_POWER * 1.25F;
                 MobEffect jump = getEffect(MobEffects.JUMP);
                 if (jump != null) {
                     motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
