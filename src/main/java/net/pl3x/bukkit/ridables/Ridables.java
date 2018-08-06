@@ -24,7 +24,6 @@ import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
-import org.apache.commons.lang.WordUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -293,14 +292,14 @@ public class Ridables extends JavaPlugin implements Listener {
     }
 
     public enum ServerType {
-        CRAFTBUKKIT,
-        SPIGOT,
-        PAPER;
+        CRAFTBUKKIT("CraftBukkit"),
+        SPIGOT("Spigot"),
+        PAPER("Paper");
 
         public final String name;
 
-        ServerType() {
-            this.name = WordUtils.capitalizeFully(name());
+        ServerType(String name) {
+            this.name = name;
         }
     }
 }
