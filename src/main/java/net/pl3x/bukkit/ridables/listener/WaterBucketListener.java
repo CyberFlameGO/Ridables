@@ -57,7 +57,6 @@ public class WaterBucketListener implements Listener {
 
         // remove creature
         creature.remove();
-        System.out.println("ding");
 
         // give player creature's bucket
         Utils.setItem(player, bucket.getItemStack(), event.getHand());
