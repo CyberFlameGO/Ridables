@@ -11,6 +11,8 @@ public class Config {
 
     public static boolean UNMOUNT_ON_TELEPORT = true;
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
+    public static boolean REQUIRE_SADDLE = false;
+    public static boolean CONSUME_SADDLE = false;
 
     public static boolean CHICKEN_ENABLED = true;
     public static float CHICKEN_SPEED = 1.0F;
@@ -87,6 +89,8 @@ public class Config {
 
         UNMOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
+        REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
+        CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
 
         CHICKEN_ENABLED = config.getBoolean("chicken.enabled", true);
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);

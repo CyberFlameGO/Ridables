@@ -63,12 +63,13 @@ public class RideListener implements Listener {
             return; // player already riding something
         }
 
-        ItemStack item = Utils.getItem(player, event.getHand());
-        if (item.getType() == Material.LEAD) {
+        ItemStack mainHand = Utils.getItem(player, EquipmentSlot.HAND);
+        ItemStack offHand = Utils.getItem(player, EquipmentSlot.OFF_HAND);
+        if (mainHand.getType() == Material.LEAD || offHand.getType() == Material.LEAD) {
             return; // do not ride when trying to leash
         }
 
-        if (ridableEntity.isFood(item)) {
+        if (ridableEntity.isFood(mainHand) || ridableEntity.isFood(offHand)) {
             return; // feed creature instead of riding it
         }
 
@@ -82,6 +83,21 @@ public class RideListener implements Listener {
         if (!player.hasPermission("allow.ride." + creature.getType().name().toLowerCase())) {
             Lang.send(player, Lang.RIDE_NO_PERMISSION);
             return;
+        }
+
+        if (Config.REQUIRE_SADDLE) {
+            ItemStack saddle = Utils.getItem(player, EquipmentSlot.HAND);
+            EquipmentSlot hand = EquipmentSlot.HAND;
+            if (saddle.getType() != Material.SADDLE) {
+                saddle = Utils.getItem(player, EquipmentSlot.OFF_HAND);
+                hand = EquipmentSlot.OFF_HAND;
+                if (saddle.getType() != Material.SADDLE) {
+                    return; // saddle is required
+                }
+            }
+            if (Config.CONSUME_SADDLE) {
+                Utils.setItem(player, Utils.subtract(saddle), hand);
+            }
         }
 
         // add player as rider
