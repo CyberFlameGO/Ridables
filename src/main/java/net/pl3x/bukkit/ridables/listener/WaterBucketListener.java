@@ -1,13 +1,13 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.data.Bucket;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,12 +18,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class WaterBucketListener implements Listener {
-    private final Ridables plugin;
-
-    public WaterBucketListener(Ridables plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onCollectCreature(PlayerInteractAtEntityEvent event) {
         Entity creature = event.getRightClicked();
@@ -31,7 +25,7 @@ public class WaterBucketListener implements Listener {
             return; // creature already removed from world
         }
 
-        ItemStack bucket = plugin.getBuckets().getBucket(creature.getType());
+        Bucket bucket = Bucket.getBucket(creature.getType());
         if (bucket == null) {
             return; // not a supported creature
         }
@@ -58,9 +52,10 @@ public class WaterBucketListener implements Listener {
 
         // remove creature
         creature.remove();
+        System.out.println("ding");
 
         // give player creature's bucket
-        Utils.setItem(player, bucket.clone(), event.getHand());
+        Utils.setItem(player, bucket.getItemStack(), event.getHand());
 
         // prevent water from placing
         event.setCancelled(true);
@@ -74,29 +69,34 @@ public class WaterBucketListener implements Listener {
 
         // get the bucket used
         Player player = event.getPlayer();
-        ItemStack bucket = player.getInventory().getItemInMainHand();
-        EntityType entityType = plugin.getBuckets().getEntityType(bucket);
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
         EquipmentSlot hand = EquipmentSlot.HAND;
-        if (entityType == null) {
-            bucket = player.getInventory().getItemInOffHand();
-            entityType = plugin.getBuckets().getEntityType(bucket);
+        Bucket bucket = Bucket.getBucket(itemStack);
+        if (bucket == null) {
+            itemStack = player.getInventory().getItemInOffHand();
             hand = EquipmentSlot.OFF_HAND;
-            if (entityType == null) {
+            bucket = Bucket.getBucket(itemStack);
+            if (bucket == null) {
                 return; // not a valid creature bucket
             }
         }
 
+        RidableType ridable = RidableType.getRidable(bucket.getEntityType());
+        if (ridable == null) {
+            return; // not a valid creature
+        }
+
         // spawn the creature
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        if (plugin.creatures().spawn(entityType, Utils.buildLocation(block.getLocation(), player.getLocation()))) {
-            // handle the bucket in hand
-            if (player.getGameMode() != GameMode.CREATIVE) {
-                Utils.setItem(player, Utils.subtract(bucket), hand);
-            }
+        ridable.spawn(Utils.buildLocation(block.getLocation(), player.getLocation()));
 
-            // place water at location
-            block.setType(Material.WATER, true);
+        // handle the bucket in hand
+        if (player.getGameMode() != GameMode.CREATIVE) {
+            Utils.setItem(player, Utils.subtract(itemStack), hand);
         }
+
+        // place water at location
+        block.setType(Material.WATER, true);
 
         // do not spawn a cod!
         event.setCancelled(true);

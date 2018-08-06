@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityHuman;
 import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityLlamaSpit;
+import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.IProjectile;
 import net.minecraft.server.v1_13_R1.Material;
 import net.minecraft.server.v1_13_R1.MathHelper;
@@ -15,7 +16,9 @@ import net.minecraft.server.v1_13_R1.Particles;
 import net.minecraft.server.v1_13_R1.Vec3D;
 import net.minecraft.server.v1_13_R1.World;
 import net.minecraft.server.v1_13_R1.WorldServer;
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.util.RegistryHax;
 
 import java.util.UUID;
 
@@ -37,6 +40,11 @@ public class EntityDolphinSpit extends EntityLlamaSpit implements IProjectile {
         setPosition(dolphin.locX - (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.sin(dolphin.aQ * 0.017453292F),
                 dolphin.locY + (double) dolphin.getHeadHeight() - 0.5000000149011612D,
                 dolphin.locZ + (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.cos(dolphin.aQ * 0.017453292F));
+    }
+
+    public static void inject() {
+        RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit",
+                EntityTypes.a.a(EntityDolphinSpit.class, EntityDolphinSpit::new));
     }
 
     public void tick() {

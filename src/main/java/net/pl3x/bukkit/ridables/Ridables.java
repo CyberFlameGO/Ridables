@@ -1,31 +1,14 @@
 package net.pl3x.bukkit.ridables;
 
-import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.data.Buckets;
-import net.pl3x.bukkit.ridables.data.Creatures;
-import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
-import net.pl3x.bukkit.ridables.entity.EntityRidableChicken;
-import net.pl3x.bukkit.ridables.entity.EntityRidableCow;
-import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
-import net.pl3x.bukkit.ridables.entity.EntityRidableEnderDragon;
-import net.pl3x.bukkit.ridables.entity.EntityRidableLlama;
-import net.pl3x.bukkit.ridables.entity.EntityRidableMushroomCow;
-import net.pl3x.bukkit.ridables.entity.EntityRidableOcelot;
-import net.pl3x.bukkit.ridables.entity.EntityRidablePhantom;
-import net.pl3x.bukkit.ridables.entity.EntityRidablePolarBear;
-import net.pl3x.bukkit.ridables.entity.EntityRidableSheep;
-import net.pl3x.bukkit.ridables.entity.EntityRidableTurtle;
-import net.pl3x.bukkit.ridables.entity.EntityRidableWolf;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
-import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,11 +20,24 @@ import org.inventivetalent.update.spiget.UpdateCallback;
 import org.inventivetalent.update.spiget.comparator.VersionComparator;
 
 public class Ridables extends JavaPlugin implements Listener {
-    private final Creatures creatures = new Creatures();
-    private final Buckets buckets = new Buckets();
-
     private boolean disabled = false;
-    private ServerType serverType;
+    private final ServerType serverType;
+
+    public Ridables() {
+        ServerType type;
+        try {
+            Class.forName("com.destroystokyo.paper.PaperConfig");
+            type = ServerType.PAPER;
+        } catch (Exception e) {
+            try {
+                Class.forName("org.spigotmc.SpigotConfig");
+                type = ServerType.SPIGOT;
+            } catch (Exception e2) {
+                type = ServerType.CRAFTBUKKIT;
+            }
+        }
+        serverType = type;
+    }
 
     @Override
     public void onLoad() {
@@ -60,146 +56,8 @@ public class Ridables extends JavaPlugin implements Listener {
             return;
         }
 
-        // server version
-        try {
-            Class.forName("com.destroystokyo.paper.PaperConfig");
-            serverType = ServerType.PAPER;
-        } catch (Exception e) {
-            try {
-                Class.forName("org.spigotmc.SpigotConfig");
-                serverType = ServerType.SPIGOT;
-            } catch (Exception e2) {
-                serverType = ServerType.CRAFTBUKKIT;
-            }
-        }
-
-        // setup chicken
-        if (Config.CHICKEN_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("chicken", EntityTypes.CHICKEN,
-                    EntityTypes.a.a(EntityRidableChicken.class, EntityRidableChicken::new),
-                    Material.CHICKEN_SPAWN_EGG);
-            creatures.putCreature(EntityType.CHICKEN, EntityRidableChicken.class);
-        } else {
-            Logger.info("Chicken disabled. Skipping..");
-        }
-
-        // setup cow
-        if (Config.COW_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("cow", EntityTypes.COW,
-                    EntityTypes.a.a(EntityRidableCow.class, EntityRidableCow::new),
-                    Material.COW_SPAWN_EGG);
-            creatures.putCreature(EntityType.COW, EntityRidableCow.class);
-        } else {
-            Logger.info("Cow disabled. Skipping..");
-        }
-
-        // setup dolphin
-        if (Config.DOLPHIN_ENABLED) {
-            if (serverType != ServerType.CRAFTBUKKIT) {
-                RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit",
-                        EntityTypes.a.a(EntityDolphinSpit.class, EntityDolphinSpit::new));
-                RegistryHax.injectReplacementEntityTypes("dolphin", EntityTypes.DOLPHIN,
-                        EntityTypes.a.a(EntityRidableDolphin.class, EntityRidableDolphin::new),
-                        Material.DOLPHIN_SPAWN_EGG);
-                creatures.putCreature(EntityType.DOLPHIN, EntityRidableDolphin.class);
-                buckets.createBucket(EntityType.DOLPHIN);
-            } else {
-                Logger.error("Dolphin cannot be enabled on CraftBukkit servers!");
-            }
-        } else {
-            Logger.info("Dolphin disabled. Skipping..");
-        }
-
-        // setup ender_dragon
-        if (Config.DRAGON_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("ender_dragon", EntityTypes.ENDER_DRAGON,
-                    EntityTypes.a.a(EntityRidableEnderDragon.class, EntityRidableEnderDragon::new),
-                    null);
-            creatures.putCreature(EntityType.ENDER_DRAGON, EntityRidableEnderDragon.class);
-        } else {
-            Logger.info("Dragon disabled. Skipping..");
-        }
-
-        // setup llama
-        if (Config.LLAMA_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("llama", EntityTypes.LLAMA,
-                    EntityTypes.a.a(EntityRidableLlama.class, EntityRidableLlama::new),
-                    Material.LLAMA_SPAWN_EGG);
-            creatures.putCreature(EntityType.LLAMA, EntityRidableLlama.class);
-        } else {
-            Logger.info("Llama disabled. Skipping..");
-        }
-
-        // setup mooshroom
-        if (Config.MOOSHROOM_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("mooshroom", EntityTypes.MOOSHROOM,
-                    EntityTypes.a.a(EntityRidableMushroomCow.class, EntityRidableMushroomCow::new),
-                    Material.MOOSHROOM_SPAWN_EGG);
-            creatures.putCreature(EntityType.MUSHROOM_COW, EntityRidableMushroomCow.class);
-        } else {
-            Logger.info("Mooshroom disabled. Skipping..");
-        }
-
-        // setup ocelot
-        if (Config.OCELOT_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("ocelot", EntityTypes.OCELOT,
-                    EntityTypes.a.a(EntityRidableOcelot.class, EntityRidableOcelot::new),
-                    Material.OCELOT_SPAWN_EGG);
-            creatures.putCreature(EntityType.OCELOT, EntityRidableOcelot.class);
-        } else {
-            Logger.info("Ocelot disabled. Skipping..");
-        }
-
-        // setup phantom
-        if (Config.PHANTOM_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("phantom", EntityTypes.PHANTOM,
-                    EntityTypes.a.a(EntityRidablePhantom.class, EntityRidablePhantom::new),
-                    Material.PHANTOM_SPAWN_EGG);
-            creatures.putCreature(EntityType.PHANTOM, EntityRidablePhantom.class);
-        } else {
-            Logger.info("Phantom disabled. Skipping..");
-        }
-
-        // setup polar bear
-        if (Config.POLAR_BEAR_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("polar_bear", EntityTypes.POLAR_BEAR,
-                    EntityTypes.a.a(EntityRidablePolarBear.class, EntityRidablePolarBear::new),
-                    Material.POLAR_BEAR_SPAWN_EGG);
-            creatures.putCreature(EntityType.POLAR_BEAR, EntityRidablePolarBear.class);
-        } else {
-            Logger.info("Polar Bear disabled. Skipping..");
-        }
-
-        // setup sheep
-        if (Config.SHEEP_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("sheep", EntityTypes.SHEEP,
-                    EntityTypes.a.a(EntityRidableSheep.class, EntityRidableSheep::new),
-                    Material.SHEEP_SPAWN_EGG);
-            creatures.putCreature(EntityType.SHEEP, EntityRidableSheep.class);
-        } else {
-            Logger.info("Sheep disabled. Skipping..");
-        }
-
-        // setup turtle
-        if (Config.TURTLE_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("turtle", EntityTypes.TURTLE,
-                    EntityTypes.a.a(EntityRidableTurtle.class, EntityRidableTurtle::new),
-                    Material.TURTLE_SPAWN_EGG);
-            creatures.putCreature(EntityType.TURTLE, EntityRidableTurtle.class);
-            buckets.createBucket(EntityType.TURTLE);
-        } else {
-            Logger.info("Turtle disabled. Skipping..");
-        }
-
-        // setup wolf
-        if (Config.WOLF_ENABLED) {
-            RegistryHax.injectReplacementEntityTypes("wolf", EntityTypes.WOLF,
-                    EntityTypes.a.a(EntityRidableWolf.class, EntityRidableWolf::new),
-                    Material.WOLF_SPAWN_EGG);
-            creatures.putCreature(EntityType.WOLF, EntityRidableWolf.class);
-        } else {
-            Logger.info("Wolf disabled. Skipping..");
-        }
+        // setup creatures by calling something in the class
+        RidableType.getRidable(EntityType.DOLPHIN);
     }
 
     @Override
@@ -225,10 +83,10 @@ public class Ridables extends JavaPlugin implements Listener {
 
         // listeners \o/
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new RideListener(this), this);
-        getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
+        getServer().getPluginManager().registerEvents(new RideListener(), this);
+        getServer().getPluginManager().registerEvents(new WaterBucketListener(), this);
         if (serverType != ServerType.CRAFTBUKKIT) {
-            getServer().getPluginManager().registerEvents(new DismountListener(this), this);
+            getServer().getPluginManager().registerEvents(new DismountListener(), this);
         }
 
         // commands \o/ idky i'm so excited
@@ -246,14 +104,6 @@ public class Ridables extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         Logger.info("Finished disabling");
-    }
-
-    public Creatures creatures() {
-        return creatures;
-    }
-
-    public Buckets getBuckets() {
-        return buckets;
     }
 
     private void checkForUpdate(Player player) {

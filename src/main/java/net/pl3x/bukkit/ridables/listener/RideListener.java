@@ -1,9 +1,9 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
@@ -27,12 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class RideListener implements Listener {
-    private final Ridables plugin;
     public static final Set<UUID> override = new HashSet<>();
-
-    public RideListener(Ridables plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onRideCreature(PlayerInteractAtEntityEvent event) {
@@ -107,7 +102,7 @@ public class RideListener implements Listener {
         }
 
         Entity creature = player.getVehicle();
-        if (!plugin.creatures().isEnabled(creature)) {
+        if (creature == null || RidableType.getRidable(creature.getType()) == null) {
             return; // not a valid creature
         }
 
@@ -123,7 +118,7 @@ public class RideListener implements Listener {
 
         Player player = event.getPlayer();
         Entity creature = player.getVehicle();
-        if (!plugin.creatures().isEnabled(creature)) {
+        if (RidableType.getRidable(creature.getType()) == null) {
             return; // not a valid creature
         }
 

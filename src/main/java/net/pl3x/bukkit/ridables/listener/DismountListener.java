@@ -14,12 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class DismountListener implements Listener {
-    private final Ridables plugin;
     public static final Set<UUID> override = new HashSet<>();
-
-    public DismountListener(Ridables plugin) {
-        this.plugin = plugin;
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onDismountCreature(EntityDismountEvent event) {

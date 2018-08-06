@@ -4,7 +4,6 @@ import com.google.common.collect.HashBiMap;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.server.v1_13_R1.DataConverterRegistry;
 import net.minecraft.server.v1_13_R1.DataConverterTypes;
-import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.Item;
 import net.minecraft.server.v1_13_R1.ItemMonsterEgg;
@@ -14,7 +13,6 @@ import net.minecraft.server.v1_13_R1.RegistryMaterials;
 import net.minecraft.server.v1_13_R1.RegistrySimple;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
@@ -24,7 +22,6 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 
 public class RegistryHax {
-    private static Field entitytypes_field_a;
     private static Field materials_field_a;
     private static Field registry_field_b;
     private static Field registry_field_c;
@@ -37,8 +34,6 @@ public class RegistryHax {
 
     static {
         try {
-            entitytypes_field_a = EntityTypes.a.class.getDeclaredField("a");
-            entitytypes_field_a.setAccessible(true);
             materials_field_a = RegistryMaterials.class.getDeclaredField("a");
             materials_field_a.setAccessible(true);
             registry_field_b = RegistryID.class.getDeclaredField("b");
@@ -71,12 +66,9 @@ public class RegistryHax {
         Logger.info("Successfully injected new entity: " + Logger.ANSI_GREEN + name);
     }
 
-    public static void injectReplacementEntityTypes(String name, EntityTypes entityTypes, EntityTypes.a entityTypes_a, Material spawnEggMaterial) {
+    public static boolean injectReplacementEntityTypes(String name, EntityTypes entityTypes, MinecraftKey key, EntityTypes<?> newType, Material spawnEggMaterial) {
         Logger.debug("Attempting to inject replacement entity: " + Logger.ANSI_CYAN + name);
         try {
-            MinecraftKey key = new MinecraftKey(name);
-            EntityTypes<?> newType = entityTypes_a.a(name);
-
             RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_field_a.get(EntityTypes.REGISTRY);
             int id = registry.getId(entityTypes);
 
@@ -93,7 +85,7 @@ public class RegistryHax {
                             id = i;
                             break;
                         }
-                        if (((EntityTypes)array_d[i]).d().contains(name)) {
+                        if (((EntityTypes) array_d[i]).d().contains(name)) {
                             Logger.debug(Logger.ANSI_RED + "Found EntityTypes id using name but not reference! What?!");
                             id = i;
                             break;
@@ -187,25 +179,17 @@ public class RegistryHax {
             materials_field_b.set(EntityTypes.REGISTRY, map_b_new);
             simple_field_c.set(EntityTypes.REGISTRY, map_c);
 
-            try {
-                Class<? extends Entity> clazz = (Class<? extends Entity>) entitytypes_field_a.get(entityTypes_a);
-                // these fields are only available on Paper
-                EntityTypes.clsToKeyMap.put(clazz, key);
-                EntityTypes.clsToTypeMap.put(clazz, EntityType.fromName(name));
-                Logger.debug("Updating Paper's extra maps");
-            } catch (NoSuchFieldError ignore) {
-            }
-
             if (spawnEggMaterial != null) {
                 Logger.debug("Updating spawn egg reference");
                 Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
                 item_field_d.set(spawnEgg, newType);
             }
-            Logger.info("Successfully injected replacement entity: " + Logger.ANSI_GREEN + name);
+            return true;
         } catch (IllegalAccessException | InvocationTargetException | ArrayIndexOutOfBoundsException e) {
             Logger.error("Could not inject new ridable entity to registry! Restart your server to try again! "
                     + "(" + Logger.ANSI_YELLOW + name + Logger.ANSI_RED + ")");
             e.printStackTrace();
+            return false;
         }
     }
 
