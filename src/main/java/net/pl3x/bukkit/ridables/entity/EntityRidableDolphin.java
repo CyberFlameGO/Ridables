@@ -141,6 +141,8 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
                 motY -= Config.DOLPHIN_BOUNCE && forward == 0 ? bounceUp ? 0.01D : 0.00D : 0.005D;
                 return;
             }
+            f2 = rider.bj; // forward motion
+            f = rider.bh; // strafe
         }
         super.a(f, f1, f2);
     }
