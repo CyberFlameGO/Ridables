@@ -90,21 +90,18 @@ public class RegistryHax {
                 for (int i = 0; i < array_d.length; i++) {
                     if (array_d[i] != null) {
                         if (array_d[i] == entityTypes) {
-                            System.out.println(((EntityTypes) array_d[i]).d());
                             id = i;
                             break;
                         }
                         if (((EntityTypes)array_d[i]).d().contains(name)) {
                             Logger.debug(Logger.ANSI_RED + "Found EntityTypes id using name but not reference! What?!");
-                            System.out.println(((EntityTypes) array_d[i]).d());
                             id = i;
                             break;
                         }
                     }
                 }
+                Logger.debug("New detected id: " + id);
             }
-
-            Logger.debug("New detected id: " + id);
 
             int oldIndex = -1;
             for (int i = 0; i < array_b.length; i++) {
@@ -143,9 +140,8 @@ public class RegistryHax {
                         }
                     }
                 }
+                Logger.debug("New detected oldIndex: " + oldIndex);
             }
-
-            Logger.debug("New detected oldIndex: " + oldIndex);
 
             int newIndex = (int) registry_method_d.invoke(registry, newType);
 
