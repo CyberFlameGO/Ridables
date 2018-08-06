@@ -25,9 +25,14 @@ public class WaterBucketListener implements Listener {
             return; // creature already removed from world
         }
 
-        Bucket bucket = Bucket.getBucket(creature.getType());
-        if (bucket == null) {
+        RidableType ridable = RidableType.getRidable(creature.getType());
+        if (ridable == null) {
             return; // not a supported creature
+        }
+
+        Bucket bucket = ridable.getWaterBucket();
+        if (bucket == null) {
+            return; // creature doesnt support water buckets
         }
 
         if (!creature.getPassengers().isEmpty()) {
