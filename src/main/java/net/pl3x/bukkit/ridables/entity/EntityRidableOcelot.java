@@ -41,7 +41,7 @@ public class EntityRidableOcelot extends EntityOcelot implements RidableEntity {
         EntityPlayer rider = getRider();
         if (rider != null) {
             if (isSitting()) {
-                setSitting(false);
+                goalSit.setSitting(false);
             }
 
             // do not target anything while being ridden
