@@ -1,23 +1,32 @@
 package net.pl3x.bukkit.ridables.listener;
 
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.Utils;
-import org.bukkit.GameMode;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public class WaterBucketListener implements Listener {
+    public static final Set<UUID> override = new HashSet<>();
+
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onCollectCreature(PlayerInteractAtEntityEvent event) {
         Entity creature = event.getRightClicked();
@@ -61,8 +70,12 @@ public class WaterBucketListener implements Listener {
         // give player creature's bucket
         Utils.setItem(player, bucket.getItemStack(), event.getHand());
 
-        // prevent water from placing
-        event.setCancelled(true);
+        // prevent water from placing in PlayerBucketEmptyEvent which fires right after this
+        override.add(player.getUniqueId());
+
+        // remove override on next tick in case PlayerBucketEmptyEvent doesnt fire
+        Bukkit.getScheduler().runTaskLater(Ridables.getPlugin(Ridables.class),
+                () -> override.remove(player.getUniqueId()), 1);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -71,8 +84,16 @@ public class WaterBucketListener implements Listener {
             return; // not a valid creature bucket
         }
 
-        // get the bucket used
         Player player = event.getPlayer();
+        if (override.remove(player.getUniqueId())) {
+            // this prevents the new cod bucket from emptying water in the same right click
+            // bug in CraftBukkit create a desync block of water here
+            // https://hub.spigotmc.org/jira/browse/SPIGOT-4238
+            event.setCancelled(true);
+            return;
+        }
+
+        // get the bucket used
         ItemStack itemStack = player.getInventory().getItemInMainHand();
         EquipmentSlot hand = EquipmentSlot.HAND;
         Bucket bucket = Bucket.getBucket(itemStack);
@@ -95,14 +116,34 @@ public class WaterBucketListener implements Listener {
         ridable.spawn(Utils.buildLocation(block.getLocation(), player.getLocation()));
 
         // handle the bucket in hand
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            Utils.setItem(player, Utils.subtract(itemStack), hand);
+        Utils.subtract(itemStack);
+        if (itemStack.getAmount() <= 0) {
+            // replace with empty bucket
+            Utils.setItem(player, new ItemStack(Material.BUCKET), hand);
+            System.out.println("1");
+        } else {
+            System.out.println("2");
+            // add subtracted amount back
+            Utils.setItem(player, itemStack, hand);
+            // add empty bucket to inventory
+            player.getInventory().addItem(new ItemStack(Material.BUCKET))
+                    // or drop to ground if inventory is full
+                    .values().forEach(leftover -> player.getWorld().dropItem(player.getLocation(), leftover));
         }
+    }
 
-        // place water at location
-        block.setType(Material.WATER, true);
-
-        // do not spawn a cod!
-        event.setCancelled(true);
+    @EventHandler
+    public void onSpecialFishSpawn(CreatureSpawnEvent event) {
+        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) {
+            return; // not spawned from a bucket (considered egg)
+        }
+        if (event.getEntityType() != EntityType.COD) {
+            return; // not our special bucket
+        }
+        Bucket.BUCKETS.forEach(bucket -> {
+            if (event.getEntity().getCustomName().equals(bucket.getItemStack().getItemMeta().getDisplayName())) {
+                event.setCancelled(true); // do not spawn a cod from special bucket!
+            }
+        });
     }
 }

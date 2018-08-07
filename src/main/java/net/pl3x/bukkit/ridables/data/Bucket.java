@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class Bucket {
-    private final static Collection<Bucket> BUCKETS = Sets.newHashSet();
+    public final static Collection<Bucket> BUCKETS = Sets.newHashSet();
 
     public static final Bucket DOLPHIN = createBucket(EntityType.DOLPHIN);
     public static final Bucket TURTLE = createBucket(EntityType.TURTLE);

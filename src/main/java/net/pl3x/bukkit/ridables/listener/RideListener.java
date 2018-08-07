@@ -36,6 +36,10 @@ public class RideListener implements Listener {
         }
 
         Entity creature = event.getRightClicked();
+        if (creature.isDead() || !creature.isValid()) {
+            return; // creature already removed from world
+        }
+
         if (creature.getType() == EntityType.COMPLEX_PART) {
             creature = ((ComplexEntityPart) creature).getParent();
         }
