@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.HashSet;
@@ -64,15 +63,5 @@ public class DismountListener implements Listener {
 
         // cancel dismount
         event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-
-        // ensure player unmounts creature so it doesn't despawn with player
-        override.add(player.getUniqueId());
-        player.leaveVehicle();
-        override.remove(player.getUniqueId());
     }
 }

@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -145,5 +146,15 @@ public class RideListener implements Listener {
         // disable commands while riding
         Lang.send(player, Lang.DISABLED_COMMANDS_WHILE_RIDING);
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        // ensure player unmounts creature so it doesn't despawn with player
+        override.add(player.getUniqueId());
+        player.leaveVehicle();
+        override.remove(player.getUniqueId());
     }
 }
