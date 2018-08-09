@@ -120,9 +120,7 @@ public class WaterBucketListener implements Listener {
         if (itemStack.getAmount() <= 0) {
             // replace with empty bucket
             Utils.setItem(player, new ItemStack(Material.BUCKET), hand);
-            System.out.println("1");
         } else {
-            System.out.println("2");
             // add subtracted amount back
             Utils.setItem(player, itemStack, hand);
             // add empty bucket to inventory
