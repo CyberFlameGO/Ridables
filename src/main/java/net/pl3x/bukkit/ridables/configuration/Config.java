@@ -68,6 +68,13 @@ public class Config {
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
 
+    public static boolean SNOWMAN_ENABLED = true;
+    public static float SNOWMAN_SPEED = 1.0F;
+    public static float SNOWMAN_JUMP_POWER = 0.5F;
+    public static boolean SNOWMAN_DAMAGE_WHEN_HOT = true;
+    public static boolean SNOWMAN_DAMAGE_WHEN_WET = true;
+    public static boolean SNOWMAN_LEAVE_SNOW_TRAIL = true;
+
     public static boolean TURTLE_ENABLED = true;
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
@@ -145,6 +152,13 @@ public class Config {
         SHEEP_ENABLED = config.getBoolean("sheep.enabled", true);
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);
         SHEEP_JUMP_POWER = (float) config.getDouble("sheep.jump-power", 0.5D);
+
+        SNOWMAN_ENABLED = config.getBoolean("snowman.enabled", true);
+        SNOWMAN_SPEED = (float) config.getDouble("snowman.speed", 1.0D);
+        SNOWMAN_JUMP_POWER = (float) config.getDouble("snowman.jump-power", 0.5D);
+        SNOWMAN_DAMAGE_WHEN_HOT = config.getBoolean("snowman.damage.when-hot", true);
+        SNOWMAN_DAMAGE_WHEN_WET = config.getBoolean("snowman.damage.when-wet", true);
+        SNOWMAN_LEAVE_SNOW_TRAIL = config.getBoolean("snowman.snow-trail", true);
 
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", true);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);

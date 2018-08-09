@@ -31,6 +31,7 @@ public class RidableType {
     public static final RidableType OCELOT = inject(Config.OCELOT_ENABLED, "ocelot", EntityTypes.OCELOT, Material.OCELOT_SPAWN_EGG, EntityRidableOcelot.class, EntityRidableOcelot::new);
     public static final RidableType PHANTOM = inject(Config.PHANTOM_ENABLED, "phantom", EntityTypes.PHANTOM, Material.PHANTOM_SPAWN_EGG, EntityRidablePhantom.class, EntityRidablePhantom::new);
     public static final RidableType POLAR_BEAR = inject(Config.POLAR_BEAR_ENABLED, "polar_bear", EntityTypes.POLAR_BEAR, Material.POLAR_BEAR_SPAWN_EGG, EntityRidablePolarBear.class, EntityRidablePolarBear::new);
+    public static final RidableType SNOWMAN = inject(Config.SNOWMAN_ENABLED, "snow_golem", EntityTypes.SNOW_GOLEM, null, EntityRidableSnowman.class, EntityRidableSnowman::new);
     public static final RidableType SHEEP = inject(Config.SHEEP_ENABLED, "sheep", EntityTypes.SHEEP, Material.SHEEP_SPAWN_EGG, EntityRidableSheep.class, EntityRidableSheep::new);
     public static final RidableType TURTLE = inject(Config.TURTLE_ENABLED, "turtle", EntityTypes.TURTLE, Material.TURTLE_SPAWN_EGG, EntityRidableTurtle.class, EntityRidableTurtle::new, Bucket.TURTLE);
     public static final RidableType WOLF = inject(Config.WOLF_ENABLED, "wolf", EntityTypes.WOLF, Material.WOLF_SPAWN_EGG, EntityRidableWolf.class, EntityRidableWolf::new);

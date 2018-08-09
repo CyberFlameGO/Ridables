@@ -96,6 +96,16 @@ sheep:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power
 
+# Snowman (Snow Golem) options
+snowman:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power
+  damage:
+    when-hot: true   # snowman takes damage when wet (rain/water)
+    when-wet: true   # snowman takes damage when too hot (hot biomes)
+  snow-trail: true   # leave a snow layer on ground where snowman walks
+
 # Turtle options
 turtle:
   enabled: true      # enable custom ridable entity

@@ -66,6 +66,9 @@ permissions:
       allow.ride.sheep:
         description: Allow to ride sheep
         default: op
+      allow.ride.snowman:
+        description: Allow to ride snowman
+        default: op
       allow.ride.turtle:
         description: Allow to ride turtles
         default: op
