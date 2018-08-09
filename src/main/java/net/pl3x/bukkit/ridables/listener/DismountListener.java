@@ -1,9 +1,10 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.Ridables;
+import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -46,6 +47,19 @@ public class DismountListener implements Listener {
 
         if (player.isDead()) {
             return; // player died
+        }
+
+        // warn super old Spigot builds about the error which is about to happen
+        if (!(event instanceof Cancellable)) {
+            Logger.error("######################################################");
+            Logger.error("# Your Spigot version is too old!                    #");
+            Logger.error("# Please re-run BuildTools to get an updated server! #");
+            Logger.error("# The version you are using does NOT contain a       #");
+            Logger.error("# cancellable EntityDismountEvent!                   #");
+            Logger.error("# Update your server for the following error to      #");
+            Logger.error("# go away and make water creatures ridable!          #");
+            Logger.error("######################################################");
+            // do not return, let the error happen so it draws attention
         }
 
         // cancel dismount
