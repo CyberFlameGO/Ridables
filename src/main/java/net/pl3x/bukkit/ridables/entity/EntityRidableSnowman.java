@@ -147,7 +147,8 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
                 itemstack.subtract(1);
             }
         } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
-            getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), itemstack.asBukkitCopy());
+            getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
+                    new ItemStack(Material.CARVED_PUMPKIN));
         }
         return super.a(player, hand);
     }
