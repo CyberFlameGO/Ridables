@@ -22,6 +22,7 @@ import java.util.function.Function;
 public class RidableType {
     private final static Map<EntityType, RidableType> BY_BUKKIT_TYPE = Maps.newHashMap();
 
+    public static final RidableType BAT = inject(Config.BAT_ENABLED, "bat", EntityTypes.BAT, Material.BAT_SPAWN_EGG, EntityRidableBat.class, EntityRidableBat::new);
     public static final RidableType CHICKEN = inject(Config.CHICKEN_ENABLED, "chicken", EntityTypes.CHICKEN, Material.CHICKEN_SPAWN_EGG, EntityRidableChicken.class, EntityRidableChicken::new);
     public static final RidableType COW = inject(Config.COW_ENABLED, "cow", EntityTypes.COW, Material.COW_SPAWN_EGG, EntityRidableCow.class, EntityRidableCow::new);
     public static final RidableType DOLPHIN = inject(Config.DOLPHIN_ENABLED, "dolphin", EntityTypes.DOLPHIN, Material.DOLPHIN_SPAWN_EGG, EntityRidableDolphin.class, EntityRidableDolphin::new, Bucket.DOLPHIN);

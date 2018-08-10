@@ -14,6 +14,11 @@ public class Config {
     public static boolean REQUIRE_SADDLE = false;
     public static boolean CONSUME_SADDLE = false;
 
+    public static boolean BAT_ENABLED = true;
+    public static float BAT_SPEED = 1.0F;
+    public static float BAT_VERTICAL = 1.0F;
+    public static float BAT_GRAVITY = 0.04F;
+
     public static boolean CHICKEN_ENABLED = true;
     public static float CHICKEN_SPEED = 1.0F;
     public static float CHICKEN_JUMP_POWER = 0.5F;
@@ -98,6 +103,11 @@ public class Config {
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
         CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
+
+        BAT_ENABLED = config.getBoolean("bat.enabled", true);
+        BAT_SPEED = (float) config.getDouble("bat.speed", 1.0D);
+        BAT_VERTICAL = (float) config.getDouble("bat.vertical", 1.0D);
+        BAT_GRAVITY = (float) config.getDouble("bat.gravity", 0.04D);
 
         CHICKEN_ENABLED = config.getBoolean("chicken.enabled", true);
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);

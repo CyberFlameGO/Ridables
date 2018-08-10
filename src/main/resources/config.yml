@@ -20,6 +20,13 @@ saddle-to-mount: false
 # Consume the saddle item when mounting (requires saddle-to-mount: true)
 consume-saddle: false
 
+# Bat options
+bat:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  vertical: 1.0      # vertical boost when pressing spacebar
+  gravity: 0.04      # amount of gravity while not in motion
+
 # Chicken options
 chicken:
   enabled: true      # enable custom ridable entity

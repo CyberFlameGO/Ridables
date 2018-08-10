@@ -36,6 +36,9 @@ permissions:
     description: Allow to ride all supported creatures
     default: op
     children:
+      allow.ride.bat:
+        description: Allow to ride bats
+        default: op
       allow.ride.chicken:
         description: Allow to ride chickens
         default: op
