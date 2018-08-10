@@ -15,6 +15,7 @@ import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.util.MaterialSetTag;
 import net.pl3x.bukkit.ridables.util.Mover;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
@@ -23,6 +24,9 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 
 public class EntityRidableSnowman extends EntitySnowman implements RidableEntity {
+    public static final MaterialSetTag PUMPKIN = new MaterialSetTag()
+            .add(Material.CARVED_PUMPKIN, Material.JACK_O_LANTERN, Material.PUMPKIN);
+
     private static Field jumping;
     private boolean isJumping = false;
 
@@ -39,7 +43,7 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
     }
 
     public boolean isFood(ItemStack itemstack) {
-        return itemstack.getType() == Material.CARVED_PUMPKIN || itemstack.getType() == Material.SHEARS;
+        return PUMPKIN.isTagged(itemstack) || itemstack.getType() == Material.SHEARS;
     }
 
     // travel(strafe, vertical, forward)
@@ -136,7 +140,7 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
     // processInteract
     protected boolean a(EntityHuman player, EnumHand hand) {
         net.minecraft.server.v1_13_R1.ItemStack itemstack = player.b(hand);
-        if (itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem() && !hasPumpkin()) {
+        if (!hasPumpkin() && PUMPKIN.isTagged(itemstack.asBukkitMirror())) {
             setHasPumpkin(true);
             if (!player.abilities.canInstantlyBuild) {
                 itemstack.subtract(1);
