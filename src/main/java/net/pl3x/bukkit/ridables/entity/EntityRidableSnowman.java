@@ -10,6 +10,7 @@ import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntitySnowman;
 import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.IBlockData;
+import net.minecraft.server.v1_13_R1.Items;
 import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.MobEffects;
@@ -145,6 +146,8 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
             if (!player.abilities.canInstantlyBuild) {
                 itemstack.subtract(1);
             }
+        } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
+            getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), itemstack.asBukkitCopy());
         }
         return super.a(player, hand);
     }
