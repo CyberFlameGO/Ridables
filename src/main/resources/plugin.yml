@@ -51,6 +51,9 @@ permissions:
       allow.ride.ender_dragon:
         description: Allow to ride ender dragon
         default: op
+      allow.ride.ghast:
+        description: Allow to ride ghast
+        default: op
       allow.ride.llama:
         description: Allow to ride llamas
         default: op
@@ -93,6 +96,9 @@ permissions:
     children:
       allow.shoot.dolphin:
         description: Allow to make dolphins shoot spit
+        default: op
+      allow.shoot.ghast:
+        description: Allow to make ghasts shoot fireballs
         default: op
   command.ridables:
     description: Allow to reload config

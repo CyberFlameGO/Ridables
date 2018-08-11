@@ -63,6 +63,15 @@ dragon:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
 
+# Ghast options
+ghast:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  shoot:
+    cooldown: 20     # ticks to wait between shooting
+    speed: 1.0       # projectile speed
+    damage: 5.0      # damage per hit (1 heart = 2.0 damage)
+
 # Llama options
 llama:
   enabled: true      # enable custom ridable entity

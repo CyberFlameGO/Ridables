@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables.entity;
+package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R1.AxisAlignedBB;
 import net.minecraft.server.v1_13_R1.DamageSource;
@@ -16,6 +16,7 @@ import net.minecraft.server.v1_13_R1.Vec3D;
 import net.minecraft.server.v1_13_R1.World;
 import net.minecraft.server.v1_13_R1.WorldServer;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 
 import java.util.UUID;
 

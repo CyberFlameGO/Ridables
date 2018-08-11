@@ -3,9 +3,10 @@ package net.pl3x.bukkit.ridables;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.entity.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
+import net.pl3x.bukkit.ridables.listener.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
@@ -23,7 +24,7 @@ import org.inventivetalent.update.spiget.comparator.VersionComparator;
 
 public class Ridables extends JavaPlugin implements Listener {
     private boolean disabled = false;
-    private final ServerType serverType;
+    public final ServerType serverType;
 
     public Ridables() {
         ServerType type;
@@ -90,6 +91,7 @@ public class Ridables extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new RideListener(), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(), this);
+        getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         if (serverType != ServerType.CRAFTBUKKIT) {
             getServer().getPluginManager().registerEvents(new DismountListener(), this);
         }

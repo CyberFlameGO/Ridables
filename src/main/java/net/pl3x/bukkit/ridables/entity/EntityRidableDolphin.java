@@ -13,6 +13,7 @@ import net.minecraft.server.v1_13_R1.WorldServer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Location;
 import org.bukkit.Tag;

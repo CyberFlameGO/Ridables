@@ -46,8 +46,7 @@ public class EntityRidableBat extends EntityBat implements RidableEntity {
     }
 
     public float getSpeed() {
-        float speed = (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
-        return speed * Config.BAT_SPEED;
+        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.BAT_SPEED;
     }
 
     public EntityPlayer getRider() {

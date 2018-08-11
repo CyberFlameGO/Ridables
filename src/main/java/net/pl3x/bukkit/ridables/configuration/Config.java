@@ -36,13 +36,19 @@ public class Config {
     public static String DOLPHIN_SPACEBAR_MODE = "shoot";
     public static int DOLPHIN_SHOOT_COOLDOWN = 10;
     public static float DOLPHIN_SHOOT_SPEED = 1.0F;
-    public static float DOLPHIN_SHOOT_DAMAGE = 5.0F;
+    public static float DOLPHIN_SHOOT_DAMAGE = 2.0F;
     public static int DOLPHIN_DASH_COOLDOWN = 10;
     public static float DOLPHIN_DASH_BOOST = 1.5F;
     public static int DOLPHIN_DASH_DURATION = 20;
 
     public static boolean DRAGON_ENABLED = false;
     public static float DRAGON_SPEED = 1.0F;
+
+    public static boolean GHAST_ENABLED = false;
+    public static float GHAST_SPEED = 1.0F;
+    public static int GHAST_SHOOT_COOLDOWN = 20;
+    public static float GHAST_SHOOT_SPEED = 1.0F;
+    public static float GHAST_SHOOT_DAMAGE = 5.0F;
 
     public static boolean LLAMA_ENABLED = true;
     public static float LLAMA_SPEED = 1.0F;
@@ -140,13 +146,19 @@ public class Config {
         DOLPHIN_SPACEBAR_MODE = config.getString("dolphin.spacebar", "shoot");
         DOLPHIN_SHOOT_COOLDOWN = (int) config.getDouble("dolphin.shoot.cooldown", 10);
         DOLPHIN_SHOOT_SPEED = (float) config.getDouble("dolphin.shoot.speed", 1.0D);
-        DOLPHIN_SHOOT_DAMAGE = (float) config.getDouble("dolphin.shoot.damage", 5.0D);
+        DOLPHIN_SHOOT_DAMAGE = (float) config.getDouble("dolphin.shoot.damage", 2.0D);
         DOLPHIN_DASH_COOLDOWN = (int) config.getDouble("dolphin.dash.cooldown", 100);
         DOLPHIN_DASH_BOOST = (float) config.getDouble("dolphin.dash.boost", 1.5D);
         DOLPHIN_DASH_DURATION = (int) config.getDouble("dolphin.dash.duration", 20);
 
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
+
+        GHAST_ENABLED = config.getBoolean("ghast.enabled", true);
+        GHAST_SPEED = (float) config.getDouble("ghast.speed", 1.0D);
+        GHAST_SHOOT_COOLDOWN = (int) config.getDouble("ghast.shoot.cooldown", 20);
+        GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 2.0D);
+        GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
 
         LLAMA_ENABLED = config.getBoolean("llama.enabled", true);
         LLAMA_SPEED = (float) config.getDouble("llama.speed", 1.0D);
