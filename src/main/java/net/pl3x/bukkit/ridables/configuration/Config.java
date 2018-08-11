@@ -157,7 +157,7 @@ public class Config {
         GHAST_ENABLED = config.getBoolean("ghast.enabled", true);
         GHAST_SPEED = (float) config.getDouble("ghast.speed", 1.0D);
         GHAST_SHOOT_COOLDOWN = (int) config.getDouble("ghast.shoot.cooldown", 20);
-        GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 2.0D);
+        GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 1.0D);
         GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
 
         LLAMA_ENABLED = config.getBoolean("llama.enabled", true);
