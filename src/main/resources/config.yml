@@ -20,6 +20,9 @@ saddle-to-mount: false
 # Consume the saddle item when mounting (requires saddle-to-mount: true)
 consume-saddle: false
 
+# Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
+flying-max-y: 256
+
 # Bat options
 bat:
   enabled: true      # enable custom ridable entity
@@ -59,7 +62,6 @@ dolphin:
 dragon:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
-  max-y: 256         # max Y height the dragon can be controlled to
 
 # Llama options
 llama:
@@ -80,6 +82,13 @@ ocelot:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Parrot options
+parrot:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  vertical: 1.0      # vertical boost when pressing spacebar
+  gravity: 0.04      # amount of gravity while not in motion
+
 # Phantom options
 phantom:
   enabled: true      # enable custom ridable entity
@@ -87,7 +96,6 @@ phantom:
   gravity: 0.05      # amount of gravity while not in motion
   fall-damage: true  # damage if fall too quickly
   burn-in-sun: true  # burn in sunlight
-  max-y: 256         # max Y height the phantom can be controlled to
 
 # Polar bear options
 polar-bear:

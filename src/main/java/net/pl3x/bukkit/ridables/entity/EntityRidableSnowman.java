@@ -2,6 +2,7 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.Blocks;
+import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.DamageSource;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityHuman;
@@ -9,99 +10,87 @@ import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntitySnowman;
 import net.minecraft.server.v1_13_R1.EnumHand;
+import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.IBlockData;
 import net.minecraft.server.v1_13_R1.Items;
 import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.MobEffect;
-import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.MaterialSetTag;
-import net.pl3x.bukkit.ridables.util.Mover;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
 import org.bukkit.inventory.ItemStack;
-
-import java.lang.reflect.Field;
 
 public class EntityRidableSnowman extends EntitySnowman implements RidableEntity {
     public static final MaterialSetTag PUMPKIN = new MaterialSetTag()
             .add(Material.CARVED_PUMPKIN, Material.JACK_O_LANTERN, Material.PUMPKIN);
 
-    private static Field jumping;
-    private boolean isJumping = false;
+    private ControllerMove aiController;
+    private ControllerWASD wasdController;
 
     public EntityRidableSnowman(World world) {
         super(world);
-
-        if (jumping == null) {
-            try {
-                jumping = EntityLiving.class.getDeclaredField("bg");
-                jumping.setAccessible(true);
-            } catch (NoSuchFieldException ignore) {
-            }
-        }
+        aiController = moveController;
+        wasdController = new ControllerWASD(this);
     }
 
-    public boolean isFood(ItemStack itemstack) {
+    public boolean isActionableItem(ItemStack itemstack) {
         return PUMPKIN.isTagged(itemstack) || itemstack.getType() == Material.SHEARS;
     }
 
-    // travel(strafe, vertical, forward)
-    @Override
-    public void a(float f, float f1, float f2) {
+    protected boolean isTypeNotPersistent() {
+        return false;
+    }
+
+    protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            // do not target anything while being ridden
             setGoalTarget(null, null, false);
-
-            // eject rider if in water or lava
-            if (isInWater() || ax()) {
-                ejectPassengers();
-                rider.stopRiding();
-                return;
-            }
-
-            // rotation
-            setYawPitch(lastYaw = yaw = rider.yaw, pitch = rider.pitch * 0.5F);
-            aS = aQ = yaw;
-
-            // controls
-            float forward = rider.bj;
-            float strafe = rider.bh * 0.5F;
-            if (forward <= 0.0F) {
-                forward *= 0.25F;
-            }
-
-            if (jumping != null && !isJumping) {
-                try {
-                    isJumping = jumping.getBoolean(rider);
-                } catch (IllegalAccessException ignore) {
-                }
-            }
-
-            if (isJumping && onGround) {
-                motY = (double) Config.SNOWMAN_JUMP_POWER;
-                MobEffect jump = getEffect(MobEffects.JUMP);
-                if (jump != null) {
-                    motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
-                }
-                impulse = true;
-                if (forward > 0.0F) {
-                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.SNOWMAN_JUMP_POWER);
-                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.SNOWMAN_JUMP_POWER);
-                }
-            }
-
-            // move
-            Mover.moveOnLand(this, strafe, f1, forward, 0.5F * Config.SNOWMAN_SPEED);
-
-            if (onGround) {
-                isJumping = false;
-            }
-            return;
+            setRotation(rider.yaw, rider.pitch);
+            useWASDController();
         }
-        super.a(f, f1, f2);
+        super.mobTick();
+    }
+
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return super.cG() * getJumpPower() * 2.2F;
+    }
+
+    public void setRotation(float newYaw, float newPitch) {
+        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
+        aS = aQ = yaw;
+    }
+
+    public float getJumpPower() {
+        return Config.SNOWMAN_JUMP_POWER;
+    }
+
+    public float getSpeed() {
+        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.SNOWMAN_SPEED;
+    }
+
+    public EntityPlayer getRider() {
+        if (passengers != null && !passengers.isEmpty()) {
+            Entity entity = passengers.get(0);
+            if (entity instanceof EntityPlayer) {
+                return (EntityPlayer) entity;
+            }
+        }
+        return null;
+    }
+
+    public void useAIController() {
+        if (moveController != aiController) {
+            moveController = aiController;
+        }
+    }
+
+    public void useWASDController() {
+        if (moveController != wasdController) {
+            moveController = wasdController;
+        }
     }
 
     // onLivingUpdate
@@ -151,15 +140,5 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
                     new ItemStack(Material.CARVED_PUMPKIN));
         }
         return super.a(player, hand);
-    }
-
-    private EntityPlayer getRider() {
-        if (passengers != null && !passengers.isEmpty()) {
-            Entity entity = passengers.get(0); // only care about first rider
-            if (entity instanceof EntityPlayer) {
-                return (EntityPlayer) entity;
-            }
-        }
-        return null; // aww, lonely snowman is lonely
     }
 }

@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.DragonControllerManager;
 import net.minecraft.server.v1_13_R1.DragonControllerPhase;
 import net.minecraft.server.v1_13_R1.Entity;
@@ -8,6 +9,7 @@ import net.minecraft.server.v1_13_R1.EntityEnderDragon;
 import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumMoveType;
+import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.NBTTagCompound;
 import net.minecraft.server.v1_13_R1.Vec3D;
@@ -18,11 +20,15 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 
 public class EntityRidableEnderDragon extends EntityEnderDragon implements RidableEntity {
+    private ControllerMove vanillaController;
+    private boolean isUsingCustomController = false;
+
     private static Field bS;
     private static Field bg;
 
     public EntityRidableEnderDragon(World world) {
         super(world);
+        vanillaController = moveController;
         persistent = true;
 
         if (bS == null) {
@@ -36,7 +42,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         }
     }
 
-    public boolean isFood(ItemStack itemstack) {
+    public boolean isActionableItem(ItemStack itemstack) {
         return false;
     }
 
@@ -84,7 +90,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
                 vertical = -vertical * 0.25F;
                 strafe *= 0.5F;
             }
-            if (locY > Config.DRAGON_MAX_Y) {
+            if (locY > Config.FLYING_MAX_Y) {
                 forward = 0;
                 motY -= 0.08;
             }
@@ -117,7 +123,20 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
     public void k(Entity entity) {
     }
 
-    private EntityPlayer getRider() {
+    public void setRotation(float yaw, float pitch) {
+        setYawPitch(lastYaw = this.yaw = yaw, this.pitch = pitch * 0.5F);
+        aS = aQ = this.yaw;
+    }
+
+    public float getJumpPower() {
+        return 0;
+    }
+
+    public float getSpeed() {
+        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.DRAGON_SPEED;
+    }
+
+    public EntityPlayer getRider() {
         if (passengers != null && !passengers.isEmpty()) {
             Entity entity = passengers.get(0); // only care about first rider
             if (entity instanceof EntityPlayer) {
@@ -125,6 +144,20 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
             }
         }
         return null; // aww, lonely dragon is lonely
+    }
+
+    public void useAIController() {
+        if (isUsingCustomController) {
+            isUsingCustomController = false;
+            //this.moveController = vanillaController;
+        }
+    }
+
+    public void useWASDController() {
+        if (!isUsingCustomController) {
+            isUsingCustomController = true;
+            //this.moveController = new ControllerFlying(this);
+        }
     }
 
     // writeEntityToNBT

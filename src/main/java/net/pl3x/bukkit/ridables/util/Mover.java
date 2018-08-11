@@ -65,7 +65,6 @@ public class Mover {
                     blockposition_b.close();
                 }
             }
-
         }
 
         creature.aI = creature.aJ; // prevLimbSwingAmount = limbSwingAmount;

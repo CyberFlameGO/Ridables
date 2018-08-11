@@ -1,82 +1,74 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityBat;
-import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumMoveType;
+import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
-
 public class EntityRidableBat extends EntityBat implements RidableEntity {
-    private static Field jumping;
+    private ControllerMove aiController;
+    private ControllerWASDFlyingWithSpacebar wasdController;
 
     public EntityRidableBat(World world) {
         super(world);
-
-        if (jumping == null) {
-            try {
-                jumping = EntityLiving.class.getDeclaredField("bg");
-                jumping.setAccessible(true);
-            } catch (NoSuchFieldException ignore) {
-            }
-        }
+        aiController = moveController;
+        wasdController = new ControllerWASDFlyingWithSpacebar(this);
     }
 
-    public boolean isFood(ItemStack itemstack) {
+    public boolean isActionableItem(ItemStack itemstack) {
         return false;
     }
 
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            if (isAsleep()) {
-                setAsleep(false);
-            }
-
-            // rotation
-            setYawPitch(lastYaw = yaw = rider.yaw, pitch = rider.pitch * 0.5F);
-            aS = aQ = yaw;
-
-            // controls
-            float forward = rider.bj;
-            float strafe = rider.bh * 0.5F;
-            float vertical = 0;
-            if (forward <= 0.0F) {
-                forward *= 0.25F;
-            }
-
-            if (jumping != null) {
-                try {
-                    if (jumping.getBoolean(rider)) {
-                        vertical = 0.98F;
-                    }
-                } catch (IllegalAccessException ignore) {
-                }
-            }
-
-            if (motY == -0.04704000278472904) {
-                a(strafe, vertical, forward, 0.04F * Config.BAT_SPEED);
-            } else {
-                a(strafe, vertical, forward * (vertical > 0 ? 1F : 0.5F), 0.025F * Config.BAT_SPEED);
-            }
-            motY += vertical > 0 ? 0.07F * Config.BAT_VERTICAL : 0.04704F - Config.BAT_GRAVITY;
-            move(EnumMoveType.PLAYER, motX, motY, motZ);
+            setGoalTarget(null, null, false);
+            setRotation(rider.yaw, rider.pitch);
+            useWASDController();
+            motY += bi > 0 ? 0.07F * Config.BAT_VERTICAL : 0.04704F - Config.BAT_GRAVITY;
             return;
         }
         super.mobTick();
     }
 
-    private EntityPlayer getRider() {
+    public void setRotation(float newYaw, float newPitch) {
+        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
+        aS = aQ = yaw;
+    }
+
+    public float getJumpPower() {
+        return 0;
+    }
+
+    public float getSpeed() {
+        float speed = (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
+        return speed * Config.BAT_SPEED;
+    }
+
+    public EntityPlayer getRider() {
         if (passengers != null && !passengers.isEmpty()) {
-            Entity entity = passengers.get(0); // only care about first rider
+            Entity entity = passengers.get(0);
             if (entity instanceof EntityPlayer) {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely bat is lonely
+        return null;
+    }
+
+    public void useAIController() {
+        if (moveController != aiController) {
+            moveController = aiController;
+        }
+    }
+
+    public void useWASDController() {
+        if (moveController != wasdController) {
+            moveController = wasdController;
+        }
     }
 }

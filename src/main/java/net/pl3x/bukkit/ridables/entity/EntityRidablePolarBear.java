@@ -1,124 +1,91 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntityPolarBear;
-import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.MobEffect;
-import net.minecraft.server.v1_13_R1.MobEffects;
+import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.SoundEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.util.Mover;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
-
 public class EntityRidablePolarBear extends EntityPolarBear implements RidableEntity {
-    private static Field jumping;
-    private boolean isJumping = false;
+    private ControllerMove aiController;
+    private ControllerWASD wasdController;
 
     public EntityRidablePolarBear(World world) {
         super(world);
-        Q = Config.POLAR_BEAR_STEP_HEIGHT; // stepHeight
-        persistent = true;
-
-        if (jumping == null) {
-            try {
-                jumping = EntityLiving.class.getDeclaredField("bg");
-                jumping.setAccessible(true);
-            } catch (NoSuchFieldException ignore) {
-            }
-        }
+        aiController = moveController;
+        wasdController = new ControllerWASD(this);
+        Q = Config.POLAR_BEAR_STEP_HEIGHT;
     }
 
-    public boolean isFood(ItemStack itemstack) {
+    public boolean isActionableItem(ItemStack itemstack) {
         return false;
     }
 
-    @Override
-    protected boolean isTypeNotPersistent() {
-        return false; // we definitely want persistence
-    }
-
-    // travel(strafe, vertical, forward)
-    @Override
-    public void a(float f, float f1, float f2) {
+    protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            Q = Config.POLAR_BEAR_STEP_HEIGHT; // stepHeight
-
-            // do not target anything while being ridden
+            Q = Config.POLAR_BEAR_STEP_HEIGHT;
             setGoalTarget(null, null, false);
+            setRotation(rider.yaw, rider.pitch);
+            useWASDController();
 
-            // eject rider if in water or lava
-            if (isInWater() || ax()) {
-                ejectPassengers();
-                rider.stopRiding();
-                return;
+            if (Config.POLAR_BEAR_STAND && !isStanding() && rider.bj == 0 && rider.bh == 0 && ReflectionUtil.isJumping(rider)) {
+                setStanding(true);
+                a(SoundEffects.ENTITY_POLAR_BEAR_WARNING, 1.0F, 1.0F);
+                Bukkit.getServer().getScheduler().runTaskLater(
+                        Ridables.getPlugin(Ridables.class),
+                        () -> setStanding(false), 20);
             }
-
-            // rotation
-            setYawPitch(lastYaw = yaw = rider.yaw, pitch = rider.pitch * 0.5F);
-            aS = aQ = yaw;
-
-            // controls
-            float forward = rider.bj;
-            float strafe = rider.bh * 0.5F;
-            if (forward <= 0.0F) {
-                forward *= 0.25F;
-            }
-
-            if (jumping != null && !isJumping) {
-                try {
-                    isJumping = jumping.getBoolean(rider);
-                    if (Config.POLAR_BEAR_STAND && isJumping && onGround && !isStanding() && forward == 0 && strafe == 0) {
-                        isJumping = false;
-                        setStanding(true);
-                        this.a(SoundEffects.ENTITY_POLAR_BEAR_WARNING, 1.0F, 1.0F);
-                        Bukkit.getServer().getScheduler().runTaskLater(
-                                Ridables.getPlugin(Ridables.class),
-                                () -> setStanding(false), 20);
-                    }
-                } catch (IllegalAccessException ignore) {
-                }
-            }
-
-            if (isJumping && onGround && !isStanding()) {
-                motY = (double) Config.POLAR_BEAR_JUMP_POWER;
-                MobEffect jump = getEffect(MobEffects.JUMP);
-                if (jump != null) {
-                    motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
-                }
-                impulse = true;
-                if (forward > 0.0F) {
-                    motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * Config.POLAR_BEAR_JUMP_POWER);
-                    motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * Config.POLAR_BEAR_JUMP_POWER);
-                }
-            }
-
-            // move
-            Mover.moveOnLand(this, strafe, f1, forward, Config.POLAR_BEAR_SPEED);
-
-            if (onGround) {
-                isJumping = false;
-            }
-            return;
         }
-        super.a(f, f1, f2);
+        super.mobTick();
     }
 
-    private EntityPlayer getRider() {
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return super.cG() * getJumpPower() * 2.2F;
+    }
+
+    public void setRotation(float newYaw, float newPitch) {
+        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
+        aS = aQ = yaw;
+    }
+
+    public float getJumpPower() {
+        return isStanding() ? 0 : Config.POLAR_BEAR_JUMP_POWER;
+    }
+
+    public float getSpeed() {
+        return isStanding() ? 0 : (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.POLAR_BEAR_SPEED;
+    }
+
+    public EntityPlayer getRider() {
         if (passengers != null && !passengers.isEmpty()) {
-            Entity entity = passengers.get(0); // only care about first rider
+            Entity entity = passengers.get(0);
             if (entity instanceof EntityPlayer) {
                 return (EntityPlayer) entity;
             }
         }
-        return null; // aww, lonely bear is lonely
+        return null;
+    }
+
+    public void useAIController() {
+        if (moveController != aiController) {
+            moveController = aiController;
+        }
+    }
+
+    public void useWASDController() {
+        if (moveController != wasdController) {
+            moveController = wasdController;
+        }
     }
 
     private boolean isStanding() {

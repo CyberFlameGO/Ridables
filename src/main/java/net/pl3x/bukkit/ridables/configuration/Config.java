@@ -14,6 +14,8 @@ public class Config {
     public static boolean REQUIRE_SADDLE = false;
     public static boolean CONSUME_SADDLE = false;
 
+    public static int FLYING_MAX_Y = 256;
+
     public static boolean BAT_ENABLED = true;
     public static float BAT_SPEED = 1.0F;
     public static float BAT_VERTICAL = 1.0F;
@@ -41,7 +43,6 @@ public class Config {
 
     public static boolean DRAGON_ENABLED = false;
     public static float DRAGON_SPEED = 1.0F;
-    public static int DRAGON_MAX_Y = 256;
 
     public static boolean LLAMA_ENABLED = true;
     public static float LLAMA_SPEED = 1.0F;
@@ -56,12 +57,16 @@ public class Config {
     public static float OCELOT_SPEED = 1.0F;
     public static float OCELOT_JUMP_POWER = 0.5F;
 
+    public static boolean PARROT_ENABLED = true;
+    public static float PARROT_SPEED = 1.0F;
+    public static float PARROT_VERTICAL = 1.0F;
+    public static float PARROT_GRAVITY = 0.04F;
+
     public static boolean PHANTOM_ENABLED = true;
     public static float PHANTOM_SPEED = 1.0F;
     public static double PHANTOM_GRAVITY = 0.05D;
     public static boolean PHANTOM_FALL_DAMAGE = true;
     public static boolean PHANTOM_BURN_IN_SUNLIGHT = true;
-    public static int PHANTOM_MAX_Y = 256;
 
     public static boolean POLAR_BEAR_ENABLED = true;
     public static float POLAR_BEAR_SPEED = 1.0F;
@@ -104,6 +109,8 @@ public class Config {
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
         CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
 
+        FLYING_MAX_Y = (int) config.getDouble("flying-max-y", 256D);
+
         BAT_ENABLED = config.getBoolean("bat.enabled", true);
         BAT_SPEED = (float) config.getDouble("bat.speed", 1.0D);
         BAT_VERTICAL = (float) config.getDouble("bat.vertical", 1.0D);
@@ -131,7 +138,6 @@ public class Config {
 
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
-        DRAGON_MAX_Y = (int) config.getDouble("dragon.max-y", 256);
 
         LLAMA_ENABLED = config.getBoolean("llama.enabled", true);
         LLAMA_SPEED = (float) config.getDouble("llama.speed", 1.0D);
@@ -146,12 +152,16 @@ public class Config {
         OCELOT_SPEED = (float) config.getDouble("ocelot.speed", 1.0D);
         OCELOT_JUMP_POWER = (float) config.getDouble("ocelot.jump-power", 0.5D);
 
+        PARROT_ENABLED = config.getBoolean("parrot.enabled", true);
+        PARROT_SPEED = (float) config.getDouble("parrot.speed", 1.0D);
+        PARROT_VERTICAL = (float) config.getDouble("parrot.vertical", 1.0D);
+        PARROT_GRAVITY = (float) config.getDouble("parrot.gravity", 0.04D);
+
         PHANTOM_ENABLED = config.getBoolean("phantom.enabled", true);
         PHANTOM_SPEED = (float) config.getDouble("phantom.speed", 1.0D);
         PHANTOM_GRAVITY = config.getDouble("phantom.gravity", 0.05D);
         PHANTOM_FALL_DAMAGE = config.getBoolean("phantom.fall-damage", true);
         PHANTOM_BURN_IN_SUNLIGHT = config.getBoolean("phantom.burn-in-sun", true);
-        PHANTOM_MAX_Y = (int) config.getDouble("phantom.max-y", 256);
 
         POLAR_BEAR_ENABLED = config.getBoolean("polar-bear.enabled", true);
         POLAR_BEAR_SPEED = (float) config.getDouble("polar-bear.speed", 1.0D);

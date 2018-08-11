@@ -74,7 +74,7 @@ public class RideListener implements Listener {
             return; // do not ride when trying to leash
         }
 
-        if (ridableEntity.isFood(mainHand) || ridableEntity.isFood(offHand)) {
+        if (ridableEntity.isActionableItem(mainHand) || ridableEntity.isActionableItem(offHand)) {
             return; // feed creature instead of riding it
         }
 

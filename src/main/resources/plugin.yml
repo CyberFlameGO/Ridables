@@ -60,6 +60,9 @@ permissions:
       allow.ride.ocelot:
         description: Allow to ride tamed ocelots
         default: op
+      allow.ride.parrot:
+        description: Allow to ride parrots
+        default: op
       allow.ride.phantom:
         description: Allow to ride phantoms
         default: op

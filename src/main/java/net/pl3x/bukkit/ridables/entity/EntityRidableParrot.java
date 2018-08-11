@@ -1,46 +1,44 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.AttributeInstance;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityParrot;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityWolf;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
+import net.pl3x.bukkit.ridables.util.MaterialSetTag;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityRidableWolf extends EntityWolf implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASD wasdController;
+public class EntityRidableParrot extends EntityParrot implements RidableEntity {
+    public static final MaterialSetTag FOOD = new MaterialSetTag()
+            .add(Material.WHEAT_SEEDS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS, Material.BEETROOT_SEEDS);
 
-    public EntityRidableWolf(World world) {
+    private ControllerMove aiController;
+    private ControllerWASDFlyingWithSpacebar wasdController;
+
+    public EntityRidableParrot(World world) {
         super(world);
         aiController = moveController;
-        wasdController = new ControllerWASD(this);
+        wasdController = new ControllerWASDFlyingWithSpacebar(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
-        return f(CraftItemStack.asNMSCopy(itemstack));
+        return FOOD.isTagged(itemstack) || itemstack.getType() == Material.COOKIE;
     }
 
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            if (isSitting()) {
-                goalSit.setSitting(false);
-            }
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
+            motY += bi > 0 ? 0.07F * Config.PARROT_VERTICAL : 0.04704F - Config.PARROT_GRAVITY;
         }
         super.mobTick();
-    }
-
-    // getJumpUpwardsMotion
-    protected float cG() {
-        return super.cG() * getJumpPower() * 2.2F;
     }
 
     public void setRotation(float newYaw, float newPitch) {
@@ -49,11 +47,13 @@ public class EntityRidableWolf extends EntityWolf implements RidableEntity {
     }
 
     public float getJumpPower() {
-        return Config.WOLF_JUMP_POWER;
+        return 0;
     }
 
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.WOLF_SPEED;
+        AttributeInstance attr = getAttributeInstance(GenericAttributes.e);
+        float speed = (float) (attr != null ? attr.getValue() : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
+        return speed * Config.PARROT_SPEED;
     }
 
     public EntityPlayer getRider() {
