@@ -63,6 +63,9 @@ permissions:
       allow.ride.parrot:
         description: Allow to ride parrots
         default: op
+      allow.ride.pig:
+        description: Allow to ride pigs
+        default: op
       allow.ride.phantom:
         description: Allow to ride phantoms
         default: op

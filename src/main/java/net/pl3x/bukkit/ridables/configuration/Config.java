@@ -62,6 +62,11 @@ public class Config {
     public static float PARROT_VERTICAL = 1.0F;
     public static float PARROT_GRAVITY = 0.04F;
 
+    public static boolean PIG_ENABLED = true;
+    public static float PIG_SPEED = 1.0F;
+    public static float PIG_JUMP_POWER = 0.5F;
+    public static boolean PIG_SADDLE_BACK = true;
+
     public static boolean PHANTOM_ENABLED = true;
     public static float PHANTOM_SPEED = 1.0F;
     public static double PHANTOM_GRAVITY = 0.05D;
@@ -160,6 +165,11 @@ public class Config {
         PARROT_SPEED = (float) config.getDouble("parrot.speed", 1.0D);
         PARROT_VERTICAL = (float) config.getDouble("parrot.vertical", 1.0D);
         PARROT_GRAVITY = (float) config.getDouble("parrot.gravity", 0.04D);
+
+        PIG_ENABLED = config.getBoolean("pig.enabled", true);
+        PIG_SPEED = (float) config.getDouble("pig.speed", 1.0D);
+        PIG_JUMP_POWER = (float) config.getDouble("pig.jump-power", 0.5D);
+        PIG_SADDLE_BACK = config.getBoolean("pig.saddle-back", true);
 
         PHANTOM_ENABLED = config.getBoolean("phantom.enabled", true);
         PHANTOM_SPEED = (float) config.getDouble("phantom.speed", 1.0D);

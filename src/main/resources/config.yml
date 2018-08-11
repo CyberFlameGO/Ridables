@@ -34,13 +34,13 @@ bat:
 chicken:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Cow options
 cow:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Dolphin options
 dolphin:
@@ -74,7 +74,7 @@ llama:
 mooshroom:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Ocelot options
 ocelot:
@@ -88,6 +88,13 @@ parrot:
   speed: 1.0         # riding speed modifier
   vertical: 1.0      # vertical boost when pressing spacebar
   gravity: 0.04      # amount of gravity while not in motion
+
+# Pig options
+pig:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  saddle-back: true  # Get your saddle back by shift clicking the pig
 
 # Phantom options
 phantom:
@@ -115,13 +122,13 @@ rabbit:
 sheep:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Snowman (Snow Golem) options
 snowman:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   damage:
     when-hot: true   # snowman takes damage when wet (rain/water)
     when-wet: true   # snowman takes damage when too hot (hot biomes)
