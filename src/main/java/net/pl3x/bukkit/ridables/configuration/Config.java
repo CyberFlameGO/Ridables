@@ -74,6 +74,10 @@ public class Config {
     public static float POLAR_BEAR_STEP_HEIGHT = 1.0F;
     public static boolean POLAR_BEAR_STAND = true;
 
+    public static boolean RABBIT_ENABLED = true;
+    public static float RABBIT_SPEED = 1.0F;
+    public static float RABBIT_JUMP_POWER = 0.5F;
+
     public static boolean SHEEP_ENABLED = true;
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
@@ -168,6 +172,10 @@ public class Config {
         POLAR_BEAR_JUMP_POWER = (float) config.getDouble("polar-bear.jump-power", 0.5D);
         POLAR_BEAR_STEP_HEIGHT = (float) config.getDouble("polar-bear.step-height", 1.0D);
         POLAR_BEAR_STAND = config.getBoolean("polar-bear.stand", true);
+
+        RABBIT_ENABLED = config.getBoolean("rabbit.enabled", true);
+        RABBIT_SPEED = (float) config.getDouble("rabbit.speed", 1.0D);
+        RABBIT_JUMP_POWER = (float) config.getDouble("rabbit.jump-power", 0.5D);
 
         SHEEP_ENABLED = config.getBoolean("sheep.enabled", true);
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);

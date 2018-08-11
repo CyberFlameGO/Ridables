@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.entity.controller;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.pl3x.bukkit.ridables.entity.EntityRidableRabbit;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 
@@ -16,7 +17,7 @@ public class ControllerWASD extends ControllerMove {
 
     // isUpdating
     public boolean b() {
-        return true;
+        return f != 0 || g != 0;
     }
 
     // onUpdate
@@ -48,11 +49,11 @@ public class ControllerWASD extends ControllerMove {
         }
 
         // jump
-        if (ReflectionUtil.isJumping(rider) && ridable.getJumpPower() > 0) {
+        if (a.onGround && ReflectionUtil.isJumping(rider) && ridable.getJumpPower() > 0) {
             a.getControllerJump().a();
         }
 
-        a.o(ridable.getSpeed());
+        a.o((float) (e = ridable.getSpeed()));
         a.t(strafe);
         a.r(forward);
 
