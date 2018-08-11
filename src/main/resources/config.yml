@@ -105,6 +105,12 @@ polar-bear:
   step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   stand: true        # make polar bear stand and roar when pressing spacebar (while not moving)
 
+# Rabbit options
+rabbit:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Sheep options
 sheep:
   enabled: true      # enable custom ridable entity
