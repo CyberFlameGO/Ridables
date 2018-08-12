@@ -6,6 +6,7 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.listener.DismountListener;
+import net.pl3x.bukkit.ridables.listener.PaperProjectileListener;
 import net.pl3x.bukkit.ridables.listener.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
@@ -94,6 +95,9 @@ public class Ridables extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         if (serverType != ServerType.CRAFTBUKKIT) {
             getServer().getPluginManager().registerEvents(new DismountListener(), this);
+        }
+        if (serverType == ServerType.PAPER) {
+            getServer().getPluginManager().registerEvents(new PaperProjectileListener(), this);
         }
 
         // commands \o/ idky i'm so excited
