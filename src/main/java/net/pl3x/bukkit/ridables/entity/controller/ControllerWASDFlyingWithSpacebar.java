@@ -41,9 +41,13 @@ public class ControllerWASDFlyingWithSpacebar extends ControllerWASD {
 
         float speed = ridable.getSpeed();
 
-        a.setNoGravity(ReflectionUtil.isJumping(rider));
-        if (a.isNoGravity()) {
+        // jump
+        if (ReflectionUtil.isJumping(rider)) {
+            ridable.onSpacebar();
+            a.setNoGravity(true);
             vertical = speed;
+        } else {
+            a.setNoGravity(false);
         }
 
         if (a.locY >= Config.FLYING_MAX_Y) {

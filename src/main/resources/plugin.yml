@@ -1,8 +1,8 @@
-name: ${project.artifactId}
-main: ${project.groupId}.${project.artifactId}
+name: "${project.artifactId}"
+main: "${project.groupId}.${project.artifactId}"
 version: "${project.version}"
-description: ${project.artifactId} Spigot/Paper Plugin
-author: BillyGalbreath
+description: "${project.artifactId} CraftBukkit/Spigot/Paper Plugin"
+author: "BillyGalbreath"
 api-version: 1.13
 
 commands:
@@ -69,11 +69,11 @@ permissions:
       allow.ride.parrot:
         description: Allow to ride parrots
         default: op
-      allow.ride.pig:
-        description: Allow to ride pigs
-        default: op
       allow.ride.phantom:
         description: Allow to ride phantoms
+        default: op
+      allow.ride.pig:
+        description: Allow to ride pigs
         default: op
       allow.ride.polar_bear:
         description: Allow to ride polar bears

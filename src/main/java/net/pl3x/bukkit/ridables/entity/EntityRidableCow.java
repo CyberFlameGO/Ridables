@@ -74,4 +74,7 @@ public class EntityRidableCow extends EntityCow implements RidableEntity {
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

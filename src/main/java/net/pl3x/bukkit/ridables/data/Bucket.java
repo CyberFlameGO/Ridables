@@ -14,12 +14,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a collection bucket of a water entity. This bucket contains a specific entity that can be placed into the world.
+ */
 public class Bucket {
+    /**
+     * All the loaded buckets
+     */
     public final static Collection<Bucket> BUCKETS = Sets.newHashSet();
 
+    /**
+     * The dolphin bucket
+     */
     public static final Bucket DOLPHIN = createBucket(EntityType.DOLPHIN);
+
+    /**
+     * The turtle bucket
+     */
     public static final Bucket TURTLE = createBucket(EntityType.TURTLE);
 
+    /**
+     * Get a Bucket object of a specific itemstack if it is one of the loaded buckets
+     *
+     * @param itemStack Itemstack to check
+     * @return Bucket of the itemstack, otherwise null
+     */
     public static Bucket getBucket(ItemStack itemStack) {
         for (Bucket bucket : BUCKETS) {
             if (bucket.getItemStack().isSimilar(itemStack)) {
@@ -55,10 +74,20 @@ public class Bucket {
         this.entityType = entityType;
     }
 
+    /**
+     * Get the itemstack for this bucket
+     *
+     * @return Itemstack
+     */
     public ItemStack getItemStack() {
         return itemStack.clone();
     }
 
+    /**
+     * Get the type of entity for this bucket
+     *
+     * @return Entity type
+     */
     public EntityType getEntityType() {
         return entityType;
     }

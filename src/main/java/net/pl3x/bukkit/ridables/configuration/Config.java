@@ -112,8 +112,11 @@ public class Config {
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
 
+    /**
+     * Reload the config.yml from disk
+     */
     public static void reload() {
-        Ridables plugin = Ridables.getPlugin(Ridables.class);
+        Ridables plugin = Ridables.getInstance();
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();

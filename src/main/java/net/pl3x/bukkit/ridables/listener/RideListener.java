@@ -1,10 +1,11 @@
 package net.pl3x.bukkit.ridables.listener;
 
+import net.pl3x.bukkit.ridables.HandItem;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import net.pl3x.bukkit.ridables.util.Utils;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.AnimalTamer;
@@ -68,8 +69,8 @@ public class RideListener implements Listener {
             return; // player already riding something
         }
 
-        ItemStack mainHand = Utils.getItem(player, EquipmentSlot.HAND);
-        ItemStack offHand = Utils.getItem(player, EquipmentSlot.OFF_HAND);
+        ItemStack mainHand = ItemUtil.getItem(player, EquipmentSlot.HAND);
+        ItemStack offHand = ItemUtil.getItem(player, EquipmentSlot.OFF_HAND);
         if (mainHand.getType() == Material.LEAD || offHand.getType() == Material.LEAD) {
             return; // do not ride when trying to leash
         }
@@ -91,17 +92,12 @@ public class RideListener implements Listener {
         }
 
         if (Config.REQUIRE_SADDLE) {
-            ItemStack saddle = Utils.getItem(player, EquipmentSlot.HAND);
-            EquipmentSlot hand = EquipmentSlot.HAND;
-            if (saddle.getType() != Material.SADDLE) {
-                saddle = Utils.getItem(player, EquipmentSlot.OFF_HAND);
-                hand = EquipmentSlot.OFF_HAND;
-                if (saddle.getType() != Material.SADDLE) {
-                    return; // saddle is required
-                }
+            HandItem saddle = ItemUtil.getItem(player, Material.SADDLE);
+            if (saddle == null) {
+                return; // saddle is required
             }
             if (Config.CONSUME_SADDLE) {
-                Utils.setItem(player, Utils.subtract(saddle), hand);
+                ItemUtil.setItem(player, saddle.subtract(), saddle.getHand());
             }
         }
 

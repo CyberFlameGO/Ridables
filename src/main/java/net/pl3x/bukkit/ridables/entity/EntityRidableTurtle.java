@@ -93,4 +93,7 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
             }
         }
     }
+
+    public void onSpacebar() {
+    }
 }

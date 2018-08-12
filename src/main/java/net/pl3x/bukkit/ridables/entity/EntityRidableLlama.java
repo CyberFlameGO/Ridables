@@ -77,6 +77,9 @@ public class EntityRidableLlama extends EntityLlama implements RidableEntity {
         }
     }
 
+    public void onSpacebar() {
+    }
+
     // mountTo
     protected void g(EntityHuman entityhuman) {
         RideListener.override.add(entityhuman.getUniqueID());

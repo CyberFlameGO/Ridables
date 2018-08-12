@@ -1,6 +1,6 @@
-package net.pl3x.bukkit.ridables.listener;
+package net.pl3x.bukkit.ridables.listener.spigot;
 
-import net.pl3x.bukkit.ridables.util.Logger;
+import net.pl3x.bukkit.ridables.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

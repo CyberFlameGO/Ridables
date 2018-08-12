@@ -12,7 +12,6 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityGhastFireball;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,10 +42,6 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
-
-            if (ReflectionUtil.isJumping(rider) && spacebarCooldown == 0) {
-                shoot(rider);
-            }
         }
         super.mobTick();
     }
@@ -86,7 +81,17 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         }
     }
 
-    private void shoot(EntityPlayer rider) {
+    public void onSpacebar() {
+        if (spacebarCooldown == 0) {
+            EntityPlayer rider = getRider();
+            if (rider == null) {
+                return;
+            }
+            shoot(rider);
+        }
+    }
+
+    public void shoot(EntityPlayer rider) {
         spacebarCooldown = Config.GHAST_SHOOT_COOLDOWN;
 
         if (rider == null) {
@@ -103,14 +108,16 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
                 .normalize().multiply(25).add(new Vector(0, 2.5, 0)).normalize().multiply(25);
 
         a(SoundEffects.ENTITY_GHAST_WARN, 1.0F, 1.0F);
+
         new BukkitRunnable() {
             @Override
             public void run() {
                 EntityGhastFireball fireball = new EntityGhastFireball(world, EntityRidableGhast.this,
                         rider, direction.getX(), direction.getY(), direction.getZ());
                 world.addEntity(fireball);
+
                 a(SoundEffects.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
             }
-        }.runTaskLater(Ridables.getPlugin(Ridables.class), 10);
+        }.runTaskLater(Ridables.getInstance(), 10);
     }
 }

@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables.util;
+package net.pl3x.bukkit.ridables;
 
 import net.pl3x.bukkit.ridables.configuration.Config;
 
@@ -10,16 +10,31 @@ public class Logger {
     public static final String ANSI_MAGENTA = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
 
+    /**
+     * Logs a debug message (if debug mode is enabled)
+     *
+     * @param str String to log
+     */
     public static void debug(String str) {
         if (Config.DEBUG_MODE) {
             log(ANSI_CYAN + "[" + ANSI_GREEN + "DEBUG" + ANSI_CYAN + "]" + ANSI_MAGENTA + " " + str);
         }
     }
 
+    /**
+     * Logs an informative message
+     *
+     * @param str String to log
+     */
     public static void info(String str) {
         log(ANSI_YELLOW + str);
     }
 
+    /**
+     * Logs an error message
+     *
+     * @param str String to log
+     */
     public static void error(String str) {
         log(ANSI_RED + str);
     }

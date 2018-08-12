@@ -102,4 +102,7 @@ public class EntityRidableRabbit extends EntityRabbit implements RidableEntity {
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

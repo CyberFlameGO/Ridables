@@ -6,7 +6,6 @@ import net.minecraft.server.v1_13_R1.EntityDolphin;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.Particles;
-import net.minecraft.server.v1_13_R1.SoundEffect;
 import net.minecraft.server.v1_13_R1.SoundEffects;
 import net.minecraft.server.v1_13_R1.World;
 import net.minecraft.server.v1_13_R1.WorldServer;
@@ -14,7 +13,6 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
@@ -62,22 +60,6 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
-
-
-            if (ReflectionUtil.isJumping(rider) && spacebarCooldown == 0) {
-                if (Config.DOLPHIN_SPACEBAR_MODE != null) {
-                    if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("shoot")) {
-                        shoot(rider);
-                    } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
-                        spacebarCooldown = Config.DOLPHIN_DASH_COOLDOWN;
-                        if (!dashing && rider.getBukkitEntity().hasPermission("allow.dash.dolphin")) {
-                            dashing = true;
-                            dashCounter = 0;
-                            playSound(SoundEffects.ENTITY_DOLPHIN_JUMP);
-                        }
-                    }
-                }
-            }
 
             if (dashing) {
                 if (++dashCounter > Config.DOLPHIN_DASH_DURATION) {
@@ -158,9 +140,24 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         }
     }
 
-    private void shoot(EntityPlayer rider) {
-        spacebarCooldown = Config.DOLPHIN_SHOOT_COOLDOWN;
+    public void onSpacebar() {
+        if (spacebarCooldown == 0 && Config.DOLPHIN_SPACEBAR_MODE != null) {
+            EntityPlayer rider = getRider();
+            if (rider == null) {
+                return;
+            }
+            if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("shoot")) {
+                System.out.println("3");
+                shoot(rider);
+            } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
+                System.out.println("2");
+                dash(rider);
+            }
+        }
+    }
 
+    public void shoot(EntityPlayer rider) {
+        spacebarCooldown = Config.DOLPHIN_SHOOT_COOLDOWN;
         if (rider == null) {
             return;
         }
@@ -171,19 +168,27 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
             return;
         }
 
-        EntityDolphinSpit spit = new EntityDolphinSpit(world, this, rider);
-
-        Location loc = rider.getBukkitEntity().getEyeLocation();
+        Location loc = player.getEyeLocation();
         loc.setPitch(loc.getPitch() - 10);
         Vector target = loc.getDirection().normalize().multiply(10).add(loc.toVector());
 
+        EntityDolphinSpit spit = new EntityDolphinSpit(world, this, rider);
         spit.shoot(target.getX() - locX, target.getY() - locY, target.getZ() - locZ, Config.DOLPHIN_SHOOT_SPEED, 5.0F);
-
-        playSound(SoundEffects.ENTITY_DOLPHIN_ATTACK);
         world.addEntity(spit);
+
+        a(SoundEffects.ENTITY_DOLPHIN_ATTACK, 1.0F, 1.0F);
     }
 
-    private void playSound(SoundEffect sound) {
-        a(sound, 1.0F, 1.0F);
+    public void dash(EntityPlayer rider) {
+        spacebarCooldown = Config.DOLPHIN_DASH_COOLDOWN;
+        if (!dashing) {
+            if (rider != null && !rider.getBukkitEntity().hasPermission("allow.dash.dolphin")) {
+                return;
+            }
+
+            dashing = true;
+            dashCounter = 0;
+            a(SoundEffects.ENTITY_DOLPHIN_JUMP, 1.0F, 1.0F);
+        }
     }
 }

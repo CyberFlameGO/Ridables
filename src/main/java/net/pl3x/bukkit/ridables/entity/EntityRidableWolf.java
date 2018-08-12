@@ -77,4 +77,7 @@ public class EntityRidableWolf extends EntityWolf implements RidableEntity {
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

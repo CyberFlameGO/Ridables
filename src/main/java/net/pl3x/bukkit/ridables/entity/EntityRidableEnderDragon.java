@@ -160,6 +160,9 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         }
     }
 
+    public void onSpacebar() {
+    }
+
     // writeEntityToNBT
     public void b(NBTTagCompound nbttagcompound) {
         super.b(nbttagcompound);

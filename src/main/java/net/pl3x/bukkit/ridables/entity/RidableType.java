@@ -7,9 +7,9 @@ import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.MinecraftKey;
 import net.minecraft.server.v1_13_R1.World;
+import net.pl3x.bukkit.ridables.Logger;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.Bucket;
-import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,6 +42,12 @@ public class RidableType {
     public static final RidableType TURTLE = inject(Config.TURTLE_ENABLED, "turtle", EntityTypes.TURTLE, Material.TURTLE_SPAWN_EGG, EntityRidableTurtle.class, EntityRidableTurtle::new, Bucket.TURTLE);
     public static final RidableType WOLF = inject(Config.WOLF_ENABLED, "wolf", EntityTypes.WOLF, Material.WOLF_SPAWN_EGG, EntityRidableWolf.class, EntityRidableWolf::new);
 
+    /**
+     * Gets a ridable entity of the specified type
+     *
+     * @param bukkitType Entity type
+     * @return RidableType if one is set/loaded, otherwise null
+     */
     public static RidableType getRidable(EntityType bukkitType) {
         return BY_BUKKIT_TYPE.get(bukkitType);
     }
@@ -87,10 +93,22 @@ public class RidableType {
         this.waterBucket = waterBucket;
     }
 
+    /**
+     * Get the bucket for this entity that can be used to place it into the world
+     * <p>
+     * This bucket works similar to Material.COD_BUCKET
+     *
+     * @return Bucket if one is set, null otherwise
+     */
     public Bucket getWaterBucket() {
         return waterBucket;
     }
 
+    /**
+     * Spawn this ridable entity in the world at given location
+     *
+     * @param loc Location to spawn at
+     */
     public void spawn(Location loc) {
         Entity entity = entityTypes.a(((CraftWorld) loc.getWorld()).getHandle());
         if (entity != null) {

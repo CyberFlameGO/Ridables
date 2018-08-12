@@ -22,8 +22,11 @@ public class Lang {
     public static String WATER_BUCKET_NAME;
     public static final List<String> WATER_BUCKET_LORE = new ArrayList<>();
 
+    /**
+     * Reload the language file from disk
+     */
     public static void reload() {
-        Ridables plugin = Ridables.getPlugin(Ridables.class);
+        Ridables plugin = Ridables.getInstance();
         String langFile = Config.LANGUAGE_FILE;
         File configFile = new File(plugin.getDataFolder(), langFile);
         if (!configFile.exists()) {
@@ -47,6 +50,12 @@ public class Lang {
         }
     }
 
+    /**
+     * Send a chat message (supports colors and line breaks)
+     *
+     * @param recipient Receiver of message
+     * @param message   Message to send
+     */
     public static void send(CommandSender recipient, String message) {
         if (message == null) {
             return; // do not send blank messages

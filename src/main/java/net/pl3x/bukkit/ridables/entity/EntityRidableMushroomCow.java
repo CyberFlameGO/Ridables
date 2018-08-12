@@ -74,4 +74,7 @@ public class EntityRidableMushroomCow extends EntityMushroomCow implements Ridab
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

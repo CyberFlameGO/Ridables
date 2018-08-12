@@ -78,4 +78,7 @@ public class EntityRidableChicken extends EntityChicken implements RidableEntity
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

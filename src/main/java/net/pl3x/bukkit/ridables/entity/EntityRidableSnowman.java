@@ -17,7 +17,7 @@ import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.MaterialSetTag;
+import net.pl3x.bukkit.ridables.MaterialSetTag;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
 import org.bukkit.inventory.ItemStack;
@@ -91,6 +91,9 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
         if (moveController != wasdController) {
             moveController = wasdController;
         }
+    }
+
+    public void onSpacebar() {
     }
 
     // onLivingUpdate

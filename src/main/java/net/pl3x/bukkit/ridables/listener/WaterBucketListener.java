@@ -4,8 +4,8 @@ import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import net.pl3x.bukkit.ridables.util.Utils;
-import org.bukkit.Bukkit;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,12 @@ import java.util.UUID;
 
 public class WaterBucketListener implements Listener {
     public static final Set<UUID> override = new HashSet<>();
+
+    private final Ridables plugin;
+
+    public WaterBucketListener(Ridables plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onCollectCreature(PlayerInteractAtEntityEvent event) {
@@ -49,7 +56,7 @@ public class WaterBucketListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        ItemStack hand = Utils.getItem(player, event.getHand());
+        ItemStack hand = ItemUtil.getItem(player, event.getHand());
         if (hand == null || hand.getType() != Material.WATER_BUCKET) {
             return; // not a water bucket
         }
@@ -68,14 +75,18 @@ public class WaterBucketListener implements Listener {
         creature.remove();
 
         // give player creature's bucket
-        Utils.setItem(player, bucket.getItemStack(), event.getHand());
+        ItemUtil.setItem(player, bucket.getItemStack(), event.getHand());
 
         // prevent water from placing in PlayerBucketEmptyEvent which fires right after this
         override.add(player.getUniqueId());
 
         // remove override on next tick in case PlayerBucketEmptyEvent doesnt fire
-        Bukkit.getScheduler().runTaskLater(Ridables.getPlugin(Ridables.class),
-                () -> override.remove(player.getUniqueId()), 1);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                override.remove(player.getUniqueId());
+            }
+        }.runTaskLater(plugin, 1);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -113,16 +124,22 @@ public class WaterBucketListener implements Listener {
 
         // spawn the creature
         Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        ridable.spawn(Utils.buildLocation(block.getLocation(), player.getLocation()));
+        Location loc = block.getLocation();
+        loc.setX(loc.getBlockX() + 0.5);
+        loc.setY(loc.getBlockY() + 0.5);
+        loc.setZ(loc.getBlockZ() + 0.5);
+        loc.setYaw(player.getLocation().getYaw());
+        loc.setPitch(player.getLocation().getPitch());
+        ridable.spawn(loc);
 
         // handle the bucket in hand
-        Utils.subtract(itemStack);
+        ItemUtil.subtract(itemStack);
         if (itemStack.getAmount() <= 0) {
             // replace with empty bucket
-            Utils.setItem(player, new ItemStack(Material.BUCKET), hand);
+            ItemUtil.setItem(player, new ItemStack(Material.BUCKET), hand);
         } else {
             // add subtracted amount back
-            Utils.setItem(player, itemStack, hand);
+            ItemUtil.setItem(player, itemStack, hand);
             // add empty bucket to inventory
             player.getInventory().addItem(new ItemStack(Material.BUCKET))
                     // or drop to ground if inventory is full

@@ -3,8 +3,7 @@ package net.pl3x.bukkit.ridables.listener;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.EntityRidableSnowman;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -14,6 +13,12 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SpawnListener implements Listener {
+    private final Ridables plugin;
+
+    public SpawnListener(Ridables plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onLetsBuildASnowman(CreatureSpawnEvent event) {
         if (!Config.SNOWMAN_ENABLED) {
@@ -34,11 +39,7 @@ public class SpawnListener implements Listener {
             return; // already a ridable snowman
         }
 
-        Location loc = entity.getLocation();
-
-        EntityRidableSnowman snowman = new EntityRidableSnowman(((CraftWorld) entity.getWorld()).getHandle());
-        snowman.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-        snowman.world.addEntity(snowman);
+        RidableType.getRidable(EntityType.SNOWMAN).spawn(entity.getLocation());
 
         // kill original snowman on next tick so the
         // ShapeDetector removes snowman blocks properly
@@ -47,6 +48,6 @@ public class SpawnListener implements Listener {
             public void run() {
                 entity.remove();
             }
-        }.runTask(Ridables.getPlugin(Ridables.class));
+        }.runTask(plugin);
     }
 }

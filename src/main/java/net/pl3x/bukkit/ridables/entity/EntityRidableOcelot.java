@@ -77,4 +77,7 @@ public class EntityRidableOcelot extends EntityOcelot implements RidableEntity {
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

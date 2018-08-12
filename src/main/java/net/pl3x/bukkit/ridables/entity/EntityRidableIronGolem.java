@@ -73,4 +73,7 @@ public class EntityRidableIronGolem extends EntityIronGolem implements RidableEn
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

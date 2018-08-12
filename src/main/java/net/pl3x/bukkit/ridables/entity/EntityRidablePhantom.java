@@ -94,6 +94,9 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         }
     }
 
+    public void onSpacebar() {
+    }
+
     // onLivingUpdate
     public void k() {
         super.k();

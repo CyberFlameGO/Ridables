@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables.listener;
+package net.pl3x.bukkit.ridables.listener.paper;
 
 import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import net.pl3x.bukkit.ridables.entity.RidableType;

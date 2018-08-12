@@ -74,4 +74,7 @@ public class EntityRidableSheep extends EntitySheep implements RidableEntity {
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

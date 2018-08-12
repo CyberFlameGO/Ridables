@@ -70,4 +70,7 @@ public class EntityRidableBat extends EntityBat implements RidableEntity {
             moveController = wasdController;
         }
     }
+
+    public void onSpacebar() {
+    }
 }

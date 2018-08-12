@@ -9,7 +9,7 @@ import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
-import net.pl3x.bukkit.ridables.util.MaterialSetTag;
+import net.pl3x.bukkit.ridables.MaterialSetTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -76,5 +76,8 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
         if (moveController != wasdController) {
             moveController = wasdController;
         }
+    }
+
+    public void onSpacebar() {
     }
 }

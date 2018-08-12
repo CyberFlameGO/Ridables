@@ -78,6 +78,9 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
         }
     }
 
+    public void onSpacebar() {
+    }
+
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
         if (Config.PIG_SADDLE_BACK && entityhuman.isSneaking() && hasSaddle() && !isVehicle()) {

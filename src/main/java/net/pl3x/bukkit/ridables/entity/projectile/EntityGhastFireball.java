@@ -11,6 +11,7 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.EntityRidableGhast;
+import net.pl3x.bukkit.ridables.ServerType;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class EntityGhastFireball extends EntityLargeFireball {
             setOnFire(1);
         }
         MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, true, ++f >= 25, shooter);
-        if (Ridables.getPlugin(Ridables.class).serverType == Ridables.ServerType.PAPER &&
+        if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
                 movingobjectposition != null && movingobjectposition.entity != null) {
             com.destroystokyo.paper.event.entity.ProjectileCollideEvent event =
                     CraftEventFactory.callProjectileCollideEvent(this, movingobjectposition);

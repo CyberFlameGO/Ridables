@@ -5,30 +5,27 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
-import net.pl3x.bukkit.ridables.listener.DismountListener;
-import net.pl3x.bukkit.ridables.listener.PaperProjectileListener;
 import net.pl3x.bukkit.ridables.listener.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.SpawnListener;
+import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
-import net.pl3x.bukkit.ridables.util.Logger;
+import net.pl3x.bukkit.ridables.listener.paper.PaperProjectileListener;
+import net.pl3x.bukkit.ridables.listener.spigot.DismountListener;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.inventivetalent.update.spiget.SpigetUpdate;
-import org.inventivetalent.update.spiget.UpdateCallback;
-import org.inventivetalent.update.spiget.comparator.VersionComparator;
 
-public class Ridables extends JavaPlugin implements Listener {
+public class Ridables extends JavaPlugin {
+    private static Ridables instance;
+
     private boolean disabled = false;
-    public final ServerType serverType;
+    private final ServerType serverType;
 
     public Ridables() {
+        instance = this;
+
         ServerType type;
         try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
@@ -46,7 +43,6 @@ public class Ridables extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
-        // config files
         Config.reload();
         Lang.reload();
 
@@ -89,12 +85,11 @@ public class Ridables extends JavaPlugin implements Listener {
             Logger.info("See project page on spigotmc.org for more details");
         }
 
-        // listeners \o/
-        getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         getServer().getPluginManager().registerEvents(new RideListener(), this);
-        getServer().getPluginManager().registerEvents(new SpawnListener(), this);
-        getServer().getPluginManager().registerEvents(new WaterBucketListener(), this);
+        getServer().getPluginManager().registerEvents(new SpawnListener(this), this);
+        getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
         if (serverType != ServerType.CRAFTBUKKIT) {
             getServer().getPluginManager().registerEvents(new DismountListener(), this);
         }
@@ -102,14 +97,11 @@ public class Ridables extends JavaPlugin implements Listener {
             getServer().getPluginManager().registerEvents(new PaperProjectileListener(), this);
         }
 
-        // commands \o/ idky i'm so excited
         getCommand("ridables").setExecutor(new CmdRidables(this));
 
-        // bStats
         new Metrics(this).addCustomChart(new Metrics.SimplePie("server_type", () -> serverType.name));
 
-        // update checker
-        checkForUpdate(null);
+        UpdateListener.checkForUpdate();
 
         Logger.info("Finished enabling");
     }
@@ -119,50 +111,21 @@ public class Ridables extends JavaPlugin implements Listener {
         Logger.info("Finished disabling");
     }
 
-    private void checkForUpdate(Player player) {
-        if (!Config.CHECK_FOR_UPDATES) {
-            return; // update checker disabled
-        }
-
-        if (player != null && !player.hasPermission("command.ridables")) {
-            return; // player doesnt have permission
-        }
-
-        final int id = 58985; // spigot resource id
-        SpigetUpdate updater = new SpigetUpdate(this, id);
-        updater.setVersionComparator(VersionComparator.SEM_VER);
-        updater.checkForUpdate(new UpdateCallback() {
-            @Override
-            public void updateAvailable(String newVersion, String downloadUrl, boolean hasDirectDownload) {
-                if (player != null) {
-                    Lang.send(player, "&e[&3Ridables&e]&a Update is available! v" + newVersion);
-                    Lang.send(player, "&e[&3Ridables&e]&b https://spigotmc.org/resources/." + id);
-                } else {
-                    Logger.info("Update is available! v" + newVersion);
-                    Logger.info("https://spigotmc.org/resources/." + id);
-                }
-            }
-
-            @Override
-            public void upToDate() {
-            }
-        });
+    /**
+     * Gets the current server's detected type
+     *
+     * @return Detected server type
+     */
+    public ServerType getServerType() {
+        return serverType;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        checkForUpdate(event.getPlayer());
-    }
-
-    public enum ServerType {
-        CRAFTBUKKIT("CraftBukkit"),
-        SPIGOT("Spigot"),
-        PAPER("Paper");
-
-        public final String name;
-
-        ServerType(String name) {
-            this.name = name;
-        }
+    /**
+     * Get the instance of this plugin
+     *
+     * @return Ridables instance
+     */
+    public static Ridables getInstance() {
+        return instance;
     }
 }

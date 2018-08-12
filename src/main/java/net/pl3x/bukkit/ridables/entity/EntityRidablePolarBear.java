@@ -10,9 +10,8 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class EntityRidablePolarBear extends EntityPolarBear implements RidableEntity {
     private ControllerMove aiController;
@@ -36,14 +35,6 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
-
-            if (Config.POLAR_BEAR_STAND && !isStanding() && rider.bj == 0 && rider.bh == 0 && ReflectionUtil.isJumping(rider)) {
-                setStanding(true);
-                a(SoundEffects.ENTITY_POLAR_BEAR_WARNING, 1.0F, 1.0F);
-                Bukkit.getServer().getScheduler().runTaskLater(
-                        Ridables.getPlugin(Ridables.class),
-                        () -> setStanding(false), 20);
-            }
         }
         super.mobTick();
     }
@@ -85,6 +76,24 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+        }
+    }
+
+    public void onSpacebar() {
+        if (Config.POLAR_BEAR_STAND && !isStanding()) {
+            EntityPlayer rider = getRider();
+            if (rider.bj == 0 && rider.bh == 0) {
+                setStanding(true);
+
+                a(SoundEffects.ENTITY_POLAR_BEAR_WARNING, 1.0F, 1.0F);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        setStanding(false);
+                    }
+                }.runTaskLater(Ridables.getInstance(), 20);
+            }
         }
     }
 
