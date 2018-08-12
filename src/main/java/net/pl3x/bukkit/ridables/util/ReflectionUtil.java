@@ -39,6 +39,18 @@ public class ReflectionUtil {
     }
 
     /**
+     * Set the jump flag for an entity
+     *
+     * @param entity Entity to set
+     */
+    public static void setJumping(EntityLiving entity) {
+        try {
+            jumping.set(entity, false);
+        } catch (IllegalAccessException ignore) {
+        }
+    }
+
+    /**
      * Set ignited state of a ridable creeper
      *
      * @param creeper Ridable creeper

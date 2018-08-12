@@ -6,8 +6,10 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
@@ -105,6 +107,7 @@ public class RideListener implements Listener {
         override.add(player.getUniqueId());
         creature.addPassenger(player);
         override.remove(player.getUniqueId());
+        ReflectionUtil.setJumping(((CraftLivingEntity) player).getHandle());
     }
 
     @EventHandler(ignoreCancelled = true)
