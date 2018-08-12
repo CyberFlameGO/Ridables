@@ -1,16 +1,22 @@
 package net.pl3x.bukkit.ridables.util;
 
+import net.minecraft.server.v1_13_R1.DataWatcherObject;
+import net.minecraft.server.v1_13_R1.EntityCreeper;
 import net.minecraft.server.v1_13_R1.EntityLiving;
+import net.pl3x.bukkit.ridables.entity.EntityRidableCreeper;
 
 import java.lang.reflect.Field;
 
 public class ReflectionUtil {
     private static Field jumping;
+    private static Field creeperIgnited;
 
     static {
         try {
             jumping = EntityLiving.class.getDeclaredField("bg");
             jumping.setAccessible(true);
+            creeperIgnited = EntityCreeper.class.getDeclaredField("c");
+            creeperIgnited.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -29,6 +35,19 @@ public class ReflectionUtil {
             return jumping.getBoolean(entity);
         } catch (IllegalAccessException ignore) {
             return false;
+        }
+    }
+
+    /**
+     * Set ignited state of a ridable creeper
+     *
+     * @param creeper Ridable creeper
+     * @param ignited Ignited state to set
+     */
+    public static void setCreeperIgnited(EntityRidableCreeper creeper, boolean ignited) {
+        try {
+            creeper.getDataWatcher().set((DataWatcherObject<Boolean>) creeperIgnited.get(creeper), ignited);
+        } catch (IllegalAccessException ignore) {
         }
     }
 }

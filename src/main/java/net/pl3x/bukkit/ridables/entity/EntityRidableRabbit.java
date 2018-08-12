@@ -103,6 +103,7 @@ public class EntityRidableRabbit extends EntityRabbit implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

@@ -140,30 +140,31 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
         if (spacebarCooldown == 0 && Config.DOLPHIN_SPACEBAR_MODE != null) {
             EntityPlayer rider = getRider();
             if (rider == null) {
-                return;
+                return false;
             }
             if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("shoot")) {
-                shoot(rider);
+                return shoot(rider);
             } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
-                dash(rider);
+                return dash(rider);
             }
         }
+        return false;
     }
 
-    public void shoot(EntityPlayer rider) {
+    public boolean shoot(EntityPlayer rider) {
         spacebarCooldown = Config.DOLPHIN_SHOOT_COOLDOWN;
         if (rider == null) {
-            return;
+            return false;
         }
 
         CraftPlayer player = rider.getBukkitEntity();
         if (!player.hasPermission("allow.shoot.dolphin")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
-            return;
+            return false;
         }
 
         Location loc = player.getEyeLocation();
@@ -175,18 +176,21 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         world.addEntity(spit);
 
         a(SoundEffects.ENTITY_DOLPHIN_ATTACK, 1.0F, 1.0F);
+        return true;
     }
 
-    public void dash(EntityPlayer rider) {
+    public boolean dash(EntityPlayer rider) {
         spacebarCooldown = Config.DOLPHIN_DASH_COOLDOWN;
         if (!dashing) {
             if (rider != null && !rider.getBukkitEntity().hasPermission("allow.dash.dolphin")) {
-                return;
+                return false;
             }
 
             dashing = true;
             dashCounter = 0;
             a(SoundEffects.ENTITY_DOLPHIN_JUMP, 1.0F, 1.0F);
+            return true;
         }
+        return false;
     }
 }

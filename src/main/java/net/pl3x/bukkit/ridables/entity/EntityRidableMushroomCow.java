@@ -75,6 +75,7 @@ public class EntityRidableMushroomCow extends EntityMushroomCow implements Ridab
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

@@ -93,7 +93,8 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 
     // onLivingUpdate

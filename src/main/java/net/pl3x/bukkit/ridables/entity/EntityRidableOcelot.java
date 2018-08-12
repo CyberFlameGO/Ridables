@@ -78,6 +78,7 @@ public class EntityRidableOcelot extends EntityOcelot implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

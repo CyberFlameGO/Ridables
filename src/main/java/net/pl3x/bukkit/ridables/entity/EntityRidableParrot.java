@@ -78,6 +78,7 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

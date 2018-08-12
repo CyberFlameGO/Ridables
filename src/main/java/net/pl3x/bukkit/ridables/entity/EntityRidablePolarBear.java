@@ -79,7 +79,7 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
         if (Config.POLAR_BEAR_STAND && !isStanding()) {
             EntityPlayer rider = getRider();
             if (rider.bj == 0 && rider.bh == 0) {
@@ -93,8 +93,11 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
                         setStanding(false);
                     }
                 }.runTaskLater(Ridables.getInstance(), 20);
+
+                return true;
             }
         }
+        return false;
     }
 
     private boolean isStanding() {

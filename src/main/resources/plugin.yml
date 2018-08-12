@@ -45,6 +45,9 @@ permissions:
       allow.ride.cow:
         description: Allow to ride cows
         default: op
+      allow.ride.creeper:
+        description: Allow to ride creepers
+        default: op
       allow.ride.dolphin:
         description: Allow to ride dolphins
         default: op
@@ -102,6 +105,13 @@ permissions:
         default: op
       allow.shoot.ghast:
         description: Allow to make ghasts shoot fireballs
+        default: op
+  allow.special.*:
+    description: Allow to make all supported creatures do their special
+    default: op
+    children:
+      allow.special.creeper:
+        description: Allow to make creepers ignite
         default: op
   command.ridables:
     description: Allow to reload config

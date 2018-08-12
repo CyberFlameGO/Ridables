@@ -16,26 +16,14 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
-
 public class EntityRidablePhantom extends EntityPhantom implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASDFlying wasdController;
-
-    private static Field field_b;
 
     public EntityRidablePhantom(World world) {
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASDFlying(this);
-
-        if (field_b == null) {
-            try {
-                field_b = EntityPhantom.class.getDeclaredField("b");
-                field_b.setAccessible(true);
-            } catch (NoSuchFieldException ignore) {
-            }
-        }
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -94,7 +82,8 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 
     // onLivingUpdate

@@ -61,6 +61,8 @@ public interface RidableEntity {
      * This method is called when the spacebar is pressed by the current rider
      * <p>
      * This is used internally for triggering spacebar events other than jumping. It is advised to not use this method
+     *
+     * @return True if spacebar was handled
      */
-    void onSpacebar();
+    boolean onSpacebar();
 }

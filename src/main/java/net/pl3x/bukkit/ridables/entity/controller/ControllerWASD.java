@@ -48,11 +48,8 @@ public class ControllerWASD extends ControllerMove {
         }
 
         // jump
-        if (ReflectionUtil.isJumping(rider)) {
-            ridable.onSpacebar();
-            if (a.onGround && ridable.getJumpPower() > 0) {
-                a.getControllerJump().a();
-            }
+        if (ReflectionUtil.isJumping(rider) && !ridable.onSpacebar() && a.onGround && ridable.getJumpPower() > 0) {
+            a.getControllerJump().a();
         }
 
         a.o((float) (e = ridable.getSpeed()));

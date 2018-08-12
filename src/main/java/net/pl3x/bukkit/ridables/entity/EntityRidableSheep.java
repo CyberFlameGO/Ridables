@@ -75,6 +75,7 @@ public class EntityRidableSheep extends EntitySheep implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

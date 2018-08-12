@@ -81,27 +81,28 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
         if (spacebarCooldown == 0) {
             EntityPlayer rider = getRider();
             if (rider == null) {
-                return;
+                return false;
             }
-            shoot(rider);
+            return shoot(rider);
         }
+        return false;
     }
 
-    public void shoot(EntityPlayer rider) {
+    public boolean shoot(EntityPlayer rider) {
         spacebarCooldown = Config.GHAST_SHOOT_COOLDOWN;
 
         if (rider == null) {
-            return;
+            return false;
         }
 
         CraftPlayer player = rider.getBukkitEntity();
         if (!player.hasPermission("allow.shoot.ghast")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
-            return;
+            return false;
         }
 
         Vector direction = rider.getBukkitEntity().getEyeLocation().getDirection()
@@ -119,5 +120,7 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
                 a(SoundEffects.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
             }
         }.runTaskLater(Ridables.getInstance(), 10);
+
+        return true;
     }
 }

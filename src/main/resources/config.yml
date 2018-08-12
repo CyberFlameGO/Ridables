@@ -42,6 +42,12 @@ cow:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Creeper options
+creeper:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Dolphin options
 dolphin:
   enabled: true      # enable custom ridable entity

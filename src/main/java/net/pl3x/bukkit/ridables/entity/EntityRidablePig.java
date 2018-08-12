@@ -78,7 +78,8 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 
     // processInteract

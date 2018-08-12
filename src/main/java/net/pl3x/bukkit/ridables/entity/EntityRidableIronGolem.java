@@ -74,6 +74,7 @@ public class EntityRidableIronGolem extends EntityIronGolem implements RidableEn
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

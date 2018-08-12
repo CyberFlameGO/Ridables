@@ -160,7 +160,8 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 
     // writeEntityToNBT

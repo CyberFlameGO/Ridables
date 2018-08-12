@@ -78,6 +78,7 @@ public class EntityRidableWolf extends EntityWolf implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }

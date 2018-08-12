@@ -77,7 +77,8 @@ public class EntityRidableLlama extends EntityLlama implements RidableEntity {
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 
     // mountTo

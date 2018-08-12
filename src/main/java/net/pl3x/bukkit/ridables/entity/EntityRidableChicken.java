@@ -79,6 +79,7 @@ public class EntityRidableChicken extends EntityChicken implements RidableEntity
         }
     }
 
-    public void onSpacebar() {
+    public boolean onSpacebar() {
+        return false;
     }
 }
