@@ -50,6 +50,10 @@ public class Config {
     public static float GHAST_SHOOT_SPEED = 1.0F;
     public static float GHAST_SHOOT_DAMAGE = 5.0F;
 
+    public static boolean IRON_GOLEM_ENABLED = true;
+    public static float IRON_GOLEM_SPEED = 1.0F;
+    public static float IRON_GOLEM_JUMP_POWER = 0.5F;
+
     public static boolean LLAMA_ENABLED = true;
     public static float LLAMA_SPEED = 1.0F;
     public static float LLAMA_JUMP_POWER = 0.5F;
@@ -159,6 +163,10 @@ public class Config {
         GHAST_SHOOT_COOLDOWN = (int) config.getDouble("ghast.shoot.cooldown", 20);
         GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 1.0D);
         GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
+
+        IRON_GOLEM_ENABLED = config.getBoolean("iron-golem.enabled", true);
+        IRON_GOLEM_SPEED = (float) config.getDouble("iron-golem.speed", 1.0D);
+        IRON_GOLEM_JUMP_POWER = (float) config.getDouble("iron-golem.jump-power", 0.5D);
 
         LLAMA_ENABLED = config.getBoolean("llama.enabled", true);
         LLAMA_SPEED = (float) config.getDouble("llama.speed", 1.0D);
