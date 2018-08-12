@@ -106,6 +106,9 @@ permissions:
       allow.shoot.ghast:
         description: Allow to make ghasts shoot fireballs
         default: op
+      allow.shoot.phantom:
+        description: Allow to make phantoms shoot flames
+        default: op
   allow.special.*:
     description: Allow to make all supported creatures do their special
     default: op

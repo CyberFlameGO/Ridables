@@ -124,6 +124,7 @@ phantom:
   gravity: 0.05      # amount of gravity while not in motion
   fall-damage: true  # damage if fall too quickly
   burn-in-sun: true  # burn in sunlight
+  shoot-damage: 1.0  # damage per hit (1 heart = 2.0 damage)
 
 # Polar bear options
 polar-bear:

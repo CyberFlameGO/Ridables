@@ -89,6 +89,7 @@ public class Config {
     public static double PHANTOM_GRAVITY = 0.05D;
     public static boolean PHANTOM_FALL_DAMAGE = true;
     public static boolean PHANTOM_BURN_IN_SUNLIGHT = true;
+    public static float PHANTOM_SHOOT_DAMAGE = 1.0F;
 
     public static boolean POLAR_BEAR_ENABLED = true;
     public static float POLAR_BEAR_SPEED = 1.0F;
@@ -210,6 +211,7 @@ public class Config {
         PHANTOM_GRAVITY = config.getDouble("phantom.gravity", 0.05D);
         PHANTOM_FALL_DAMAGE = config.getBoolean("phantom.fall-damage", true);
         PHANTOM_BURN_IN_SUNLIGHT = config.getBoolean("phantom.burn-in-sun", true);
+        PHANTOM_SHOOT_DAMAGE = (float) config.getDouble("phantom.shoot-damage", 1.0D);
 
         POLAR_BEAR_ENABLED = config.getBoolean("polar-bear.enabled", true);
         POLAR_BEAR_SPEED = (float) config.getDouble("polar-bear.speed", 1.0D);

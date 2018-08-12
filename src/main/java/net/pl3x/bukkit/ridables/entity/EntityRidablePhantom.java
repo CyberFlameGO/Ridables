@@ -14,7 +14,11 @@ import net.minecraft.server.v1_13_R1.SoundEffectType;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 public class EntityRidablePhantom extends EntityPhantom implements RidableEntity {
     private ControllerMove aiController;
@@ -83,7 +87,22 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
     }
 
     public boolean onSpacebar() {
+        EntityPlayer rider = getRider();
+        if (rider != null && rider.getBukkitEntity().hasPermission("allow.shoot.phantom")) {
+            shoot(getRider());
+        }
         return false;
+    }
+
+    public boolean shoot(EntityPlayer rider) {
+        Location loc = ((LivingEntity) getBukkitEntity()).getEyeLocation();
+        loc.setPitch(-loc.getPitch());
+        Vector target = loc.getDirection().normalize().multiply(100).add(loc.toVector());
+
+        EntityPhantomFlames flames = new EntityPhantomFlames(world, this, rider);
+        flames.shoot(target.getX() - locX, target.getY() - locY, target.getZ() - locZ, 1.0F, 5.0F);
+        world.addEntity(flames);
+        return true;
     }
 
     // onLivingUpdate
