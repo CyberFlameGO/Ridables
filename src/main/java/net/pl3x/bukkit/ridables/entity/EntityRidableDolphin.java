@@ -147,10 +147,8 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
                 return;
             }
             if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("shoot")) {
-                System.out.println("3");
                 shoot(rider);
             } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
-                System.out.println("2");
                 dash(rider);
             }
         }
