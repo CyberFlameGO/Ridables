@@ -57,6 +57,9 @@ permissions:
       allow.ride.ender_dragon:
         description: Allow to ride ender dragon
         default: op
+      allow.ride.evoker:
+        description: Allow to ride evokers
+        default: op
       allow.ride.ghast:
         description: Allow to ride ghast
         default: op

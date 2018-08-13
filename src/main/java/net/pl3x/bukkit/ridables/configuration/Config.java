@@ -57,6 +57,10 @@ public class Config {
     public static boolean DRAGON_ENABLED = false;
     public static float DRAGON_SPEED = 1.0F;
 
+    public static boolean EVOKER_ENABLED = true;
+    public static float EVOKER_SPEED = 1.0F;
+    public static float EVOKER_JUMP_POWER = 0.5F;
+
     public static boolean GHAST_ENABLED = false;
     public static float GHAST_SPEED = 1.0F;
     public static int GHAST_SHOOT_COOLDOWN = 20;
@@ -206,6 +210,10 @@ public class Config {
 
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
+
+        EVOKER_ENABLED = config.getBoolean("evoker.enabled", true);
+        EVOKER_SPEED = (float) config.getDouble("evoker.speed", 1.0D);
+        EVOKER_JUMP_POWER = (float) config.getDouble("evoker.jump-power", 0.5D);
 
         GHAST_ENABLED = config.getBoolean("ghast.enabled", true);
         GHAST_SPEED = (float) config.getDouble("ghast.speed", 1.0D);
