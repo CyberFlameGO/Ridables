@@ -2,8 +2,8 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityIllagerIllusioner;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityVindicator;
 import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
@@ -12,11 +12,11 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityRidableVindicator extends EntityVindicator implements RidableEntity {
+public class EntityRidableIllusioner extends EntityIllagerIllusioner implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASD wasdController;
 
-    public EntityRidableVindicator(World world) {
+    public EntityRidableIllusioner(World world) {
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASD(this);
@@ -47,11 +47,11 @@ public class EntityRidableVindicator extends EntityVindicator implements Ridable
     }
 
     public float getJumpPower() {
-        return Config.VINDICATOR_JUMP_POWER;
+        return Config.ILLUSIONER_JUMP_POWER;
     }
 
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.VINDICATOR_SPEED * 0.7F;
+        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.ILLUSIONER_SPEED * 0.5F;
     }
 
     public EntityPlayer getRider() {

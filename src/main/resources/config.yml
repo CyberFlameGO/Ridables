@@ -99,6 +99,12 @@ ghast:
     damage: 5.0      # damage per hit (1 heart = 2.0 damage)
     grief: true      # whether ghast fireballs can damage the blocks in the world
 
+# Illusioner options
+illusioner:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Iron Golem options
 iron-golem:
   enabled: true      # enable custom ridable entity

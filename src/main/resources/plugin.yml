@@ -63,6 +63,9 @@ permissions:
       allow.ride.ghast:
         description: Allow to ride ghast
         default: op
+      allow.ride.illusioner:
+        description: Allow to ride illusioners
+        default: op
       allow.ride.iron_golem:
         description: Allow to ride iron golems
         default: op

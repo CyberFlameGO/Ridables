@@ -51,7 +51,7 @@ public class EntityRidableEvoker extends EntityEvoker implements RidableEntity {
     }
 
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.EVOKER_SPEED * 0.7F;
+        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.EVOKER_SPEED * 0.5F;
     }
 
     public EntityPlayer getRider() {
