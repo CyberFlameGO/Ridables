@@ -34,6 +34,10 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         return false;
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         if (spacebarCooldown > 0) {
             spacebarCooldown--;

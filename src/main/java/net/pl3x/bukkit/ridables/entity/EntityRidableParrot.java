@@ -32,6 +32,10 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
         return FOOD.isTagged(itemstack) || itemstack.getType() == Material.COOKIE;
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

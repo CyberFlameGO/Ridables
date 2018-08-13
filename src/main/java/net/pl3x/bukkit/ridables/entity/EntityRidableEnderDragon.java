@@ -48,6 +48,10 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         return false;
     }
 
+    public boolean aY() {
+        return false; // eject passengers when in water
+    }
+
     private void setPhase(DragonControllerPhase phase) {
         try {
             DragonControllerManager phaseManager = (DragonControllerManager) bS.get(this);

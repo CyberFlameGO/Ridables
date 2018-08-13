@@ -12,7 +12,6 @@ import net.pl3x.bukkit.ridables.listener.SpawnListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.listener.paper.ProjectileListener;
-import net.pl3x.bukkit.ridables.listener.spigot.DismountListener;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.EntityType;
@@ -89,12 +88,9 @@ public class Ridables extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
         getServer().getPluginManager().registerEvents(new CreeperListener(), this);
-        getServer().getPluginManager().registerEvents(new RideListener(), this);
+        getServer().getPluginManager().registerEvents(new RideListener(this), this);
         getServer().getPluginManager().registerEvents(new SpawnListener(this), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
-        if (serverType != ServerType.CRAFTBUKKIT) {
-            getServer().getPluginManager().registerEvents(new DismountListener(), this);
-        }
         if (serverType == ServerType.PAPER) {
             getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         }

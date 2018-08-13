@@ -36,6 +36,10 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         return false;
     }
 
+    public boolean aY() {
+        return false; // eject passengers when in water
+    }
+
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

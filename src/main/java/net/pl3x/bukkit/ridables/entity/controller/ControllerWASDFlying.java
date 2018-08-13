@@ -21,13 +21,6 @@ public class ControllerWASDFlying extends ControllerWASD {
         // do not target anything while being ridden
         a.setGoalTarget(null, null, false);
 
-        // eject rider if in water or lava
-        if (a.isInWater() || a.ax()) {
-            a.ejectPassengers();
-            rider.stopRiding();
-            return;
-        }
-
         // rotation
         ridable.setRotation(rider.yaw, rider.pitch);
 

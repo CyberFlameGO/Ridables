@@ -36,6 +36,10 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
         return false;
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

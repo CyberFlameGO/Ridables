@@ -29,6 +29,10 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
         return f(CraftItemStack.asNMSCopy(itemstack)) || itemstack.getType() == Material.SADDLE;
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

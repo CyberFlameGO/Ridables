@@ -27,6 +27,10 @@ public class EntityRidableOcelot extends EntityOcelot implements RidableEntity {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     public void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

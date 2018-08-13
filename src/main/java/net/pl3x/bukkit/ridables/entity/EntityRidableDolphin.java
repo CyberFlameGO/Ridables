@@ -48,6 +48,10 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         return false;
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         if (++bounceCounter > 10) {
             bounceCounter = 0;

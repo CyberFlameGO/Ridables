@@ -27,6 +27,10 @@ public class EntityRidableSheep extends EntitySheep implements RidableEntity {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

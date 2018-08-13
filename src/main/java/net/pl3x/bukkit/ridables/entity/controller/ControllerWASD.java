@@ -31,13 +31,6 @@ public class ControllerWASD extends ControllerMove {
         // do not target anything while being ridden
         a.setGoalTarget(null, null, false);
 
-        // eject rider if in water or lava
-        if (a.isInWater() || a.ax()) {
-            a.ejectPassengers();
-            rider.stopRiding();
-            return;
-        }
-
         // controls
         float forward = rider.bj * 0.5F;
         float strafe = rider.bh * 0.25F;

@@ -26,6 +26,10 @@ public class EntityRidableIronGolem extends EntityIronGolem implements RidableEn
         return false;
     }
 
+    public boolean aY() {
+        return true; // dont eject passengers when in water
+    }
+
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {

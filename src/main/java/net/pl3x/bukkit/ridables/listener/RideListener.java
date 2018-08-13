@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.listener;
 
 import net.pl3x.bukkit.ridables.HandItem;
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,11 @@ import java.util.UUID;
 
 public class RideListener implements Listener {
     public static final Set<UUID> override = new HashSet<>();
+    private final Ridables plugin;
+
+    public RideListener(Ridables plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onRideCreature(PlayerInteractAtEntityEvent event) {
@@ -111,22 +118,31 @@ public class RideListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (!Config.UNMOUNT_ON_TELEPORT) {
-            return; // disabled feature
-        }
-
         Player player = event.getPlayer();
         if (override.contains(player.getUniqueId())) {
             return; // overridden
         }
 
-        Entity creature = player.getVehicle();
-        if (creature == null || RidableType.getRidableType(creature.getType()) == null) {
-            return; // not a valid creature
+        Entity vehicle = player.getVehicle();
+        if (vehicle == null) {
+            return; // not riding
         }
 
-        // eject player before teleportation
-        creature.eject();
+        RidableEntity ridable = RidableType.getRidable(vehicle);
+        if (ridable == null) {
+            return; // not ridable
+        }
+
+        player.leaveVehicle();
+        if (!Config.UNMOUNT_ON_TELEPORT) {
+            vehicle.teleport(event.getTo());
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    vehicle.addPassenger(player);
+                }
+            }.runTask(plugin);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -147,11 +163,7 @@ public class RideListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-
         // ensure player unmounts creature so it doesn't despawn with player
-        override.add(player.getUniqueId());
-        player.leaveVehicle();
-        override.remove(player.getUniqueId());
+        event.getPlayer().leaveVehicle();
     }
 }
