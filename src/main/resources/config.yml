@@ -47,6 +47,9 @@ creeper:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  explosion:
+    damage: 5.0      # damage per hit (1 heart = 2.0 damage) set to negative value to let vanilla handle the damage modifier
+    grief: true      # whether ghast fireballs can damage the blocks in the world
 
 # Dolphin options
 dolphin:

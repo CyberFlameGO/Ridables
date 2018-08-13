@@ -32,9 +32,8 @@ public class Config {
     public static boolean CREEPER_ENABLED = true;
     public static float CREEPER_SPEED = 1.0F;
     public static float CREEPER_JUMP_POWER = 0.5F;
-    public static int CREEPER_FUSE = 30; // TODO
-    public static int CREEPER_EXPLOSION_RADIUS = 3; // TODO
-    public static boolean CREEPER_BLOCK_DAMAGE = true; // TODO
+    public static float CREEPER_EXPLOSION_DAMAGE = 5.0F;
+    public static boolean CREEPER_EXPLOSION_GRIEF = true;
 
     public static boolean DOLPHIN_ENABLED = true;
     public static float DOLPHIN_SPEED = 1.0F;
@@ -158,6 +157,8 @@ public class Config {
         CREEPER_ENABLED = config.getBoolean("creeper.enabled", true);
         CREEPER_SPEED = (float) config.getDouble("creeper.speed", 1.0D);
         CREEPER_JUMP_POWER = (float) config.getDouble("creeper.jump-power", 0.5D);
+        CREEPER_EXPLOSION_DAMAGE = (float) config.getDouble("creeper.explosion.damage", 5.0D);
+        CREEPER_EXPLOSION_GRIEF = config.getBoolean("creeper.explosion.grief", true);
 
         DOLPHIN_ENABLED = config.getBoolean("dolphin.enabled", true);
         DOLPHIN_SPEED = (float) config.getDouble("dolphin.speed", 1.0D);
