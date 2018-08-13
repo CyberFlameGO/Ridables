@@ -90,6 +90,9 @@ permissions:
       allow.ride.snowman:
         description: Allow to ride snowman
         default: op
+      allow.ride.spider:
+        description: Allow to ride spiders
+        default: op
       allow.ride.turtle:
         description: Allow to ride turtles
         default: op

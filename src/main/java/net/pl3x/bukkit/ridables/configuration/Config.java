@@ -112,6 +112,12 @@ public class Config {
     public static boolean SNOWMAN_DAMAGE_WHEN_WET = true;
     public static boolean SNOWMAN_LEAVE_SNOW_TRAIL = true;
 
+    public static boolean SPIDER_ENABLED = true;
+    public static float SPIDER_SPEED = 1.0F;
+    public static float SPIDER_JUMP_POWER = 0.5F;
+    public static boolean SPIDER_CLIMB_WALLS = true;
+    public static float SPIDER_CLIMB_SPEED = 1.0F;
+
     public static boolean TURTLE_ENABLED = true;
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
@@ -236,6 +242,12 @@ public class Config {
         SNOWMAN_DAMAGE_WHEN_HOT = config.getBoolean("snowman.damage.when-hot", true);
         SNOWMAN_DAMAGE_WHEN_WET = config.getBoolean("snowman.damage.when-wet", true);
         SNOWMAN_LEAVE_SNOW_TRAIL = config.getBoolean("snowman.snow-trail", true);
+
+        SPIDER_ENABLED = config.getBoolean("spider.enabled", true);
+        SPIDER_SPEED = (float) config.getDouble("spider.speed", 1.0D);
+        SPIDER_JUMP_POWER = (float) config.getDouble("spider.jump-power", 0.5D);
+        SPIDER_CLIMB_WALLS = config.getBoolean("spider.climb-walls", true);
+        SPIDER_CLIMB_SPEED = (float) config.getDouble("spider.climb-speed", 1.0D);
 
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", true);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);

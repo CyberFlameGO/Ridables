@@ -160,6 +160,14 @@ snowman:
     when-wet: true   # snowman takes damage when too hot (hot biomes)
   snow-trail: true   # leave a snow layer on ground where snowman walks
 
+# Spider options
+spider:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  climb-walls: true  # enable climbing walls
+  climb-speed: 1.0   # speed of vertical climb
+
 # Turtle options
 turtle:
   enabled: true      # enable custom ridable entity
