@@ -109,7 +109,9 @@ public class EntityDolphinSpit extends EntityLlamaSpit implements IProjectile {
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
         if (hitEntity != null && rider != null) {
-            hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.DOLPHIN_SHOOT_DAMAGE);
+            if (Config.DOLPHIN_SHOOT_DAMAGE > 0) {
+                hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.DOLPHIN_SHOOT_DAMAGE);
+            }
             die();
         }
     }

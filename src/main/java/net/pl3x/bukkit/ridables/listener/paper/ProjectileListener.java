@@ -9,7 +9,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.List;
 
-public class PaperProjectileListener implements Listener {
+public class ProjectileListener implements Listener {
     @EventHandler
     public void onHitRidableCreature(ProjectileCollideEvent event) {
         Entity creature = event.getCollidedWith();

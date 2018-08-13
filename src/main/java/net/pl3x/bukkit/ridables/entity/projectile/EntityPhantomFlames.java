@@ -103,8 +103,10 @@ public class EntityPhantomFlames extends EntityLlamaSpit implements IProjectile 
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
         if (hitEntity != null && rider != null) {
-            hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.PHANTOM_SHOOT_DAMAGE);
-            hitEntity.setOnFire(100);
+            if (Config.PHANTOM_SHOOT_DAMAGE > 0) {
+                hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.PHANTOM_SHOOT_DAMAGE);
+                hitEntity.setOnFire(100);
+            }
             die();
         }
     }

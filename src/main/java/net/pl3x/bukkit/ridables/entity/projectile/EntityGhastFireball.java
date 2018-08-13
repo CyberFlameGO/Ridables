@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R1.BlockPosition;
+import net.minecraft.server.v1_13_R1.DamageSource;
 import net.minecraft.server.v1_13_R1.EntityLargeFireball;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.MathHelper;
@@ -9,12 +10,15 @@ import net.minecraft.server.v1_13_R1.Particles;
 import net.minecraft.server.v1_13_R1.ProjectileHelper;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
+import net.pl3x.bukkit.ridables.ServerType;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.EntityRidableGhast;
-import net.pl3x.bukkit.ridables.ServerType;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
+import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class EntityGhastFireball extends EntityLargeFireball {
     private final EntityRidableGhast ghast;
@@ -52,19 +56,17 @@ public class EntityGhastFireball extends EntityLargeFireball {
         if (f()) {
             setOnFire(1);
         }
-        MovingObjectPosition movingobjectposition = ProjectileHelper.a(this, true, ++f >= 25, shooter);
-        if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
-                movingobjectposition != null && movingobjectposition.entity != null) {
-            com.destroystokyo.paper.event.entity.ProjectileCollideEvent event =
-                    CraftEventFactory.callProjectileCollideEvent(this, movingobjectposition);
+        MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
+        if (Ridables.getInstance().getServerType() == ServerType.PAPER && mop != null && mop.entity != null) {
+            com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = CraftEventFactory.callProjectileCollideEvent(this, mop);
             if (event.isCancelled()) {
-                movingobjectposition = null;
+                mop = null;
             }
         }
-        if (movingobjectposition != null) {
-            a(movingobjectposition);
+        if (mop != null) {
+            a(mop);
             if (dead) {
-                CraftEventFactory.callProjectileHitEvent(this, movingobjectposition);
+                CraftEventFactory.callProjectileHitEvent(this, mop);
             }
         }
         locX += motX * Config.GHAST_SHOOT_SPEED;
@@ -86,5 +88,22 @@ public class EntityGhastFireball extends EntityLargeFireball {
         motZ *= f;
         world.addParticle(i(), locX, locY + 0.5D, locZ, 0.0D, 0.0D, 0.0D);
         setPosition(locX, locY, locZ);
+    }
+
+    protected void a(MovingObjectPosition mop) {
+        if (!world.isClientSide) {
+            if (mop.entity != null) {
+                if (Config.GHAST_SHOOT_DAMAGE > 0) {
+                    mop.entity.damageEntity(DamageSource.fireball(this, shooter), Config.GHAST_SHOOT_DAMAGE);
+                    a(shooter, mop.entity);
+                }
+            }
+            ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(world.getServer(), this));
+            world.getServer().getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+                world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), isIncendiary);
+            }
+            die();
+        }
     }
 }

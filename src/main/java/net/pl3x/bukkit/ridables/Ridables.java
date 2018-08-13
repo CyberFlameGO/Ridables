@@ -6,12 +6,11 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
-import net.pl3x.bukkit.ridables.listener.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.SpawnListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
-import net.pl3x.bukkit.ridables.listener.paper.PaperProjectileListener;
+import net.pl3x.bukkit.ridables.listener.paper.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.spigot.DismountListener;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
@@ -88,7 +87,6 @@ public class Ridables extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
-        getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         getServer().getPluginManager().registerEvents(new RideListener(), this);
         getServer().getPluginManager().registerEvents(new SpawnListener(this), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
@@ -96,7 +94,7 @@ public class Ridables extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new DismountListener(), this);
         }
         if (serverType == ServerType.PAPER) {
-            getServer().getPluginManager().registerEvents(new PaperProjectileListener(), this);
+            getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         }
 
         getCommand("ridables").setExecutor(new CmdRidables(this));
