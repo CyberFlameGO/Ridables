@@ -4,6 +4,9 @@ language-file: lang-en.yml
 # Debug mode. Enable this before reporting any issues, please
 debug-mode: false
 
+# Use the new WASD key yaw calculations
+use-new-wasd-yaw-calculations: true
+
 # Enabled the update checker (does not actually download updates!)
 update-checker: true
 

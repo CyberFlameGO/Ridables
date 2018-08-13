@@ -9,6 +9,7 @@ public class Config {
 
     public static boolean CHECK_FOR_UPDATES = true;
 
+    public static boolean USE_NEW_WASD_YAW_CALCULATIONS = true;
     public static boolean UNMOUNT_ON_TELEPORT = true;
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
     public static boolean REQUIRE_SADDLE = false;
@@ -140,6 +141,7 @@ public class Config {
 
         CHECK_FOR_UPDATES = config.getBoolean("update-checker", true);
 
+        USE_NEW_WASD_YAW_CALCULATIONS = config.getBoolean("use-new-wasd-yaw-calculations", true);
         UNMOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
