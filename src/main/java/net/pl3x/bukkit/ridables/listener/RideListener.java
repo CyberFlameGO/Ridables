@@ -20,7 +20,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -107,25 +106,6 @@ public class RideListener implements Listener {
         creature.addPassenger(player);
         override.remove(player.getUniqueId());
         ReflectionUtil.setJumping(((CraftLivingEntity) player).getHandle());
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.getPlayer().isSneaking()) {
-            return; // player shift
-        }
-
-        if (event.getRightClicked().getType() != EntityType.VILLAGER) {
-            return; // not a villager
-        }
-
-        RidableEntity ridable = RidableType.getRidable(event.getRightClicked());
-        if (ridable == null) {
-            return; // not a ridable villager
-        }
-
-        // cancel opening the inventory trade GUI
-        event.setCancelled(true);
     }
 
 

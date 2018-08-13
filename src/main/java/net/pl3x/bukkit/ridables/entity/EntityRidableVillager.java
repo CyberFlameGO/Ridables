@@ -2,6 +2,7 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityHuman;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntityVillager;
 import net.minecraft.server.v1_13_R1.EnumHand;
@@ -90,5 +91,10 @@ public class EntityRidableVillager extends EntityVillager implements RidableEnti
 
     public boolean onClick(EnumHand hand) {
         return false;
+    }
+
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        return getRider() == null && super.a(entityhuman, enumhand);
     }
 }
