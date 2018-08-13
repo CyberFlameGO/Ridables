@@ -129,10 +129,6 @@ public class Config {
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
 
-    public static boolean WOLF_ENABLED = true;
-    public static float WOLF_SPEED = 1.0F;
-    public static float WOLF_JUMP_POWER = 0.5F;
-
     public static boolean VILLAGER_ENABLED = true;
     public static float VILLAGER_SPEED = 1.0F;
     public static float VILLAGER_JUMP_POWER = 0.5F;
@@ -140,6 +136,10 @@ public class Config {
     public static boolean VINDICATOR_ENABLED = true;
     public static float VINDICATOR_SPEED = 1.0F;
     public static float VINDICATOR_JUMP_POWER = 0.5F;
+
+    public static boolean WOLF_ENABLED = true;
+    public static float WOLF_SPEED = 1.0F;
+    public static float WOLF_JUMP_POWER = 0.5F;
 
     public static boolean ZOMBIE_VILLAGER_ENABLED = true;
     public static float ZOMBIE_VILLAGER_SPEED = 1.0F;
@@ -279,10 +279,6 @@ public class Config {
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
         TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
 
-        WOLF_ENABLED = config.getBoolean("wolf.enabled", true);
-        WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
-        WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
-
         VILLAGER_ENABLED = config.getBoolean("villager.enabled", true);
         VILLAGER_SPEED = (float) config.getDouble("villager.speed", 1.0D);
         VILLAGER_JUMP_POWER = (float) config.getDouble("villager.jump-power", 0.5D);
@@ -290,6 +286,10 @@ public class Config {
         VINDICATOR_ENABLED = config.getBoolean("vindicator.enabled", true);
         VINDICATOR_SPEED = (float) config.getDouble("vindicator.speed", 1.0D);
         VINDICATOR_JUMP_POWER = (float) config.getDouble("vindicator.jump-power", 0.5D);
+
+        WOLF_ENABLED = config.getBoolean("wolf.enabled", true);
+        WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
+        WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
 
         ZOMBIE_VILLAGER_ENABLED = config.getBoolean("zombie-villager.enabled", true);
         ZOMBIE_VILLAGER_SPEED = (float) config.getDouble("zombie-villager.speed", 1.0D);

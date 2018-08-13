@@ -186,12 +186,6 @@ turtle:
     on-land: 1.0     # riding speed modifier on land
     in-water: 1.0    # riding speed modifier in water
 
-# Wolf options
-wolf:
-  enabled: true      # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-
 # Villager options
 villager:
   enabled: true      # enable custom ridable entity
@@ -200,6 +194,12 @@ villager:
 
 # Vindicator options
 vindicator:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
+# Wolf options
+wolf:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
