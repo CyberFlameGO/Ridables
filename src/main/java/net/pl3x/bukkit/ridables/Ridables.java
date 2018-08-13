@@ -5,6 +5,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
+import net.pl3x.bukkit.ridables.listener.ClickListener;
 import net.pl3x.bukkit.ridables.listener.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.SpawnListener;
@@ -58,7 +59,7 @@ public class Ridables extends JavaPlugin {
         }
 
         // setup creatures by calling something in the class
-        RidableType.getRidable(EntityType.DOLPHIN);
+        RidableType.getRidableType(EntityType.DOLPHIN);
 
         // inject new entities
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", EntityDolphinSpit.class, EntityDolphinSpit::new);
@@ -86,6 +87,7 @@ public class Ridables extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
+        getServer().getPluginManager().registerEvents(new ClickListener(), this);
         getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
         getServer().getPluginManager().registerEvents(new RideListener(), this);
         getServer().getPluginManager().registerEvents(new SpawnListener(this), this);

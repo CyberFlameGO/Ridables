@@ -8,7 +8,6 @@ import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
@@ -52,14 +51,13 @@ public class RideListener implements Listener {
             return; // do not force mount llamas
         }
 
-        net.minecraft.server.v1_13_R1.Entity craftEntity = ((CraftEntity) creature).getHandle();
-        if (!(craftEntity instanceof RidableEntity)) {
-            return; // not a valid creature
-        }
-
-        RidableEntity ridableEntity = (RidableEntity) craftEntity;
         if (!creature.getPassengers().isEmpty()) {
             return; // creature already has rider
+        }
+
+        RidableEntity ridable = RidableType.getRidable(creature);
+        if (ridable == null) {
+            return; // not a valid creature
         }
 
         Player player = event.getPlayer();
@@ -77,7 +75,7 @@ public class RideListener implements Listener {
             return; // do not ride when trying to leash
         }
 
-        if (ridableEntity.isActionableItem(mainHand) || ridableEntity.isActionableItem(offHand)) {
+        if (ridable.isActionableItem(mainHand) || ridable.isActionableItem(offHand)) {
             return; // feed creature instead of riding it
         }
 
@@ -122,7 +120,7 @@ public class RideListener implements Listener {
         }
 
         Entity creature = player.getVehicle();
-        if (creature == null || RidableType.getRidable(creature.getType()) == null) {
+        if (creature == null || RidableType.getRidableType(creature.getType()) == null) {
             return; // not a valid creature
         }
 
@@ -137,8 +135,7 @@ public class RideListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        Entity creature = player.getVehicle();
-        if (RidableType.getRidable(creature.getType()) == null) {
+        if (RidableType.getRidableType(player.getVehicle().getType()) == null) {
             return; // not a valid creature
         }
 

@@ -14,6 +14,7 @@ import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 
 import java.util.Map;
@@ -49,8 +50,13 @@ public class RidableType {
      * @param bukkitType Entity type
      * @return RidableType if one is set/loaded, otherwise null
      */
-    public static RidableType getRidable(EntityType bukkitType) {
+    public static RidableType getRidableType(EntityType bukkitType) {
         return BY_BUKKIT_TYPE.get(bukkitType);
+    }
+
+    public static RidableEntity getRidable(org.bukkit.entity.Entity entity) {
+        net.minecraft.server.v1_13_R1.Entity craftEntity = ((CraftEntity) entity).getHandle();
+        return craftEntity instanceof RidableEntity ? (RidableEntity) craftEntity : null;
     }
 
     private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Material spawnEgg, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function) {

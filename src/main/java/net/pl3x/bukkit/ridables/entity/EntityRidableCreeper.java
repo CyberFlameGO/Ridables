@@ -21,6 +21,7 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ReflectionUtil;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableCreeper extends EntityCreeper implements RidableEntity {
@@ -101,16 +102,24 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     public boolean onSpacebar() {
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
-            if (rider != null) {
-                if (!rider.getBukkitEntity().hasPermission("allow.special.creeper")) {
-                    return false;
-                }
-                if (rider.bj == 0 && rider.bh == 0) {
-                    dC(); // ignite
-                    return true;
-                }
+            if (rider != null && rider.bj == 0 && rider.bh == 0 &&
+                    rider.getBukkitEntity().hasPermission("allow.special.creeper")) {
+                dC(); // ignite
+                return true;
             }
         }
+        return false;
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(Block block, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(EnumHand hand) {
         return false;
     }
 

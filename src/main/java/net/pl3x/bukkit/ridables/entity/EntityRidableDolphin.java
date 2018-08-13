@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityDolphin;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.Particles;
 import net.minecraft.server.v1_13_R1.SoundEffects;
@@ -15,6 +16,7 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import org.bukkit.Location;
 import org.bukkit.Tag;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -143,15 +145,26 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
     public boolean onSpacebar() {
         if (spacebarCooldown == 0 && Config.DOLPHIN_SPACEBAR_MODE != null) {
             EntityPlayer rider = getRider();
-            if (rider == null) {
-                return false;
-            }
-            if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("shoot")) {
-                return shoot(rider);
-            } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
-                return dash(rider);
+            if (rider != null) {
+                if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("shoot")) {
+                    return shoot(rider);
+                } else if (Config.DOLPHIN_SPACEBAR_MODE.equalsIgnoreCase("dash")) {
+                    return dash(rider);
+                }
             }
         }
+        return false;
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(Block block, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(EnumHand hand) {
         return false;
     }
 

@@ -2,9 +2,7 @@ package net.pl3x.bukkit.ridables.listener;
 
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.EntityRidableSnowman;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -34,12 +32,11 @@ public class SpawnListener implements Listener {
         }
 
         Entity entity = event.getEntity();
-        net.minecraft.server.v1_13_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-        if (nmsEntity instanceof EntityRidableSnowman) {
+        if (RidableType.getRidable(entity) != null) {
             return; // already a ridable snowman
         }
 
-        RidableType.getRidable(EntityType.SNOWMAN).spawn(entity.getLocation());
+        RidableType.getRidableType(EntityType.SNOWMAN).spawn(entity.getLocation());
 
         // kill original snowman on next tick so the
         // ShapeDetector removes snowman blocks properly

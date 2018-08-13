@@ -4,10 +4,12 @@ import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityCow;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -76,6 +78,18 @@ public class EntityRidableCow extends EntityCow implements RidableEntity {
     }
 
     public boolean onSpacebar() {
+        return false;
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(Block block, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(EnumHand hand) {
         return false;
     }
 }

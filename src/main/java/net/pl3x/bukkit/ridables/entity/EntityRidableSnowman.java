@@ -19,6 +19,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.MaterialSetTag;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
 import org.bukkit.inventory.ItemStack;
 
@@ -94,6 +95,18 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
     }
 
     public boolean onSpacebar() {
+        return false;
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(Block block, EnumHand hand) {
+        return false;
+    }
+
+    public boolean onClick(EnumHand hand) {
         return false;
     }
 

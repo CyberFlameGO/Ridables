@@ -41,7 +41,7 @@ public class WaterBucketListener implements Listener {
             return; // creature already removed from world
         }
 
-        RidableType ridable = RidableType.getRidable(creature.getType());
+        RidableType ridable = RidableType.getRidableType(creature.getType());
         if (ridable == null) {
             return; // not a supported creature
         }
@@ -117,7 +117,7 @@ public class WaterBucketListener implements Listener {
             }
         }
 
-        RidableType ridable = RidableType.getRidable(bucket.getEntityType());
+        RidableType ridable = RidableType.getRidableType(bucket.getEntityType());
         if (ridable == null) {
             return; // not a valid creature
         }

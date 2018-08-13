@@ -18,7 +18,7 @@ public class PaperProjectileListener implements Listener {
             return; // creature doesnt have a rider
         }
 
-        RidableType ridable = RidableType.getRidable(creature.getType());
+        RidableType ridable = RidableType.getRidableType(creature.getType());
         if (ridable == null) {
             return; // did not hit a ridable entity
         }
