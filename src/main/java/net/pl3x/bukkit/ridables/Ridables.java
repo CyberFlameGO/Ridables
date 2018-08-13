@@ -7,11 +7,11 @@ import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
 import net.pl3x.bukkit.ridables.listener.CreeperListener;
+import net.pl3x.bukkit.ridables.listener.ProjectileListener;
 import net.pl3x.bukkit.ridables.listener.RideListener;
 import net.pl3x.bukkit.ridables.listener.SpawnListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
-import net.pl3x.bukkit.ridables.listener.paper.ProjectileListener;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.EntityType;
@@ -73,27 +73,13 @@ public class Ridables extends JavaPlugin {
             return;
         }
 
-        if (serverType == ServerType.PAPER) {
-            Logger.info("Paper server detected. All features enabled");
-        } else if (serverType == ServerType.SPIGOT) {
-            Logger.info("Spigot server detected. Some features disabled");
-            Logger.info("Please upgrade to Paper to enable all features");
-            Logger.info("See project page on spigotmc.org for more details");
-        } else {
-            Logger.info("CraftBukkit server detected. Most features disabled");
-            Logger.info("Please upgrade to Spigot or Paper to enable more features");
-            Logger.info("See project page on spigotmc.org for more details");
-        }
-
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
         getServer().getPluginManager().registerEvents(new CreeperListener(), this);
         getServer().getPluginManager().registerEvents(new RideListener(this), this);
         getServer().getPluginManager().registerEvents(new SpawnListener(this), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
-        if (serverType == ServerType.PAPER) {
-            getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
-        }
+        getServer().getPluginManager().registerEvents(new ProjectileListener(), this);
 
         getCommand("ridables").setExecutor(new CmdRidables(this));
 

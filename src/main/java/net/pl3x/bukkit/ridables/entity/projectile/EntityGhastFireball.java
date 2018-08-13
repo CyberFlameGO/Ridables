@@ -13,6 +13,7 @@ import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.ServerType;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.EntityRidableGhast;
+import net.pl3x.bukkit.ridables.event.ProjectileCollideEvent;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
 import org.bukkit.entity.Explosive;
@@ -52,15 +53,22 @@ public class EntityGhastFireball extends EntityLargeFireball {
             die();
             return;
         }
-        super.tick();
+        if (!world.isClientSide) {
+            setFlag(6, bc());
+        }
+        W();
         if (f()) {
             setOnFire(1);
         }
         MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
-        if (Ridables.getInstance().getServerType() == ServerType.PAPER && mop != null && mop.entity != null) {
-            com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = CraftEventFactory.callProjectileCollideEvent(this, mop);
-            if (event.isCancelled()) {
+        if (mop != null && mop.entity != null) {
+            if (ProjectileCollideEvent.callProjectileCollideEvent(this, mop).isCancelled()) {
                 mop = null;
+            }
+            if (Ridables.getInstance().getServerType() == ServerType.PAPER && mop != null) {
+                if (CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
+                    mop = null;
+                }
             }
         }
         if (mop != null) {
