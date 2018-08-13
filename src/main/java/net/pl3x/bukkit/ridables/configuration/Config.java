@@ -133,6 +133,10 @@ public class Config {
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
 
+    public static boolean VILLAGER_ENABLED = true;
+    public static float VILLAGER_SPEED = 1.0F;
+    public static float VILLAGER_JUMP_POWER = 0.5F;
+
     /**
      * Reload the config.yml from disk
      */
@@ -270,5 +274,9 @@ public class Config {
         WOLF_ENABLED = config.getBoolean("wolf.enabled", true);
         WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
         WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
+
+        VILLAGER_ENABLED = config.getBoolean("villager.enabled", true);
+        VILLAGER_SPEED = (float) config.getDouble("villager.speed", 1.0D);
+        VILLAGER_JUMP_POWER = (float) config.getDouble("villager.jump-power", 0.5D);
     }
 }

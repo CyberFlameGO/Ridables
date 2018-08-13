@@ -102,6 +102,9 @@ permissions:
       allow.ride.wolf:
         description: Allow to ride tamed wolves
         default: op
+      allow.ride.villager:
+        description: Allow to ride villagers
+        default: op
   allow.shoot.*:
     description: Allow to make all supported creatures shoot
     default: op
