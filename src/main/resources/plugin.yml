@@ -105,6 +105,9 @@ permissions:
       allow.ride.villager:
         description: Allow to ride villagers
         default: op
+      allow.ride.vindicator:
+        description: Allow to ride vindicators
+        default: op
       allow.ride.zombie_villager:
         description: Allow to ride zombie villagers
         default: op

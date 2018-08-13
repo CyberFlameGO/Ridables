@@ -198,6 +198,12 @@ villager:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Vindicator options
+vindicator:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Zombie Villager options
 zombie-villager:
   enabled: true      # enable custom ridable entity
