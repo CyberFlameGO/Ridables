@@ -77,6 +77,7 @@ ghast:
     cooldown: 20     # ticks to wait between shooting
     speed: 1.0       # projectile speed
     damage: 5.0      # damage per hit (1 heart = 2.0 damage)
+    grief: true      # whether ghast fireballs can damage the blocks in the world
 
 # Iron Golem options
 iron-golem:

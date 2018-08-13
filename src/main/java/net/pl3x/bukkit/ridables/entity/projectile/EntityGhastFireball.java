@@ -99,6 +99,9 @@ public class EntityGhastFireball extends EntityLargeFireball {
                 }
             }
             ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(world.getServer(), this));
+            if (!Config.GHAST_SHOOT_GRIEF) {
+                event.setRadius(0);
+            }
             world.getServer().getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), isIncendiary);

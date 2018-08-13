@@ -56,6 +56,7 @@ public class Config {
     public static int GHAST_SHOOT_COOLDOWN = 20;
     public static float GHAST_SHOOT_SPEED = 1.0F;
     public static float GHAST_SHOOT_DAMAGE = 5.0F;
+    public static boolean GHAST_SHOOT_GRIEF = true;
 
     public static boolean IRON_GOLEM_ENABLED = true;
     public static float IRON_GOLEM_SPEED = 1.0F;
@@ -178,6 +179,7 @@ public class Config {
         GHAST_SHOOT_COOLDOWN = (int) config.getDouble("ghast.shoot.cooldown", 20);
         GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 1.0D);
         GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
+        GHAST_SHOOT_GRIEF = config.getBoolean("ghast.shoot.grief", true);
 
         IRON_GOLEM_ENABLED = config.getBoolean("iron-golem.enabled", true);
         IRON_GOLEM_SPEED = (float) config.getDouble("iron-golem.speed", 1.0D);
