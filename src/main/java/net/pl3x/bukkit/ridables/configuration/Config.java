@@ -137,6 +137,10 @@ public class Config {
     public static float VILLAGER_SPEED = 1.0F;
     public static float VILLAGER_JUMP_POWER = 0.5F;
 
+    public static boolean ZOMBIE_VILLAGER_ENABLED = true;
+    public static float ZOMBIE_VILLAGER_SPEED = 1.0F;
+    public static float ZOMBIE_VILLAGER_JUMP_POWER = 0.5F;
+
     /**
      * Reload the config.yml from disk
      */
@@ -278,5 +282,9 @@ public class Config {
         VILLAGER_ENABLED = config.getBoolean("villager.enabled", true);
         VILLAGER_SPEED = (float) config.getDouble("villager.speed", 1.0D);
         VILLAGER_JUMP_POWER = (float) config.getDouble("villager.jump-power", 0.5D);
+
+        ZOMBIE_VILLAGER_ENABLED = config.getBoolean("zombie-villager.enabled", true);
+        ZOMBIE_VILLAGER_SPEED = (float) config.getDouble("zombie-villager.speed", 1.0D);
+        ZOMBIE_VILLAGER_JUMP_POWER = (float) config.getDouble("zombie-villager.jump-power", 0.5D);
     }
 }
