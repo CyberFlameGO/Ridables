@@ -22,6 +22,12 @@ public class Config {
     public static float BAT_VERTICAL = 1.0F;
     public static float BAT_GRAVITY = 0.04F;
 
+    public static boolean CAVE_SPIDER_ENABLED = true;
+    public static float CAVE_SPIDER_SPEED = 1.0F;
+    public static float CAVE_SPIDER_JUMP_POWER = 0.5F;
+    public static boolean CAVE_SPIDER_CLIMB_WALLS = true;
+    public static float CAVE_SPIDER_CLIMB_SPEED = 1.0F;
+
     public static boolean CHICKEN_ENABLED = true;
     public static float CHICKEN_SPEED = 1.0F;
     public static float CHICKEN_JUMP_POWER = 0.5F;
@@ -153,6 +159,12 @@ public class Config {
         BAT_SPEED = (float) config.getDouble("bat.speed", 1.0D);
         BAT_VERTICAL = (float) config.getDouble("bat.vertical", 1.0D);
         BAT_GRAVITY = (float) config.getDouble("bat.gravity", 0.04D);
+
+        CAVE_SPIDER_ENABLED = config.getBoolean("cave-spider.enabled", true);
+        CAVE_SPIDER_SPEED = (float) config.getDouble("cave-spider.speed", 1.0D);
+        CAVE_SPIDER_JUMP_POWER = (float) config.getDouble("cave-spider.jump-power", 0.5D);
+        CAVE_SPIDER_CLIMB_WALLS = config.getBoolean("cave-spider.climb-walls", true);
+        CAVE_SPIDER_CLIMB_SPEED = (float) config.getDouble("cave-spider.climb-speed", 1.0D);
 
         CHICKEN_ENABLED = config.getBoolean("chicken.enabled", true);
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);

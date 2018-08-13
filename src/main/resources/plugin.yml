@@ -39,6 +39,9 @@ permissions:
       allow.ride.bat:
         description: Allow to ride bats
         default: op
+      allow.ride.cave_spider:
+        description: Allow to ride cave spiders
+        default: op
       allow.ride.chicken:
         description: Allow to ride chickens
         default: op

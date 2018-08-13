@@ -33,6 +33,14 @@ bat:
   vertical: 1.0      # vertical boost when pressing spacebar
   gravity: 0.04      # amount of gravity while not in motion
 
+# Cave Spider options
+cave-spider:
+  enabled: true      # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  climb-walls: true  # enable climbing walls
+  climb-speed: 1.0   # speed of vertical climb
+
 # Chicken options
 chicken:
   enabled: true      # enable custom ridable entity
@@ -133,7 +141,7 @@ phantom:
   burn-in-sun: true  # burn in sunlight
   shoot-damage: 1.0  # damage per hit (1 heart = 2.0 damage)
 
-# Polar bear options
+# Polar Bear options
 polar-bear:
   enabled: true      # enable custom ridable entity
   speed: 1.0         # riding speed modifier
