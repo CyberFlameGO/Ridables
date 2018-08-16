@@ -151,11 +151,6 @@ public class RegistryHax {
             Logger.debug("Generated newIndex: " + newIndex);
 
             EntityTypes e = (EntityTypes) array_b[newIndex];
-            if (e != null) {
-                Logger.debug("EntityType already in use! Trying again!");
-                newIndex = (int) registry_method_d.invoke(registry, newType);
-                Logger.debug("Generated newIndex: " + newIndex);
-            }
             Logger.debug("EntityType at newIndex " + newIndex + ": " + (e == null ? "null" : Logger.ANSI_RED + e.d()));
 
             Logger.debug("Injecting new EntityTypes to b[newIndex]: " + newIndex);

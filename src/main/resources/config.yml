@@ -11,9 +11,10 @@ use-new-wasd-yaw-calculations: true
 update-checker: true
 
 # When players teleport for any reason, unmount from any creature they are riding
+# When set to false the creature will teleport with the player
 unmount-on-teleport: true
 
-# While player is riding a creature, disable commands for them
+# While player is riding a creature, disable all commands for them
 cancel-commands-while-riding: false
 
 # Require saddle in hand to mount a ridable creature
@@ -28,14 +29,14 @@ flying-max-y: 256
 
 # Bat options
 bat:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   vertical: 1.0      # vertical boost when pressing spacebar
   gravity: 0.04      # amount of gravity while not in motion
 
 # Cave Spider options
 cave-spider:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   climb-walls: true  # enable climbing walls
@@ -43,19 +44,19 @@ cave-spider:
 
 # Chicken options
 chicken:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Cow options
 cow:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Creeper options
 creeper:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   explosion:
@@ -64,7 +65,7 @@ creeper:
 
 # Dolphin options
 dolphin:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   bounce: true       # enable small up/down bouncing motion when still
   bubbles: true      # enable bubble trail when in motion
@@ -85,7 +86,7 @@ dragon:
 
 # Evoker options
 evoker:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
@@ -101,52 +102,52 @@ ghast:
 
 # Illusioner options
 illusioner:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Iron Golem options
 iron-golem:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Llama options
 llama:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   caravan: true      # create caravan while riding llama
 
 # Mooshroom (Mushroom Cow) options
 mooshroom:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Ocelot options
 ocelot:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Parrot options
 parrot:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   vertical: 1.0      # vertical boost when pressing spacebar
   gravity: 0.04      # amount of gravity while not in motion
 
 # Pig options
 pig:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   saddle-back: true  # Get your saddle back by shift clicking the pig
 
 # Phantom options
 phantom:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   gravity: 0.05      # amount of gravity while not in motion
   fall-damage: true  # damage if fall too quickly
@@ -155,7 +156,7 @@ phantom:
 
 # Polar Bear options
 polar-bear:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
@@ -163,19 +164,19 @@ polar-bear:
 
 # Rabbit options
 rabbit:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Sheep options
 sheep:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Snowman (Snow Golem) options
 snowman:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   damage:
@@ -185,7 +186,7 @@ snowman:
 
 # Spider options
 spider:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   climb-walls: true  # enable climbing walls
@@ -193,31 +194,32 @@ spider:
 
 # Turtle options
 turtle:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed:
     on-land: 1.0     # riding speed modifier on land
     in-water: 1.0    # riding speed modifier in water
 
 # Villager options
 villager:
-  enabled: true      # enable custom ridable entity
+  # (DO NOT enable this one if you use another plugin with custom NPCs, like Citizens, etc)
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Vindicator options
 vindicator:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Wolf options
 wolf:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Zombie Villager options
 zombie-villager:
-  enabled: true      # enable custom ridable entity
+  enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
