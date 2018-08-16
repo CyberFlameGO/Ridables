@@ -35,6 +35,7 @@ public class RegistryHax {
     private static Field field_modifiers;
     private static Field item_field_d;
     private static Method registry_method_d;
+    private static Method registry_method_e;
 
     static {
         try {
@@ -56,6 +57,8 @@ public class RegistryHax {
             item_field_d.setAccessible(true);
             registry_method_d = RegistryID.class.getDeclaredMethod("d", Object.class);
             registry_method_d.setAccessible(true);
+            registry_method_e = RegistryID.class.getDeclaredMethod("e", int.class);
+            registry_method_e.setAccessible(true);
         } catch (NoSuchFieldException | NoSuchMethodException ignore) {
         }
     }
@@ -86,10 +89,11 @@ public class RegistryHax {
                 for (int i = 0; i < array_d.length; i++) {
                     if (array_d[i] != null) {
                         if (array_d[i] == entityTypes) {
+                            Logger.debug("Found EntityTypes id by reference");
                             id = i;
                             break;
                         }
-                        if (((EntityTypes) array_d[i]).d().contains(name)) {
+                        if (((EntityTypes) array_d[i]).d().equals("minecraft:" + name)) {
                             Logger.debug(Logger.ANSI_RED + "Found EntityTypes id using name but not reference! What?!");
                             id = i;
                             break;
@@ -99,6 +103,8 @@ public class RegistryHax {
                 Logger.debug("New detected id: " + id);
             }
 
+            Logger.debug("EntityType at id " + id + ": " + ((EntityTypes) array_d[id]).d());
+
             int oldIndex = -1;
             for (int i = 0; i < array_b.length; i++) {
                 if (array_b[i] != null) {
@@ -107,7 +113,7 @@ public class RegistryHax {
                         oldIndex = i;
                         break;
                     }
-                    if (((EntityTypes) array_b[i]).d().contains(name)) {
+                    if (((EntityTypes) array_b[i]).d().equals("minecraft:" + name)) {
                         Logger.debug(Logger.ANSI_RED + "Found EntityTypes oldIndex using name but not reference! What?!");
                         //array_b[i] = null; // do not remove old reference (might be causing issues?)
                         oldIndex = i;
@@ -128,7 +134,7 @@ public class RegistryHax {
                             oldIndex = i;
                             break;
                         }
-                        if (((EntityTypes) array_b[i]).d().contains(name)) {
+                        if (((EntityTypes) array_b[i]).d().equals("minecraft:" + name)) {
                             Logger.debug(Logger.ANSI_RED + "Found EntityTypes oldIndex using name but not reference! What?!");
                             //array_b[i] = null; // do not remove old reference (might be causing issues?)
                             oldIndex = i;
@@ -139,9 +145,18 @@ public class RegistryHax {
                 Logger.debug("New detected oldIndex: " + oldIndex);
             }
 
-            int newIndex = (int) registry_method_d.invoke(registry, newType);
+            Logger.debug("EntityType at oldIndex " + oldIndex + ": " + ((EntityTypes) array_b[oldIndex]).d());
 
+            int newIndex = (int) registry_method_e.invoke(registry, registry_method_d.invoke(registry, newType));
             Logger.debug("Generated newIndex: " + newIndex);
+
+            EntityTypes e = (EntityTypes) array_b[newIndex];
+            if (e != null) {
+                Logger.debug("EntityType already in use! Trying again!");
+                newIndex = (int) registry_method_d.invoke(registry, newType);
+                Logger.debug("Generated newIndex: " + newIndex);
+            }
+            Logger.debug("EntityType at newIndex " + newIndex + ": " + (e == null ? "null" : Logger.ANSI_RED + e.d()));
 
             Logger.debug("Injecting new EntityTypes to b[newIndex]: " + newIndex);
             array_b[newIndex] = newType;
