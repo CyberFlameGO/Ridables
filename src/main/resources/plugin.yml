@@ -57,6 +57,9 @@ permissions:
       allow.ride.ender_dragon:
         description: Allow to ride ender dragon
         default: op
+      allow.ride.enderman:
+        description: Allow to ride endermen
+        default: op
       allow.ride.evoker:
         description: Allow to ride evokers
         default: op
@@ -136,6 +139,9 @@ permissions:
     children:
       allow.special.creeper:
         description: Allow to make creepers ignite
+        default: op
+      allow.special.enderman:
+        description: Allow to make endermen pick up and place blocks
         default: op
   command.ridables:
     description: Allow to reload config

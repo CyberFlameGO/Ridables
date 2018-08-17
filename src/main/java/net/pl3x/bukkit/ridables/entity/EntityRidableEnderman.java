@@ -118,6 +118,10 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         if (hand == EnumHand.MAIN_HAND) {
             return false; // ignore left clicks
         }
+        EntityPlayer rider = getRider();
+        if (rider == null || !rider.getBukkitEntity().hasPermission("allow.special.enderman")) {
+            return false;
+        }
         if (getCarried() == null) {
             BlockPosition blockposition = new BlockPosition(block.getX(), block.getY(), block.getZ());
             setCarried(world.getType(blockposition));
