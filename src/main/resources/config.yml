@@ -84,6 +84,16 @@ dragon:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
 
+# Enderman options
+enderman:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  when-wet:          # Wet meaning in water or rain
+    damage: true     # Damage the enderman
+    eject: true      # Eject the rider
+  teleport-on-damage: true
+
 # Evoker options
 evoker:
   enabled: false     # enable custom ridable entity

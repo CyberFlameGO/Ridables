@@ -57,6 +57,13 @@ public class Config {
     public static boolean DRAGON_ENABLED = false;
     public static float DRAGON_SPEED = 1.0F;
 
+    public static boolean ENDERMAN_ENABLED = false;
+    public static float ENDERMAN_SPEED = 1.0F;
+    public static float ENDERMAN_JUMP_POWER = 0.5F;
+    public static boolean ENDERMAN_DAMAGE_WHEN_WET = true;
+    public static boolean ENDERMAN_EJECT_WHEN_WET = true;
+    public static boolean ENDERMAN_TELEPORT_WHEN_DAMAGED = true;
+
     public static boolean EVOKER_ENABLED = false;
     public static float EVOKER_SPEED = 1.0F;
     public static float EVOKER_JUMP_POWER = 0.5F;
@@ -214,6 +221,13 @@ public class Config {
 
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
+
+        ENDERMAN_ENABLED = config.getBoolean("enderman.enabled", false);
+        ENDERMAN_SPEED = (float) config.getDouble("enderman.speed", 1.0D);
+        ENDERMAN_JUMP_POWER = (float) config.getDouble("enderman.jump-power", 0.5D);
+        ENDERMAN_DAMAGE_WHEN_WET = config.getBoolean("enderman.when-wet.damage", true);
+        ENDERMAN_EJECT_WHEN_WET = config.getBoolean("enderman.when-wet.eject", true);
+        ENDERMAN_TELEPORT_WHEN_DAMAGED = config.getBoolean("enderman.teleport-on-damage", true);
 
         EVOKER_ENABLED = config.getBoolean("evoker.enabled", false);
         EVOKER_SPEED = (float) config.getDouble("evoker.speed", 1.0D);
