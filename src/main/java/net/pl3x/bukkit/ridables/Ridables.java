@@ -62,6 +62,9 @@ public class Ridables extends JavaPlugin {
 
         // inject new entities
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", EntityDolphinSpit.class, EntityDolphinSpit::new);
+
+        // Fix worldgen mob features
+        RegistryHax.rebuildWorldGenMobs();
     }
 
     @Override

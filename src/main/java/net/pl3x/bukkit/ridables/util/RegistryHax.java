@@ -1,7 +1,9 @@
 package net.pl3x.bukkit.ridables.util;
 
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Lists;
 import com.mojang.datafixers.types.Type;
+import net.minecraft.server.v1_13_R1.BiomeBase;
 import net.minecraft.server.v1_13_R1.DataConverterRegistry;
 import net.minecraft.server.v1_13_R1.DataConverterTypes;
 import net.minecraft.server.v1_13_R1.Entity;
@@ -13,6 +15,10 @@ import net.minecraft.server.v1_13_R1.RegistryID;
 import net.minecraft.server.v1_13_R1.RegistryMaterials;
 import net.minecraft.server.v1_13_R1.RegistrySimple;
 import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R1.WorldGenDungeons;
+import net.minecraft.server.v1_13_R1.WorldGenFeatureSwampHut;
+import net.minecraft.server.v1_13_R1.WorldGenMonument;
+import net.minecraft.server.v1_13_R1.WorldGenNether;
 import net.pl3x.bukkit.ridables.Logger;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
@@ -217,5 +223,24 @@ public class RegistryHax {
             }
         }
         throw new IllegalArgumentException("Could not get Field of " + entityTypes.getClass().getSimpleName());
+    }
+
+    public static void rebuildWorldGenMobs() {
+        setPrivateFinalField(WorldGenDungeons.class, "b", new EntityTypes[]{EntityTypes.SKELETON, EntityTypes.ZOMBIE, EntityTypes.ZOMBIE, EntityTypes.SPIDER});
+        setPrivateFinalField(WorldGenFeatureSwampHut.class, "b", Lists.newArrayList(new BiomeBase.BiomeMeta[]{new BiomeBase.BiomeMeta(EntityTypes.WITCH, 1, 1, 1)}));
+        setPrivateFinalField(WorldGenMonument.class, "b", Lists.newArrayList(new BiomeBase.BiomeMeta[]{new BiomeBase.BiomeMeta(EntityTypes.GUARDIAN, 1, 2, 4)}));
+        setPrivateFinalField(WorldGenNether.class, "b", Lists.newArrayList(new BiomeBase.BiomeMeta[]{new BiomeBase.BiomeMeta(EntityTypes.BLAZE, 10, 2, 3), new BiomeBase.BiomeMeta(EntityTypes.ZOMBIE_PIGMAN, 5, 4, 4), new BiomeBase.BiomeMeta(EntityTypes.WITHER_SKELETON, 8, 5, 5), new BiomeBase.BiomeMeta(EntityTypes.SKELETON, 2, 5, 5), new BiomeBase.BiomeMeta(EntityTypes.MAGMA_CUBE, 3, 4, 4)}));
+    }
+
+    private static void setPrivateFinalField(Class clazz, String name, Object value) {
+        Logger.debug("Rebuilding world gen mob features for: " + clazz.getSimpleName());
+        try {
+            Field field = clazz.getDeclaredField(name);
+            field.setAccessible(true);
+            field_modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            field.set(null, value);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 }
