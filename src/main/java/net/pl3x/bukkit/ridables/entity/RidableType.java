@@ -87,14 +87,14 @@ public class RidableType {
                 } catch (NoSuchFieldError ignore) {
                 }
 
-                Logger.info("Successfully injected replacement entity: " + Logger.ANSI_GREEN + name);
+                Logger.info("Successfully injected replacement entity: &a" + name);
 
                 RidableType ridableTypes = new RidableType(newType, waterBucket);
                 BY_BUKKIT_TYPE.put(bukkitType, ridableTypes);
                 return ridableTypes;
             }
         } else {
-            Logger.info("Skipping disabled entity: " + Logger.ANSI_GREEN + name);
+            Logger.info("Skipping disabled entity: &a" + name);
         }
         return null;
     }

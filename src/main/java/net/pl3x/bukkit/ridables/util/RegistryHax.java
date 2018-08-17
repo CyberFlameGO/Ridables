@@ -70,17 +70,17 @@ public class RegistryHax {
     }
 
     public static void injectNewEntityTypes(String name, String extend_from, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function) {
-        Logger.debug("Attempting to inject new entity: " + Logger.ANSI_CYAN + name);
+        Logger.debug("Attempting to inject new entity: &3" + name);
         Logger.debug("Injecting new datatypes");
         Map<Object, Type<?>> dataTypes = (Map<Object, Type<?>>) DataConverterRegistry.a().getSchema(15190).findChoiceType(DataConverterTypes.n).types();
         dataTypes.put("minecraft:" + name, dataTypes.get("minecraft:" + extend_from));
         Logger.debug("Injecting new EntityTypes");
         EntityTypes.a(name, EntityTypes.a.a(clazz, function));
-        Logger.info("Successfully injected new entity: " + Logger.ANSI_GREEN + name);
+        Logger.info("Successfully injected new entity: &a" + name);
     }
 
     public static boolean injectReplacementEntityTypes(String name, EntityTypes entityTypes, MinecraftKey key, EntityTypes<?> newType, Material spawnEggMaterial) {
-        Logger.debug("Attempting to inject replacement entity: " + Logger.ANSI_CYAN + name);
+        Logger.debug("Attempting to inject replacement entity: &3" + name);
         try {
             RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_field_a.get(EntityTypes.REGISTRY);
             int id = registry.getId(entityTypes);
@@ -91,7 +91,7 @@ public class RegistryHax {
             Object[] array_d = (Object[]) registry_field_d.get(registry);
 
             if (id < 0) {
-                Logger.debug(Logger.ANSI_RED + "Invalid id detected. Trying again!");
+                Logger.debug("&cInvalid id detected. Trying again!");
                 for (int i = 0; i < array_d.length; i++) {
                     if (array_d[i] != null) {
                         if (array_d[i] == entityTypes) {
@@ -100,7 +100,7 @@ public class RegistryHax {
                             break;
                         }
                         if (((EntityTypes) array_d[i]).d().equals("minecraft:" + name)) {
-                            Logger.debug(Logger.ANSI_RED + "Found EntityTypes id using name but not reference! What?!");
+                            Logger.debug("&cFound EntityTypes id using name but not reference! What?!");
                             id = i;
                             break;
                         }
@@ -120,7 +120,7 @@ public class RegistryHax {
                         break;
                     }
                     if (((EntityTypes) array_b[i]).d().equals("minecraft:" + name)) {
-                        Logger.debug(Logger.ANSI_RED + "Found EntityTypes oldIndex using name but not reference! What?!");
+                        Logger.debug("&cFound EntityTypes oldIndex using name but not reference! What?!");
                         //array_b[i] = null; // do not remove old reference (might be causing issues?)
                         oldIndex = i;
                         break;
@@ -131,7 +131,7 @@ public class RegistryHax {
             Logger.debug("Detected oldIndex: " + oldIndex);
 
             if (oldIndex < 0) {
-                Logger.debug(Logger.ANSI_RED + "Invalid oldIndex detected. Trying again!");
+                Logger.debug("&cInvalid oldIndex detected. Trying again!");
                 array_b = (Object[]) registry_field_b.get(registry);
                 for (int i = 0; i < array_b.length; i++) {
                     if (array_b[i] != null) {
@@ -141,7 +141,7 @@ public class RegistryHax {
                             break;
                         }
                         if (((EntityTypes) array_b[i]).d().equals("minecraft:" + name)) {
-                            Logger.debug(Logger.ANSI_RED + "Found EntityTypes oldIndex using name but not reference! What?!");
+                            Logger.debug("&cFound EntityTypes oldIndex using name but not reference! What?!");
                             //array_b[i] = null; // do not remove old reference (might be causing issues?)
                             oldIndex = i;
                             break;
@@ -157,7 +157,7 @@ public class RegistryHax {
             Logger.debug("Generated newIndex: " + newIndex);
 
             EntityTypes e = (EntityTypes) array_b[newIndex];
-            Logger.debug("EntityType at newIndex " + newIndex + ": " + (e == null ? "null" : Logger.ANSI_RED + e.d()));
+            Logger.debug("EntityType at newIndex " + newIndex + ": " + (e == null ? "null" : "&c" + e.d()));
 
             Logger.debug("Injecting new EntityTypes to b[newIndex]: " + newIndex);
             array_b[newIndex] = newType;
@@ -169,7 +169,7 @@ public class RegistryHax {
                 Logger.debug("Removing c[oldIndex] reference: " + oldIndex + ":0");
                 array_c[oldIndex] = 0;
             } else {
-                Logger.debug(Logger.ANSI_RED + "Skipping c[oldIndex] reference: " + oldIndex + ":0");
+                Logger.debug("&cSkipping c[oldIndex] reference: " + oldIndex + ":0");
             }
             Logger.debug("Injecting c[newIndex] reference: " + newIndex + ":" + id);
             array_c[newIndex] = id;
@@ -207,7 +207,7 @@ public class RegistryHax {
             return true;
         } catch (IllegalAccessException | InvocationTargetException | ArrayIndexOutOfBoundsException e) {
             Logger.error("Could not inject new ridable entity to registry! Restart your server to try again! "
-                    + "(" + Logger.ANSI_YELLOW + name + Logger.ANSI_RED + ")");
+                    + "(&e" + name + "&c)");
             e.printStackTrace();
             return false;
         }
