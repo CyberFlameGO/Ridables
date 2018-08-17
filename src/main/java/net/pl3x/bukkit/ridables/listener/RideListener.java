@@ -134,14 +134,24 @@ public class RideListener implements Listener {
         }
 
         player.leaveVehicle();
+
         if (!Config.UNMOUNT_ON_TELEPORT) {
-            vehicle.teleport(event.getTo());
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    vehicle.addPassenger(player);
+                    // delay vehicle teleport to ensure player is not still on it
+                    vehicle.teleport(event.getTo());
                 }
-            }.runTask(plugin);
+            }.runTaskLater(plugin, 10);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    // delay adding rider back to ensure client has received new vehicle location
+                    override.add(player.getUniqueId());
+                    vehicle.addPassenger(player);
+                    override.remove(player.getUniqueId());
+                }
+            }.runTaskLater(plugin, 20);
         }
     }
 
