@@ -8,7 +8,6 @@ import net.minecraft.server.v1_13_R1.EntityComplexPart;
 import net.minecraft.server.v1_13_R1.EntityEnderDragon;
 import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.EnumMoveType;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.MathHelper;
@@ -16,7 +15,6 @@ import net.minecraft.server.v1_13_R1.NBTTagCompound;
 import net.minecraft.server.v1_13_R1.Vec3D;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
@@ -164,22 +162,6 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
             isUsingCustomController = true;
             //this.moveController = new ControllerFlying(this);
         }
-    }
-
-    public boolean onSpacebar() {
-        return false;
-    }
-
-    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
-        return false;
-    }
-
-    public boolean onClick(Block block, EnumHand hand) {
-        return false;
-    }
-
-    public boolean onClick(EnumHand hand) {
-        return false;
     }
 
     // writeEntityToNBT

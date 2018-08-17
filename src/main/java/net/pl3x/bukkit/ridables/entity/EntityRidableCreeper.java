@@ -21,7 +21,6 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ReflectionUtil;
-import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableCreeper extends EntityCreeper implements RidableEntity {
@@ -112,18 +111,6 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
                 return true;
             }
         }
-        return false;
-    }
-
-    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
-        return false;
-    }
-
-    public boolean onClick(Block block, EnumHand hand) {
-        return false;
-    }
-
-    public boolean onClick(EnumHand hand) {
         return false;
     }
 

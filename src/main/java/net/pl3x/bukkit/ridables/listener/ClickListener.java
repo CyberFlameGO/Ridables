@@ -29,19 +29,24 @@ public class ClickListener implements Listener {
             return; // not ridable
         }
 
+        boolean cancel = false;
         switch (event.getAction()) {
             case LEFT_CLICK_BLOCK:
-                ridable.onClick(event.getClickedBlock(), EnumHand.MAIN_HAND);
+                cancel = ridable.onClick(event.getClickedBlock(), event.getBlockFace(), EnumHand.MAIN_HAND);
                 break;
             case RIGHT_CLICK_BLOCK:
-                ridable.onClick(event.getClickedBlock(), EnumHand.OFF_HAND);
+                cancel = ridable.onClick(event.getClickedBlock(), event.getBlockFace(), EnumHand.OFF_HAND);
                 break;
             case LEFT_CLICK_AIR:
-                ridable.onClick(EnumHand.MAIN_HAND);
+                cancel = ridable.onClick(EnumHand.MAIN_HAND);
                 break;
             case RIGHT_CLICK_AIR:
-                ridable.onClick(EnumHand.OFF_HAND);
+                cancel = ridable.onClick(EnumHand.OFF_HAND);
                 break;
+        }
+
+        if (cancel) {
+            event.setCancelled(true);
         }
     }
 

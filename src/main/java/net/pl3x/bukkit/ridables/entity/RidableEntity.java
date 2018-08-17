@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumHand;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
@@ -67,7 +68,9 @@ public interface RidableEntity {
      *
      * @return True if spacebar was handled
      */
-    boolean onSpacebar();
+    default boolean onSpacebar() {
+        return false;
+    }
 
     /**
      * This method is called when the current rider clicks on an entity
@@ -78,18 +81,23 @@ public interface RidableEntity {
      * @param hand   Hand used to click
      * @return True if click was handled
      */
-    boolean onClick(Entity entity, EnumHand hand);
+    default boolean onClick(Entity entity, EnumHand hand) {
+        return false;
+    }
 
     /**
      * This method is called when the current rider clicks on a block
      * <p>
      * This is used internally for triggering click events on the creature. It is advised to not use this method
      *
-     * @param block The Block clicked on
-     * @param hand  Hand used to click
+     * @param block     The Block clicked on
+     * @param blockFace Face of black clicked
+     * @param hand      Hand used to click
      * @return True if click was handled
      */
-    boolean onClick(Block block, EnumHand hand);
+    default boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
+        return false;
+    }
 
     /**
      * This method is called when the current rider clicks in the air
@@ -99,5 +107,7 @@ public interface RidableEntity {
      * @param hand Hand used to click
      * @return True if click was handled
      */
-    boolean onClick(EnumHand hand);
+    default boolean onClick(EnumHand hand) {
+        return false;
+    }
 }
