@@ -108,6 +108,9 @@ permissions:
       allow.ride.sheep:
         description: Allow to ride sheep
         default: op
+      allow.ride.silverfish:
+        description: Allow to ride silverfish
+        default: op
       allow.ride.skeleton:
         description: Allow to ride skeletons
         default: op

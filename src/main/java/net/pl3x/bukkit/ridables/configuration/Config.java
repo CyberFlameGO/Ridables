@@ -139,6 +139,10 @@ public class Config {
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
 
+    public static boolean SILVERFISH_ENABLED = false;
+    public static float SILVERFISH_SPEED = 1.0F;
+    public static float SILVERFISH_JUMP_POWER = 0.5F;
+
     public static boolean SKELETON_ENABLED = false;
     public static float SKELETON_SPEED = 1.0F;
     public static float SKELETON_JUMP_POWER = 0.5F;
@@ -331,6 +335,10 @@ public class Config {
         SHEEP_ENABLED = config.getBoolean("sheep.enabled", false);
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);
         SHEEP_JUMP_POWER = (float) config.getDouble("sheep.jump-power", 0.5D);
+
+        SILVERFISH_ENABLED = config.getBoolean("silverfish.enabled", false);
+        SILVERFISH_SPEED = (float) config.getDouble("silverfish.speed", 1.0D);
+        SILVERFISH_JUMP_POWER = (float) config.getDouble("silverfish.jump-power", 0.5D);
 
         SKELETON_ENABLED = config.getBoolean("skeleton.enabled", false);
         SKELETON_SPEED = (float) config.getDouble("skeleton.speed", 1.0D);
