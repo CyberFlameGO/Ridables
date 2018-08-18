@@ -138,6 +138,9 @@ permissions:
       allow.ride.zombie:
         description: Allow to ride zombies
         default: op
+      allow.ride.zombie_horse:
+        description: Allow to ride zombie horses
+        default: op
       allow.ride.zombie_pigman:
         description: Allow to ride zombie pigman
         default: op

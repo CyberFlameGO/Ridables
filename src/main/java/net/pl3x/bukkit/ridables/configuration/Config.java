@@ -184,6 +184,8 @@ public class Config {
     public static float ZOMBIE_SPEED = 1.0F;
     public static float ZOMBIE_JUMP_POWER = 0.5F;
 
+    public static boolean ZOMBIE_HORSE_ENABLED = false;
+
     public static boolean ZOMBIE_PIGMAN_ENABLED = false;
     public static float ZOMBIE_PIGMAN_SPEED = 1.0F;
     public static float ZOMBIE_PIGMAN_JUMP_POWER = 0.5F;
@@ -380,6 +382,8 @@ public class Config {
         ZOMBIE_ENABLED = config.getBoolean("zombie.enabled", false);
         ZOMBIE_SPEED = (float) config.getDouble("zombie.speed", 1.0D);
         ZOMBIE_JUMP_POWER = (float) config.getDouble("zombie.jump-power", 0.5D);
+
+        ZOMBIE_HORSE_ENABLED = config.getBoolean("zombie-horse.enabled", false);
 
         ZOMBIE_PIGMAN_ENABLED = config.getBoolean("zombie-pigman.enabled", false);
         ZOMBIE_PIGMAN_SPEED = (float) config.getDouble("zombie-pigman.speed", 1.0D);

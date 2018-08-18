@@ -270,6 +270,10 @@ zombie:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Zombie Horse options
+zombie-horse:
+  enabled: false     # enable custom ridable entity
+
 # Zombie Pigman options
 zombie-pigman:
   enabled: false     # enable custom ridable entity

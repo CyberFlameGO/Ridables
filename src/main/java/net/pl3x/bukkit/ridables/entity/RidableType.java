@@ -57,6 +57,7 @@ public class RidableType {
     public static final RidableType VINDICATOR = inject(Config.VINDICATOR_ENABLED, "vindicator", EntityTypes.VINDICATOR, Material.VINDICATOR_SPAWN_EGG, EntityRidableVindicator.class, EntityRidableVindicator::new);
     public static final RidableType WOLF = inject(Config.WOLF_ENABLED, "wolf", EntityTypes.WOLF, Material.WOLF_SPAWN_EGG, EntityRidableWolf.class, EntityRidableWolf::new);
     public static final RidableType ZOMBIE = inject(Config.ZOMBIE_ENABLED, "zombie", EntityTypes.ZOMBIE, Material.ZOMBIE_SPAWN_EGG, EntityRidableZombie.class, EntityRidableZombie::new);
+    public static final RidableType ZOMBIE_HORSE = inject(Config.ZOMBIE_HORSE_ENABLED, "zombie_horse", EntityTypes.ZOMBIE_HORSE, Material.ZOMBIE_HORSE_SPAWN_EGG, EntityRidableZombieHorse.class, EntityRidableZombieHorse::new);
     public static final RidableType ZOMBIE_PIGMAN = inject(Config.ZOMBIE_PIGMAN_ENABLED, "zombie_pigman", EntityTypes.ZOMBIE_PIGMAN, Material.ZOMBIE_PIGMAN_SPAWN_EGG, EntityRidableZombiePigman.class, EntityRidableZombiePigman::new);
     public static final RidableType ZOMBIE_VILLAGER = inject(Config.ZOMBIE_VILLAGER_ENABLED, "zombie_villager", EntityTypes.ZOMBIE_VILLAGER, Material.ZOMBIE_VILLAGER_SPAWN_EGG, EntityRidableZombieVillager.class, EntityRidableZombieVillager::new);
 
