@@ -39,6 +39,9 @@ permissions:
       allow.ride.bat:
         description: Allow to ride bats
         default: op
+      allow.ride.blaze:
+        description: Allow to ride blazes
+        default: op
       allow.ride.cave_spider:
         description: Allow to ride cave spiders
         default: op

@@ -34,6 +34,13 @@ bat:
   vertical: 1.0      # vertical boost when pressing spacebar
   gravity: 0.04      # amount of gravity while not in motion
 
+# Blaze options
+blaze:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  vertical: 0.5      # vertical boost when pressing spacebar
+  gravity: 0.04      # amount of gravity while not in motion
+
 # Cave Spider options
 cave-spider:
   enabled: false     # enable custom ridable entity

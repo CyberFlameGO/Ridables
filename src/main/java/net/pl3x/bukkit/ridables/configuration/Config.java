@@ -22,6 +22,11 @@ public class Config {
     public static float BAT_VERTICAL = 1.0F;
     public static float BAT_GRAVITY = 0.04F;
 
+    public static boolean BLAZE_ENABLED = false;
+    public static float BLAZE_SPEED = 1.0F;
+    public static float BLAZE_VERTICAL = 0.5F;
+    public static float BLAZE_GRAVITY = 0.04F;
+
     public static boolean CAVE_SPIDER_ENABLED = false;
     public static float CAVE_SPIDER_SPEED = 1.0F;
     public static float CAVE_SPIDER_JUMP_POWER = 0.5F;
@@ -234,6 +239,11 @@ public class Config {
         BAT_SPEED = (float) config.getDouble("bat.speed", 1.0D);
         BAT_VERTICAL = (float) config.getDouble("bat.vertical", 1.0D);
         BAT_GRAVITY = (float) config.getDouble("bat.gravity", 0.04D);
+
+        BLAZE_ENABLED = config.getBoolean("blaze.enabled", false);
+        BLAZE_SPEED = (float) config.getDouble("blaze.speed", 1.0D);
+        BLAZE_VERTICAL = (float) config.getDouble("blaze.vertical", 0.5D);
+        BLAZE_GRAVITY = (float) config.getDouble("blaze.gravity", 0.04D);
 
         CAVE_SPIDER_ENABLED = config.getBoolean("cave-spider.enabled", false);
         CAVE_SPIDER_SPEED = (float) config.getDouble("cave-spider.speed", 1.0D);
