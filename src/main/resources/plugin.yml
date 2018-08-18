@@ -114,6 +114,9 @@ permissions:
       allow.ride.skeleton:
         description: Allow to ride skeletons
         default: op
+      allow.ride.skeleton_horse:
+        description: Allow to ride skeleton horses
+        default: op
       allow.ride.snowman:
         description: Allow to ride snowman
         default: op

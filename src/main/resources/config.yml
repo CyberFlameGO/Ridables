@@ -214,6 +214,10 @@ skeleton:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Skeleton Horse options
+skeleton-horse:
+  enabled: false     # enable custom ridable entity
+
 # Snowman (Snow Golem) options
 snowman:
   enabled: false     # enable custom ridable entity
