@@ -63,6 +63,9 @@ permissions:
       allow.ride.enderman:
         description: Allow to ride endermen
         default: op
+      allow.ride.endermite:
+        description: Allow to ride endermites
+        default: op
       allow.ride.evoker:
         description: Allow to ride evokers
         default: op

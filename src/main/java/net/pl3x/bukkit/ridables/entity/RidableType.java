@@ -32,6 +32,7 @@ public class RidableType {
     public static final RidableType DROWNED = inject(Config.DROWNED_ENABLED, "drowned", EntityTypes.DROWNED, Material.DROWNED_SPAWN_EGG, EntityRidableDrowned.class, EntityRidableDrowned::new);
     public static final RidableType ENDER_DRAGON = inject(Config.DRAGON_ENABLED, "ender_dragon", EntityTypes.ENDER_DRAGON, null, EntityRidableEnderDragon.class, EntityRidableEnderDragon::new);
     public static final RidableType ENDERMAN = inject(Config.ENDERMAN_ENABLED, "enderman", EntityTypes.ENDERMAN, null, EntityRidableEnderman.class, EntityRidableEnderman::new);
+    public static final RidableType ENDERMITE = inject(Config.ENDERMITE_ENABLED, "endermite", EntityTypes.ENDERMITE, null, EntityRidableEndermite.class, EntityRidableEndermite::new);
     public static final RidableType EVOKER = inject(Config.EVOKER_ENABLED, "evoker", EntityTypes.EVOKER, Material.EVOKER_SPAWN_EGG, EntityRidableEvoker.class, EntityRidableEvoker::new);
     public static final RidableType GHAST = inject(Config.GHAST_ENABLED, "ghast", EntityTypes.GHAST, Material.GHAST_SPAWN_EGG, EntityRidableGhast.class, EntityRidableGhast::new);
     public static final RidableType HUSK = inject(Config.HUSK_ENABLED, "husk", EntityTypes.HUSK, Material.HUSK_SPAWN_EGG, EntityRidableHusk.class, EntityRidableHusk::new);

@@ -68,6 +68,10 @@ public class Config {
     public static boolean ENDERMAN_EJECT_WHEN_WET = true;
     public static boolean ENDERMAN_TELEPORT_WHEN_DAMAGED = true;
 
+    public static boolean ENDERMITE_ENABLED = false;
+    public static float ENDERMITE_SPEED = 1.0F;
+    public static float ENDERMITE_JUMP_POWER = 0.5F;
+
     public static boolean EVOKER_ENABLED = false;
     public static float EVOKER_SPEED = 1.0F;
     public static float EVOKER_JUMP_POWER = 0.5F;
@@ -256,6 +260,10 @@ public class Config {
         ENDERMAN_DAMAGE_WHEN_WET = config.getBoolean("enderman.when-wet.damage", true);
         ENDERMAN_EJECT_WHEN_WET = config.getBoolean("enderman.when-wet.eject", true);
         ENDERMAN_TELEPORT_WHEN_DAMAGED = config.getBoolean("enderman.teleport-on-damage", true);
+
+        ENDERMITE_ENABLED = config.getBoolean("endermite.enabled", false);
+        ENDERMITE_SPEED = (float) config.getDouble("endermite.speed", 1.0D);
+        ENDERMITE_JUMP_POWER = (float) config.getDouble("endermite.jump-power", 0.5D);
 
         EVOKER_ENABLED = config.getBoolean("evoker.enabled", false);
         EVOKER_SPEED = (float) config.getDouble("evoker.speed", 1.0D);
