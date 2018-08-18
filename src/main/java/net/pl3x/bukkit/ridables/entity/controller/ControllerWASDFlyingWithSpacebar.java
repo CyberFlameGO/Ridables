@@ -3,7 +3,6 @@ package net.pl3x.bukkit.ridables.entity.controller;
 import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 
 public class ControllerWASDFlyingWithSpacebar extends ControllerWASD {
     public ControllerWASDFlyingWithSpacebar(EntityInsentient entity) {
@@ -35,7 +34,7 @@ public class ControllerWASDFlyingWithSpacebar extends ControllerWASD {
         float speed = ridable.getSpeed();
 
         // jump
-        if (ReflectionUtil.isJumping(rider) && !ridable.onSpacebar()) {
+        if (isJumping(rider) && !ridable.onSpacebar()) {
             a.setNoGravity(true);
             vertical = speed;
         } else {

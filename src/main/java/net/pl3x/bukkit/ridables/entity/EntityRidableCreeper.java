@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.ControllerMove;
+import net.minecraft.server.v1_13_R1.DataWatcherObject;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityCreeper;
 import net.minecraft.server.v1_13_R1.EntityHuman;
@@ -20,10 +21,22 @@ import net.minecraft.server.v1_13_R1.PathfinderGoalSwell;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
+
 public class EntityRidableCreeper extends EntityCreeper implements RidableEntity {
+    private static Field ignited_field;
+
+    static {
+        try {
+            ignited_field = EntityCreeper.class.getDeclaredField("c");
+            ignited_field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
     private ControllerMove aiController;
     private ControllerWASD wasdController;
 
@@ -107,7 +120,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
             EntityPlayer rider = getRider();
             if (rider != null && rider.bj == 0 && rider.bh == 0 &&
                     rider.getBukkitEntity().hasPermission("allow.special.creeper")) {
-                dC(); // ignite
+                setIgnited(true);
                 return true;
             }
         }
@@ -137,7 +150,23 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     }
 
     public void disarm() {
-        ReflectionUtil.setCreeperIgnited(this, false);
+        setIgnited(false);
         a(-1); // setSwellState
+    }
+
+    /**
+     * Set ignited state of a ridable creeper
+     *
+     * @param ignited Ignited state to set
+     */
+    public void setIgnited(boolean ignited) {
+        if (ignited) {
+            dC();
+        } else {
+            try {
+                getDataWatcher().set((DataWatcherObject<Boolean>) ignited_field.get(this), false);
+            } catch (IllegalAccessException ignore) {
+            }
+        }
     }
 }

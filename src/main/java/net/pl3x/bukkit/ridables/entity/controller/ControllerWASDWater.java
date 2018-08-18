@@ -2,7 +2,6 @@ package net.pl3x.bukkit.ridables.entity.controller;
 
 import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 
 public class ControllerWASDWater extends ControllerWASD {
     public ControllerWASDWater(EntityInsentient entity) {
@@ -36,7 +35,7 @@ public class ControllerWASDWater extends ControllerWASD {
         }
 
         // jump
-        if (ReflectionUtil.isJumping(rider)) {
+        if (isJumping(rider)) {
             ridable.onSpacebar();
         }
 

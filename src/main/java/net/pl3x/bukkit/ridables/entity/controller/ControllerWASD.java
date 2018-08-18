@@ -2,10 +2,12 @@ package net.pl3x.bukkit.ridables.entity.controller;
 
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.EntityInsentient;
+import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
+
+import java.lang.reflect.Field;
 
 public class ControllerWASD extends ControllerMove {
     protected final RidableEntity ridable;
@@ -61,7 +63,7 @@ public class ControllerWASD extends ControllerMove {
         ridable.setRotation(yaw, rider.pitch);
 
         // jump
-        if (ReflectionUtil.isJumping(rider) && !ridable.onSpacebar() && a.onGround && ridable.getJumpPower() > 0) {
+        if (isJumping(rider) && !ridable.onSpacebar() && a.onGround && ridable.getJumpPower() > 0) {
             a.getControllerJump().a();
         }
 
@@ -73,5 +75,44 @@ public class ControllerWASD extends ControllerMove {
 
         f = a.bj;
         g = a.bh;
+    }
+
+    private static Field jumping;
+
+    static {
+        try {
+            jumping = EntityLiving.class.getDeclaredField("bg");
+            jumping.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Check if entity has their jump flag toggled on
+     * <p>
+     * This is true for players when they are pressing the spacebar
+     *
+     * @param entity Living entity to check
+     * @return True if jump flag is toggled on
+     */
+    public static boolean isJumping(EntityLiving entity) {
+        try {
+            return jumping.getBoolean(entity);
+        } catch (IllegalAccessException ignore) {
+            return false;
+        }
+    }
+
+    /**
+     * Set the jump flag for an entity
+     *
+     * @param entity Entity to set
+     */
+    public static void setJumping(EntityLiving entity) {
+        try {
+            jumping.set(entity, false);
+        } catch (IllegalAccessException ignore) {
+        }
     }
 }

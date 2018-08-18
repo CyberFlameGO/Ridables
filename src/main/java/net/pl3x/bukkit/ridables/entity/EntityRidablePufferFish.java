@@ -9,11 +9,22 @@ import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
+
 public class EntityRidablePufferFish extends EntityPufferFish implements RidableEntity {
+    private static Field puffCounter;
+
+    static {
+        try {
+            puffCounter = EntityPufferFish.class.getDeclaredField("c");
+            puffCounter.setAccessible(true);
+        } catch (NoSuchFieldException ignore) {
+        }
+    }
+
     private ControllerMove aiController;
     private ControllerWASDWater wasdController;
 
@@ -106,13 +117,38 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
             spacebarCooldown = 20;
             if (getPuffState() > 0) {
                 setPuffState(0);
-                ReflectionUtil.setPufferfishBlowupCount(this, 0);
+                setPuffCount(0);
             } else {
                 setPuffState(1);
-                ReflectionUtil.setPufferfishBlowupCount(this, 1);
+                setPuffCount(1);
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get puff up count
+     *
+     * @return Count
+     */
+    public int getPuffCount() {
+        try {
+            return puffCounter.getInt(this);
+        } catch (IllegalAccessException ignore) {
+            return 0;
+        }
+    }
+
+    /**
+     * Set puff up count
+     *
+     * @param count New count
+     */
+    public void setPuffCount(int count) {
+        try {
+            puffCounter.set(this, count);
+        } catch (IllegalAccessException ignore) {
+        }
     }
 }
