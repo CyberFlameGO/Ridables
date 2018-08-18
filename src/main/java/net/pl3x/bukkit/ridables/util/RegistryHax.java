@@ -246,29 +246,6 @@ public class RegistryHax {
         }
     }
 
-    private static void rebuildBiome(int id, String name, BiomeBase biome) {
-        try {
-            Logger.debug(" Rebuilding biome: " + name + " (" + id + ")");
-            Method method = BiomeBase.class.getDeclaredMethod("a", int.class, String.class, BiomeBase.class);
-            method.setAccessible(true);
-            method.invoke(null, id, name, biome);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            Logger.error("Could not rebuild biome: " + name);
-            e.printStackTrace();
-        }
-    }
-
-    private static BiomeBase getConstructor(Class<? extends BiomeBase> clazz) {
-        try {
-            Constructor<? extends BiomeBase> con = clazz.getDeclaredConstructor();
-            con.setAccessible(true);
-            return con.newInstance();
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private static void rebuildBiome(BiomeBase biome, EnumCreatureType type, BiomeBase.BiomeMeta meta) {
         try {
             Method register = BiomeBase.class.getDeclaredMethod("a", EnumCreatureType.class, BiomeBase.BiomeMeta.class);
@@ -279,27 +256,10 @@ public class RegistryHax {
         }
     }
 
-    public static void clearBiomeMobs(BiomeBase biome) {
-        try {
-            Field ba = BiomeBase.class.getDeclaredField("ba");
-            ba.setAccessible(true);
-            field_modifiers.setInt(ba, ba.getModifiers() & ~Modifier.FINAL);
-            Map map = (Map) ba.get(biome);
-            map.clear();
-            ba.set(biome, map);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void rebuildBiomes() {
         Logger.info("Rebuilding biome mob lists");
 
-        BiomeBase biome;
-
-        //rebuildBiome(0, "ocean", new BiomeOcean());
-        biome = BiomeBase.REGISTRY_ID.getId(0);
-        //clearBiomeMobs(biome);
+        BiomeBase biome = BiomeBase.REGISTRY_ID.getId(0);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 1, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.COD, 10, 3, 6));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.DOLPHIN, 1, 1, 2));
@@ -314,9 +274,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(1, "plains", getConstructor(BiomePlains.class));
         biome = BiomeBase.REGISTRY_ID.getId(1);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -334,9 +292,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(2, "desert", new BiomeDesert());
         biome = BiomeBase.REGISTRY_ID.getId(2);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.RABBIT, 4, 2, 3));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -350,9 +306,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ZOMBIE_VILLAGER, 1, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.HUSK, 80, 4, 4));
 
-        //rebuildBiome(3, "mountains", getConstructor(BiomeBigHills.class));
         biome = BiomeBase.REGISTRY_ID.getId(3);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -369,9 +323,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(4, "forest", new BiomeForest());
         biome = BiomeBase.REGISTRY_ID.getId(4);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -388,9 +340,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(5, "taiga", new BiomeTaiga());
         biome = BiomeBase.REGISTRY_ID.getId(5);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -408,9 +358,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(6, "swamp", getConstructor(BiomeSwamp.class));
         biome = BiomeBase.REGISTRY_ID.getId(6);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -427,9 +375,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SLIME, 1, 1, 1));
 
-        //rebuildBiome(7, "river", new BiomeRiver());
         biome = BiomeBase.REGISTRY_ID.getId(7);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 2, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SALMON, 5, 1, 5));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -443,22 +389,16 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(8, "nether", getConstructor(BiomeHell.class));
         biome = BiomeBase.REGISTRY_ID.getId(8);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GHAST, 50, 4, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ZOMBIE_PIGMAN, 100, 4, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.MAGMA_CUBE, 2, 4, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 1, 4, 4));
 
-        //rebuildBiome(9, "the_end", new BiomeTheEnd());
         biome = BiomeBase.REGISTRY_ID.getId(9);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 4, 4));
 
-        //rebuildBiome(10, "frozen_ocean", new BiomeFrozenOcean());
         biome = BiomeBase.REGISTRY_ID.getId(10);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 1, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SALMON, 15, 1, 5));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.POLAR_BEAR, 1, 1, 2));
@@ -473,9 +413,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(11, "frozen_river", new BiomeFrozenRiver());
         biome = BiomeBase.REGISTRY_ID.getId(11);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 2, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SALMON, 5, 1, 5));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -489,9 +427,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(12, "snowy_tundra", new BiomeIcePlains());
         biome = BiomeBase.REGISTRY_ID.getId(12);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.RABBIT, 10, 2, 3));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.POLAR_BEAR, 1, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -506,9 +442,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SKELETON, 20, 4, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.STRAY, 80, 4, 4));
 
-        //rebuildBiome(13, "snowy_mountains", new BiomeIceMountains());
         biome = BiomeBase.REGISTRY_ID.getId(13);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.RABBIT, 10, 2, 3));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.POLAR_BEAR, 1, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -523,21 +457,15 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SKELETON, 20, 4, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.STRAY, 80, 4, 4));
 
-        //rebuildBiome(14, "mushroom_fields", new BiomeMushrooms());
         biome = BiomeBase.REGISTRY_ID.getId(14);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.MOOSHROOM, 8, 4, 8));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
 
-        //rebuildBiome(15, "mushroom_field_shore", new BiomeMushroomIslandShore());
         biome = BiomeBase.REGISTRY_ID.getId(15);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.MOOSHROOM, 8, 4, 8));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
 
-        //rebuildBiome(16, "beach", new BiomeBeach());
         biome = BiomeBase.REGISTRY_ID.getId(16);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.TURTLE, 5, 2, 5));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -550,9 +478,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(17, "desert_hills", new BiomeDesertHills());
         biome = BiomeBase.REGISTRY_ID.getId(17);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.RABBIT, 4, 2, 3));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -566,9 +492,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ZOMBIE_VILLAGER, 1, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.HUSK, 80, 4, 4));
 
-        //rebuildBiome(18, "wooded_hills", new BiomeForestHills());
         biome = BiomeBase.REGISTRY_ID.getId(18);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -585,9 +509,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(19, "taiga_hills", new BiomeTaigaHills());
         biome = BiomeBase.REGISTRY_ID.getId(19);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -605,9 +527,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(20, "mountain_edge", getConstructor(BiomeExtremeHillsEdge.class));
         biome = BiomeBase.REGISTRY_ID.getId(20);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -624,9 +544,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(21, "jungle", new BiomeJungle());
         biome = BiomeBase.REGISTRY_ID.getId(21);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -645,9 +563,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.OCELOT, 2, 1, 1));
 
-        //rebuildBiome(22, "jungle_hills", new BiomeJungleHills());
         biome = BiomeBase.REGISTRY_ID.getId(22);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -666,9 +582,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.OCELOT, 2, 1, 1));
 
-        //rebuildBiome(23, "jungle_edge", new BiomeJungleEdge());
         biome = BiomeBase.REGISTRY_ID.getId(23);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -685,9 +599,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(24, "deep_ocean", new BiomeDeepOcean());
         biome = BiomeBase.REGISTRY_ID.getId(24);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 1, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.COD, 10, 3, 6));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.DOLPHIN, 1, 1, 2));
@@ -702,9 +614,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(25, "stone_shore", new BiomeStoneBeach());
         biome = BiomeBase.REGISTRY_ID.getId(25);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -716,9 +626,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(26, "snowy_beach", new BiomeColdBeach());
         biome = BiomeBase.REGISTRY_ID.getId(26);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -730,9 +638,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(27, "birch_forest", new BiomeBirchForest());
         biome = BiomeBase.REGISTRY_ID.getId(27);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -748,9 +654,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(28, "birch_forest_hills", new BiomeBirchForestHills());
         biome = BiomeBase.REGISTRY_ID.getId(28);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -766,9 +670,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(29, "dark_forest", new BiomeRoofedForest());
         biome = BiomeBase.REGISTRY_ID.getId(29);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -784,9 +686,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(30, "snowy_taiga", new BiomeColdTaiga());
         biome = BiomeBase.REGISTRY_ID.getId(30);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -804,9 +704,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(31, "snowy_taiga_hills", new BiomeColdTaigaHills());
         biome = BiomeBase.REGISTRY_ID.getId(31);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -824,9 +722,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(32, "giant_tree_taiga", new BiomeMegaTaiga());
         biome = BiomeBase.REGISTRY_ID.getId(32);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -844,9 +740,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(33, "giant_tree_taiga_hills", new BiomeMegaTaigaHills());
         biome = BiomeBase.REGISTRY_ID.getId(33);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -864,9 +758,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(34, "wooded_mountains", getConstructor(BiomeExtremeHillsWithTrees.class));
         biome = BiomeBase.REGISTRY_ID.getId(34);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -883,9 +775,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(35, "savanna", getConstructor(BiomeSavanna.class));
         biome = BiomeBase.REGISTRY_ID.getId(35);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -903,9 +793,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(36, "savanna_plateau", getConstructor(BiomeSavannaPlateau.class));
         biome = BiomeBase.REGISTRY_ID.getId(36);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -924,9 +812,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(37, "badlands", new BiomeMesa());
         biome = BiomeBase.REGISTRY_ID.getId(37);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -938,9 +824,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(38, "wooded_badlands_plateau", new BiomeMesaPlataeu());
         biome = BiomeBase.REGISTRY_ID.getId(38);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -952,9 +836,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(39, "badlands_plateau", new BiomeMesaPlataeuClear());
         biome = BiomeBase.REGISTRY_ID.getId(39);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -966,29 +848,19 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(40, "small_end_islands", new BiomeTheEndFloatingIslands());
         biome = BiomeBase.REGISTRY_ID.getId(40);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 4, 4));
 
-        //rebuildBiome(41, "end_midlands", new BiomeTheEndMediumIsland());
         biome = BiomeBase.REGISTRY_ID.getId(41);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 4, 4));
 
-        //rebuildBiome(42, "end_highlands", new BiomeTheEndHighIsland());
         biome = BiomeBase.REGISTRY_ID.getId(42);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 4, 4));
 
-        //rebuildBiome(43, "end_barrens", new BiomeTheEndBarrenIsland());
         biome = BiomeBase.REGISTRY_ID.getId(43);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 4, 4));
 
-        //rebuildBiome(44, "warm_ocean", new BiomeWarmOcean());
         biome = BiomeBase.REGISTRY_ID.getId(44);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PUFFERFISH, 15, 1, 3));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.TROPICAL_FISH, 25, 8, 8));
@@ -1003,9 +875,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(45, "lukewarm_ocean", new BiomeLukewarmOcean());
         biome = BiomeBase.REGISTRY_ID.getId(45);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.COD, 15, 3, 6));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PUFFERFISH, 5, 1, 3));
@@ -1022,9 +892,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(46, "cold_ocean", new BiomeColdOcean());
         biome = BiomeBase.REGISTRY_ID.getId(46);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 3, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.COD, 15, 3, 6));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SALMON, 15, 1, 5));
@@ -1039,9 +907,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(47, "deep_warm_ocean", new BiomeWarmDeepOcean());
         biome = BiomeBase.REGISTRY_ID.getId(47);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 5, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.TROPICAL_FISH, 25, 8, 8));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.DOLPHIN, 2, 1, 2));
@@ -1056,9 +922,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(48, "deep_lukewarm_ocean", new BiomeLukewarmDeepOcean());
         biome = BiomeBase.REGISTRY_ID.getId(48);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 8, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.COD, 8, 3, 6));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PUFFERFISH, 5, 1, 3));
@@ -1075,9 +939,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(49, "deep_cold_ocean", new BiomeColdDeepOcean());
         biome = BiomeBase.REGISTRY_ID.getId(49);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 3, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.COD, 15, 3, 6));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SALMON, 15, 1, 5));
@@ -1092,9 +954,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(50, "deep_frozen_ocean", new BiomeFrozenDeepOcean());
         biome = BiomeBase.REGISTRY_ID.getId(50);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 1, 1, 4));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SALMON, 15, 1, 5));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.POLAR_BEAR, 1, 1, 2));
@@ -1109,13 +969,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(127, "the_void", new BiomeVoid());
-        biome = BiomeBase.REGISTRY_ID.getId(127);
-        //clearBiomeMobs(biome);
-
-        //rebuildBiome(129, "sunflower_plains", getConstructor(BiomeSunflowerPlains.class));
         biome = BiomeBase.REGISTRY_ID.getId(129);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1133,9 +987,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(130, "desert_lakes", new BiomeDesertMutated());
         biome = BiomeBase.REGISTRY_ID.getId(130);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.RABBIT, 4, 2, 3));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
@@ -1149,9 +1001,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ZOMBIE_VILLAGER, 1, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.HUSK, 80, 4, 4));
 
-        //rebuildBiome(131, "gravelly_mountains", getConstructor(BiomeExtremeHillsMutated.class));
         biome = BiomeBase.REGISTRY_ID.getId(131);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1168,9 +1018,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(132, "flower_forest", new BiomeFlowerForest());
         biome = BiomeBase.REGISTRY_ID.getId(132);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1187,9 +1035,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(133, "taiga_mountains", new BiomeTaigaMutated());
         biome = BiomeBase.REGISTRY_ID.getId(133);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1207,9 +1053,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(134, "swamp_hills", getConstructor(BiomeSwamplandMutated.class));
         biome = BiomeBase.REGISTRY_ID.getId(134);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1226,9 +1070,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SLIME, 1, 1, 1));
 
-        //rebuildBiome(140, "ice_spikes", new BiomeIcePlainsSpikes());
         biome = BiomeBase.REGISTRY_ID.getId(140);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.RABBIT, 10, 2, 3));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.POLAR_BEAR, 1, 1, 2));
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
@@ -1243,9 +1085,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SKELETON, 20, 4, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.STRAY, 80, 4, 4));
 
-        //rebuildBiome(149, "modified_jungle", new BiomeJungleMutated());
         biome = BiomeBase.REGISTRY_ID.getId(149);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1264,9 +1104,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.OCELOT, 2, 1, 1));
 
-        //rebuildBiome(151, "modified_jungle_edge", new BiomeJungleEdgeMutated());
         biome = BiomeBase.REGISTRY_ID.getId(151);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1283,9 +1121,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(155, "tall_birch_forest", new BiomeBirchForestMutated());
         biome = BiomeBase.REGISTRY_ID.getId(155);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1301,9 +1137,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(156, "tall_birch_hills", new BiomeBirchForestHillsMutated());
         biome = BiomeBase.REGISTRY_ID.getId(156);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1319,9 +1153,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(157, "dark_forest_hills", new BiomeRoofedForestMutated());
         biome = BiomeBase.REGISTRY_ID.getId(157);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1337,9 +1169,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(158, "snowy_taiga_mountains", new BiomeColdTaigaMutated());
         biome = BiomeBase.REGISTRY_ID.getId(158);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1357,9 +1187,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(160, "giant_spruce_taiga", new BiomeMegaSpruceTaiga());
         biome = BiomeBase.REGISTRY_ID.getId(160);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1377,9 +1205,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(161, "giant_spruce_taiga_hills", new BiomeRedwoodTaigaHillsMutated());
         biome = BiomeBase.REGISTRY_ID.getId(161);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1397,9 +1223,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(162, "modified_gravelly_mountains", getConstructor(BiomeExtremeHillsWithTreesMutated.class));
         biome = BiomeBase.REGISTRY_ID.getId(162);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1416,9 +1240,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(163, "shattered_savanna", new BiomeSavannaMutated());
         biome = BiomeBase.REGISTRY_ID.getId(163);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1436,9 +1258,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(164, "shattered_savanna_plateau", new BiomeSavannaPlateauMutated());
         biome = BiomeBase.REGISTRY_ID.getId(164);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SHEEP, 12, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.PIG, 10, 4, 4));
         rebuildBiome(biome, EnumCreatureType.CREATURE, new BiomeBase.BiomeMeta(EntityTypes.CHICKEN, 10, 4, 4));
@@ -1456,9 +1276,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(165, "eroded_badlands", new BiomeMesaBryce());
         biome = BiomeBase.REGISTRY_ID.getId(165);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -1470,9 +1288,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(166, "modified_wooded_badlands_plateau", new BiomeMesaPlateauMutated());
         biome = BiomeBase.REGISTRY_ID.getId(166);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
@@ -1484,9 +1300,7 @@ public class RegistryHax {
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 10, 1, 4));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.WITCH, 5, 1, 1));
 
-        //rebuildBiome(167, "modified_badlands_plateau", new BiomeMesaPlateauClearMutated());
         biome = BiomeBase.REGISTRY_ID.getId(167);
-        //clearBiomeMobs(biome);
         rebuildBiome(biome, EnumCreatureType.WATER_CREATURE, new BiomeBase.BiomeMeta(EntityTypes.SQUID, 10, 1, 2));
         rebuildBiome(biome, EnumCreatureType.AMBIENT, new BiomeBase.BiomeMeta(EntityTypes.BAT, 10, 8, 8));
         rebuildBiome(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SPIDER, 100, 4, 4));
