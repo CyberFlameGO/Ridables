@@ -75,6 +75,10 @@ public class Config {
     public static float GHAST_SHOOT_DAMAGE = 5.0F;
     public static boolean GHAST_SHOOT_GRIEF = true;
 
+    public static boolean HUSK_ENABLED = false;
+    public static float HUSK_SPEED = 1.0F;
+    public static float HUSK_JUMP_POWER = 0.5F;
+
     public static boolean ILLUSIONER_ENABLED = false;
     public static float ILLUSIONER_SPEED = 1.0F;
     public static float ILLUSIONER_JUMP_POWER = 0.5F;
@@ -127,6 +131,10 @@ public class Config {
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
 
+    public static boolean SKELETON_ENABLED = false;
+    public static float SKELETON_SPEED = 1.0F;
+    public static float SKELETON_JUMP_POWER = 0.5F;
+
     public static boolean SNOWMAN_ENABLED = false;
     public static float SNOWMAN_SPEED = 1.0F;
     public static float SNOWMAN_JUMP_POWER = 0.5F;
@@ -139,6 +147,10 @@ public class Config {
     public static float SPIDER_JUMP_POWER = 0.5F;
     public static boolean SPIDER_CLIMB_WALLS = true;
     public static float SPIDER_CLIMB_SPEED = 1.0F;
+
+    public static boolean STRAY_ENABLED = false;
+    public static float STRAY_SPEED = 1.0F;
+    public static float STRAY_JUMP_POWER = 0.5F;
 
     public static boolean TURTLE_ENABLED = false;
     public static float TURTLE_SPEED_LAND = 1.0F;
@@ -155,6 +167,14 @@ public class Config {
     public static boolean WOLF_ENABLED = false;
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
+
+    public static boolean ZOMBIE_ENABLED = false;
+    public static float ZOMBIE_SPEED = 1.0F;
+    public static float ZOMBIE_JUMP_POWER = 0.5F;
+
+    public static boolean ZOMBIE_PIGMAN_ENABLED = false;
+    public static float ZOMBIE_PIGMAN_SPEED = 1.0F;
+    public static float ZOMBIE_PIGMAN_JUMP_POWER = 0.5F;
 
     public static boolean ZOMBIE_VILLAGER_ENABLED = false;
     public static float ZOMBIE_VILLAGER_SPEED = 1.0F;
@@ -240,6 +260,10 @@ public class Config {
         GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
         GHAST_SHOOT_GRIEF = config.getBoolean("ghast.shoot.grief", true);
 
+        HUSK_ENABLED = config.getBoolean("husk.enabled", false);
+        HUSK_SPEED = (float) config.getDouble("husk.speed", 1.0D);
+        HUSK_JUMP_POWER = (float) config.getDouble("husk.jump-power", 0.5D);
+
         ILLUSIONER_ENABLED = config.getBoolean("illusioner.enabled", false);
         ILLUSIONER_SPEED = (float) config.getDouble("illusioner.speed", 1.0D);
         ILLUSIONER_JUMP_POWER = (float) config.getDouble("illusioner.jump-power", 0.5D);
@@ -292,6 +316,10 @@ public class Config {
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);
         SHEEP_JUMP_POWER = (float) config.getDouble("sheep.jump-power", 0.5D);
 
+        SKELETON_ENABLED = config.getBoolean("skeleton.enabled", false);
+        SKELETON_SPEED = (float) config.getDouble("skeleton.speed", 1.0D);
+        SKELETON_JUMP_POWER = (float) config.getDouble("skeleton.jump-power", 0.5D);
+
         SNOWMAN_ENABLED = config.getBoolean("snowman.enabled", false);
         SNOWMAN_SPEED = (float) config.getDouble("snowman.speed", 1.0D);
         SNOWMAN_JUMP_POWER = (float) config.getDouble("snowman.jump-power", 0.5D);
@@ -304,6 +332,10 @@ public class Config {
         SPIDER_JUMP_POWER = (float) config.getDouble("spider.jump-power", 0.5D);
         SPIDER_CLIMB_WALLS = config.getBoolean("spider.climb-walls", true);
         SPIDER_CLIMB_SPEED = (float) config.getDouble("spider.climb-speed", 1.0D);
+
+        STRAY_ENABLED = config.getBoolean("stray.enabled", false);
+        STRAY_SPEED = (float) config.getDouble("stray.speed", 1.0D);
+        STRAY_JUMP_POWER = (float) config.getDouble("stray.jump-power", 0.5D);
 
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", false);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
@@ -320,6 +352,14 @@ public class Config {
         WOLF_ENABLED = config.getBoolean("wolf.enabled", false);
         WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
         WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
+
+        ZOMBIE_ENABLED = config.getBoolean("zombie.enabled", false);
+        ZOMBIE_SPEED = (float) config.getDouble("zombie.speed", 1.0D);
+        ZOMBIE_JUMP_POWER = (float) config.getDouble("zombie.jump-power", 0.5D);
+
+        ZOMBIE_PIGMAN_ENABLED = config.getBoolean("zombie-pigman.enabled", false);
+        ZOMBIE_PIGMAN_SPEED = (float) config.getDouble("zombie-pigman.speed", 1.0D);
+        ZOMBIE_PIGMAN_JUMP_POWER = (float) config.getDouble("zombie-pigman.jump-power", 0.5D);
 
         ZOMBIE_VILLAGER_ENABLED = config.getBoolean("zombie-villager.enabled", false);
         ZOMBIE_VILLAGER_SPEED = (float) config.getDouble("zombie-villager.speed", 1.0D);

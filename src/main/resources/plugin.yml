@@ -66,6 +66,9 @@ permissions:
       allow.ride.ghast:
         description: Allow to ride ghast
         default: op
+      allow.ride.husk:
+        description: Allow to ride husks
+        default: op
       allow.ride.illusioner:
         description: Allow to ride illusioners
         default: op
@@ -99,11 +102,17 @@ permissions:
       allow.ride.sheep:
         description: Allow to ride sheep
         default: op
+      allow.ride.skeleton:
+        description: Allow to ride skeletons
+        default: op
       allow.ride.snowman:
         description: Allow to ride snowman
         default: op
       allow.ride.spider:
         description: Allow to ride spiders
+        default: op
+      allow.ride.stray:
+        description: Allow to ride strays
         default: op
       allow.ride.turtle:
         description: Allow to ride turtles
@@ -116,6 +125,12 @@ permissions:
         default: op
       allow.ride.wolf:
         description: Allow to ride tamed wolves
+        default: op
+      allow.ride.zombie:
+        description: Allow to ride zombies
+        default: op
+      allow.ride.zombie_pigman:
+        description: Allow to ride zombie pigman
         default: op
       allow.ride.zombie_villager:
         description: Allow to ride zombie villagers

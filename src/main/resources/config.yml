@@ -110,6 +110,12 @@ ghast:
     damage: 5.0      # damage per hit (1 heart = 2.0 damage)
     grief: true      # whether ghast fireballs can damage the blocks in the world
 
+# Husk options
+husk:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Illusioner options
 illusioner:
   enabled: false     # enable custom ridable entity
@@ -184,6 +190,12 @@ sheep:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Skeleton options
+skeleton:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Snowman (Snow Golem) options
 snowman:
   enabled: false     # enable custom ridable entity
@@ -201,6 +213,12 @@ spider:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   climb-walls: true  # enable climbing walls
   climb-speed: 1.0   # speed of vertical climb
+
+# Stray options
+stray:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Turtle options
 turtle:
@@ -224,6 +242,18 @@ vindicator:
 
 # Wolf options
 wolf:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
+# Zombie options
+zombie:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
+# Zombie Pigman options
+zombie-pigman:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
