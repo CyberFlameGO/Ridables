@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityDolphin;
+import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.Particles;
@@ -18,8 +19,11 @@ import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import javax.annotation.Nullable;
 
 public class EntityRidableDolphin extends EntityDolphin implements RidableEntity {
     private ControllerMove aiController;
@@ -67,7 +71,7 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
 
         EntityPlayer rider = getRider();
         if (rider != null && getAirTicks() > 150) {
-            setGoalTarget(null, null, false);
+            super.setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
 
@@ -199,5 +203,13 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
             return true;
         }
         return false;
+    }
+
+    public void setGoalTarget(@Nullable EntityLiving entityliving) {
+        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
+    }
+
+    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
+        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 }

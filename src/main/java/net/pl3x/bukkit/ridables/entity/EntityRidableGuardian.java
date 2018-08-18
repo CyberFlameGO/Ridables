@@ -41,7 +41,7 @@ public class EntityRidableGuardian extends EntityGuardian implements RidableEnti
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null && getAirTicks() > 150) {
-            setGoalTarget(null, null, false);
+            super.setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             motY += 0.005F;

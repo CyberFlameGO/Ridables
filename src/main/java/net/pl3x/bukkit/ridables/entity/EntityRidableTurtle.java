@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntityTurtle;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
@@ -12,7 +13,10 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nullable;
 
 public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
     private ControllerMove aiController;
@@ -47,7 +51,7 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            setGoalTarget(null, null, false);
+            super.setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             if (isInWater()) {
@@ -105,5 +109,13 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
                 lookController = blankLookController;
             }
         }
+    }
+
+    public void setGoalTarget(@Nullable EntityLiving entityliving) {
+        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
+    }
+
+    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
+        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 }

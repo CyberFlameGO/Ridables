@@ -22,7 +22,10 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nullable;
 
 public class EntityRidableSnowman extends EntitySnowman implements RidableEntity {
     public static final MaterialSetTag PUMPKIN = new MaterialSetTag()
@@ -56,7 +59,7 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            setGoalTarget(null, null, false);
+            super.setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
         }
@@ -103,6 +106,14 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
             moveController = wasdController;
             lookController = blankLookController;
         }
+    }
+
+    public void setGoalTarget(@Nullable EntityLiving entityliving) {
+        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
+    }
+
+    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
+        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     // onLivingUpdate

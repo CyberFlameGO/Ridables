@@ -10,6 +10,7 @@ import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityEnderman;
 import net.minecraft.server.v1_13_R1.EntityEndermite;
 import net.minecraft.server.v1_13_R1.EntityHuman;
+import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.FluidCollisionOption;
@@ -34,8 +35,10 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class EntityRidableEnderman extends EntityEnderman implements RidableEntity {
@@ -64,7 +67,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            setGoalTarget(null, null, false);
+            super.setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             if (ap()) { // isWet
@@ -141,6 +144,14 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
             setCarried(null);
         }
         return true;
+    }
+
+    public void setGoalTarget(@Nullable EntityLiving entityliving) {
+        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
+    }
+
+    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
+        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     // randomlyTeleport

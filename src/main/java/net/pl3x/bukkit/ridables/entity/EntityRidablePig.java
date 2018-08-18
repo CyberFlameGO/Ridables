@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityHuman;
+import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPig;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumHand;
@@ -14,7 +15,10 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nullable;
 
 public class EntityRidablePig extends EntityPig implements RidableEntity {
     private ControllerMove aiController;
@@ -41,7 +45,7 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            setGoalTarget(null, null, false);
+            super.setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
         }
@@ -88,6 +92,14 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
             moveController = wasdController;
             lookController = blankLookController;
         }
+    }
+
+    public void setGoalTarget(@Nullable EntityLiving entityliving) {
+        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
+    }
+
+    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
+        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     // processInteract
