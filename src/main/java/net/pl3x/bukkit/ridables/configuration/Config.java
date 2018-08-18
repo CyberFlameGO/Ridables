@@ -184,6 +184,9 @@ public class Config {
     public static float STRAY_SPEED = 1.0F;
     public static float STRAY_JUMP_POWER = 0.5F;
 
+    public static boolean TROPICAL_FISH_ENABLED = false;
+    public static float TROPICAL_FISH_SPEED = 1.0F;
+
     public static boolean TURTLE_ENABLED = false;
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
@@ -410,6 +413,9 @@ public class Config {
         STRAY_ENABLED = config.getBoolean("stray.enabled", false);
         STRAY_SPEED = (float) config.getDouble("stray.speed", 1.0D);
         STRAY_JUMP_POWER = (float) config.getDouble("stray.jump-power", 0.5D);
+
+        TROPICAL_FISH_ENABLED = config.getBoolean("tropical-fish.enabled", false);
+        TROPICAL_FISH_SPEED = (float) config.getDouble("tropical-fish.speed", 1.0D);
 
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", false);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);

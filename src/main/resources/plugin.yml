@@ -141,6 +141,8 @@ permissions:
       allow.ride.stray:
         description: Allow to ride strays
         default: op
+      allow.ride.tropical_fish:
+        description: Allow to ride tropical fish
       allow.ride.turtle:
         description: Allow to ride turtles
         default: op

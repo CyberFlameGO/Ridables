@@ -58,6 +58,7 @@ public class RidableType {
     public static final RidableType SNOWMAN = inject(Config.SNOWMAN_ENABLED, "snow_golem", EntityTypes.SNOW_GOLEM, null, EntityRidableSnowman.class, EntityRidableSnowman::new);
     public static final RidableType SPIDER = inject(Config.SPIDER_ENABLED, "spider", EntityTypes.SPIDER, Material.SPIDER_SPAWN_EGG, EntityRidableSpider.class, EntityRidableSpider::new);
     public static final RidableType STRAY = inject(Config.STRAY_ENABLED, "stray", EntityTypes.STRAY, Material.STRAY_SPAWN_EGG, EntityRidableStray.class, EntityRidableStray::new);
+    public static final RidableType TROPICAL_FISH = inject(Config.TROPICAL_FISH_ENABLED, "tropical_fish", EntityTypes.TROPICAL_FISH, Material.TROPICAL_FISH_SPAWN_EGG, EntityRidableTropicalFish.class, EntityRidableTropicalFish::new);
     public static final RidableType TURTLE = inject(Config.TURTLE_ENABLED, "turtle", EntityTypes.TURTLE, Material.TURTLE_SPAWN_EGG, EntityRidableTurtle.class, EntityRidableTurtle::new, Bucket.TURTLE);
     public static final RidableType VILLAGER = inject(Config.VILLAGER_ENABLED, "villager", EntityTypes.VILLAGER, Material.VILLAGER_SPAWN_EGG, EntityRidableVillager.class, EntityRidableVillager::new);
     public static final RidableType VINDICATOR = inject(Config.VINDICATOR_ENABLED, "vindicator", EntityTypes.VINDICATOR, Material.VINDICATOR_SPAWN_EGG, EntityRidableVindicator.class, EntityRidableVindicator::new);
