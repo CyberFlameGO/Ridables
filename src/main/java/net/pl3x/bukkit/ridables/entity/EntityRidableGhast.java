@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityGhast;
@@ -10,6 +11,7 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityGhastFireball;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
@@ -20,12 +22,16 @@ import org.bukkit.util.Vector;
 public class EntityRidableGhast extends EntityGhast implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASDFlying wasdController;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
     private int spacebarCooldown = 0;
 
     public EntityRidableGhast(World world) {
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASDFlying(this);
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -72,12 +78,14 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
         }
     }
 
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+            lookController = blankLookController;
         }
     }
 

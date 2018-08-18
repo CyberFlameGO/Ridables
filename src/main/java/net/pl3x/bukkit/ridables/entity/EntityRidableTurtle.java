@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
@@ -7,6 +8,7 @@ import net.minecraft.server.v1_13_R1.EntityTurtle;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
@@ -16,6 +18,8 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASD wasdControllerLand;
     private ControllerWASDWater wasdControllerWater;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
 
     public EntityRidableTurtle(World world) {
         super(world);
@@ -23,6 +27,8 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
         aiController = moveController;
         wasdControllerLand = new ControllerWASD(this);
         wasdControllerWater = new ControllerWASDWater(this);
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -83,6 +89,7 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
         }
     }
 
@@ -90,10 +97,12 @@ public class EntityRidableTurtle extends EntityTurtle implements RidableEntity {
         if (isInWater()) {
             if (moveController != wasdControllerWater) {
                 moveController = wasdControllerWater;
+                lookController = blankLookController;
             }
         } else {
             if (moveController != wasdControllerLand) {
                 moveController = wasdControllerLand;
+                lookController = blankLookController;
             }
         }
     }

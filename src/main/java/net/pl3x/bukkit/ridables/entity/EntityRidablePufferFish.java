@@ -32,7 +32,6 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
 
     public EntityRidablePufferFish(World world) {
         super(world);
-        persistent = true;
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
     }

@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.AttributeInstance;
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityParrot;
@@ -9,6 +10,7 @@ import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.MaterialSetTag;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -19,11 +21,15 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
 
     private ControllerMove aiController;
     private ControllerWASDFlyingWithSpacebar wasdController;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
 
     public EntityRidableParrot(World world) {
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASDFlyingWithSpacebar(this);
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -69,12 +75,14 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
         }
     }
 
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+            lookController = blankLookController;
         }
     }
 }

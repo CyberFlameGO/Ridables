@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
@@ -7,17 +8,22 @@ import net.minecraft.server.v1_13_R1.EntitySkeletonStray;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableStray extends EntitySkeletonStray implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASD wasdController;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
 
     public EntityRidableStray(World world) {
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASD(this);
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -69,12 +75,14 @@ public class EntityRidableStray extends EntitySkeletonStray implements RidableEn
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
         }
     }
 
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+            lookController = blankLookController;
         }
     }
 }

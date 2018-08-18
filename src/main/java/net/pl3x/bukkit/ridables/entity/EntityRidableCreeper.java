@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.DataWatcherObject;
 import net.minecraft.server.v1_13_R1.Entity;
@@ -20,6 +21,7 @@ import net.minecraft.server.v1_13_R1.PathfinderGoalRandomStrollLand;
 import net.minecraft.server.v1_13_R1.PathfinderGoalSwell;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,6 +41,8 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
 
     private ControllerMove aiController;
     private ControllerWASD wasdController;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
 
     private PathfinderGoalNearestAttackableTarget goalTargetPlayer;
     private PathfinderGoalHurtByTarget goalTargetHurtBy;
@@ -47,6 +51,8 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASD(this);
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -101,6 +107,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
             targetSelector.a(1, goalTargetPlayer);
             targetSelector.a(2, goalTargetHurtBy);
         }
@@ -109,6 +116,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+            lookController = blankLookController;
             targetSelector.a(goalTargetPlayer);
             targetSelector.a(goalTargetHurtBy);
             disarm();

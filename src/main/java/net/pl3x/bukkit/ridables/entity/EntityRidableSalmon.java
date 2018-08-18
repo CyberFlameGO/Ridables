@@ -18,7 +18,6 @@ public class EntityRidableSalmon extends EntitySalmon implements RidableEntity {
 
     public EntityRidableSalmon(World world) {
         super(world);
-        persistent = true;
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
     }

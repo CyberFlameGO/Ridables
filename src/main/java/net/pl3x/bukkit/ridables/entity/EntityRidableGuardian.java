@@ -26,7 +26,6 @@ public class EntityRidableGuardian extends EntityGuardian implements RidableEnti
         super(world);
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
-
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
     }

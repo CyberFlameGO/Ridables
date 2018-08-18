@@ -18,7 +18,6 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
 
     public EntityRidableTropicalFish(World world) {
         super(world);
-        persistent = true;
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
     }

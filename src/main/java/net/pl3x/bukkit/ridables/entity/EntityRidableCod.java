@@ -18,7 +18,6 @@ public class EntityRidableCod extends EntityCod implements RidableEntity {
 
     public EntityRidableCod(World world) {
         super(world);
-        persistent = true;
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
     }

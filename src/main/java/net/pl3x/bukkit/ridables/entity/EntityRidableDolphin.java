@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityDolphin;
@@ -11,6 +12,7 @@ import net.minecraft.server.v1_13_R1.World;
 import net.minecraft.server.v1_13_R1.WorldServer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import org.bukkit.Location;
@@ -22,6 +24,8 @@ import org.bukkit.util.Vector;
 public class EntityRidableDolphin extends EntityDolphin implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASDWater wasdController;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
 
     private int bounceCounter = 0;
     private boolean bounceUp = false;
@@ -36,6 +40,8 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         persistent = true;
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
@@ -131,12 +137,14 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
         }
     }
 
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+            lookController = blankLookController;
         }
     }
 
