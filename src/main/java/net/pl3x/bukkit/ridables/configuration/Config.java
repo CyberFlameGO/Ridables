@@ -83,6 +83,10 @@ public class Config {
     public static float GHAST_SHOOT_DAMAGE = 5.0F;
     public static boolean GHAST_SHOOT_GRIEF = true;
 
+    public static boolean GIANT_ENABLED = false;
+    public static float GIANT_SPEED = 1.0F;
+    public static float GIANT_JUMP_POWER = 0.5F;
+
     public static boolean HUSK_ENABLED = false;
     public static float HUSK_SPEED = 1.0F;
     public static float HUSK_JUMP_POWER = 0.5F;
@@ -283,6 +287,10 @@ public class Config {
         GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 1.0D);
         GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
         GHAST_SHOOT_GRIEF = config.getBoolean("ghast.shoot.grief", true);
+
+        GIANT_ENABLED = config.getBoolean("giant.enabled", false);
+        GIANT_SPEED = (float) config.getDouble("giant.speed", 1.0D);
+        GIANT_JUMP_POWER = (float) config.getDouble("giant.jump-power", 0.5D);
 
         HUSK_ENABLED = config.getBoolean("husk.enabled", false);
         HUSK_SPEED = (float) config.getDouble("husk.speed", 1.0D);

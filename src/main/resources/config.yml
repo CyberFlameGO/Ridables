@@ -122,6 +122,12 @@ ghast:
     damage: 5.0      # damage per hit (1 heart = 2.0 damage)
     grief: true      # whether ghast fireballs can damage the blocks in the world
 
+# Giant options
+giant:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+
 # Husk options
 husk:
   enabled: false     # enable custom ridable entity

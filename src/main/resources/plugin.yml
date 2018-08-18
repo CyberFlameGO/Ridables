@@ -72,6 +72,9 @@ permissions:
       allow.ride.ghast:
         description: Allow to ride ghast
         default: op
+      allow.ride.giant:
+        description: Allow to ride giants
+        default: op
       allow.ride.husk:
         description: Allow to ride husks
         default: op
