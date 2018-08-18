@@ -141,6 +141,9 @@ permissions:
       allow.ride.witch:
         description: Allow to ride witches
         default: op
+      allow.ride.wither_skeleton:
+        description: Allow to ride wither skeletons
+        default: op
       allow.ride.wolf:
         description: Allow to ride tamed wolves
         default: op

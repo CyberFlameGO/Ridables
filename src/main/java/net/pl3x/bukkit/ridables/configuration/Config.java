@@ -186,6 +186,10 @@ public class Config {
     public static float WITCH_SPEED = 1.0F;
     public static float WITCH_JUMP_POWER = 0.5F;
 
+    public static boolean WITHER_SKELETON_ENABLED = false;
+    public static float WITHER_SKELETON_SPEED = 1.0F;
+    public static float WITHER_SKELETON_JUMP_POWER = 0.5F;
+
     public static boolean WOLF_ENABLED = false;
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
@@ -394,6 +398,10 @@ public class Config {
         WITCH_ENABLED = config.getBoolean("witch.enabled", false);
         WITCH_SPEED = (float) config.getDouble("witch.speed", 1.0D);
         WITCH_JUMP_POWER = (float) config.getDouble("witch.jump-power", 0.5D);
+
+        WITHER_SKELETON_ENABLED = config.getBoolean("wither-skeleton.enabled", false);
+        WITHER_SKELETON_SPEED = (float) config.getDouble("wither-skeleton.speed", 1.0D);
+        WITHER_SKELETON_JUMP_POWER = (float) config.getDouble("wither-skeleton.jump-power", 0.5D);
 
         WOLF_ENABLED = config.getBoolean("wolf.enabled", false);
         WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
