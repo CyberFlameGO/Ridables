@@ -150,6 +150,9 @@ public class Config {
     public static float RABBIT_SPEED = 1.0F;
     public static float RABBIT_JUMP_POWER = 0.5F;
 
+    public static boolean SALMON_ENABLED = false;
+    public static float SALMON_SPEED = 1.0F;
+
     public static boolean SHEEP_ENABLED = false;
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
@@ -373,6 +376,9 @@ public class Config {
         RABBIT_ENABLED = config.getBoolean("rabbit.enabled", false);
         RABBIT_SPEED = (float) config.getDouble("rabbit.speed", 1.0D);
         RABBIT_JUMP_POWER = (float) config.getDouble("rabbit.jump-power", 0.5D);
+
+        SALMON_ENABLED = config.getBoolean("salmon.enabled", false);
+        SALMON_SPEED = (float) config.getDouble("salmon.speed", 1.0D);
 
         SHEEP_ENABLED = config.getBoolean("sheep.enabled", false);
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);

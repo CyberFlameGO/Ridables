@@ -117,6 +117,9 @@ permissions:
       allow.ride.rabbit:
         description: Allow to ride rabbits
         default: op
+      allow.ride.salmon:
+        description: Allow to ride salmon
+        default: op
       allow.ride.sheep:
         description: Allow to ride sheep
         default: op
