@@ -57,6 +57,10 @@ public class Config {
     public static boolean DRAGON_ENABLED = false;
     public static float DRAGON_SPEED = 1.0F;
 
+    public static boolean DROWNED_ENABLED = false;
+    public static float DROWNED_SPEED = 1.0F;
+    public static float DROWNED_JUMP_POWER = 0.5F;
+
     public static boolean ENDERMAN_ENABLED = false;
     public static float ENDERMAN_SPEED = 1.0F;
     public static float ENDERMAN_JUMP_POWER = 0.5F;
@@ -241,6 +245,10 @@ public class Config {
 
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
+
+        DROWNED_ENABLED = config.getBoolean("drowned.enabled", false);
+        DROWNED_SPEED = (float) config.getDouble("drowned.speed", 1.0D);
+        DROWNED_JUMP_POWER = (float) config.getDouble("drowned.jump-power", 0.5D);
 
         ENDERMAN_ENABLED = config.getBoolean("enderman.enabled", false);
         ENDERMAN_SPEED = (float) config.getDouble("enderman.speed", 1.0D);

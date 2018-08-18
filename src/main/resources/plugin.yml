@@ -54,6 +54,9 @@ permissions:
       allow.ride.dolphin:
         description: Allow to ride dolphins
         default: op
+      allow.ride.drowned:
+        description: Allow to ride drowned
+        default: op
       allow.ride.ender_dragon:
         description: Allow to ride ender dragon
         default: op
