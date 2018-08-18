@@ -14,6 +14,7 @@ public class Config {
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
     public static boolean REQUIRE_SADDLE = false;
     public static boolean CONSUME_SADDLE = false;
+    public static boolean ALLOW_RIDE_BABIES = false;
 
     public static int FLYING_MAX_Y = 256;
 
@@ -247,6 +248,7 @@ public class Config {
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
         CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
+        ALLOW_RIDE_BABIES = config.getBoolean("allow-ride-babies", false);
 
         FLYING_MAX_Y = (int) config.getDouble("flying-max-y", 256D);
 

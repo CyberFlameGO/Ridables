@@ -24,6 +24,9 @@ saddle-to-mount: false
 # Consume the saddle item when mounting (requires saddle-to-mount: true)
 consume-saddle: false
 
+# Can players ride baby versions of creatures
+allow-ride-babies: false
+
 # Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
 flying-max-y: 256
 

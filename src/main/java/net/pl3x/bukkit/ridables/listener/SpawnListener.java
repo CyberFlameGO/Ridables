@@ -2,7 +2,10 @@ package net.pl3x.bukkit.ridables.listener;
 
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -46,5 +49,38 @@ public class SpawnListener implements Listener {
                 entity.remove();
             }
         }.runTask(plugin);
+    }
+
+    @EventHandler
+    public void onBabyCreatureSpawn(CreatureSpawnEvent event) {
+        RidableType ridableType = RidableType.getRidableType(event.getEntityType());
+        if (ridableType == null) {
+            return; // not a ridable type
+        }
+
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Ageable)) {
+            return; // not ageable
+        }
+
+        if (((Ageable) entity).isAdult()) {
+            return; // not a baby
+        }
+
+        if (entity instanceof RidableEntity) {
+            return; // already ridable
+        }
+
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                net.minecraft.server.v1_13_R1.Entity baby = ridableType.spawn(entity.getLocation(), true);
+                net.minecraft.server.v1_13_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+                if (nmsEntity.hasCustomName()) {
+                    baby.setCustomName(nmsEntity.getCustomName());
+                }
+                entity.remove();
+            }
+        }.runTaskLater(plugin, 1);
     }
 }

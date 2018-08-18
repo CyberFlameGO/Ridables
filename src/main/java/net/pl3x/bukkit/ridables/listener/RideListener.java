@@ -10,6 +10,7 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
@@ -90,6 +91,12 @@ public class RideListener implements Listener {
             AnimalTamer owner = ((Tameable) creature).getOwner();
             if (owner == null || !player.getUniqueId().equals(owner.getUniqueId())) {
                 return; // player doesnt own this creature
+            }
+        }
+
+        if (creature instanceof Ageable) {
+            if (!((Ageable) creature).isAdult() && !Config.ALLOW_RIDE_BABIES) {
+                return; // do not ride babies
             }
         }
 
