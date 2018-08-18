@@ -95,6 +95,9 @@ public class Config {
     public static float GIANT_SPEED = 1.0F;
     public static float GIANT_JUMP_POWER = 0.5F;
 
+    public static boolean GUARDIAN_ENABLED = false;
+    public static float GUARDIAN_SPEED = 1.0F;
+
     public static boolean HUSK_ENABLED = false;
     public static float HUSK_SPEED = 1.0F;
     public static float HUSK_JUMP_POWER = 0.5F;
@@ -324,6 +327,9 @@ public class Config {
         GIANT_ENABLED = config.getBoolean("giant.enabled", false);
         GIANT_SPEED = (float) config.getDouble("giant.speed", 1.0D);
         GIANT_JUMP_POWER = (float) config.getDouble("giant.jump-power", 0.5D);
+
+        GUARDIAN_ENABLED = config.getBoolean("guardian.enabled", false);
+        GUARDIAN_SPEED = (float) config.getDouble("guardian.speed", 1.0D);
 
         HUSK_ENABLED = config.getBoolean("husk.enabled", false);
         HUSK_SPEED = (float) config.getDouble("husk.speed", 1.0D);

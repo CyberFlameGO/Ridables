@@ -26,14 +26,6 @@ public class EntityRidableZombieHorse extends EntityHorseZombie implements Ridab
     public void setRotation(float newYaw, float newPitch) {
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
-    public float getSpeed() {
-        return 0;
-    }
-
     public EntityPlayer getRider() {
         if (passengers != null && !passengers.isEmpty()) {
             Entity entity = passengers.get(0);

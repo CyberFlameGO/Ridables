@@ -1,71 +1,61 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityGuardian;
+import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityPufferFish;
-import net.minecraft.server.v1_13_R1.EnumMoveType;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
-import net.pl3x.bukkit.ridables.util.ReflectionUtil;
-import org.bukkit.Material;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityRidablePufferFish extends EntityPufferFish implements RidableEntity {
+import javax.annotation.Nullable;
+
+public class EntityRidableGuardian extends EntityGuardian implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASDWater wasdController;
+    private ControllerLook defaultLookController;
+    private BlankLookController blankLookController;
 
-    private int spacebarCooldown = 0;
-
-    public EntityRidablePufferFish(World world) {
+    public EntityRidableGuardian(World world) {
         super(world);
-        persistent = true;
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
+
+        defaultLookController = lookController;
+        blankLookController = new BlankLookController(this);
     }
 
     public boolean isActionableItem(ItemStack itemstack) {
-        return itemstack.getType() == Material.WATER_BUCKET;
+        return false;
     }
 
     public boolean aY() {
         return true;
     }
 
-    public void k() {
-        if (spacebarCooldown > 0) {
-            spacebarCooldown--;
-        }
+    protected void mobTick() {
         EntityPlayer rider = getRider();
-        if (rider != null) {
+        if (rider != null && getAirTicks() > 150) {
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
-            motY += 0.005D;
+            motY += 0.005F;
         }
-        super.k();
+        super.mobTick();
     }
 
+    @Override
     public void a(float f, float f1, float f2) {
         EntityPlayer rider = getRider();
-        if (rider != null) {
-            if (!isInWater()) {
-                f2 = rider.bj;
-                f = rider.bh;
-            }
-        }
-        if (cP() && this.isInWater()) {
-            a(f, f1, f2, rider == null ? 0.01F : getSpeed());
-            move(EnumMoveType.SELF, motX, motY, motZ);
-            motX *= 0.8999999761581421D;
-            motY *= 0.8999999761581421D;
-            motZ *= 0.8999999761581421D;
-            if (getGoalTarget() == null) {
-                motY -= 0.005D;
-            }
-            return;
+        if (rider != null && !isInWater()) {
+            f2 = rider.bj;
+            f = rider.bh;
         }
         super.a(f, f1, f2);
     }
@@ -76,7 +66,7 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
     }
 
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.PUFFERFISH_SPEED * 0.25F;
+        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.GUARDIAN_SPEED;
     }
 
     public EntityPlayer getRider() {
@@ -92,27 +82,27 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
     public void useAIController() {
         if (moveController != aiController) {
             moveController = aiController;
+            lookController = defaultLookController;
         }
     }
 
     public void useWASDController() {
         if (moveController != wasdController) {
             moveController = wasdController;
+            lookController = blankLookController;
         }
     }
 
     public boolean onSpacebar() {
-        if (spacebarCooldown == 0) {
-            spacebarCooldown = 20;
-            if (getPuffState() > 0) {
-                setPuffState(0);
-                ReflectionUtil.setPufferfishBlowupCount(this, 0);
-            } else {
-                setPuffState(1);
-                ReflectionUtil.setPufferfishBlowupCount(this, 1);
-            }
-            return true;
-        }
-        return false;
+        world.broadcastEntityEffect(this, (byte) 21);
+        return true;
+    }
+
+    public void setGoalTarget(@Nullable EntityLiving entityliving) {
+        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
+    }
+
+    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
+        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 }

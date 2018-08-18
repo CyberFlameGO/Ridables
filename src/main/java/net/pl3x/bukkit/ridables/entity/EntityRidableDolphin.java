@@ -113,10 +113,6 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         aS = aQ = yaw;
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
         float speed = (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
         return speed * Config.DOLPHIN_SPEED * (dashing ? Config.DOLPHIN_DASH_BOOST : 1) * 0.2F;

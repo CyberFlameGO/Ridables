@@ -50,10 +50,6 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
         aS = aQ = yaw;
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
         AttributeInstance attr = getAttributeInstance(GenericAttributes.e);
         float speed = (float) (attr != null ? attr.getValue() : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());

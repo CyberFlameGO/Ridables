@@ -55,10 +55,6 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         aS = aQ = yaw;
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
         return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.GHAST_SPEED;
     }

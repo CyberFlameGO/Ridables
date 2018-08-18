@@ -45,10 +45,6 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
         aS = aQ = yaw;
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
         return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.BLAZE_SPEED * 2;
     }

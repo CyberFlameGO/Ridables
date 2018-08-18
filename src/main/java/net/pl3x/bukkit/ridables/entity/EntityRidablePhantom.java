@@ -60,10 +60,6 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         aS = aQ = yaw;
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
         return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.PHANTOM_SPEED * (onGround ? 1 : 3F);
     }

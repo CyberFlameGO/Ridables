@@ -132,10 +132,6 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         aS = aQ = this.yaw;
     }
 
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
         return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.DRAGON_SPEED;
     }

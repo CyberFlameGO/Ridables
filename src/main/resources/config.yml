@@ -140,6 +140,11 @@ giant:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Guardian options
+guardian:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+
 # Husk options
 husk:
   enabled: false     # enable custom ridable entity

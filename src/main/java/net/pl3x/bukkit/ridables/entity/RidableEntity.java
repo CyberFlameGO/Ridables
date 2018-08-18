@@ -33,14 +33,18 @@ public interface RidableEntity {
      *
      * @return Jump power
      */
-    float getJumpPower();
+    default float getJumpPower() {
+        return 0;
+    }
 
     /**
      * Get the configured speed for this entity
      *
      * @return Speed
      */
-    float getSpeed();
+    default float getSpeed() {
+        return 0;
+    }
 
     /**
      * Get the rider of this entity

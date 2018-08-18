@@ -81,6 +81,9 @@ permissions:
       allow.ride.giant:
         description: Allow to ride giants
         default: op
+      allow.ride.guardian:
+        description: Allow to ride guardians
+        default: op
       allow.ride.husk:
         description: Allow to ride husks
         default: op
@@ -143,6 +146,7 @@ permissions:
         default: op
       allow.ride.tropical_fish:
         description: Allow to ride tropical fish
+        default: op
       allow.ride.turtle:
         description: Allow to ride turtles
         default: op
