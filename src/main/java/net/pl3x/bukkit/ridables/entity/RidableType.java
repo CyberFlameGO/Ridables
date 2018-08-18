@@ -5,6 +5,7 @@ import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityTypes;
+import net.minecraft.server.v1_13_R1.ItemFishBucket;
 import net.minecraft.server.v1_13_R1.MinecraftKey;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Logger;
@@ -27,7 +28,7 @@ public class RidableType {
     public static final RidableType BLAZE = inject(Config.BLAZE_ENABLED, "blaze", EntityTypes.BLAZE, Material.BLAZE_SPAWN_EGG, EntityRidableBlaze.class, EntityRidableBlaze::new);
     public static final RidableType CAVE_SPIDER = inject(Config.CAVE_SPIDER_ENABLED, "cave_spider", EntityTypes.CAVE_SPIDER, Material.CAVE_SPIDER_SPAWN_EGG, EntityRidableCaveSpider.class, EntityRidableCaveSpider::new);
     public static final RidableType CHICKEN = inject(Config.CHICKEN_ENABLED, "chicken", EntityTypes.CHICKEN, Material.CHICKEN_SPAWN_EGG, EntityRidableChicken.class, EntityRidableChicken::new);
-    public static final RidableType COD = inject(Config.COD_ENABLED, "cod", EntityTypes.COD, Material.COD_SPAWN_EGG, EntityRidableCod.class, EntityRidableCod::new);
+    public static final RidableType COD = inject(Config.COD_ENABLED, "cod", EntityTypes.COD, Material.COD_SPAWN_EGG, EntityRidableCod.class, EntityRidableCod::new, Material.COD_BUCKET);
     public static final RidableType COW = inject(Config.COW_ENABLED, "cow", EntityTypes.COW, Material.COW_SPAWN_EGG, EntityRidableCow.class, EntityRidableCow::new);
     public static final RidableType CREEPER = inject(Config.CREEPER_ENABLED, "creeper", EntityTypes.CREEPER, Material.CREEPER_SPAWN_EGG, EntityRidableCreeper.class, EntityRidableCreeper::new);
     public static final RidableType DOLPHIN = inject(Config.DOLPHIN_ENABLED, "dolphin", EntityTypes.DOLPHIN, Material.DOLPHIN_SPAWN_EGG, EntityRidableDolphin.class, EntityRidableDolphin::new, Bucket.DOLPHIN);
@@ -48,9 +49,9 @@ public class RidableType {
     public static final RidableType PIG = inject(Config.PIG_ENABLED, "pig", EntityTypes.PIG, Material.PIG_SPAWN_EGG, EntityRidablePig.class, EntityRidablePig::new);
     public static final RidableType PHANTOM = inject(Config.PHANTOM_ENABLED, "phantom", EntityTypes.PHANTOM, Material.PHANTOM_SPAWN_EGG, EntityRidablePhantom.class, EntityRidablePhantom::new);
     public static final RidableType POLAR_BEAR = inject(Config.POLAR_BEAR_ENABLED, "polar_bear", EntityTypes.POLAR_BEAR, Material.POLAR_BEAR_SPAWN_EGG, EntityRidablePolarBear.class, EntityRidablePolarBear::new);
-    public static final RidableType PUFFERFISH = inject(Config.PUFFERFISH_ENABLED, "pufferfish", EntityTypes.PUFFERFISH, Material.PUFFERFISH_SPAWN_EGG, EntityRidablePufferFish.class, EntityRidablePufferFish::new);
+    public static final RidableType PUFFERFISH = inject(Config.PUFFERFISH_ENABLED, "pufferfish", EntityTypes.PUFFERFISH, Material.PUFFERFISH_SPAWN_EGG, EntityRidablePufferFish.class, EntityRidablePufferFish::new, Material.PUFFERFISH_BUCKET);
     public static final RidableType RABBIT = inject(Config.RABBIT_ENABLED, "rabbit", EntityTypes.RABBIT, Material.RABBIT_SPAWN_EGG, EntityRidableRabbit.class, EntityRidableRabbit::new);
-    public static final RidableType SALMON = inject(Config.SALMON_ENABLED, "salmon", EntityTypes.SALMON, Material.SALMON_SPAWN_EGG, EntityRidableSalmon.class, EntityRidableSalmon::new);
+    public static final RidableType SALMON = inject(Config.SALMON_ENABLED, "salmon", EntityTypes.SALMON, Material.SALMON_SPAWN_EGG, EntityRidableSalmon.class, EntityRidableSalmon::new, Material.SALMON_BUCKET);
     public static final RidableType SHEEP = inject(Config.SHEEP_ENABLED, "sheep", EntityTypes.SHEEP, Material.SHEEP_SPAWN_EGG, EntityRidableSheep.class, EntityRidableSheep::new);
     public static final RidableType SILVERFISH = inject(Config.SILVERFISH_ENABLED, "silverfish", EntityTypes.SILVERFISH, Material.SILVERFISH_SPAWN_EGG, EntityRidableSilverfish.class, EntityRidableSilverfish::new);
     public static final RidableType SKELETON = inject(Config.SKELETON_ENABLED, "skeleton", EntityTypes.SKELETON, Material.SKELETON_SPAWN_EGG, EntityRidableSkeleton.class, EntityRidableSkeleton::new);
@@ -58,7 +59,7 @@ public class RidableType {
     public static final RidableType SNOWMAN = inject(Config.SNOWMAN_ENABLED, "snow_golem", EntityTypes.SNOW_GOLEM, null, EntityRidableSnowman.class, EntityRidableSnowman::new);
     public static final RidableType SPIDER = inject(Config.SPIDER_ENABLED, "spider", EntityTypes.SPIDER, Material.SPIDER_SPAWN_EGG, EntityRidableSpider.class, EntityRidableSpider::new);
     public static final RidableType STRAY = inject(Config.STRAY_ENABLED, "stray", EntityTypes.STRAY, Material.STRAY_SPAWN_EGG, EntityRidableStray.class, EntityRidableStray::new);
-    public static final RidableType TROPICAL_FISH = inject(Config.TROPICAL_FISH_ENABLED, "tropical_fish", EntityTypes.TROPICAL_FISH, Material.TROPICAL_FISH_SPAWN_EGG, EntityRidableTropicalFish.class, EntityRidableTropicalFish::new);
+    public static final RidableType TROPICAL_FISH = inject(Config.TROPICAL_FISH_ENABLED, "tropical_fish", EntityTypes.TROPICAL_FISH, Material.TROPICAL_FISH_SPAWN_EGG, EntityRidableTropicalFish.class, EntityRidableTropicalFish::new, Material.TROPICAL_FISH_BUCKET);
     public static final RidableType TURTLE = inject(Config.TURTLE_ENABLED, "turtle", EntityTypes.TURTLE, Material.TURTLE_SPAWN_EGG, EntityRidableTurtle.class, EntityRidableTurtle::new, Bucket.TURTLE);
     public static final RidableType VILLAGER = inject(Config.VILLAGER_ENABLED, "villager", EntityTypes.VILLAGER, Material.VILLAGER_SPAWN_EGG, EntityRidableVillager.class, EntityRidableVillager::new);
     public static final RidableType VINDICATOR = inject(Config.VINDICATOR_ENABLED, "vindicator", EntityTypes.VINDICATOR, Material.VINDICATOR_SPAWN_EGG, EntityRidableVindicator.class, EntityRidableVindicator::new);
@@ -86,10 +87,18 @@ public class RidableType {
     }
 
     private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Material spawnEgg, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function) {
-        return inject(enabled, name, nmsTypes, spawnEgg, clazz, function, null);
+        return inject(enabled, name, nmsTypes, spawnEgg, clazz, function, null, null);
+    }
+
+    private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Material spawnEgg, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function, Material fishBucket) {
+        return inject(enabled, name, nmsTypes, spawnEgg, clazz, function, null, fishBucket);
     }
 
     private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Material spawnEgg, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function, Bucket waterBucket) {
+        return inject(enabled, name, nmsTypes, spawnEgg, clazz, function, waterBucket, null);
+    }
+
+    private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Material spawnEgg, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function, Bucket waterBucket, Material fishBucket) {
         if (enabled) {
             EntityTypes.a<?> entityTypes_a = EntityTypes.a.a(clazz, function);
 
@@ -97,7 +106,7 @@ public class RidableType {
             EntityTypes<?> newType = entityTypes_a.a(name);
             EntityType bukkitType = EntityType.fromName(name);
 
-            if (RegistryHax.injectReplacementEntityTypes(name, nmsTypes, key, newType, spawnEgg)) {
+            if (RegistryHax.injectReplacementEntityTypes(name, nmsTypes, key, newType, spawnEgg, fishBucket)) {
                 try {
                     // these fields are only available on Paper
                     EntityTypes.clsToKeyMap.put(clazz, key);

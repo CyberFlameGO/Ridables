@@ -10,6 +10,7 @@ import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.EnumCreatureType;
 import net.minecraft.server.v1_13_R1.Item;
+import net.minecraft.server.v1_13_R1.ItemFishBucket;
 import net.minecraft.server.v1_13_R1.ItemMonsterEgg;
 import net.minecraft.server.v1_13_R1.MinecraftKey;
 import net.minecraft.server.v1_13_R1.RegistryID;
@@ -25,7 +26,6 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,6 +41,7 @@ public class RegistryHax {
     private static Field materials_field_b;
     private static Field simple_field_c;
     private static Field field_modifiers;
+    private static Field item_field_a;
     private static Field item_field_d;
     private static Method registry_method_d;
     private static Method registry_method_e;
@@ -61,6 +62,8 @@ public class RegistryHax {
             simple_field_c.setAccessible(true);
             field_modifiers = Field.class.getDeclaredField("modifiers");
             field_modifiers.setAccessible(true);
+            item_field_a = ItemFishBucket.class.getDeclaredField("a");
+            item_field_a.setAccessible(true);
             item_field_d = ItemMonsterEgg.class.getDeclaredField("d");
             item_field_d.setAccessible(true);
             registry_method_d = RegistryID.class.getDeclaredMethod("d", Object.class);
@@ -81,7 +84,7 @@ public class RegistryHax {
         Logger.info("Successfully injected new entity: &a" + name);
     }
 
-    public static boolean injectReplacementEntityTypes(String name, EntityTypes entityTypes, MinecraftKey key, EntityTypes<?> newType, Material spawnEggMaterial) {
+    public static boolean injectReplacementEntityTypes(String name, EntityTypes entityTypes, MinecraftKey key, EntityTypes<?> newType, Material spawnEggMaterial, Material fishBucketMaterial) {
         Logger.debug("Attempting to inject replacement entity: &3" + name);
         try {
             RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_field_a.get(EntityTypes.REGISTRY);
@@ -205,6 +208,13 @@ public class RegistryHax {
                 Logger.debug("Updating spawn egg reference");
                 Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
                 item_field_d.set(spawnEgg, newType);
+            }
+
+            if (fishBucketMaterial != null) {
+                Logger.debug("Updating fish bucket");
+                Item fishBucket = CraftItemStack.asNMSCopy(new ItemStack(fishBucketMaterial)).getItem();
+                field_modifiers.setInt(item_field_a, item_field_a.getModifiers() & ~Modifier.FINAL);
+                item_field_a.set(fishBucket, newType);
             }
             return true;
         } catch (IllegalAccessException | InvocationTargetException | ArrayIndexOutOfBoundsException e) {
