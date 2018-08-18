@@ -3,13 +3,16 @@ package net.pl3x.bukkit.ridables.util;
 import net.minecraft.server.v1_13_R1.DataWatcherObject;
 import net.minecraft.server.v1_13_R1.EntityCreeper;
 import net.minecraft.server.v1_13_R1.EntityLiving;
+import net.minecraft.server.v1_13_R1.EntityPufferFish;
 import net.pl3x.bukkit.ridables.entity.EntityRidableCreeper;
+import net.pl3x.bukkit.ridables.entity.EntityRidablePufferFish;
 
 import java.lang.reflect.Field;
 
 public class ReflectionUtil {
     private static Field jumping;
     private static Field creeperIgnited;
+    private static Field pufferfishBlowupCounter;
 
     static {
         try {
@@ -17,6 +20,8 @@ public class ReflectionUtil {
             jumping.setAccessible(true);
             creeperIgnited = EntityCreeper.class.getDeclaredField("c");
             creeperIgnited.setAccessible(true);
+            pufferfishBlowupCounter = EntityPufferFish.class.getDeclaredField("c");
+            pufferfishBlowupCounter.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -59,6 +64,33 @@ public class ReflectionUtil {
     public static void setCreeperIgnited(EntityRidableCreeper creeper, boolean ignited) {
         try {
             creeper.getDataWatcher().set((DataWatcherObject<Boolean>) creeperIgnited.get(creeper), ignited);
+        } catch (IllegalAccessException ignore) {
+        }
+    }
+
+    /**
+     * Get puffer fish blow up count
+     *
+     * @param fish Ridable puffer fish
+     * @return Count
+     */
+    public static int getPufferfishBlowupCount(EntityRidablePufferFish fish) {
+        try {
+            return pufferfishBlowupCounter.getInt(fish);
+        } catch (IllegalAccessException ignore) {
+            return 0;
+        }
+    }
+
+    /**
+     * Set puffer fish blow up count
+     *
+     * @param fish  Ridable puffer fish
+     * @param count New count
+     */
+    public static void setPufferfishBlowupCount(EntityRidablePufferFish fish, int count) {
+        try {
+            pufferfishBlowupCounter.set(fish, count);
         } catch (IllegalAccessException ignore) {
         }
     }

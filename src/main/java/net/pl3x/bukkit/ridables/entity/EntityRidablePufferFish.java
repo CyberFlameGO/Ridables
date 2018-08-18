@@ -9,12 +9,15 @@ import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
+import net.pl3x.bukkit.ridables.util.ReflectionUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidablePufferFish extends EntityPufferFish implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASDWater wasdController;
+
+    private int spacebarCooldown = 0;
 
     public EntityRidablePufferFish(World world) {
         super(world);
@@ -32,6 +35,9 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
     }
 
     public void k() {
+        if (spacebarCooldown > 0) {
+            spacebarCooldown--;
+        }
         EntityPlayer rider = getRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
@@ -97,5 +103,20 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
         if (moveController != wasdController) {
             moveController = wasdController;
         }
+    }
+
+    public boolean onSpacebar() {
+        if (spacebarCooldown == 0) {
+            spacebarCooldown = 20;
+            if (getPuffState() > 0) {
+                setPuffState(0);
+                ReflectionUtil.setPufferfishBlowupCount(this, 0);
+            } else {
+                setPuffState(1);
+                ReflectionUtil.setPufferfishBlowupCount(this, 1);
+            }
+            return true;
+        }
+        return false;
     }
 }
