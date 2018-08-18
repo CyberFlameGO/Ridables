@@ -55,6 +55,11 @@ chicken:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Cod options
+cod:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+
 # Cow options
 cow:
   enabled: false     # enable custom ridable entity

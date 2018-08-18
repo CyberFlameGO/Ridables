@@ -37,6 +37,9 @@ public class Config {
     public static float CHICKEN_SPEED = 1.0F;
     public static float CHICKEN_JUMP_POWER = 0.5F;
 
+    public static boolean COD_ENABLED = false;
+    public static float COD_SPEED = 1.0F;
+
     public static boolean COW_ENABLED = false;
     public static float COW_SPEED = 1.0F;
     public static float COW_JUMP_POWER = 0.5F;
@@ -254,6 +257,9 @@ public class Config {
         CHICKEN_ENABLED = config.getBoolean("chicken.enabled", false);
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);
         CHICKEN_JUMP_POWER = (float) config.getDouble("chicken.jump-power", 0.5D);
+
+        COD_ENABLED = config.getBoolean("cod.enabled", false);
+        COD_SPEED = (float) config.getDouble("cod.speed", 1.0D);
 
         COW_ENABLED = config.getBoolean("cow.enabled", false);
         COW_SPEED = (float) config.getDouble("cow.speed", 1.0D);

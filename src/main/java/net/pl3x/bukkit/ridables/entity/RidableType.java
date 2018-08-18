@@ -27,6 +27,7 @@ public class RidableType {
     public static final RidableType BLAZE = inject(Config.BLAZE_ENABLED, "blaze", EntityTypes.BLAZE, Material.BLAZE_SPAWN_EGG, EntityRidableBlaze.class, EntityRidableBlaze::new);
     public static final RidableType CAVE_SPIDER = inject(Config.CAVE_SPIDER_ENABLED, "cave_spider", EntityTypes.CAVE_SPIDER, Material.CAVE_SPIDER_SPAWN_EGG, EntityRidableCaveSpider.class, EntityRidableCaveSpider::new);
     public static final RidableType CHICKEN = inject(Config.CHICKEN_ENABLED, "chicken", EntityTypes.CHICKEN, Material.CHICKEN_SPAWN_EGG, EntityRidableChicken.class, EntityRidableChicken::new);
+    public static final RidableType COD = inject(Config.COD_ENABLED, "cod", EntityTypes.COD, Material.COD_SPAWN_EGG, EntityRidableCod.class, EntityRidableCod::new);
     public static final RidableType COW = inject(Config.COW_ENABLED, "cow", EntityTypes.COW, Material.COW_SPAWN_EGG, EntityRidableCow.class, EntityRidableCow::new);
     public static final RidableType CREEPER = inject(Config.CREEPER_ENABLED, "creeper", EntityTypes.CREEPER, Material.CREEPER_SPAWN_EGG, EntityRidableCreeper.class, EntityRidableCreeper::new);
     public static final RidableType DOLPHIN = inject(Config.DOLPHIN_ENABLED, "dolphin", EntityTypes.DOLPHIN, Material.DOLPHIN_SPAWN_EGG, EntityRidableDolphin.class, EntityRidableDolphin::new, Bucket.DOLPHIN);

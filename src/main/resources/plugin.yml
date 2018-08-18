@@ -48,6 +48,9 @@ permissions:
       allow.ride.chicken:
         description: Allow to ride chickens
         default: op
+      allow.ride.cod:
+        description: Allow to ride cod fish
+        default: op
       allow.ride.cow:
         description: Allow to ride cows
         default: op
