@@ -65,6 +65,9 @@ public class Ridables extends JavaPlugin {
 
         // Fix worldgen mob features
         RegistryHax.rebuildWorldGenMobs();
+
+        // Fix biome's mobs
+        RegistryHax.rebuildBiomes();
     }
 
     @Override
