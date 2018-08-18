@@ -48,6 +48,7 @@ public class RidableType {
     public static final RidableType PIG = inject(Config.PIG_ENABLED, "pig", EntityTypes.PIG, Material.PIG_SPAWN_EGG, EntityRidablePig.class, EntityRidablePig::new);
     public static final RidableType PHANTOM = inject(Config.PHANTOM_ENABLED, "phantom", EntityTypes.PHANTOM, Material.PHANTOM_SPAWN_EGG, EntityRidablePhantom.class, EntityRidablePhantom::new);
     public static final RidableType POLAR_BEAR = inject(Config.POLAR_BEAR_ENABLED, "polar_bear", EntityTypes.POLAR_BEAR, Material.POLAR_BEAR_SPAWN_EGG, EntityRidablePolarBear.class, EntityRidablePolarBear::new);
+    public static final RidableType PUFFERFISH = inject(Config.PUFFERFISH_ENABLED, "pufferfish", EntityTypes.PUFFERFISH, Material.PUFFERFISH_SPAWN_EGG, EntityRidablePufferFish.class, EntityRidablePufferFish::new);
     public static final RidableType RABBIT = inject(Config.RABBIT_ENABLED, "rabbit", EntityTypes.RABBIT, Material.RABBIT_SPAWN_EGG, EntityRidableRabbit.class, EntityRidableRabbit::new);
     public static final RidableType SHEEP = inject(Config.SHEEP_ENABLED, "sheep", EntityTypes.SHEEP, Material.SHEEP_SPAWN_EGG, EntityRidableSheep.class, EntityRidableSheep::new);
     public static final RidableType SILVERFISH = inject(Config.SILVERFISH_ENABLED, "silverfish", EntityTypes.SILVERFISH, Material.SILVERFISH_SPAWN_EGG, EntityRidableSilverfish.class, EntityRidableSilverfish::new);

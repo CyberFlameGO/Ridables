@@ -111,6 +111,9 @@ permissions:
       allow.ride.polar_bear:
         description: Allow to ride polar bears
         default: op
+      allow.ride.pufferfish:
+        description: Allow to ride pufferfish
+        default: op
       allow.ride.rabbit:
         description: Allow to ride rabbits
         default: op
