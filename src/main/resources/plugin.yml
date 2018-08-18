@@ -138,6 +138,9 @@ permissions:
       allow.ride.vindicator:
         description: Allow to ride vindicators
         default: op
+      allow.ride.witch:
+        description: Allow to ride witches
+        default: op
       allow.ride.wolf:
         description: Allow to ride tamed wolves
         default: op

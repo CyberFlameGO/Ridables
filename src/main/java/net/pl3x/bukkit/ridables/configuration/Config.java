@@ -182,6 +182,10 @@ public class Config {
     public static float VINDICATOR_SPEED = 1.0F;
     public static float VINDICATOR_JUMP_POWER = 0.5F;
 
+    public static boolean WITCH_ENABLED = false;
+    public static float WITCH_SPEED = 1.0F;
+    public static float WITCH_JUMP_POWER = 0.5F;
+
     public static boolean WOLF_ENABLED = false;
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
@@ -386,6 +390,10 @@ public class Config {
         VINDICATOR_ENABLED = config.getBoolean("vindicator.enabled", false);
         VINDICATOR_SPEED = (float) config.getDouble("vindicator.speed", 1.0D);
         VINDICATOR_JUMP_POWER = (float) config.getDouble("vindicator.jump-power", 0.5D);
+
+        WITCH_ENABLED = config.getBoolean("witch.enabled", false);
+        WITCH_SPEED = (float) config.getDouble("witch.speed", 1.0D);
+        WITCH_JUMP_POWER = (float) config.getDouble("witch.jump-power", 0.5D);
 
         WOLF_ENABLED = config.getBoolean("wolf.enabled", false);
         WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
