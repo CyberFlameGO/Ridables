@@ -26,10 +26,6 @@ public class EntityRidableZombieVillager extends EntityZombieVillager implements
         blankLookController = new BlankLookController(this);
     }
 
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
-    }
-
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

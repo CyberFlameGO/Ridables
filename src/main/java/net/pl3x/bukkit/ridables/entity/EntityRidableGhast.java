@@ -15,7 +15,6 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityGhastFireball;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -32,10 +31,6 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         wasdController = new ControllerWASDFlying(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {

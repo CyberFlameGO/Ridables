@@ -16,7 +16,9 @@ public interface RidableEntity {
      * @param itemstack Itemstack to check
      * @return True if itemstack is actionable
      */
-    boolean isActionableItem(ItemStack itemstack);
+    default boolean isActionableItem(ItemStack itemstack) {
+        return false;
+    }
 
     /**
      * Set the rotation of the entity

@@ -15,7 +15,6 @@ import net.minecraft.server.v1_13_R1.NBTTagCompound;
 import net.minecraft.server.v1_13_R1.Vec3D;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 
@@ -40,10 +39,6 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
             } catch (NoSuchFieldException ignore) {
             }
         }
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {

@@ -12,7 +12,6 @@ import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class EntityRidablePolarBear extends EntityPolarBear implements RidableEntity {
@@ -28,10 +27,6 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
         Q = Config.POLAR_BEAR_STEP_HEIGHT;
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {

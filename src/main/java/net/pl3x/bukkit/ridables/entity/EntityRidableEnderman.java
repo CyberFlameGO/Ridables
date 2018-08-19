@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.AttributeInstance;
 import net.minecraft.server.v1_13_R1.Block;
 import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.Blocks;
@@ -11,7 +10,6 @@ import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityEnderman;
 import net.minecraft.server.v1_13_R1.EntityEndermite;
 import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.FluidCollisionOption;
@@ -36,10 +34,7 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class EntityRidableEnderman extends EntityEnderman implements RidableEntity {
@@ -55,10 +50,6 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         wasdController = new ControllerWASD(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {

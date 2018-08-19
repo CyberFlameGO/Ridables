@@ -13,7 +13,6 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableIronGolem extends EntityIronGolem implements RidableEntity {
     private ControllerMove aiController;
@@ -27,10 +26,6 @@ public class EntityRidableIronGolem extends EntityIronGolem implements RidableEn
         wasdController = new ControllerWASD(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {

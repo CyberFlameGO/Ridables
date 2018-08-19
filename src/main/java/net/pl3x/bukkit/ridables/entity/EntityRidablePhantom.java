@@ -19,7 +19,6 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class EntityRidablePhantom extends EntityPhantom implements RidableEntity {
@@ -34,10 +33,6 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         wasdController = new ControllerWASDFlying(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {

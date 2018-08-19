@@ -10,7 +10,6 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableEndermite extends EntityEndermite implements RidableEntity {
     private ControllerMove aiController;
@@ -24,10 +23,6 @@ public class EntityRidableEndermite extends EntityEndermite implements RidableEn
         wasdController = new ControllerWASD(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     public boolean aY() {
