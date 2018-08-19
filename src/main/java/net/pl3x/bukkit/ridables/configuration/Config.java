@@ -171,6 +171,9 @@ public class Config {
 
     public static boolean SKELETON_HORSE_ENABLED = false;
 
+    public static boolean SLIME_ENABLED = false;
+    public static float SLIME_SPEED = 1.0F;
+
     public static boolean SNOWMAN_ENABLED = false;
     public static float SNOWMAN_SPEED = 1.0F;
     public static float SNOWMAN_JUMP_POWER = 0.5F;
@@ -404,6 +407,9 @@ public class Config {
         SKELETON_JUMP_POWER = (float) config.getDouble("skeleton.jump-power", 0.5D);
 
         SKELETON_HORSE_ENABLED = config.getBoolean("skeleton-horse.enabled", false);
+
+        SLIME_ENABLED = config.getBoolean("slime.enabled", false);
+        SLIME_SPEED = (float) config.getDouble("slime.speed", 1.0D);
 
         SNOWMAN_ENABLED = config.getBoolean("snowman.enabled", false);
         SNOWMAN_SPEED = (float) config.getDouble("snowman.speed", 1.0D);

@@ -254,6 +254,11 @@ skeleton:
 skeleton-horse:
   enabled: false     # enable custom ridable entity
 
+# Slime options
+slime:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+
 # Snowman (Snow Golem) options
 snowman:
   enabled: false     # enable custom ridable entity
