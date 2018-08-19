@@ -63,6 +63,9 @@ permissions:
       allow.ride.drowned:
         description: Allow to ride drowned
         default: op
+      allow.ride.elder-guardian:
+        description: Allow to ride elder guardians
+        default: op
       allow.ride.ender_dragon:
         description: Allow to ride ender dragon
         default: op

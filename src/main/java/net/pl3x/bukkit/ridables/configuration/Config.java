@@ -70,6 +70,9 @@ public class Config {
     public static float DROWNED_SPEED = 1.0F;
     public static float DROWNED_JUMP_POWER = 0.5F;
 
+    public static boolean ELDER_GUARDIAN_ENABLED = false;
+    public static float ELDER_GUARDIAN_SPEED = 1.0F;
+
     public static boolean ENDERMAN_ENABLED = false;
     public static float ENDERMAN_SPEED = 1.0F;
     public static float ENDERMAN_JUMP_POWER = 0.5F;
@@ -309,6 +312,9 @@ public class Config {
         DROWNED_ENABLED = config.getBoolean("drowned.enabled", false);
         DROWNED_SPEED = (float) config.getDouble("drowned.speed", 1.0D);
         DROWNED_JUMP_POWER = (float) config.getDouble("drowned.jump-power", 0.5D);
+
+        ELDER_GUARDIAN_ENABLED = config.getBoolean("elder-guardian.enabled", false);
+        ELDER_GUARDIAN_SPEED = (float) config.getDouble("elder-guardian.speed", 1.0D);
 
         ENDERMAN_ENABLED = config.getBoolean("enderman.enabled", false);
         ENDERMAN_SPEED = (float) config.getDouble("enderman.speed", 1.0D);

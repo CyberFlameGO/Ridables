@@ -105,6 +105,11 @@ drowned:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Elder Guardian options
+elder-guardian:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+
 # Enderman options
 enderman:
   enabled: false     # enable custom ridable entity
