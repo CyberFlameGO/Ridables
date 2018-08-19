@@ -2,7 +2,6 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntityPufferFish;
 import net.minecraft.server.v1_13_R1.EnumMoveType;
@@ -11,10 +10,8 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import org.bukkit.Material;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class EntityRidablePufferFish extends EntityPufferFish implements RidableEntity {
@@ -53,7 +50,7 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
         }
         EntityPlayer rider = getRider();
         if (rider != null) {
-            super.setGoalTarget(null, null, false);
+            setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             motY += 0.005D;
@@ -152,13 +149,5 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
             puffCounter.set(this, count);
         } catch (IllegalAccessException ignore) {
         }
-    }
-
-    public void setGoalTarget(@Nullable EntityLiving entityliving) {
-        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
-    }
-
-    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 }

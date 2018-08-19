@@ -4,7 +4,6 @@ import net.minecraft.server.v1_13_R1.AttributeInstance;
 import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityParrot;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
@@ -14,10 +13,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
 import org.bukkit.Material;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
-
-import javax.annotation.Nullable;
 
 public class EntityRidableParrot extends EntityParrot implements RidableEntity {
     public static final MaterialSetTag FOOD = new MaterialSetTag()
@@ -47,7 +43,7 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            super.setGoalTarget(null, null, false);
+            setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             motY += bi > 0 ? 0.07F * Config.PARROT_VERTICAL : 0.04704F - Config.PARROT_GRAVITY;
@@ -88,13 +84,5 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
             moveController = wasdController;
             lookController = blankLookController;
         }
-    }
-
-    public void setGoalTarget(@Nullable EntityLiving entityliving) {
-        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
-    }
-
-    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 }

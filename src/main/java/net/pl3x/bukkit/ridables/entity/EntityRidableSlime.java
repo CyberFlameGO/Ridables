@@ -17,10 +17,7 @@ import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
-
-import javax.annotation.Nullable;
 
 public class EntityRidableSlime extends EntitySlime implements RidableEntity {
     private ControllerWASD controllerWASD;
@@ -46,7 +43,7 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            super.setGoalTarget(null, null, false);
+            setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
         }
@@ -86,14 +83,6 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
 
     public boolean onSpacebar() {
         return false;
-    }
-
-    public void setGoalTarget(@Nullable EntityLiving entityliving) {
-        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
-    }
-
-    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     protected void n() {

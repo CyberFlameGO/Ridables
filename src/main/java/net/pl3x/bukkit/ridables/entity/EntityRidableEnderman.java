@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.AttributeInstance;
 import net.minecraft.server.v1_13_R1.Block;
 import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.Blocks;
@@ -67,7 +68,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            super.setGoalTarget(null, null, false);
+            setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             if (ap()) { // isWet
@@ -144,14 +145,6 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
             setCarried(null);
         }
         return true;
-    }
-
-    public void setGoalTarget(@Nullable EntityLiving entityliving) {
-        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
-    }
-
-    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     // randomlyTeleport

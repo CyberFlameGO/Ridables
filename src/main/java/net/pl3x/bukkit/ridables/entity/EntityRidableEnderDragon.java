@@ -15,10 +15,8 @@ import net.minecraft.server.v1_13_R1.NBTTagCompound;
 import net.minecraft.server.v1_13_R1.Vec3D;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class EntityRidableEnderDragon extends EntityEnderDragon implements RidableEntity {
@@ -74,7 +72,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
             setPhase(DragonControllerPhase.k);
 
             // do not target anything while being ridden
-            super.setGoalTarget(null, null, false);
+            setGoalTarget(null, null, false);
 
             // eject rider if in water or lava
             if (isInWater() || ax()) {
@@ -160,14 +158,6 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
             isUsingCustomController = true;
             //this.moveController = new ControllerFlying(this);
         }
-    }
-
-    public void setGoalTarget(@Nullable EntityLiving entityliving) {
-        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
-    }
-
-    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     // writeEntityToNBT

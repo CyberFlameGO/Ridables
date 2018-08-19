@@ -5,7 +5,6 @@ import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.DamageSource;
 import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPhantom;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumMoveType;
@@ -20,11 +19,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import javax.annotation.Nullable;
 
 public class EntityRidablePhantom extends EntityPhantom implements RidableEntity {
     private ControllerMove aiController;
@@ -51,7 +47,7 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
     protected void mobTick() {
         EntityPlayer rider = getRider();
         if (rider != null) {
-            super.setGoalTarget(null, null, false);
+            setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();
             if (rider.bj == 0) {
@@ -115,14 +111,6 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         flames.shoot(target.getX() - locX, target.getY() - locY, target.getZ() - locZ, 1.0F, 5.0F);
         world.addEntity(flames);
         return true;
-    }
-
-    public void setGoalTarget(@Nullable EntityLiving entityliving) {
-        setGoalTarget(entityliving, EntityTargetEvent.TargetReason.UNKNOWN, true);
-    }
-
-    public boolean setGoalTarget(EntityLiving entityliving, EntityTargetEvent.TargetReason reason, boolean fireEvent) {
-        return getRider() != null && super.setGoalTarget(entityliving, reason, fireEvent);
     }
 
     // onLivingUpdate
