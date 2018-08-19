@@ -173,6 +173,11 @@ llama:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   caravan: true      # create caravan while riding llama
 
+# Magma Cube options
+magma-cube:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+
 # Mooshroom (Mushroom Cow) options
 mooshroom:
   enabled: false     # enable custom ridable entity

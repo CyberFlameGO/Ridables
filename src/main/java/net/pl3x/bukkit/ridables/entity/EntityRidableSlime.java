@@ -8,6 +8,7 @@ import net.minecraft.server.v1_13_R1.EntityIronGolem;
 import net.minecraft.server.v1_13_R1.EntityLiving;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EntitySlime;
+import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.MobEffects;
 import net.minecraft.server.v1_13_R1.PathfinderGoal;
@@ -25,7 +26,11 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
     private BlankLookController blankLookController;
 
     public EntityRidableSlime(World world) {
-        super(world);
+        this(EntityTypes.SLIME, world);
+    }
+
+    public EntityRidableSlime(EntityTypes entityTypes, World world) {
+        super(entityTypes, world);
         moveController = new SlimeController(this);
         controllerWASD = new ControllerWASD(this);
         defaultLookController = lookController;

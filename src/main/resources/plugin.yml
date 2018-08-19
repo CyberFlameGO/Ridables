@@ -96,6 +96,9 @@ permissions:
       allow.ride.llama:
         description: Allow to ride llamas
         default: op
+      allow.ride.magma_cube:
+        description: Allow to ride magma cubes
+        default: op
       allow.ride.mooshroom:
         description: Allow to ride mooshrooms
         default: op

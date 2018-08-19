@@ -116,6 +116,9 @@ public class Config {
     public static float LLAMA_JUMP_POWER = 0.5F;
     public static boolean LLAMA_CARAVAN = true;
 
+    public static boolean MAGMA_CUBE_ENABLED = false;
+    public static float MAGMA_CUBE_SPEED = 1.0F;
+
     public static boolean MOOSHROOM_ENABLED = false;
     public static float MOOSHROOM_SPEED = 1.0F;
     public static float MOOSHROOM_JUMP_POWER = 0.5F;
@@ -352,6 +355,9 @@ public class Config {
         LLAMA_SPEED = (float) config.getDouble("llama.speed", 1.0D);
         LLAMA_JUMP_POWER = (float) config.getDouble("llama.jump-power", 0.5D);
         LLAMA_CARAVAN = config.getBoolean("llama.caravan", true);
+
+        MAGMA_CUBE_ENABLED = config.getBoolean("magma-cube.enabled", false);
+        MAGMA_CUBE_SPEED = (float) config.getDouble("magma-cube.speed", 1.0D);
 
         MOOSHROOM_ENABLED = config.getBoolean("mooshroom.enabled", false);
         MOOSHROOM_SPEED = (float) config.getDouble("mooshroom.speed", 1.0D);
