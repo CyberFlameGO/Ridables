@@ -20,7 +20,7 @@
  *  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.pl3x.bukkit.ridables;
+package net.pl3x.bukkit.ridables.data;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

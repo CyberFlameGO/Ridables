@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables;
+package net.pl3x.bukkit.ridables.util;
 
 import net.pl3x.bukkit.ridables.configuration.Config;
 import org.bukkit.Bukkit;

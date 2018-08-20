@@ -8,7 +8,7 @@ import net.minecraft.server.v1_13_R1.EntityParrot;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.World;
-import net.pl3x.bukkit.ridables.MaterialSetTag;
+import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;

@@ -1,6 +1,6 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.Logger;
+import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;

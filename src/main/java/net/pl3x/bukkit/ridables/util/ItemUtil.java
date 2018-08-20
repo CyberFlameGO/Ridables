@@ -1,6 +1,6 @@
 package net.pl3x.bukkit.ridables.util;
 
-import net.pl3x.bukkit.ridables.HandItem;
+import net.pl3x.bukkit.ridables.data.HandItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;

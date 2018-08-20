@@ -1,6 +1,6 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.HandItem;
+import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;

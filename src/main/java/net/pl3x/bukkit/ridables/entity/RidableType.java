@@ -8,7 +8,7 @@ import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.MinecraftKey;
 import net.minecraft.server.v1_13_R1.World;
-import net.pl3x.bukkit.ridables.Logger;
+import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.util.RegistryHax;

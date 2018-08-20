@@ -21,7 +21,6 @@ import net.minecraft.server.v1_13_R1.WorldGenDungeons;
 import net.minecraft.server.v1_13_R1.WorldGenFeatureSwampHut;
 import net.minecraft.server.v1_13_R1.WorldGenMonument;
 import net.minecraft.server.v1_13_R1.WorldGenNether;
-import net.pl3x.bukkit.ridables.Logger;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;

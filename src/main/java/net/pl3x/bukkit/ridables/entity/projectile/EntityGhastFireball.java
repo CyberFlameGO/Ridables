@@ -10,7 +10,7 @@ import net.minecraft.server.v1_13_R1.Particles;
 import net.minecraft.server.v1_13_R1.ProjectileHelper;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.ServerType;
+import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.EntityRidableGhast;
 import net.pl3x.bukkit.ridables.event.ProjectileCollideEvent;

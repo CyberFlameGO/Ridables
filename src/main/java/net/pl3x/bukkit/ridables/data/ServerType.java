@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables;
+package net.pl3x.bukkit.ridables.data;
 
 public enum ServerType {
     /**

@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables;
+package net.pl3x.bukkit.ridables.data;
 
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.inventory.EquipmentSlot;
