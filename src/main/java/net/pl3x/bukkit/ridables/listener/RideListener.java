@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.listener;
 
 import net.minecraft.server.v1_13_R1.EntityAgeable;
+import net.minecraft.server.v1_13_R1.ItemMonsterEgg;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
@@ -12,6 +13,7 @@ import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
@@ -85,6 +87,14 @@ public class RideListener implements Listener {
         ItemStack offHand = ItemUtil.getItem(player, EquipmentSlot.OFF_HAND);
         if (mainHand.getType() == Material.LEAD || offHand.getType() == Material.LEAD) {
             return; // do not ride when trying to leash
+        }
+
+        if (mainHand.getType() == Material.NAME_TAG || CraftItemStack.asNMSCopy(mainHand).getItem() instanceof ItemMonsterEgg) {
+            return; // main hand contains nametag or spawn egg
+        }
+
+        if (offHand.getType() == Material.NAME_TAG || CraftItemStack.asNMSCopy(offHand).getItem() instanceof ItemMonsterEgg) {
+            return; // main hand contains nametag or spawn egg
         }
 
         if (ridable.isActionableItem(mainHand) || ridable.isActionableItem(offHand)) {
