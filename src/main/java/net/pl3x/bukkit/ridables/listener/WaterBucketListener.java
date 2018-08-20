@@ -9,12 +9,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -145,20 +143,5 @@ public class WaterBucketListener implements Listener {
                     // or drop to ground if inventory is full
                     .values().forEach(leftover -> player.getWorld().dropItem(player.getLocation(), leftover));
         }
-    }
-
-    @EventHandler
-    public void onSpecialFishSpawn(CreatureSpawnEvent event) {
-        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) {
-            return; // not spawned from a bucket (considered egg)
-        }
-        if (event.getEntityType() != EntityType.COD) {
-            return; // not our special bucket
-        }
-        Bucket.BUCKETS.forEach(bucket -> {
-            if (event.getEntity().getCustomName().equals(bucket.getItemStack().getItemMeta().getDisplayName())) {
-                event.setCancelled(true); // do not spawn a cod from special bucket!
-            }
-        });
     }
 }
