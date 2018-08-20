@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.entity;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityAgeable;
 import net.minecraft.server.v1_13_R1.EntityInsentient;
 import net.minecraft.server.v1_13_R1.EntityTypes;
 import net.minecraft.server.v1_13_R1.MinecraftKey;
@@ -156,6 +157,16 @@ public class RidableType {
      * @param loc Location to spawn at
      */
     public Entity spawn(Location loc) {
+        return spawn(loc, false);
+    }
+
+    /**
+     * Spawn this ridable entity in the world at given location
+     *
+     * @param loc  Location to spawn at
+     * @param baby True to make baby
+     */
+    public Entity spawn(Location loc, boolean baby) {
         Entity entity = entityTypes.a(((CraftWorld) loc.getWorld()).getHandle());
         if (entity != null) {
             entity.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
@@ -166,6 +177,9 @@ public class RidableType {
                 insentient.aQ = insentient.yaw;
                 insentient.prepare(entity.world.getDamageScaler(new BlockPosition(insentient)), null, null);
                 insentient.A();
+            }
+            if (baby && entity instanceof EntityAgeable) {
+                ((EntityAgeable) entity).setAgeRaw(-24000);
             }
         }
         return entity;

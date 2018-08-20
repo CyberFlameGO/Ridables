@@ -148,17 +148,14 @@ public class RideListener implements Listener {
             return; // not a valid ridable
         }
 
-        net.minecraft.server.v1_13_R1.Entity newEntity = ridableType.spawn(event.getLocation());
-        net.minecraft.server.v1_13_R1.Entity oldEntity = ((CraftEntity) entity).getHandle();
-
         new BukkitRunnable() {
             @Override
             public void run() {
+                net.minecraft.server.v1_13_R1.Entity oldEntity = ((CraftEntity) entity).getHandle();
+                net.minecraft.server.v1_13_R1.Entity newEntity = ridableType.spawn(event.getLocation(),
+                        oldEntity instanceof EntityAgeable && ((EntityAgeable) oldEntity).isBaby());
                 if (oldEntity.hasCustomName()) {
                     newEntity.setCustomName(oldEntity.getCustomName());
-                }
-                if (oldEntity instanceof EntityAgeable) {
-                    ((EntityAgeable) newEntity).setAgeRaw(((EntityAgeable) oldEntity).getAge());
                 }
                 entity.remove();
             }
