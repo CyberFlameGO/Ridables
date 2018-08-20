@@ -16,6 +16,7 @@ public class EntityRidableSilverfish extends EntitySilverfish implements Ridable
     private ControllerWASD wasdController;
     private ControllerLook defaultLookController;
     private BlankLookController blankLookController;
+    private EntityPlayer rider;
 
     public EntityRidableSilverfish(World world) {
         super(world);
@@ -34,7 +35,7 @@ public class EntityRidableSilverfish extends EntitySilverfish implements Ridable
     }
 
     protected void mobTick() {
-        EntityPlayer rider = getRider();
+        EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
@@ -62,13 +63,17 @@ public class EntityRidableSilverfish extends EntitySilverfish implements Ridable
     }
 
     public EntityPlayer getRider() {
-        if (passengers != null && !passengers.isEmpty()) {
+        return rider;
+    }
+
+    public EntityPlayer updateRider() {
+        if (passengers == null || passengers.isEmpty()) {
+            rider = null;
+        } else {
             Entity entity = passengers.get(0);
-            if (entity instanceof EntityPlayer) {
-                return (EntityPlayer) entity;
-            }
+            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
         }
-        return null;
+        return rider;
     }
 
     public void useAIController() {

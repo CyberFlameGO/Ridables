@@ -48,7 +48,7 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
     private PathfinderGoalRandomLookaround goalLookAround;
     private PathfinderGoalHurtByTarget goalHurtByTarget;
     private PathfinderGoalNearestAttackableTarget goalNearestTarget;
-
+    private EntityPlayer rider;
     private int shootCooldown = 0;
 
     public EntityRidableWither(World world) {
@@ -101,7 +101,7 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-        EntityPlayer rider = getRider();
+        EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
             super.a(0, 0);
@@ -132,13 +132,17 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
     }
 
     public EntityPlayer getRider() {
-        if (passengers != null && !passengers.isEmpty()) {
+        return rider;
+    }
+
+    public EntityPlayer updateRider() {
+        if (passengers == null || passengers.isEmpty()) {
+            rider = null;
+        } else {
             Entity entity = passengers.get(0);
-            if (entity instanceof EntityPlayer) {
-                return (EntityPlayer) entity;
-            }
+            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
         }
-        return null;
+        return rider;
     }
 
     public void useAIController() {

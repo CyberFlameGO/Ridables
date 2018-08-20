@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 public class EntityRidableTropicalFish extends EntityTropicalFish implements RidableEntity {
     private ControllerMove aiController;
     private ControllerWASDWater wasdController;
+    private EntityPlayer rider;
 
     public EntityRidableTropicalFish(World world) {
         super(world);
@@ -35,7 +36,7 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
     }
 
     public void k() {
-        EntityPlayer rider = getRider();
+        EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
@@ -77,13 +78,17 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
     }
 
     public EntityPlayer getRider() {
-        if (passengers != null && !passengers.isEmpty()) {
+        return rider;
+    }
+
+    public EntityPlayer updateRider() {
+        if (passengers == null || passengers.isEmpty()) {
+            rider = null;
+        } else {
             Entity entity = passengers.get(0);
-            if (entity instanceof EntityPlayer) {
-                return (EntityPlayer) entity;
-            }
+            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
         }
-        return null;
+        return rider;
     }
 
     public void useAIController() {

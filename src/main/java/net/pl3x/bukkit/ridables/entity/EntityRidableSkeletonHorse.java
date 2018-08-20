@@ -11,6 +11,8 @@ import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements RidableEntity {
+    private EntityPlayer rider;
+
     public EntityRidableSkeletonHorse(World world) {
         super(world);
     }
@@ -27,17 +29,26 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
         return true;
     }
 
+    public void mobTick() {
+        updateRider();
+        super.mobTick();
+    }
+
     public void setRotation(float newYaw, float newPitch) {
     }
 
     public EntityPlayer getRider() {
-        if (passengers != null && !passengers.isEmpty()) {
+        return rider;
+    }
+
+    public EntityPlayer updateRider() {
+        if (passengers == null || passengers.isEmpty()) {
+            rider = null;
+        } else {
             Entity entity = passengers.get(0);
-            if (entity instanceof EntityPlayer) {
-                return (EntityPlayer) entity;
-            }
+            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
         }
-        return null;
+        return rider;
     }
 
     public void useAIController() {

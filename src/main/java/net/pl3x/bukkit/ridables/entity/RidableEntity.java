@@ -65,6 +65,15 @@ public interface RidableEntity {
     EntityPlayer getRider();
 
     /**
+     * Update and get the rider of this entity
+     * <p>
+     * This method should never be called directly. It is updated once per tick already.
+     *
+     * @return Current rider, otherwise null
+     */
+    EntityPlayer updateRider();
+
+    /**
      * Change to the vanilla AI controller
      */
     void useAIController();

@@ -25,6 +25,8 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
     private static Field bS;
     private static Field bg;
 
+    private EntityPlayer rider;
+
     public EntityRidableEnderDragon(World world) {
         super(world);
         vanillaController = moveController;
@@ -58,13 +60,13 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
     }
 
     protected boolean isTypeNotPersistent() {
-        return false; // we definitely want persistence
+        return false;
     }
 
     // travel(strafe, vertical, forward)
     @Override
     public void k() {
-        EntityPlayer rider = getRider();
+        EntityPlayer rider = updateRider();
         if (rider != null) {
             this.noclip = false;
             this.setSize(4.0F, 2.0F);
@@ -136,13 +138,17 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
     }
 
     public EntityPlayer getRider() {
-        if (passengers != null && !passengers.isEmpty()) {
-            Entity entity = passengers.get(0); // only care about first rider
-            if (entity instanceof EntityPlayer) {
-                return (EntityPlayer) entity;
-            }
+        return rider;
+    }
+
+    public EntityPlayer updateRider() {
+        if (passengers == null || passengers.isEmpty()) {
+            rider = null;
+        } else {
+            Entity entity = passengers.get(0);
+            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
         }
-        return null; // aww, lonely dragon is lonely
+        return rider;
     }
 
     public void useAIController() {
