@@ -4,12 +4,14 @@ import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.DataWatcherObject;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityAreaEffectCloud;
 import net.minecraft.server.v1_13_R1.EntityCreeper;
 import net.minecraft.server.v1_13_R1.EntityHuman;
 import net.minecraft.server.v1_13_R1.EntityOcelot;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
 import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
+import net.minecraft.server.v1_13_R1.MobEffect;
 import net.minecraft.server.v1_13_R1.PathfinderGoalAvoidTarget;
 import net.minecraft.server.v1_13_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_13_R1.PathfinderGoalHurtByTarget;
@@ -19,20 +21,31 @@ import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.server.v1_13_R1.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_13_R1.PathfinderGoalRandomStrollLand;
 import net.minecraft.server.v1_13_R1.PathfinderGoalSwell;
+import net.minecraft.server.v1_13_R1.SoundEffects;
 import net.minecraft.server.v1_13_R1.World;
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 public class EntityRidableCreeper extends EntityCreeper implements RidableEntity {
     private static Field ignited_field;
+    private static Field fuseTicks_field;
+    private static Field lastActive_field;
 
     static {
         try {
             ignited_field = EntityCreeper.class.getDeclaredField("c");
             ignited_field.setAccessible(true);
+            fuseTicks_field = EntityCreeper.class.getDeclaredField("fuseTicks");
+            fuseTicks_field.setAccessible(true);
+            lastActive_field = EntityCreeper.class.getDeclaredField("bC");
+            lastActive_field.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -69,6 +82,29 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
             }
         }
         super.mobTick();
+    }
+
+    public void tick() {
+        if (isAlive()) {
+            int fuseTicks = getFuseTicks();
+            setLastActive(fuseTicks);
+            if (isIgnited()) {
+                a(1);
+            }
+            int i = dA();
+            if (i > 0 && fuseTicks == 0) {
+                this.a(SoundEffects.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
+            }
+            fuseTicks += i;
+            if (fuseTicks < 0) {
+                setFuseTicks(0);
+            }
+            if (fuseTicks >= maxFuseTicks) {
+                setFuseTicks(maxFuseTicks);
+                explode();
+            }
+        }
+        super.tick();
     }
 
     // getJumpUpwardsMotion
@@ -171,5 +207,63 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
             } catch (IllegalAccessException ignore) {
             }
         }
+    }
+
+    public int getFuseTicks() {
+        try {
+            return fuseTicks_field.getInt(this);
+        } catch (IllegalAccessException ignore) {
+        }
+        return 0;
+    }
+
+    public void setFuseTicks(int fuseTicks) {
+        try {
+            fuseTicks_field.set(this, fuseTicks);
+        } catch (IllegalAccessException ignore) {
+        }
+    }
+
+    public void setLastActive(int lastActive) {
+        try {
+            lastActive_field.set(this, lastActive);
+        } catch (IllegalAccessException ignore) {
+        }
+    }
+
+    public void explode() {
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), explosionRadius * (isPowered() ? 2.0F : 1.0F), false);
+        world.getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled()) {
+            aX = true; // duplicate of isDead
+            boolean flag = getRider() == null ? world.getGameRules().getBoolean("mobGriefing") : Config.CREEPER_EXPLOSION_GRIEF;
+            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), flag);
+            die();
+            spawnCloud();
+        } else {
+            setFuseTicks(0);
+            setIgnited(false);
+        }
+    }
+
+    private void spawnCloud() {
+        Collection<MobEffect> collection = getEffects();
+        if (collection.isEmpty()) {
+            return;
+        }
+        if (Ridables.getInstance().getServerType() == ServerType.PAPER && world.paperConfig.disableCreeperLingeringEffect) {
+            return;
+        }
+        EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, locX, locY, locZ);
+        cloud.setSource(this);
+        cloud.setRadius(2.5F);
+        cloud.setRadiusOnUse(-0.5F);
+        cloud.setWaitTime(10);
+        cloud.setDuration(cloud.getDuration() / 2);
+        cloud.setRadiusPerTick(-cloud.getRadius() / (float) cloud.getDuration());
+        for (MobEffect mobEffect : collection) {
+            cloud.a(new MobEffect(mobEffect));
+        }
+        world.addEntity(cloud);
     }
 }
