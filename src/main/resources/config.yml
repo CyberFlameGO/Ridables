@@ -324,6 +324,18 @@ witch:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Wither options
+wither:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  shoot:
+    cooldown: 20     # ticks to wait between shooting
+    speed: 1.0       # projectile speed
+    damage: 1.0      # damage per hit (1 heart = 2.0 damage)
+    heal: 1.0        # how much health to "steal" from entities per hit
+    grief: true      # whether wither skulls can damage the blocks in the world
+    effect-duration: 10 # long (in seconds) the "wither" effect is effective for
+
 # Wither Skeleton options
 wither-skeleton:
   enabled: false     # enable custom ridable entity

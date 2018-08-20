@@ -53,13 +53,9 @@ public class EntityGhastFireball extends EntityLargeFireball {
             die();
             return;
         }
-        if (!world.isClientSide) {
-            setFlag(6, bc());
-        }
+        setFlag(6, bc());
         W();
-        if (f()) {
-            setOnFire(1);
-        }
+        setOnFire(1);
         MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
         if (mop != null && mop.entity != null) {
             if (ProjectileCollideEvent.callProjectileCollideEvent(this, mop).isCancelled()) {
@@ -99,22 +95,17 @@ public class EntityGhastFireball extends EntityLargeFireball {
     }
 
     protected void a(MovingObjectPosition mop) {
-        if (!world.isClientSide) {
-            if (mop.entity != null) {
-                if (Config.GHAST_SHOOT_DAMAGE > 0) {
-                    mop.entity.damageEntity(DamageSource.fireball(this, shooter), Config.GHAST_SHOOT_DAMAGE);
-                    a(shooter, mop.entity);
-                }
+        if (mop.entity != null) {
+            if (Config.GHAST_SHOOT_DAMAGE > 0) {
+                mop.entity.damageEntity(DamageSource.fireball(this, shooter), Config.GHAST_SHOOT_DAMAGE);
+                a(shooter, mop.entity);
             }
-            ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(world.getServer(), this));
-            if (!Config.GHAST_SHOOT_GRIEF) {
-                event.setRadius(0);
-            }
-            world.getServer().getPluginManager().callEvent(event);
-            if (!event.isCancelled()) {
-                world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), isIncendiary);
-            }
-            die();
         }
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(world.getServer(), this));
+        world.getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled()) {
+            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), Config.GHAST_SHOOT_GRIEF);
+        }
+        die();
     }
 }

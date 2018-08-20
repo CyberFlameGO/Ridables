@@ -168,6 +168,9 @@ permissions:
       allow.ride.witch:
         description: Allow to ride witches
         default: op
+      allow.ride.wither:
+        description: Allow to ride withers
+        default: op
       allow.ride.wither_skeleton:
         description: Allow to ride wither skeletons
         default: op
@@ -198,6 +201,9 @@ permissions:
         default: op
       allow.shoot.phantom:
         description: Allow to make phantoms shoot flames
+        default: op
+      allow.shoot.wither:
+        description: Allow to make withers shoot skulls
         default: op
   allow.special.*:
     description: Allow to make all supported creatures do their special

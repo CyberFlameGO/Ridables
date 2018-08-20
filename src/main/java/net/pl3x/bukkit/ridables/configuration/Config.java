@@ -216,6 +216,15 @@ public class Config {
     public static float WITCH_SPEED = 1.0F;
     public static float WITCH_JUMP_POWER = 0.5F;
 
+    public static boolean WITHER_ENABLED = false;
+    public static float WITHER_SPEED = 1.0F;
+    public static int WITHER_SHOOT_COOLDOWN = 20;
+    public static float WITHER_SHOOT_SPEED = 1.0F;
+    public static float WITHER_SHOOT_DAMAGE = 1.0F;
+    public static float WITHER_SHOOT_HEAL_AMOUNT = 1.0F;
+    public static int WITHER_SHOOT_EFFECT_DURATION = 10;
+    public static boolean WITHER_SHOOT_GRIEF = true;
+
     public static boolean WITHER_SKELETON_ENABLED = false;
     public static float WITHER_SKELETON_SPEED = 1.0F;
     public static float WITHER_SKELETON_JUMP_POWER = 0.5F;
@@ -458,6 +467,15 @@ public class Config {
         WITCH_ENABLED = config.getBoolean("witch.enabled", false);
         WITCH_SPEED = (float) config.getDouble("witch.speed", 1.0D);
         WITCH_JUMP_POWER = (float) config.getDouble("witch.jump-power", 0.5D);
+
+        WITHER_ENABLED = config.getBoolean("wither.enabled", false);
+        WITHER_SPEED = (float) config.getDouble("wither.speed", 1.0D);
+        WITHER_SHOOT_COOLDOWN = (int) config.getDouble("wither.shoot.cooldown", 20);
+        WITHER_SHOOT_SPEED = (float) config.getDouble("wither.shoot.speed", 1.0D);
+        WITHER_SHOOT_DAMAGE = (float) config.getDouble("wither.shoot.damage", 1.0D);
+        WITHER_SHOOT_HEAL_AMOUNT = (float) config.getDouble("wither.shoot.heal", 1.0D);
+        WITHER_SHOOT_EFFECT_DURATION = (int) config.getDouble("wither.shoot.effect-duration", 10);
+        WITHER_SHOOT_GRIEF = config.getBoolean("wither.shoot.grief", true);
 
         WITHER_SKELETON_ENABLED = config.getBoolean("wither-skeleton.enabled", false);
         WITHER_SKELETON_SPEED = (float) config.getDouble("wither-skeleton.speed", 1.0D);
