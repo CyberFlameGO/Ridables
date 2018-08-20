@@ -1,25 +1,29 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.data.HandItem;
+import net.minecraft.server.v1_13_R1.EntityAgeable;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -120,6 +124,31 @@ public class RideListener implements Listener {
         creature.addPassenger(player);
         override.remove(player.getUniqueId());
         ControllerWASD.setJumping(((CraftLivingEntity) player).getHandle());
+    }
+
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (RidableType.getRidable(entity) != null) {
+            return; // already ridable
+        }
+
+        net.minecraft.server.v1_13_R1.Entity newEntity = RidableType.getRidableType(event.getEntityType())
+                .spawn(event.getLocation());
+        net.minecraft.server.v1_13_R1.Entity oldEntity = ((CraftEntity) entity).getHandle();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (oldEntity.hasCustomName()) {
+                    newEntity.setCustomName(oldEntity.getCustomName());
+                }
+                if (oldEntity instanceof EntityAgeable) {
+                    ((EntityAgeable) newEntity).setAgeRaw(((EntityAgeable) oldEntity).getAge());
+                }
+                entity.remove();
+            }
+        }.runTaskLater(plugin, 1);
     }
 
 
