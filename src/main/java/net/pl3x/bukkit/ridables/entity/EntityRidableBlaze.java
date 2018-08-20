@@ -25,6 +25,10 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.BLAZE;
+    }
+
     public boolean aY() {
         return true;
     }

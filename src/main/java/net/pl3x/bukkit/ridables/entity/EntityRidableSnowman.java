@@ -41,6 +41,10 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.SNOWMAN;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return PUMPKIN.isTagged(itemstack) || itemstack.getType() == Material.SHEARS;
     }

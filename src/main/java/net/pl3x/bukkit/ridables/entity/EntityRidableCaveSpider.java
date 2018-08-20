@@ -25,6 +25,10 @@ public class EntityRidableCaveSpider extends EntityCaveSpider implements Ridable
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.CAVE_SPIDER;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

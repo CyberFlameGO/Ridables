@@ -25,6 +25,10 @@ public class EntityRidableHusk extends EntityZombieHusk implements RidableEntity
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.HUSK;
+    }
+
     public boolean aY() {
         return true;
     }

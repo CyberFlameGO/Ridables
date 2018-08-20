@@ -22,6 +22,10 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
         wasdController = new ControllerWASDWater(this);
     }
 
+    public RidableType getType() {
+        return RidableType.TROPICAL_FISH;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return itemstack.getType() == Material.WATER_BUCKET;
     }

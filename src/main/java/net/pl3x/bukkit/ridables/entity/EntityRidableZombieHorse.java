@@ -15,6 +15,10 @@ public class EntityRidableZombieHorse extends EntityHorseZombie implements Ridab
         super(world);
     }
 
+    public RidableType getType() {
+        return RidableType.ZOMBIE_HORSE;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }

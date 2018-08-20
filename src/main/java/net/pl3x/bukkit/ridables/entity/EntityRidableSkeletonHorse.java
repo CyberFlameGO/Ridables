@@ -15,6 +15,10 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
         super(world);
     }
 
+    public RidableType getType() {
+        return RidableType.SKELETON_HORSE;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }

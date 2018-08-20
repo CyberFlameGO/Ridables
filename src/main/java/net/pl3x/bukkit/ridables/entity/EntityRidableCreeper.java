@@ -67,6 +67,10 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.CREEPER;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

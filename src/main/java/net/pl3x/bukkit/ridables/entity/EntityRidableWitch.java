@@ -25,6 +25,10 @@ public class EntityRidableWitch extends EntityWitch implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.WITCH;
+    }
+
     public boolean aY() {
         return true;
     }

@@ -27,6 +27,10 @@ public class EntityRidableWolf extends EntityWolf implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.WOLF;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }

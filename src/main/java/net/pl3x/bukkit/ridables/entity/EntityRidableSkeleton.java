@@ -25,6 +25,10 @@ public class EntityRidableSkeleton extends EntitySkeleton implements RidableEnti
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.SKELETON;
+    }
+
     public boolean aY() {
         return true;
     }

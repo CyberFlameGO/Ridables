@@ -25,6 +25,10 @@ public class EntityRidableZombiePigman extends EntityPigZombie implements Ridabl
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.ZOMBIE_PIGMAN;
+    }
+
     public boolean aY() {
         return true;
     }

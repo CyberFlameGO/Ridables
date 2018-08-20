@@ -27,6 +27,10 @@ public class EntityRidableOcelot extends EntityOcelot implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.OCELOT;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }

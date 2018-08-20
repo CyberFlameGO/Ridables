@@ -22,6 +22,10 @@ public class EntityRidableSalmon extends EntitySalmon implements RidableEntity {
         wasdController = new ControllerWASDWater(this);
     }
 
+    public RidableType getType() {
+        return RidableType.SALMON;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return itemstack.getType() == Material.WATER_BUCKET;
     }

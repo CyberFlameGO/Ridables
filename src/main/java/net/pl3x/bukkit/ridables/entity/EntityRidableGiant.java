@@ -26,6 +26,10 @@ public class EntityRidableGiant extends EntityGiantZombie implements RidableEnti
         Q = 3;
     }
 
+    public RidableType getType() {
+        return RidableType.GIANT;
+    }
+
     public boolean aY() {
         return true;
     }

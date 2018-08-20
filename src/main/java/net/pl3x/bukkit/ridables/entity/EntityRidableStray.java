@@ -25,6 +25,10 @@ public class EntityRidableStray extends EntitySkeletonStray implements RidableEn
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.STRAY;
+    }
+
     public boolean aY() {
         return true;
     }

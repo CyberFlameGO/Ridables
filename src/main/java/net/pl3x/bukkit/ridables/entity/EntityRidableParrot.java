@@ -32,6 +32,10 @@ public class EntityRidableParrot extends EntityParrot implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.PARROT;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return FOOD.isTagged(itemstack) || itemstack.getType() == Material.COOKIE;
     }

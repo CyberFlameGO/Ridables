@@ -25,6 +25,10 @@ public class EntityRidableGuardian extends EntityGuardian implements RidableEnti
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.GUARDIAN;
+    }
+
     public boolean aY() {
         return true;
     }

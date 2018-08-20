@@ -27,6 +27,10 @@ public class EntityRidableMushroomCow extends EntityMushroomCow implements Ridab
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.MOOSHROOM;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }

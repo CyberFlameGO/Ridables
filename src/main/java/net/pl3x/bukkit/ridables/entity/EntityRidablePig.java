@@ -30,6 +30,10 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.PIG;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return f(CraftItemStack.asNMSCopy(itemstack)) || itemstack.getType() == Material.SADDLE;
     }

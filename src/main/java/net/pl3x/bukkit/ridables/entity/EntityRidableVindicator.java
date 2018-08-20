@@ -25,6 +25,10 @@ public class EntityRidableVindicator extends EntityVindicator implements Ridable
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.VINDICATOR;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

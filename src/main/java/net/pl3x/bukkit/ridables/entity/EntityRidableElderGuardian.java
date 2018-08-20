@@ -25,6 +25,10 @@ public class EntityRidableElderGuardian extends EntityGuardianElder implements R
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.ELDER_GUARDIAN;
+    }
+
     public boolean aY() {
         return true;
     }

@@ -25,6 +25,10 @@ public class EntityRidableZombie extends EntityZombie implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.ZOMBIE;
+    }
+
     public boolean aY() {
         return true;
     }

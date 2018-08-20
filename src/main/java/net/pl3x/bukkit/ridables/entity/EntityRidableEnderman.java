@@ -52,6 +52,10 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.ENDERMAN;
+    }
+
     public boolean aY() {
         return !Config.ENDERMAN_EJECT_WHEN_WET;
     }

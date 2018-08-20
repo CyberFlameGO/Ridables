@@ -25,6 +25,10 @@ public class EntityRidableIllusioner extends EntityIllagerIllusioner implements 
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.ILLUSIONER;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

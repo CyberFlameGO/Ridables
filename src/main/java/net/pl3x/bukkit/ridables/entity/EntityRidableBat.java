@@ -25,6 +25,10 @@ public class EntityRidableBat extends EntityBat implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.BAT;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

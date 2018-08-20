@@ -22,6 +22,10 @@ public class EntityRidableCod extends EntityCod implements RidableEntity {
         wasdController = new ControllerWASDWater(this);
     }
 
+    public RidableType getType() {
+        return RidableType.COD;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return itemstack.getType() == Material.WATER_BUCKET;
     }

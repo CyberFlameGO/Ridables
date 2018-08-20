@@ -36,6 +36,10 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.SLIME;
+    }
+
     public boolean aY() {
         return true;
     }

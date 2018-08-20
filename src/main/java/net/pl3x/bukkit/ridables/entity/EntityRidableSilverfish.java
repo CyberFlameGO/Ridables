@@ -25,6 +25,10 @@ public class EntityRidableSilverfish extends EntitySilverfish implements Ridable
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.SILVERFISH;
+    }
+
     public boolean aY() {
         return true;
     }

@@ -25,6 +25,10 @@ public class EntityRidableEndermite extends EntityEndermite implements RidableEn
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.ENDERMITE;
+    }
+
     public boolean aY() {
         return true;
     }

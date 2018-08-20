@@ -29,6 +29,10 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
         Q = Config.POLAR_BEAR_STEP_HEIGHT;
     }
 
+    public RidableType getType() {
+        return RidableType.POLAR_BEAR;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

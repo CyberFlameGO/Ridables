@@ -44,6 +44,10 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.DOLPHIN;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return Tag.ITEMS_FISHES.isTagged(itemstack.getType());
     }

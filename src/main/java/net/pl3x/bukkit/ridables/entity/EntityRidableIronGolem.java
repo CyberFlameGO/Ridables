@@ -28,6 +28,10 @@ public class EntityRidableIronGolem extends EntityIronGolem implements RidableEn
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.IRON_GOLEM;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

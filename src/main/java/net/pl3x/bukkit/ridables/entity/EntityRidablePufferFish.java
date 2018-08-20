@@ -36,6 +36,10 @@ public class EntityRidablePufferFish extends EntityPufferFish implements Ridable
         wasdController = new ControllerWASDWater(this);
     }
 
+    public RidableType getType() {
+        return RidableType.PUFFERFISH;
+    }
+
     public boolean isActionableItem(ItemStack itemstack) {
         return itemstack.getType() == Material.WATER_BUCKET;
     }

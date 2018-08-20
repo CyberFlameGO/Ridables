@@ -59,6 +59,10 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.WITHER;
+    }
+
     protected void n() {
         goalArrowAttack = new PathfinderGoalArrowAttack(this, 1.0D, 40, 20.0F);
         goalRandomStroll = new PathfinderGoalRandomStrollLand(this, 1.0D);

@@ -25,6 +25,10 @@ public class EntityRidableWitherSkeleton extends EntitySkeletonWither implements
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.WITHER_SKELETON;
+    }
+
     public boolean aY() {
         return true;
     }

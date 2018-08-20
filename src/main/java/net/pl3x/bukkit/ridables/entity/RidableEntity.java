@@ -9,6 +9,13 @@ import org.bukkit.inventory.ItemStack;
 
 public interface RidableEntity {
     /**
+     * Get the RidableType of this entity
+     *
+     * @return RidableType
+     */
+    RidableType getType();
+
+    /**
      * Check if this item is an actionable item for this entity
      * <p>
      * An actionable item is something that makes the entity do something (eat, breed, tempt, etc)

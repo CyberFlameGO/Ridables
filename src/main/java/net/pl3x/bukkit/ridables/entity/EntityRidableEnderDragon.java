@@ -41,6 +41,10 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         }
     }
 
+    public RidableType getType() {
+        return RidableType.ENDER_DRAGON;
+    }
+
     public boolean aY() {
         return false; // eject passengers when in water
     }

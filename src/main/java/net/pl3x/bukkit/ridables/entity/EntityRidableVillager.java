@@ -27,6 +27,10 @@ public class EntityRidableVillager extends EntityVillager implements RidableEnti
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.VILLAGER;
+    }
+
     public boolean aY() {
         return true; // dont eject passengers when in water
     }

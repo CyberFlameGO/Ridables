@@ -25,6 +25,10 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
         super(EntityTypes.MAGMA_CUBE, world);
     }
 
+    public RidableType getType() {
+        return RidableType.MAGMA_CUBE;
+    }
+
     public float getSpeed() {
         return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.MAGMA_CUBE_SPEED;
     }

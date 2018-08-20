@@ -35,6 +35,10 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         blankLookController = new BlankLookController(this);
     }
 
+    public RidableType getType() {
+        return RidableType.PHANTOM;
+    }
+
     public boolean aY() {
         return false; // eject passengers when in water
     }
