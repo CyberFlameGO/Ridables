@@ -12,10 +12,9 @@ import net.minecraft.server.v1_13_R1.Particles;
 import net.minecraft.server.v1_13_R1.ProjectileHelper;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.EntityRidableWither;
-import net.pl3x.bukkit.ridables.event.ProjectileCollideEvent;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -55,13 +54,11 @@ public class EntitySafeWitherSkull extends EntityWitherSkull {
         W();
         MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
         if (mop != null && mop.entity != null) {
-            if (ProjectileCollideEvent.callProjectileCollideEvent(this, mop).isCancelled()) {
+            if (mop.entity == wither || mop.entity == player) {
+                mop = null; // dont hit self
+            } else if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
+                    CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
                 mop = null;
-            }
-            if (Ridables.getInstance().getServerType() == ServerType.PAPER && mop != null) {
-                if (CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
-                    mop = null;
-                }
             }
         }
         if (mop != null) {
