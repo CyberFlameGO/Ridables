@@ -93,13 +93,13 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
             int fuseTicks = getFuseTicks();
             setLastActive(fuseTicks);
             if (isIgnited()) {
-                a(1);
+                a(1); // setSwellState
             }
-            int i = dA();
-            if (i > 0 && fuseTicks == 0) {
-                this.a(SoundEffects.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
+            int state = dA(); // getSwellState
+            if (state > 0 && fuseTicks == 0) {
+                a(SoundEffects.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
             }
-            fuseTicks += i;
+            fuseTicks += state;
             if (fuseTicks < 0) {
                 setFuseTicks(0);
             }
@@ -236,7 +236,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     }
 
     public void explode() {
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), explosionRadius * (isPowered() ? 2.0F : 1.0F), false);
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             aX = true; // duplicate of isDead

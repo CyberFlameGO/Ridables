@@ -49,6 +49,7 @@ public class Config {
     public static float CREEPER_SPEED = 1.0F;
     public static float CREEPER_JUMP_POWER = 0.5F;
     public static float CREEPER_EXPLOSION_DAMAGE = 5.0F;
+    public static int CREEPER_EXPLOSION_RADIUS = 3;
     public static boolean CREEPER_EXPLOSION_GRIEF = true;
 
     public static boolean DOLPHIN_ENABLED = false;
@@ -301,6 +302,7 @@ public class Config {
         CREEPER_SPEED = (float) config.getDouble("creeper.speed", 1.0D);
         CREEPER_JUMP_POWER = (float) config.getDouble("creeper.jump-power", 0.5D);
         CREEPER_EXPLOSION_DAMAGE = (float) config.getDouble("creeper.explosion.damage", 5.0D);
+        CREEPER_EXPLOSION_RADIUS = (int) config.getDouble("creeper.explosion.radius", 3.0D);
         CREEPER_EXPLOSION_GRIEF = config.getBoolean("creeper.explosion.grief", true);
 
         DOLPHIN_ENABLED = config.getBoolean("dolphin.enabled", false);
