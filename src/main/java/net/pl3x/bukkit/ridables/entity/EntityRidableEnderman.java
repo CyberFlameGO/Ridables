@@ -15,7 +15,6 @@ import net.minecraft.server.v1_13_R1.EnumHand;
 import net.minecraft.server.v1_13_R1.FluidCollisionOption;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
 import net.minecraft.server.v1_13_R1.IBlockData;
-import net.minecraft.server.v1_13_R1.IWorldReader;
 import net.minecraft.server.v1_13_R1.MathHelper;
 import net.minecraft.server.v1_13_R1.MovingObjectPosition;
 import net.minecraft.server.v1_13_R1.PathfinderGoal;
@@ -130,21 +129,49 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         if (hand == EnumHand.MAIN_HAND) {
             return false; // ignore left clicks
         }
+
         EntityPlayer rider = getRider();
         if (rider == null || !rider.getBukkitEntity().hasPermission("allow.special.enderman")) {
             return false;
         }
+
         if (getCarried() == null) {
-            BlockPosition blockposition = new BlockPosition(block.getX(), block.getY(), block.getZ());
-            setCarried(world.getType(blockposition));
-            world.setAir(blockposition);
-        } else {
-            block = block.getRelative(blockFace);
-            BlockPosition blockposition = new BlockPosition(block.getX(), block.getY(), block.getZ());
-            world.setTypeAndData(blockposition, getCarried(), 3);
-            setCarried(null);
+            return pickUpBlock(block.getX(), block.getY(), block.getZ());
         }
-        return true;
+
+        block = block.getRelative(blockFace);
+        return placeBlock(block.getX(), block.getY(), block.getZ());
+    }
+
+    public boolean pickUpBlock(int x, int y, int z) {
+        BlockPosition pos = new BlockPosition(x, y, z);
+        IBlockData state = world.getType(pos);
+        Block block = state.getBlock();
+        MovingObjectPosition movingobjectposition = world.rayTrace(new Vec3D((double) ((float) MathHelper.floor(locX) + 0.5F), (double) ((float) y + 0.5F), (double) ((float) MathHelper.floor(locZ) + 0.5F)), new Vec3D((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F)), FluidCollisionOption.NEVER, true, false);
+        boolean flag = movingobjectposition != null && movingobjectposition.a().equals(pos);
+        if (block.a(TagsBlock.G) && flag) {
+            if (!CraftEventFactory.callEntityChangeBlockEvent(this, pos, Blocks.AIR.getBlockData()).isCancelled()) {
+                world.setAir(pos);
+                setCarried(Block.b(state, world, pos));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean placeBlock(int x, int y, int z) {
+        BlockPosition pos = new BlockPosition(x, y, z);
+        IBlockData state = world.getType(pos);
+        IBlockData state1 = world.getType(pos.down());
+        IBlockData state2 = Block.b(getCarried(), world, pos);
+        if (state2 != null && state.isAir() && !state1.isAir() && state1.g() && state2.canPlace(world, pos)) {
+            if (!CraftEventFactory.callEntityChangeBlockEvent(this, pos, state2).isCancelled()) {
+                world.setTypeAndData(pos, state2, 3);
+                setCarried(null);
+                return true;
+            }
+        }
+        return false;
     }
 
     // randomlyTeleport
@@ -195,17 +222,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
             int x = MathHelper.floor(enderman.locX - 2.0D + enderman.random.nextDouble() * 4.0D);
             int y = MathHelper.floor(enderman.locY + enderman.random.nextDouble() * 3.0D);
             int z = MathHelper.floor(enderman.locZ - 2.0D + enderman.random.nextDouble() * 4.0D);
-            BlockPosition blockposition = new BlockPosition(x, y, z);
-            IBlockData iblockdata = enderman.world.getType(blockposition);
-            Block block = iblockdata.getBlock();
-            MovingObjectPosition movingobjectposition = enderman.world.rayTrace(new Vec3D((double) ((float) MathHelper.floor(enderman.locX) + 0.5F), (double) ((float) y + 0.5F), (double) ((float) MathHelper.floor(enderman.locZ) + 0.5F)), new Vec3D((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F)), FluidCollisionOption.NEVER, true, false);
-            boolean flag = movingobjectposition != null && movingobjectposition.a().equals(blockposition);
-            if (block.a(TagsBlock.G) && flag) {
-                if (!CraftEventFactory.callEntityChangeBlockEvent(enderman, blockposition, Blocks.AIR.getBlockData()).isCancelled()) {
-                    enderman.setCarried(iblockdata);
-                    enderman.world.setAir(blockposition);
-                }
-            }
+            enderman.pickUpBlock(x, y, z);
         }
     }
 
@@ -232,21 +249,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
             int x = MathHelper.floor(enderman.locX - 1.0D + enderman.random.nextDouble() * 2.0D);
             int y = MathHelper.floor(enderman.locY + enderman.random.nextDouble() * 2.0D);
             int z = MathHelper.floor(enderman.locZ - 1.0D + enderman.random.nextDouble() * 2.0D);
-            BlockPosition blockposition = new BlockPosition(x, y, z);
-            IBlockData iblockdata = enderman.world.getType(blockposition);
-            IBlockData iblockdata1 = enderman.world.getType(blockposition.down());
-            IBlockData iblockdata2 = enderman.getCarried();
-            if (iblockdata2 != null && a(enderman.world, blockposition, iblockdata2, iblockdata, iblockdata1)) {
-                if (!CraftEventFactory.callEntityChangeBlockEvent(enderman, blockposition, iblockdata2).isCancelled()) {
-                    enderman.world.setTypeAndData(blockposition, iblockdata2, 3);
-                    enderman.setCarried(null);
-                }
-            }
-
-        }
-
-        private boolean a(IWorldReader iworldreader, BlockPosition blockposition, IBlockData iblockdata, IBlockData iblockdata1, IBlockData iblockdata2) {
-            return iblockdata1.isAir() && !iblockdata2.isAir() && iblockdata2.g() && iblockdata.canPlace(iworldreader, blockposition);
+            enderman.placeBlock(x, y, z);
         }
     }
 
