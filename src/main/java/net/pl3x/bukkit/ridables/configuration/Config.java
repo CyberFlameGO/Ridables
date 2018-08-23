@@ -99,6 +99,12 @@ public class Config {
     public static boolean GIANT_ENABLED = false;
     public static float GIANT_SPEED = 1.0F;
     public static float GIANT_JUMP_POWER = 0.5F;
+    public static boolean GIANT_AI_ENABLED = true;
+    public static float GIANT_MAX_HEALTH = 100F;
+    public static float GIANT_AI_SPEED = 0.5F;
+    public static float GIANT_FOLLOW_RANGE = 32.0F;
+    public static boolean GIANT_HOSTILE = true;
+    public static float GIANT_ATTACK_DAMAGE = 5.0F;
 
     public static boolean GUARDIAN_ENABLED = false;
     public static float GUARDIAN_SPEED = 1.0F;
@@ -352,6 +358,12 @@ public class Config {
         GIANT_ENABLED = config.getBoolean("giant.enabled", false);
         GIANT_SPEED = (float) config.getDouble("giant.speed", 1.0D);
         GIANT_JUMP_POWER = (float) config.getDouble("giant.jump-power", 0.5D);
+        GIANT_AI_ENABLED = config.getBoolean("giant.ai.enabled", true);
+        GIANT_MAX_HEALTH = (float) config.getDouble("giant.ai.health", 100D);
+        GIANT_AI_SPEED = (float) config.getDouble("giant.ai.speed", 0.3D);
+        GIANT_FOLLOW_RANGE = (float) config.getDouble("giant.ai.follow", 32.0D);
+        GIANT_HOSTILE = config.getBoolean("giant.ai.hostile", true);
+        GIANT_ATTACK_DAMAGE = (float) config.getDouble("giant.ai.attack", 5.0D);
 
         GUARDIAN_ENABLED = config.getBoolean("guardian.enabled", false);
         GUARDIAN_SPEED = (float) config.getDouble("guardian.speed", 1.0D);
