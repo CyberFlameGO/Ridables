@@ -56,6 +56,7 @@ public class RidableType {
     public static final RidableType RABBIT = inject(Config.RABBIT_ENABLED, "rabbit", EntityTypes.RABBIT, Material.RABBIT_SPAWN_EGG, EntityRidableRabbit.class, EntityRidableRabbit::new);
     public static final RidableType SALMON = inject(Config.SALMON_ENABLED, "salmon", EntityTypes.SALMON, Material.SALMON_SPAWN_EGG, EntityRidableSalmon.class, EntityRidableSalmon::new, Material.SALMON_BUCKET);
     public static final RidableType SHEEP = inject(Config.SHEEP_ENABLED, "sheep", EntityTypes.SHEEP, Material.SHEEP_SPAWN_EGG, EntityRidableSheep.class, EntityRidableSheep::new);
+    public static final RidableType SHULKER = inject(Config.SHULKER_ENABLED, "shulker", EntityTypes.SHULKER, Material.SHULKER_SPAWN_EGG, EntityRidableShulker.class, EntityRidableShulker::new);
     public static final RidableType SILVERFISH = inject(Config.SILVERFISH_ENABLED, "silverfish", EntityTypes.SILVERFISH, Material.SILVERFISH_SPAWN_EGG, EntityRidableSilverfish.class, EntityRidableSilverfish::new);
     public static final RidableType SKELETON = inject(Config.SKELETON_ENABLED, "skeleton", EntityTypes.SKELETON, Material.SKELETON_SPAWN_EGG, EntityRidableSkeleton.class, EntityRidableSkeleton::new);
     public static final RidableType SKELETON_HORSE = inject(Config.SKELETON_HORSE_ENABLED, "skeleton_horse", EntityTypes.SKELETON_HORSE, Material.SKELETON_HORSE_SPAWN_EGG, EntityRidableSkeletonHorse.class, EntityRidableSkeletonHorse::new);

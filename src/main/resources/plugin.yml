@@ -132,6 +132,9 @@ permissions:
       allow.ride.sheep:
         description: Allow to ride sheep
         default: op
+      allow.ride.shulker:
+        description: Allow to ride shulkers
+        default: op
       allow.ride.silverfish:
         description: Allow to ride silverfish
         default: op
@@ -201,6 +204,9 @@ permissions:
         default: op
       allow.shoot.phantom:
         description: Allow to make phantoms shoot flames
+        default: op
+      allow.shoot.shulker:
+        description: Allow to make withers shoot skulls
         default: op
       allow.shoot.wither:
         description: Allow to make withers shoot skulls

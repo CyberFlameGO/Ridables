@@ -254,6 +254,15 @@ sheep:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
+# Shulker options
+shulker:
+  enabled: false     # enable custom ridable entity
+  peek-height: 33    # height of shulker lid to be open when riding
+  shoot:
+    cooldown: 10     # ticks to wait between shooting
+    speed: 1.0       # projectile speed
+    damage: 4.0      # damage per hit (1 heart = 2.0 damage)
+
 # Silverfish options
 silverfish:
   enabled: false     # enable custom ridable entity

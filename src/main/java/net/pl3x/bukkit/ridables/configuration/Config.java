@@ -174,6 +174,12 @@ public class Config {
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
 
+    public static boolean SHULKER_ENABLED = false;
+    public static int SHULKER_PEEK_HEIGHT = 33;
+    public static int SHULKER_SHOOT_COOLDOWN = 10;
+    public static float SHULKER_SHOOT_SPEED = 1.0F;
+    public static float SHULKER_SHOOT_DAMAGE = 4.0F;
+
     public static boolean SILVERFISH_ENABLED = false;
     public static float SILVERFISH_SPEED = 1.0F;
     public static float SILVERFISH_JUMP_POWER = 0.5F;
@@ -432,6 +438,12 @@ public class Config {
         SHEEP_ENABLED = config.getBoolean("sheep.enabled", false);
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);
         SHEEP_JUMP_POWER = (float) config.getDouble("sheep.jump-power", 0.5D);
+
+        SHULKER_ENABLED = config.getBoolean("shulker.enabled", false);
+        SHULKER_PEEK_HEIGHT = (int) config.getDouble("shulker.peek-height", 33);
+        SHULKER_SHOOT_COOLDOWN = (int) config.getDouble("shulker.shoot.cooldown", 10);
+        SHULKER_SHOOT_SPEED = (float) config.getDouble("shulker.shoot.speed", 1.0D);
+        SHULKER_SHOOT_DAMAGE = (float) config.getDouble("shulker.shoot.damage", 4.0D);
 
         SILVERFISH_ENABLED = config.getBoolean("silverfish.enabled", false);
         SILVERFISH_SPEED = (float) config.getDouble("silverfish.speed", 1.0D);
