@@ -6,6 +6,7 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -46,6 +47,33 @@ public class Bucket {
             }
         }
         return null;
+    }
+
+    public static boolean isFromBucket(Entity entity) {
+        if (entity.getType() != EntityType.COD) {
+            return false; // not a cod
+        }
+
+        String name = entity.getCustomName();
+        if (name == null) {
+            return false; // no custom name
+        }
+
+        for (Bucket bucket : BUCKETS) {
+            ItemStack stack = bucket.getItemStack();
+            if (!stack.hasItemMeta()) {
+                continue; // no meta
+            }
+            ItemMeta meta = stack.getItemMeta();
+            if (!meta.hasDisplayName()) {
+                continue; // no custom name
+            }
+            if (name.equals(meta.getDisplayName())) {
+                return true; // found a matching name
+            }
+        }
+
+        return false; // not from a bucket
     }
 
     private static Bucket createBucket(EntityType entityType) {

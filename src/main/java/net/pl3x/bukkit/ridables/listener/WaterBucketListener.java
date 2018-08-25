@@ -8,11 +8,14 @@ import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Cod;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -142,6 +145,22 @@ public class WaterBucketListener implements Listener {
             player.getInventory().addItem(new ItemStack(Material.BUCKET))
                     // or drop to ground if inventory is full
                     .values().forEach(leftover -> player.getWorld().dropItem(player.getLocation(), leftover));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onSpawnCodFish(CreatureSpawnEvent event) {
+        if (event.getEntityType() != EntityType.COD) {
+            return; // not a cod
+        }
+
+        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) {
+            return; // not from a bucket
+        }
+
+        Cod codFish = (Cod) event.getEntity();
+        if (Bucket.isFromBucket(codFish)) {
+            event.setCancelled(true);
         }
     }
 }
