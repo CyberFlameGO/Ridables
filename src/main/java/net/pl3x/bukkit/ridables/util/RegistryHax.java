@@ -4,6 +4,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.server.v1_13_R1.BiomeBase;
+import net.minecraft.server.v1_13_R1.Biomes;
 import net.minecraft.server.v1_13_R1.DataConverterRegistry;
 import net.minecraft.server.v1_13_R1.DataConverterTypes;
 import net.minecraft.server.v1_13_R1.Entity;
@@ -259,83 +260,88 @@ public class RegistryHax {
     }
 
     public static void rebuildBiomes() {
+        Logger.info("Rebuilding biome mob lists");
+        rebuildBiome("a", 0, "ocean", new net.minecraft.server.v1_13_R1.BiomeOcean());
         try {
-            biomebase_method_a.invoke(null, 0, "ocean", new net.minecraft.server.v1_13_R1.BiomeOcean());
-            biomebase_method_a.invoke(null, 1, "plains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomePlains.class));
-            biomebase_method_a.invoke(null, 2, "desert", new net.minecraft.server.v1_13_R1.BiomeDesert());
-            biomebase_method_a.invoke(null, 3, "mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeBigHills.class));
-            biomebase_method_a.invoke(null, 4, "forest", new net.minecraft.server.v1_13_R1.BiomeForest());
-            biomebase_method_a.invoke(null, 5, "taiga", new net.minecraft.server.v1_13_R1.BiomeTaiga());
-            biomebase_method_a.invoke(null, 6, "swamp", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSwamp.class));
-            biomebase_method_a.invoke(null, 7, "river", new net.minecraft.server.v1_13_R1.BiomeRiver());
-            biomebase_method_a.invoke(null, 8, "nether", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeHell.class));
-            biomebase_method_a.invoke(null, 9, "the_end", new net.minecraft.server.v1_13_R1.BiomeTheEnd());
-            biomebase_method_a.invoke(null, 10, "frozen_ocean", new net.minecraft.server.v1_13_R1.BiomeFrozenOcean());
-            biomebase_method_a.invoke(null, 11, "frozen_river", new net.minecraft.server.v1_13_R1.BiomeFrozenRiver());
-            biomebase_method_a.invoke(null, 12, "snowy_tundra", new net.minecraft.server.v1_13_R1.BiomeIcePlains());
-            biomebase_method_a.invoke(null, 13, "snowy_mountains", new net.minecraft.server.v1_13_R1.BiomeIceMountains());
-            biomebase_method_a.invoke(null, 14, "mushroom_fields", new net.minecraft.server.v1_13_R1.BiomeMushrooms());
-            biomebase_method_a.invoke(null, 15, "mushroom_field_shore", new net.minecraft.server.v1_13_R1.BiomeMushroomIslandShore());
-            biomebase_method_a.invoke(null, 16, "beach", new net.minecraft.server.v1_13_R1.BiomeBeach());
-            biomebase_method_a.invoke(null, 17, "desert_hills", new net.minecraft.server.v1_13_R1.BiomeDesertHills());
-            biomebase_method_a.invoke(null, 18, "wooded_hills", new net.minecraft.server.v1_13_R1.BiomeForestHills());
-            biomebase_method_a.invoke(null, 19, "taiga_hills", new net.minecraft.server.v1_13_R1.BiomeTaigaHills());
-            biomebase_method_a.invoke(null, 20, "mountain_edge", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsEdge.class));
-            biomebase_method_a.invoke(null, 21, "jungle", new net.minecraft.server.v1_13_R1.BiomeJungle());
-            biomebase_method_a.invoke(null, 22, "jungle_hills", new net.minecraft.server.v1_13_R1.BiomeJungleHills());
-            biomebase_method_a.invoke(null, 23, "jungle_edge", new net.minecraft.server.v1_13_R1.BiomeJungleEdge());
-            biomebase_method_a.invoke(null, 24, "deep_ocean", new net.minecraft.server.v1_13_R1.BiomeDeepOcean());
-            biomebase_method_a.invoke(null, 25, "stone_shore", new net.minecraft.server.v1_13_R1.BiomeStoneBeach());
-            biomebase_method_a.invoke(null, 26, "snowy_beach", new net.minecraft.server.v1_13_R1.BiomeColdBeach());
-            biomebase_method_a.invoke(null, 27, "birch_forest", new net.minecraft.server.v1_13_R1.BiomeBirchForest());
-            biomebase_method_a.invoke(null, 28, "birch_forest_hills", new net.minecraft.server.v1_13_R1.BiomeBirchForestHills());
-            biomebase_method_a.invoke(null, 29, "dark_forest", new net.minecraft.server.v1_13_R1.BiomeRoofedForest());
-            biomebase_method_a.invoke(null, 30, "snowy_taiga", new net.minecraft.server.v1_13_R1.BiomeColdTaiga());
-            biomebase_method_a.invoke(null, 31, "snowy_taiga_hills", new net.minecraft.server.v1_13_R1.BiomeColdTaigaHills());
-            biomebase_method_a.invoke(null, 32, "giant_tree_taiga", new net.minecraft.server.v1_13_R1.BiomeMegaTaiga());
-            biomebase_method_a.invoke(null, 33, "giant_tree_taiga_hills", new net.minecraft.server.v1_13_R1.BiomeMegaTaigaHills());
-            biomebase_method_a.invoke(null, 34, "wooded_mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsWithTrees.class));
-            biomebase_method_a.invoke(null, 35, "savanna", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSavanna.class));
-            biomebase_method_a.invoke(null, 36, "savanna_plateau", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSavannaPlateau.class));
-            biomebase_method_a.invoke(null, 37, "badlands", new net.minecraft.server.v1_13_R1.BiomeMesa());
-            biomebase_method_a.invoke(null, 38, "wooded_badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlataeu());
-            biomebase_method_a.invoke(null, 39, "badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlataeuClear());
-            biomebase_method_a.invoke(null, 40, "small_end_islands", new net.minecraft.server.v1_13_R1.BiomeTheEndFloatingIslands());
-            biomebase_method_a.invoke(null, 41, "end_midlands", new net.minecraft.server.v1_13_R1.BiomeTheEndMediumIsland());
-            biomebase_method_a.invoke(null, 42, "end_highlands", new net.minecraft.server.v1_13_R1.BiomeTheEndHighIsland());
-            biomebase_method_a.invoke(null, 43, "end_barrens", new net.minecraft.server.v1_13_R1.BiomeTheEndBarrenIsland());
-            biomebase_method_a.invoke(null, 44, "warm_ocean", new net.minecraft.server.v1_13_R1.BiomeWarmOcean());
-            biomebase_method_a.invoke(null, 45, "lukewarm_ocean", new net.minecraft.server.v1_13_R1.BiomeLukewarmOcean());
-            biomebase_method_a.invoke(null, 46, "cold_ocean", new net.minecraft.server.v1_13_R1.BiomeColdOcean());
-            biomebase_method_a.invoke(null, 47, "deep_warm_ocean", new net.minecraft.server.v1_13_R1.BiomeWarmDeepOcean());
-            biomebase_method_a.invoke(null, 48, "deep_lukewarm_ocean", new net.minecraft.server.v1_13_R1.BiomeLukewarmDeepOcean());
-            biomebase_method_a.invoke(null, 49, "deep_cold_ocean", new net.minecraft.server.v1_13_R1.BiomeColdDeepOcean());
-            biomebase_method_a.invoke(null, 50, "deep_frozen_ocean", new net.minecraft.server.v1_13_R1.BiomeFrozenDeepOcean());
-            biomebase_method_a.invoke(null, 127, "the_void", new net.minecraft.server.v1_13_R1.BiomeVoid());
-            biomebase_method_a.invoke(null, 129, "sunflower_plains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSunflowerPlains.class));
-            biomebase_method_a.invoke(null, 130, "desert_lakes", new net.minecraft.server.v1_13_R1.BiomeDesertMutated());
-            biomebase_method_a.invoke(null, 131, "gravelly_mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsMutated.class));
-            biomebase_method_a.invoke(null, 132, "flower_forest", new net.minecraft.server.v1_13_R1.BiomeFlowerForest());
-            biomebase_method_a.invoke(null, 133, "taiga_mountains", new net.minecraft.server.v1_13_R1.BiomeTaigaMutated());
-            biomebase_method_a.invoke(null, 134, "swamp_hills", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSwamplandMutated.class));
-            biomebase_method_a.invoke(null, 140, "ice_spikes", new net.minecraft.server.v1_13_R1.BiomeIcePlainsSpikes());
-            biomebase_method_a.invoke(null, 149, "modified_jungle", new net.minecraft.server.v1_13_R1.BiomeJungleMutated());
-            biomebase_method_a.invoke(null, 151, "modified_jungle_edge", new net.minecraft.server.v1_13_R1.BiomeJungleEdgeMutated());
-            biomebase_method_a.invoke(null, 155, "tall_birch_forest", new net.minecraft.server.v1_13_R1.BiomeBirchForestMutated());
-            biomebase_method_a.invoke(null, 156, "tall_birch_hills", new net.minecraft.server.v1_13_R1.BiomeBirchForestHillsMutated());
-            biomebase_method_a.invoke(null, 157, "dark_forest_hills", new net.minecraft.server.v1_13_R1.BiomeRoofedForestMutated());
-            biomebase_method_a.invoke(null, 158, "snowy_taiga_mountains", new net.minecraft.server.v1_13_R1.BiomeColdTaigaMutated());
-            biomebase_method_a.invoke(null, 160, "giant_spruce_taiga", new net.minecraft.server.v1_13_R1.BiomeMegaSpruceTaiga());
-            biomebase_method_a.invoke(null, 161, "giant_spruce_taiga_hills", new net.minecraft.server.v1_13_R1.BiomeRedwoodTaigaHillsMutated());
-            biomebase_method_a.invoke(null, 162, "modified_gravelly_mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsWithTreesMutated.class));
-            biomebase_method_a.invoke(null, 163, "shattered_savanna", new net.minecraft.server.v1_13_R1.BiomeSavannaMutated());
-            biomebase_method_a.invoke(null, 164, "shattered_savanna_plateau", new net.minecraft.server.v1_13_R1.BiomeSavannaPlateauMutated());
-            biomebase_method_a.invoke(null, 165, "eroded_badlands", new net.minecraft.server.v1_13_R1.BiomeMesaBryce());
-            biomebase_method_a.invoke(null, 166, "modified_wooded_badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlateauMutated());
-            biomebase_method_a.invoke(null, 167, "modified_badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlateauClearMutated());
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            Field biomes_field = Biomes.class.getDeclaredField("b");
+            biomes_field.setAccessible(true);
+            field_modifiers.setInt(biomes_field, biomes_field.getModifiers() & ~Modifier.FINAL);
+            biomes_field.set(null, Biomes.a);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
+        rebuildBiome("c", 1, "plains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomePlains.class));
+        rebuildBiome("d", 2, "desert", new net.minecraft.server.v1_13_R1.BiomeDesert());
+        rebuildBiome("e", 3, "mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeBigHills.class));
+        rebuildBiome("f", 4, "forest", new net.minecraft.server.v1_13_R1.BiomeForest());
+        rebuildBiome("g", 5, "taiga", new net.minecraft.server.v1_13_R1.BiomeTaiga());
+        rebuildBiome("h", 6, "swamp", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSwamp.class));
+        rebuildBiome("i", 7, "river", new net.minecraft.server.v1_13_R1.BiomeRiver());
+        rebuildBiome("j", 8, "nether", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeHell.class));
+        rebuildBiome("k", 9, "the_end", new net.minecraft.server.v1_13_R1.BiomeTheEnd());
+        rebuildBiome("l", 10, "frozen_ocean", new net.minecraft.server.v1_13_R1.BiomeFrozenOcean());
+        rebuildBiome("m", 11, "frozen_river", new net.minecraft.server.v1_13_R1.BiomeFrozenRiver());
+        rebuildBiome("n", 12, "snowy_tundra", new net.minecraft.server.v1_13_R1.BiomeIcePlains());
+        rebuildBiome("o", 13, "snowy_mountains", new net.minecraft.server.v1_13_R1.BiomeIceMountains());
+        rebuildBiome("p", 14, "mushroom_fields", new net.minecraft.server.v1_13_R1.BiomeMushrooms());
+        rebuildBiome("q", 15, "mushroom_field_shore", new net.minecraft.server.v1_13_R1.BiomeMushroomIslandShore());
+        rebuildBiome("r", 16, "beach", new net.minecraft.server.v1_13_R1.BiomeBeach());
+        rebuildBiome("s", 17, "desert_hills", new net.minecraft.server.v1_13_R1.BiomeDesertHills());
+        rebuildBiome("t", 18, "wooded_hills", new net.minecraft.server.v1_13_R1.BiomeForestHills());
+        rebuildBiome("u", 19, "taiga_hills", new net.minecraft.server.v1_13_R1.BiomeTaigaHills());
+        rebuildBiome("v", 20, "mountain_edge", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsEdge.class));
+        rebuildBiome("w", 21, "jungle", new net.minecraft.server.v1_13_R1.BiomeJungle());
+        rebuildBiome("x", 22, "jungle_hills", new net.minecraft.server.v1_13_R1.BiomeJungleHills());
+        rebuildBiome("y", 23, "jungle_edge", new net.minecraft.server.v1_13_R1.BiomeJungleEdge());
+        rebuildBiome("z", 24, "deep_ocean", new net.minecraft.server.v1_13_R1.BiomeDeepOcean());
+        rebuildBiome("A", 25, "stone_shore", new net.minecraft.server.v1_13_R1.BiomeStoneBeach());
+        rebuildBiome("B", 26, "snowy_beach", new net.minecraft.server.v1_13_R1.BiomeColdBeach());
+        rebuildBiome("C", 27, "birch_forest", new net.minecraft.server.v1_13_R1.BiomeBirchForest());
+        rebuildBiome("D", 28, "birch_forest_hills", new net.minecraft.server.v1_13_R1.BiomeBirchForestHills());
+        rebuildBiome("E", 29, "dark_forest", new net.minecraft.server.v1_13_R1.BiomeRoofedForest());
+        rebuildBiome("F", 30, "snowy_taiga", new net.minecraft.server.v1_13_R1.BiomeColdTaiga());
+        rebuildBiome("G", 31, "snowy_taiga_hills", new net.minecraft.server.v1_13_R1.BiomeColdTaigaHills());
+        rebuildBiome("H", 32, "giant_tree_taiga", new net.minecraft.server.v1_13_R1.BiomeMegaTaiga());
+        rebuildBiome("I", 33, "giant_tree_taiga_hills", new net.minecraft.server.v1_13_R1.BiomeMegaTaigaHills());
+        rebuildBiome("J", 34, "wooded_mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsWithTrees.class));
+        rebuildBiome("K", 35, "savanna", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSavanna.class));
+        rebuildBiome("L", 36, "savanna_plateau", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSavannaPlateau.class));
+        rebuildBiome("M", 37, "badlands", new net.minecraft.server.v1_13_R1.BiomeMesa());
+        rebuildBiome("N", 38, "wooded_badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlataeu());
+        rebuildBiome("O", 39, "badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlataeuClear());
+        rebuildBiome("P", 40, "small_end_islands", new net.minecraft.server.v1_13_R1.BiomeTheEndFloatingIslands());
+        rebuildBiome("Q", 41, "end_midlands", new net.minecraft.server.v1_13_R1.BiomeTheEndMediumIsland());
+        rebuildBiome("R", 42, "end_highlands", new net.minecraft.server.v1_13_R1.BiomeTheEndHighIsland());
+        rebuildBiome("S", 43, "end_barrens", new net.minecraft.server.v1_13_R1.BiomeTheEndBarrenIsland());
+        rebuildBiome("T", 44, "warm_ocean", new net.minecraft.server.v1_13_R1.BiomeWarmOcean());
+        rebuildBiome("U", 45, "lukewarm_ocean", new net.minecraft.server.v1_13_R1.BiomeLukewarmOcean());
+        rebuildBiome("V", 46, "cold_ocean", new net.minecraft.server.v1_13_R1.BiomeColdOcean());
+        rebuildBiome("W", 47, "deep_warm_ocean", new net.minecraft.server.v1_13_R1.BiomeWarmDeepOcean());
+        rebuildBiome("X", 48, "deep_lukewarm_ocean", new net.minecraft.server.v1_13_R1.BiomeLukewarmDeepOcean());
+        rebuildBiome("Y", 49, "deep_cold_ocean", new net.minecraft.server.v1_13_R1.BiomeColdDeepOcean());
+        rebuildBiome("Z", 50, "deep_frozen_ocean", new net.minecraft.server.v1_13_R1.BiomeFrozenDeepOcean());
+        rebuildBiome("aa", 127, "the_void", new net.minecraft.server.v1_13_R1.BiomeVoid());
+        rebuildBiome("ab", 129, "sunflower_plains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSunflowerPlains.class));
+        rebuildBiome("ac", 130, "desert_lakes", new net.minecraft.server.v1_13_R1.BiomeDesertMutated());
+        rebuildBiome("ad", 131, "gravelly_mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsMutated.class));
+        rebuildBiome("ae", 132, "flower_forest", new net.minecraft.server.v1_13_R1.BiomeFlowerForest());
+        rebuildBiome("af", 133, "taiga_mountains", new net.minecraft.server.v1_13_R1.BiomeTaigaMutated());
+        rebuildBiome("ag", 134, "swamp_hills", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeSwamplandMutated.class));
+        rebuildBiome("ah", 140, "ice_spikes", new net.minecraft.server.v1_13_R1.BiomeIcePlainsSpikes());
+        rebuildBiome("ai", 149, "modified_jungle", new net.minecraft.server.v1_13_R1.BiomeJungleMutated());
+        rebuildBiome("aj", 151, "modified_jungle_edge", new net.minecraft.server.v1_13_R1.BiomeJungleEdgeMutated());
+        rebuildBiome("ak", 155, "tall_birch_forest", new net.minecraft.server.v1_13_R1.BiomeBirchForestMutated());
+        rebuildBiome("al", 156, "tall_birch_hills", new net.minecraft.server.v1_13_R1.BiomeBirchForestHillsMutated());
+        rebuildBiome("am", 157, "dark_forest_hills", new net.minecraft.server.v1_13_R1.BiomeRoofedForestMutated());
+        rebuildBiome("an", 158, "snowy_taiga_mountains", new net.minecraft.server.v1_13_R1.BiomeColdTaigaMutated());
+        rebuildBiome("ao", 160, "giant_spruce_taiga", new net.minecraft.server.v1_13_R1.BiomeMegaSpruceTaiga());
+        rebuildBiome("ap", 161, "giant_spruce_taiga_hills", new net.minecraft.server.v1_13_R1.BiomeRedwoodTaigaHillsMutated());
+        rebuildBiome("aq", 162, "modified_gravelly_mountains", createNonPublicBiome(net.minecraft.server.v1_13_R1.BiomeExtremeHillsWithTreesMutated.class));
+        rebuildBiome("ar", 163, "shattered_savanna", new net.minecraft.server.v1_13_R1.BiomeSavannaMutated());
+        rebuildBiome("as", 164, "shattered_savanna_plateau", new net.minecraft.server.v1_13_R1.BiomeSavannaPlateauMutated());
+        rebuildBiome("at", 165, "eroded_badlands", new net.minecraft.server.v1_13_R1.BiomeMesaBryce());
+        rebuildBiome("au", 166, "modified_wooded_badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlateauMutated());
+        rebuildBiome("av", 167, "modified_badlands_plateau", new net.minecraft.server.v1_13_R1.BiomeMesaPlateauClearMutated());
     }
 
     private static BiomeBase createNonPublicBiome(Class<? extends BiomeBase> clazz) {
@@ -347,5 +353,18 @@ public class RegistryHax {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static void rebuildBiome(String field, int id, String name, BiomeBase biome) {
+        Logger.debug(" - rebuilding biome: " + name);
+        try {
+            biomebase_method_a.invoke(null, id, name, biome);
+            Field biomes_field = Biomes.class.getDeclaredField(field);
+            biomes_field.setAccessible(true);
+            field_modifiers.setInt(biomes_field, biomes_field.getModifiers() & ~Modifier.FINAL);
+            biomes_field.set(null, biome);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 }
