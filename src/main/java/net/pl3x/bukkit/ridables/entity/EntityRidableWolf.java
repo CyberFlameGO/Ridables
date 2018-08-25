@@ -36,6 +36,7 @@ public class EntityRidableWolf extends EntityWolf implements RidableEntity {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

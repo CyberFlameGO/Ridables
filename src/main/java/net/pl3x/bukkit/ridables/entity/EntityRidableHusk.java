@@ -30,6 +30,7 @@ public class EntityRidableHusk extends EntityZombieHusk implements RidableEntity
         return RidableType.HUSK;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

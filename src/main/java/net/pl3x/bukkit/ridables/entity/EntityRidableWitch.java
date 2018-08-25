@@ -30,6 +30,7 @@ public class EntityRidableWitch extends EntityWitch implements RidableEntity {
         return RidableType.WITCH;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

@@ -30,8 +30,9 @@ public class EntityRidableEvoker extends EntityEvoker implements RidableEntity {
         return RidableType.EVOKER;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

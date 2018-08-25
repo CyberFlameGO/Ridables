@@ -30,6 +30,7 @@ public class EntityRidableElderGuardian extends EntityGuardianElder implements R
         return RidableType.ELDER_GUARDIAN;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }
@@ -45,14 +46,14 @@ public class EntityRidableElderGuardian extends EntityGuardianElder implements R
         super.mobTick();
     }
 
-    @Override
-    public void a(float f, float f1, float f2) {
+    // travel
+    public void a(float strafe, float vertical, float forward) {
         EntityPlayer rider = getRider();
         if (rider != null && !isInWater()) {
-            f2 = rider.bj;
-            f = rider.bh;
+            forward = rider.bj;
+            strafe = rider.bh;
         }
-        super.a(f, f1, f2);
+        super.a(strafe, vertical, forward);
     }
 
     public void setRotation(float newYaw, float newPitch) {

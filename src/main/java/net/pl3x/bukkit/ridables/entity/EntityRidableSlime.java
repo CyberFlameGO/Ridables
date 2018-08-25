@@ -41,6 +41,7 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
         return RidableType.SLIME;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }
@@ -94,6 +95,7 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
         return false;
     }
 
+    // initEntityAI
     protected void n() {
         this.goalSelector.a(1, new PathfinderGoalSlimeRandomJump(this));
         this.goalSelector.a(2, new PathfinderGoalSlimeNearestPlayer(this));

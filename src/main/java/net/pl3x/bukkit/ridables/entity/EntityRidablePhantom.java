@@ -40,8 +40,9 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         return RidableType.PHANTOM;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return false; // eject passengers when in water
+        return false;
     }
 
     protected void mobTick() {
@@ -157,6 +158,7 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
         }
     }
 
+    // travel
     public void a(float strafe, float vertical, float forward) {
         if (getRider() == null) {
             super.a(strafe, vertical, forward);

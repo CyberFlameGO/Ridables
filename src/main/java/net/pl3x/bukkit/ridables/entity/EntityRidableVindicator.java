@@ -30,8 +30,9 @@ public class EntityRidableVindicator extends EntityVindicator implements Ridable
         return RidableType.VINDICATOR;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

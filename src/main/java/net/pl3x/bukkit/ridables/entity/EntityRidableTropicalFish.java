@@ -31,10 +31,12 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
         return itemstack.getType() == Material.WATER_BUCKET;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }
 
+    // onLivingUpdate
     public void k() {
         EntityPlayer rider = updateRider();
         if (rider != null) {
@@ -46,16 +48,17 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
         super.k();
     }
 
-    public void a(float f, float f1, float f2) {
+    // travel
+    public void a(float strafe, float vertical, float forward) {
         EntityPlayer rider = getRider();
         if (rider != null) {
             if (!isInWater()) {
-                f2 = rider.bj;
-                f = rider.bh;
+                forward = rider.bj;
+                strafe = rider.bh;
             }
         }
         if (cP() && this.isInWater()) {
-            a(f, f1, f2, rider == null ? 0.01F : getSpeed());
+            a(strafe, vertical, forward, rider == null ? 0.01F : getSpeed());
             move(EnumMoveType.SELF, motX, motY, motZ);
             motX *= 0.8999999761581421D;
             motY *= 0.8999999761581421D;
@@ -65,7 +68,7 @@ public class EntityRidableTropicalFish extends EntityTropicalFish implements Rid
             }
             return;
         }
-        super.a(f, f1, f2);
+        super.a(strafe, vertical, forward);
     }
 
     public void setRotation(float newYaw, float newPitch) {

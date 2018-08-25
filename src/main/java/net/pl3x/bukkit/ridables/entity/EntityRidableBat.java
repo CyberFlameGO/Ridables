@@ -30,8 +30,9 @@ public class EntityRidableBat extends EntityBat implements RidableEntity {
         return RidableType.BAT;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

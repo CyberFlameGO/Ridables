@@ -54,8 +54,9 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         return false;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {
@@ -106,14 +107,14 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         super.mobTick();
     }
 
-    @Override
-    public void a(float f, float f1, float f2) {
+    // travel
+    public void a(float strafe, float vertical, float forward) {
         EntityPlayer rider = getRider();
         if (rider != null && !isInWater()) {
-            f2 = rider.bj;
-            f = rider.bh;
+            forward = rider.bj;
+            strafe = rider.bh;
         }
-        super.a(f, f1, f2);
+        super.a(strafe, vertical, forward);
     }
 
     public void setRotation(float newYaw, float newPitch) {

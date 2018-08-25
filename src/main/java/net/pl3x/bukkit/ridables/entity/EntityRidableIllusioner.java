@@ -30,8 +30,9 @@ public class EntityRidableIllusioner extends EntityIllagerIllusioner implements 
         return RidableType.ILLUSIONER;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

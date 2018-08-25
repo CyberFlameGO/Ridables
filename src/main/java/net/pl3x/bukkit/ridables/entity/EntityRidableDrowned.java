@@ -30,6 +30,7 @@ public class EntityRidableDrowned extends EntityDrowned implements RidableEntity
         return RidableType.DROWNED;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

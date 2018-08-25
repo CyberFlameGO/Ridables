@@ -30,6 +30,7 @@ public class EntityRidableZombieVillager extends EntityZombieVillager implements
         return RidableType.ZOMBIE_VILLAGER;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

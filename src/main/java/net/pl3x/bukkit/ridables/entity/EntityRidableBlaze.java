@@ -30,6 +30,7 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
         return RidableType.BLAZE;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

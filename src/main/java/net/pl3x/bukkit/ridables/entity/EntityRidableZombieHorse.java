@@ -25,6 +25,7 @@ public class EntityRidableZombieHorse extends EntityHorseZombie implements Ridab
         return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }
@@ -68,7 +69,7 @@ public class EntityRidableZombieHorse extends EntityHorseZombie implements Ridab
         return true;
     }
 
-    // make swim
+    // addSwimmingPathfinder
     protected void dJ() {
         goalSelector.a(0, new PathfinderGoalFloat(this));
     }

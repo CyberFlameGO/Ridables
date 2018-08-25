@@ -30,6 +30,7 @@ public class EntityRidableSilverfish extends EntitySilverfish implements Ridable
         return RidableType.SILVERFISH;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

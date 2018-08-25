@@ -40,8 +40,9 @@ public class EntityRidableChicken extends EntityChicken implements RidableEntity
         return false;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

@@ -34,8 +34,9 @@ public class EntityRidablePolarBear extends EntityPolarBear implements RidableEn
         return RidableType.POLAR_BEAR;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

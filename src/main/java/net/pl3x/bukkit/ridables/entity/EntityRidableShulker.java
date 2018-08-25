@@ -58,8 +58,9 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
         return false;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {
@@ -190,10 +191,12 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
         return true;
     }
 
+    // tryTeleportToNewPosition
     protected boolean l() {
         return getRider() != null || super.l();
     }
 
+    // initEntityAI
     protected void n() {
         goalSelector.a(1, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         goalSelector.a(4, new AIAttack(this));

@@ -63,6 +63,7 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         return RidableType.WITHER;
     }
 
+    // initEntityAI
     protected void n() {
         goalArrowAttack = new PathfinderGoalArrowAttack(this, 1.0D, 40, 20.0F);
         goalRandomStroll = new PathfinderGoalRandomStrollLand(this, 1.0D);
@@ -93,6 +94,7 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         targetSelector.a(goalNearestTarget);
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

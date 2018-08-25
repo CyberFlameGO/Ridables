@@ -42,6 +42,7 @@ public class EntityRidableGiant extends EntityGiantZombie implements RidableEnti
         return RidableType.GIANT;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }
@@ -103,6 +104,7 @@ public class EntityRidableGiant extends EntityGiantZombie implements RidableEnti
         }
     }
 
+    // initEntityAI
     protected void n() {
         super.n();
         if (Config.GIANT_AI_ENABLED) {

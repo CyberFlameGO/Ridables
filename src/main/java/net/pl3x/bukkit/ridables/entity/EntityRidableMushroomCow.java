@@ -37,8 +37,9 @@ public class EntityRidableMushroomCow extends EntityMushroomCow implements Ridab
         return f(CraftItemStack.asNMSCopy(itemstack)) || itemstack.getType() == Material.SHEARS;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

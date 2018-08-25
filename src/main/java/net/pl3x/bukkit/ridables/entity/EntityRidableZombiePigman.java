@@ -30,6 +30,7 @@ public class EntityRidableZombiePigman extends EntityPigZombie implements Ridabl
         return RidableType.ZOMBIE_PIGMAN;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

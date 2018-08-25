@@ -36,8 +36,9 @@ public class EntityRidableCow extends EntityCow implements RidableEntity {
         return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {

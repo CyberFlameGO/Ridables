@@ -30,6 +30,7 @@ public class EntityRidableSkeleton extends EntitySkeleton implements RidableEnti
         return RidableType.SKELETON;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

@@ -30,8 +30,9 @@ public class EntityRidableCaveSpider extends EntityCaveSpider implements Ridable
         return RidableType.CAVE_SPIDER;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return true; // dont eject passengers when in water
+        return true;
     }
 
     protected void mobTick() {
@@ -98,8 +99,9 @@ public class EntityRidableCaveSpider extends EntityCaveSpider implements Ridable
         return Config.CAVE_SPIDER_CLIMB_WALLS && l();
     }
 
-    public void a(float f, float f1, float f2) {
-        super.a(f, f1, f2);
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
         if (positionChanged && z_() && getRider() != null) {
             motY = 0.2D * Config.CAVE_SPIDER_CLIMB_SPEED;
         }

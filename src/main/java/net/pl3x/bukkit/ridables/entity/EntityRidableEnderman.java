@@ -56,6 +56,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         return RidableType.ENDERMAN;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return !Config.ENDERMAN_EJECT_WHEN_WET;
     }
@@ -186,6 +187,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         return result;
     }
 
+    // initEntityAI
     protected void n() {
         goalSelector.a(0, new PathfinderGoalFloat(this));
         goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.0D, false));

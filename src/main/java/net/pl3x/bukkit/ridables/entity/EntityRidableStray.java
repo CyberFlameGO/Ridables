@@ -30,6 +30,7 @@ public class EntityRidableStray extends EntitySkeletonStray implements RidableEn
         return RidableType.STRAY;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

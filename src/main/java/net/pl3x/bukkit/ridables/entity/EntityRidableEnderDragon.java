@@ -47,8 +47,9 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         return RidableType.ENDER_DRAGON;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
-        return false; // eject passengers when in water
+        return false;
     }
 
     private void setPhase(DragonControllerPhase phase) {
@@ -63,7 +64,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         return false;
     }
 
-    // travel(strafe, vertical, forward)
+    // onLivingUpdate
     @Override
     public void k() {
         EntityPlayer rider = updateRider();
@@ -125,6 +126,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         super.k();
     }
 
+    // updatePassenger
     public void k(Entity entity) {
     }
 
@@ -171,6 +173,7 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
         nbttagcompound.setBoolean("ridable", true);
     }
 
+    // onLivingUpdate (from dragon's super class)
     private void super_k() {
         bL = bM; // prevAnimTime = animTime
         if (getHealth() <= 0.0F) {

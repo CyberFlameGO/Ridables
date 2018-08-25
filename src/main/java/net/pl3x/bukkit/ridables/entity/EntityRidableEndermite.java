@@ -30,6 +30,7 @@ public class EntityRidableEndermite extends EntityEndermite implements RidableEn
         return RidableType.ENDERMITE;
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }

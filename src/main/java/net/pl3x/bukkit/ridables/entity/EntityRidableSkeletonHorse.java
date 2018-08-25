@@ -25,6 +25,7 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
         return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
+    // canBeRiddenInWater
     public boolean aY() {
         return true;
     }
@@ -68,7 +69,7 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
         return true;
     }
 
-    // make swim
+    // addSwimmingPathfinder
     protected void dJ() {
         goalSelector.a(0, new PathfinderGoalFloat(this));
     }
