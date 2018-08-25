@@ -3,6 +3,10 @@ package net.pl3x.bukkit.ridables.configuration;
 import net.pl3x.bukkit.ridables.Ridables;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
     public static boolean DEBUG_MODE = false;
@@ -105,6 +109,14 @@ public class Config {
     public static float GIANT_FOLLOW_RANGE = 32.0F;
     public static boolean GIANT_HOSTILE = true;
     public static float GIANT_ATTACK_DAMAGE = 5.0F;
+    public static boolean GIANT_SPAWN_NATURALLY = false;
+    public static int GIANT_SPAWN_LIGHT_LEVEL = 8;
+    public static int GIANT_SPAWN_WEIGHT = 10;
+    public static int GIANT_SPAWN_MIN_GROUP = 1;
+    public static int GIANT_SPAWN_MAX_GROUP = 1;
+    public static List<Integer> GIANT_SPAWN_BIOMES = new ArrayList<>(Arrays.asList(
+            1, 2, 3, 4, 5, 6, 17, 18, 19, 20, 27, 28, 32, 33, 34, 35, 36, 37, 38, 39,
+            129, 130, 131, 132, 133, 134, 156, 157, 160, 161, 162, 163, 164, 165, 166, 167));
 
     public static boolean GUARDIAN_ENABLED = false;
     public static float GUARDIAN_SPEED = 1.0F;
@@ -116,6 +128,14 @@ public class Config {
     public static boolean ILLUSIONER_ENABLED = false;
     public static float ILLUSIONER_SPEED = 1.0F;
     public static float ILLUSIONER_JUMP_POWER = 0.5F;
+    public static boolean ILLUSIONER_SPAWN_NATURALLY = false;
+    public static int ILLUSIONER_SPAWN_LIGHT_LEVEL = 8;
+    public static int ILLUSIONER_SPAWN_WEIGHT = 5;
+    public static int ILLUSIONER_SPAWN_MIN_GROUP = 1;
+    public static int ILLUSIONER_SPAWN_MAX_GROUP = 1;
+    public static List<Integer> ILLUSIONER_SPAWN_BIOMES = new ArrayList<>(Arrays.asList(
+            1, 2, 3, 4, 5, 6, 17, 18, 19, 20, 27, 28, 32, 33, 34, 35, 36, 37, 38, 39,
+            129, 130, 131, 132, 133, 134, 156, 157, 160, 161, 162, 163, 164, 165, 166, 167));
 
     public static boolean IRON_GOLEM_ENABLED = false;
     public static float IRON_GOLEM_SPEED = 1.0F;
@@ -370,6 +390,17 @@ public class Config {
         GIANT_FOLLOW_RANGE = (float) config.getDouble("giant.ai.follow", 32.0D);
         GIANT_HOSTILE = config.getBoolean("giant.ai.hostile", true);
         GIANT_ATTACK_DAMAGE = (float) config.getDouble("giant.ai.attack", 5.0D);
+        GIANT_SPAWN_NATURALLY = config.getBoolean("giant.spawn.natural", false);
+        GIANT_SPAWN_LIGHT_LEVEL = (int) config.getDouble("giant.spawn.max-light", 8);
+        GIANT_SPAWN_WEIGHT = (int) config.getDouble("giant.spawn.weight", 10);
+        GIANT_SPAWN_MIN_GROUP = (int) config.getDouble("giant.spawn.min-group", 1);
+        GIANT_SPAWN_MAX_GROUP = (int) config.getDouble("giant.spawn.max-group", 1);
+        GIANT_SPAWN_BIOMES = config.getIntegerList("giant.spawn.biomes");
+        if (GIANT_SPAWN_BIOMES == null) {
+            GIANT_SPAWN_BIOMES = new ArrayList<>(Arrays.asList(
+                    1, 2, 3, 4, 5, 6, 17, 18, 19, 20, 27, 28, 32, 33, 34, 35, 36, 37, 38, 39,
+                    129, 130, 131, 132, 133, 134, 156, 157, 160, 161, 162, 163, 164, 165, 166, 167));
+        }
 
         GUARDIAN_ENABLED = config.getBoolean("guardian.enabled", false);
         GUARDIAN_SPEED = (float) config.getDouble("guardian.speed", 1.0D);
@@ -381,6 +412,17 @@ public class Config {
         ILLUSIONER_ENABLED = config.getBoolean("illusioner.enabled", false);
         ILLUSIONER_SPEED = (float) config.getDouble("illusioner.speed", 1.0D);
         ILLUSIONER_JUMP_POWER = (float) config.getDouble("illusioner.jump-power", 0.5D);
+        ILLUSIONER_SPAWN_NATURALLY = config.getBoolean("illusioner.spawn.natural", false);
+        ILLUSIONER_SPAWN_LIGHT_LEVEL = (int) config.getDouble("illusioner.spawn.max-light", 8);
+        ILLUSIONER_SPAWN_WEIGHT = (int) config.getDouble("illusioner.spawn.weight", 5);
+        ILLUSIONER_SPAWN_MIN_GROUP = (int) config.getDouble("illusioner.spawn.min-group", 1);
+        ILLUSIONER_SPAWN_MAX_GROUP = (int) config.getDouble("illusioner.spawn.max-group", 1);
+        ILLUSIONER_SPAWN_BIOMES = config.getIntegerList("illusioner.spawn.biomes");
+        if (ILLUSIONER_SPAWN_BIOMES == null) {
+            ILLUSIONER_SPAWN_BIOMES = new ArrayList<>(Arrays.asList(
+                    1, 2, 3, 4, 5, 6, 17, 18, 19, 20, 27, 28, 32, 33, 34, 35, 36, 37, 38, 39,
+                    129, 130, 131, 132, 133, 134, 156, 157, 160, 161, 162, 163, 164, 165, 166, 167));
+        }
 
         IRON_GOLEM_ENABLED = config.getBoolean("iron-golem.enabled", false);
         IRON_GOLEM_SPEED = (float) config.getDouble("iron-golem.speed", 1.0D);

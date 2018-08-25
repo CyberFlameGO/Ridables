@@ -153,6 +153,14 @@ giant:
     follow: 32.0     # Follow distance (when looking for attackable targets, etc)
     hostile: true    # Giants are hostile towards players (set to false to be neutral, meaning it will still attack if hit)
     attack: 5.0      # Attack damage (1 heart = 2.0 damage)
+  spawn:
+    natural: false   # spawn naturally in world
+    max-light: 8         # maximum light level creature can spawn in
+    weight: 10       # weight of spawn attempt (0-100) (default is 10, which is similar to enderman spawn weight)
+    min-group: 1     # minimum number to spawn in a group
+    max-group: 1     # maximum number to spawn in a group
+    # list of biomes to spawn in (see https://minecraft.gamepedia.com/Biome#Biome_IDs)
+    biomes: [1,2,3,4,5,6,17,18,19,20,27,28,32,33,34,35,36,37,38,39,129,130,131,132,133,134,156,157,160,161,162,163,164,165,166,167]
 
 # Guardian options
 guardian:
@@ -170,6 +178,14 @@ illusioner:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  spawn:
+    natural: false   # spawn naturally in world
+    max-light: 8         # maximum light level creature can spawn in
+    weight: 5        # weight of spawn attempt (0-100) (default is 5, which is similar to witch spawn weight)
+    min-group: 1     # minimum number to spawn in a group
+    max-group: 1     # maximum number to spawn in a group
+    # list of biomes to spawn in (see https://minecraft.gamepedia.com/Biome#Biome_IDs)
+    biomes: [1,2,3,4,5,6,17,18,19,20,27,28,32,33,34,35,36,37,38,39,129,130,131,132,133,134,156,157,160,161,162,163,164,165,166,167]
 
 # Iron Golem options
 iron-golem:

@@ -8,7 +8,10 @@ import net.minecraft.server.v1_13_R1.Biomes;
 import net.minecraft.server.v1_13_R1.DataConverterRegistry;
 import net.minecraft.server.v1_13_R1.DataConverterTypes;
 import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityPositionTypes;
 import net.minecraft.server.v1_13_R1.EntityTypes;
+import net.minecraft.server.v1_13_R1.EnumCreatureType;
+import net.minecraft.server.v1_13_R1.HeightMap;
 import net.minecraft.server.v1_13_R1.Item;
 import net.minecraft.server.v1_13_R1.ItemFishBucket;
 import net.minecraft.server.v1_13_R1.ItemMonsterEgg;
@@ -21,6 +24,7 @@ import net.minecraft.server.v1_13_R1.WorldGenDungeons;
 import net.minecraft.server.v1_13_R1.WorldGenFeatureSwampHut;
 import net.minecraft.server.v1_13_R1.WorldGenMonument;
 import net.minecraft.server.v1_13_R1.WorldGenNether;
+import net.pl3x.bukkit.ridables.configuration.Config;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
@@ -46,6 +50,8 @@ public class RegistryHax {
     private static Method registry_method_d;
     private static Method registry_method_e;
     private static Method biomebase_method_a;
+    private static Method biomebase_method_a2;
+    private static Method entitypositiontypes_a;
 
     static {
         try {
@@ -73,6 +79,11 @@ public class RegistryHax {
             registry_method_e.setAccessible(true);
             biomebase_method_a = BiomeBase.class.getDeclaredMethod("a", int.class, String.class, BiomeBase.class);
             biomebase_method_a.setAccessible(true);
+            biomebase_method_a2 = BiomeBase.class.getDeclaredMethod("a", EnumCreatureType.class, BiomeBase.BiomeMeta.class);
+            biomebase_method_a2.setAccessible(true);
+            entitypositiontypes_a = EntityPositionTypes.class.getDeclaredMethod("a", EntityTypes.class, EntityPositionTypes.Surface.class, HeightMap.Type.class);
+            entitypositiontypes_a.setAccessible(true);
+
         } catch (NoSuchFieldException | NoSuchMethodException ignore) {
         }
     }
@@ -261,6 +272,13 @@ public class RegistryHax {
 
     public static void rebuildBiomes() {
         Logger.info("Rebuilding biome mob lists");
+
+        try {
+            entitypositiontypes_a.invoke(null, EntityTypes.ILLUSIONER, EntityPositionTypes.Surface.ON_GROUND, HeightMap.Type.MOTION_BLOCKING_NO_LEAVES);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
         rebuildBiome("a", 0, "ocean", new net.minecraft.server.v1_13_R1.BiomeOcean());
         try {
             Field biomes_field = Biomes.class.getDeclaredField("b");
@@ -363,6 +381,16 @@ public class RegistryHax {
             biomes_field.setAccessible(true);
             field_modifiers.setInt(biomes_field, biomes_field.getModifiers() & ~Modifier.FINAL);
             biomes_field.set(null, biome);
+            if (Config.GIANT_SPAWN_NATURALLY && Config.GIANT_SPAWN_BIOMES.contains(id)) {
+                Logger.debug("   - Adding giants to spawn list");
+                biomebase_method_a2.invoke(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GIANT,
+                        Config.GIANT_SPAWN_WEIGHT, Config.GIANT_SPAWN_MIN_GROUP, Config.GIANT_SPAWN_MAX_GROUP));
+            }
+            if (Config.ILLUSIONER_SPAWN_NATURALLY && Config.ILLUSIONER_SPAWN_BIOMES.contains(id)) {
+                Logger.debug("   - Adding illusioners to spawn list");
+                biomebase_method_a2.invoke(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ILLUSIONER,
+                        Config.ILLUSIONER_SPAWN_WEIGHT, Config.ILLUSIONER_SPAWN_MIN_GROUP, Config.ILLUSIONER_SPAWN_MAX_GROUP));
+            }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
             e.printStackTrace();
         }

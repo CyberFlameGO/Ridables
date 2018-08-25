@@ -1,11 +1,14 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R1.BlockPosition;
 import net.minecraft.server.v1_13_R1.ControllerLook;
 import net.minecraft.server.v1_13_R1.ControllerMove;
 import net.minecraft.server.v1_13_R1.Entity;
 import net.minecraft.server.v1_13_R1.EntityIllagerIllusioner;
 import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R1.GeneratorAccess;
 import net.minecraft.server.v1_13_R1.GenericAttributes;
+import net.minecraft.server.v1_13_R1.IWorldReader;
 import net.minecraft.server.v1_13_R1.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
@@ -33,6 +36,22 @@ public class EntityRidableIllusioner extends EntityIllagerIllusioner implements 
     // canBeRiddenInWater
     public boolean aY() {
         return true;
+    }
+
+    // isValidLightLevel
+    protected boolean K_() {
+        BlockPosition pos = new BlockPosition(locX, getBoundingBox().b, locZ);
+        return (world.X() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= Config.ILLUSIONER_SPAWN_LIGHT_LEVEL;
+    }
+
+    // func_205022_a
+    public float a(BlockPosition pos, IWorldReader world) {
+        return 1.0F;
+    }
+
+    // canSpawn
+    public boolean a(GeneratorAccess world) {
+        return super.a(world) && a(new BlockPosition(locX, getBoundingBox().b, locZ), world) >= 0.0F;
     }
 
     protected void mobTick() {
