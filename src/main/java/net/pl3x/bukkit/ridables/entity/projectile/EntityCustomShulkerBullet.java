@@ -26,6 +26,12 @@ public class EntityCustomShulkerBullet extends EntityShulkerBullet implements IP
     private final EntityPlayer player;
     private int life;
 
+    public EntityCustomShulkerBullet(World world) {
+        super(world);
+        this.shulker = null;
+        this.player = null;
+    }
+
     public EntityCustomShulkerBullet(World world, EntityRidableShulker shulker, EntityPlayer player, Entity target, EnumDirection.EnumAxis dir) {
         super(world, shulker, target, dir);
         this.shulker = shulker;

@@ -25,6 +25,12 @@ public class EntityGhastFireball extends EntityLargeFireball {
     private final EntityPlayer rider;
     private int f;
 
+    public EntityGhastFireball(World world) {
+        super(world);
+        this.ghast = null;
+        this.rider = null;
+    }
+
     public EntityGhastFireball(World world, EntityRidableGhast ghast, EntityPlayer rider, double x, double y, double z) {
         super(world, rider, x, y, z);
         this.ghast = ghast;
