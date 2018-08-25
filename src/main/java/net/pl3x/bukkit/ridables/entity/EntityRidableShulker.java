@@ -164,7 +164,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
     }
 
     public boolean shoot() {
-        if (shootCooldown > 0) {
+        if (shootCooldown > 0 || !isOpen()) {
             return false;
         }
 
