@@ -22,6 +22,7 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableSnowman extends EntitySnowman implements RidableEntity {
@@ -152,7 +153,7 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
     // processInteract
     protected boolean a(EntityHuman player, EnumHand hand) {
         net.minecraft.server.v1_13_R2.ItemStack itemstack = player.b(hand);
-        if (!hasPumpkin() && PUMPKIN.isTagged(itemstack.asBukkitMirror())) {
+        if (!hasPumpkin() && PUMPKIN.isTagged(CraftItemStack.asCraftMirror(itemstack))) {
             setHasPumpkin(true);
             if (!player.abilities.canInstantlyBuild) {
                 itemstack.subtract(1);
