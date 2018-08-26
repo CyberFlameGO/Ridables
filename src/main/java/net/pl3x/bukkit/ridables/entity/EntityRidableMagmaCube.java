@@ -1,28 +1,27 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.DamageSource;
-import net.minecraft.server.v1_13_R1.EntityTypes;
-import net.minecraft.server.v1_13_R1.EnumDifficulty;
-import net.minecraft.server.v1_13_R1.FluidType;
-import net.minecraft.server.v1_13_R1.GeneratorAccess;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.IWorldReader;
-import net.minecraft.server.v1_13_R1.LootTables;
-import net.minecraft.server.v1_13_R1.MinecraftKey;
-import net.minecraft.server.v1_13_R1.ParticleParam;
-import net.minecraft.server.v1_13_R1.Particles;
-import net.minecraft.server.v1_13_R1.SoundEffect;
-import net.minecraft.server.v1_13_R1.SoundEffects;
-import net.minecraft.server.v1_13_R1.Tag;
-import net.minecraft.server.v1_13_R1.TagsFluid;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.EntityTypes;
+import net.minecraft.server.v1_13_R2.EnumDifficulty;
+import net.minecraft.server.v1_13_R2.FluidType;
+import net.minecraft.server.v1_13_R2.GeneratorAccess;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IWorldReader;
+import net.minecraft.server.v1_13_R2.LootTables;
+import net.minecraft.server.v1_13_R2.MinecraftKey;
+import net.minecraft.server.v1_13_R2.ParticleParam;
+import net.minecraft.server.v1_13_R2.Particles;
+import net.minecraft.server.v1_13_R2.SoundEffect;
+import net.minecraft.server.v1_13_R2.SoundEffects;
+import net.minecraft.server.v1_13_R2.Tag;
+import net.minecraft.server.v1_13_R2.TagsFluid;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-
-import javax.annotation.Nullable;
 
 public class EntityRidableMagmaCube extends EntityRidableSlime implements RidableEntity {
     public EntityRidableMagmaCube(World world) {
         super(EntityTypes.MAGMA_CUBE, world);
+        this.fireProof = true;
     }
 
     public RidableType getType() {
@@ -45,7 +44,7 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
 
     // isNotColliding
     public boolean a(IWorldReader iworldreader) {
-        return iworldreader.b(this, this.getBoundingBox()) && iworldreader.getCubes(this, this.getBoundingBox()) && !iworldreader.containsLiquid(this.getBoundingBox());
+        return iworldreader.a_(this, this.getBoundingBox()) && iworldreader.getCubes(this, this.getBoundingBox()) && !iworldreader.containsLiquid(this.getBoundingBox());
     }
 
     public void setSize(int i, boolean flag) {
@@ -64,8 +63,8 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
     }
 
     // getLootTable
-    protected MinecraftKey G() {
-        return this.dz() ? LootTables.a : LootTables.ap;
+    protected MinecraftKey getDefaultLootTable() {
+        return this.dy() ? LootTables.a : LootTables.ap;
     }
 
     public boolean isBurning() {
@@ -73,12 +72,12 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
     }
 
     // getJumpDelay
-    protected int ds() {
-        return super.ds() * 4;
+    protected int dr() {
+        return super.dr() * 4;
     }
 
     // alterSquishAmount
-    protected void dt() {
+    protected void ds() {
         this.a *= 0.9F;
     }
 
@@ -90,7 +89,7 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
 
     // handleFluidJump
     protected void c(Tag<FluidType> tag) {
-        if (tag == TagsFluid.b) {
+        if (tag == TagsFluid.LAVA) {
             this.motY = (double) (0.22F + (float) this.getSize() * 0.05F);
             this.impulse = true;
         } else {
@@ -104,13 +103,13 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
     }
 
     // canDamagePlayer
-    protected boolean du() {
-        return true;
+    protected boolean dt() {
+        return this.cP();
     }
 
     // getAttackStrength
-    protected int dv() {
-        return super.dv() + 2;
+    protected int du() {
+        return super.du() + 2;
     }
 
     // getHurtSound
@@ -124,12 +123,12 @@ public class EntityRidableMagmaCube extends EntityRidableSlime implements Ridabl
     }
 
     // getSquishSound
-    protected SoundEffect dw() {
+    protected SoundEffect dv() {
         return this.dz() ? SoundEffects.ENTITY_MAGMA_CUBE_SQUISH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_SQUISH;
     }
 
     // getJumpSound
-    protected SoundEffect dx() {
+    protected SoundEffect dw() {
         return SoundEffects.ENTITY_MAGMA_CUBE_JUMP;
     }
 }

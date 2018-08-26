@@ -1,26 +1,26 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.BlockPosition;
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityWither;
-import net.minecraft.server.v1_13_R1.EnumHand;
-import net.minecraft.server.v1_13_R1.EnumMonsterType;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.PathfinderGoal;
-import net.minecraft.server.v1_13_R1.PathfinderGoalArrowAttack;
-import net.minecraft.server.v1_13_R1.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomStrollLand;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityWither;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.EnumMonsterType;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.PathfinderGoal;
+import net.minecraft.server.v1_13_R2.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
@@ -29,7 +29,7 @@ import net.pl3x.bukkit.ridables.entity.projectile.EntitySafeWitherSkull;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 
 import java.util.function.Predicate;
 
@@ -232,8 +232,8 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         return i <= 0 ? locZ : locZ + (double) MathHelper.sin((aQ + (float) (180 * (i - 1))) * 0.017453292F) * 1.3D;
     }
 
-    public int q(int i) {
-        return getRider() != null ? 0 : super.q(i);
+    public int p(int i) {
+        return getRider() != null ? 0 : super.p(i);
     }
 
     public void a(int i, int j) {
@@ -248,7 +248,7 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         }
 
         public boolean a() {
-            return dA() > 0;
+            return dz() > 0;
         }
     }
 }

@@ -1,38 +1,38 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.Block;
-import net.minecraft.server.v1_13_R1.BlockPosition;
-import net.minecraft.server.v1_13_R1.Blocks;
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.DamageSource;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityEnderman;
-import net.minecraft.server.v1_13_R1.EntityEndermite;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumHand;
-import net.minecraft.server.v1_13_R1.FluidCollisionOption;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.IBlockData;
-import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.MovingObjectPosition;
-import net.minecraft.server.v1_13_R1.PathfinderGoal;
-import net.minecraft.server.v1_13_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_13_R1.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomStrollLand;
-import net.minecraft.server.v1_13_R1.TagsBlock;
-import net.minecraft.server.v1_13_R1.Vec3D;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.Block;
+import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.Blocks;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityEnderman;
+import net.minecraft.server.v1_13_R2.EntityEndermite;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.FluidCollisionOption;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IBlockData;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.MovingObjectPosition;
+import net.minecraft.server.v1_13_R2.PathfinderGoal;
+import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
+import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
+import net.minecraft.server.v1_13_R2.TagsBlock;
+import net.minecraft.server.v1_13_R2.Vec3D;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 
 import java.util.function.Predicate;
 
@@ -150,7 +150,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         Block block = state.getBlock();
         MovingObjectPosition movingobjectposition = world.rayTrace(new Vec3D((double) ((float) MathHelper.floor(locX) + 0.5F), (double) ((float) y + 0.5F), (double) ((float) MathHelper.floor(locZ) + 0.5F)), new Vec3D((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F)), FluidCollisionOption.NEVER, true, false);
         boolean flag = movingobjectposition != null && movingobjectposition.a().equals(pos);
-        if (block.a(TagsBlock.G) && flag) {
+        if (block.a(TagsBlock.ENDERMAN_HOLDABLE) && flag) {
             if (!CraftEventFactory.callEntityChangeBlockEvent(this, pos, Blocks.AIR.getBlockData()).isCancelled()) {
                 world.setAir(pos);
                 setCarried(Block.b(state, world, pos));
@@ -176,8 +176,8 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
     }
 
     // randomlyTeleport
-    protected boolean dA() {
-        return skipTP || super.dA();
+    protected boolean dz() {
+        return skipTP || super.dz();
     }
 
     public boolean damageEntity(DamageSource damagesource, float f) {
@@ -313,7 +313,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
                 if (d != null) {
                     if (shouldAttack(d)) {
                         if (d.h(enderman) < 16.0D && tryEscape()) {
-                            enderman.dA();
+                            enderman.dz();
                         }
                         teleportTime = 0;
                     } else if (d.h(enderman) > 256.0D && teleportTime++ >= 30 && enderman.a((Entity) d)) {
@@ -327,7 +327,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         private boolean tryEscape() {
             try {
                 return new com.destroystokyo.paper.event.entity.EndermanEscapeEvent(
-                        (org.bukkit.craftbukkit.v1_13_R1.entity.CraftEnderman) enderman.getBukkitEntity(),
+                        (org.bukkit.craftbukkit.v1_13_R2.entity.CraftEnderman) enderman.getBukkitEntity(),
                         com.destroystokyo.paper.event.entity.EndermanEscapeEvent.Reason.STARE)
                         .callEvent();
             } catch (NoClassDefFoundError ignore) {
@@ -350,7 +350,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         }
 
         private boolean shouldAttack_real(EntityHuman entityhuman) {
-            net.minecraft.server.v1_13_R1.ItemStack itemstack = entityhuman.inventory.armor.get(3);
+            net.minecraft.server.v1_13_R2.ItemStack itemstack = entityhuman.inventory.armor.get(3);
             if (itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem()) {
                 return false;
             } else {

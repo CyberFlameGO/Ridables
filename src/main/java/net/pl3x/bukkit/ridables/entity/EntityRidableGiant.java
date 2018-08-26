@@ -1,26 +1,26 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.BlockPosition;
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityGiantZombie;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityIronGolem;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityVillager;
-import net.minecraft.server.v1_13_R1.GeneratorAccess;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.IWorldReader;
-import net.minecraft.server.v1_13_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_13_R1.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_13_R1.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomStrollLand;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityGiantZombie;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityIronGolem;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityVillager;
+import net.minecraft.server.v1_13_R2.GeneratorAccess;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IWorldReader;
+import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
+import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_13_R2.PathfinderGoalMoveTowardsRestriction;
+import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
@@ -53,7 +53,7 @@ public class EntityRidableGiant extends EntityGiantZombie implements RidableEnti
     // isValidLightLevel
     protected boolean K_() {
         BlockPosition pos = new BlockPosition(locX, getBoundingBox().b, locZ);
-        return (world.X() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= Config.GIANT_SPAWN_LIGHT_LEVEL;
+        return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= Config.GIANT_SPAWN_LIGHT_LEVEL;
     }
 
     // func_205022_a

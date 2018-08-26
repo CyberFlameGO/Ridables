@@ -1,13 +1,13 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityHorseSkeleton;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHorseSkeleton;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.listener.RideListener;
-import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements RidableEntity {

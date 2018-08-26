@@ -1,9 +1,9 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 

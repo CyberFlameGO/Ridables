@@ -1,26 +1,26 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.AxisAlignedBB;
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityShulker;
-import net.minecraft.server.v1_13_R1.EntityShulkerBullet;
-import net.minecraft.server.v1_13_R1.EnumDifficulty;
-import net.minecraft.server.v1_13_R1.EnumDirection;
-import net.minecraft.server.v1_13_R1.EnumHand;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.IMonster;
-import net.minecraft.server.v1_13_R1.PathfinderGoal;
-import net.minecraft.server.v1_13_R1.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R1.SoundEffects;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.AxisAlignedBB;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityShulker;
+import net.minecraft.server.v1_13_R2.EntityShulkerBullet;
+import net.minecraft.server.v1_13_R2.EnumDifficulty;
+import net.minecraft.server.v1_13_R2.EnumDirection;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IMonster;
+import net.minecraft.server.v1_13_R2.PathfinderGoal;
+import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_13_R2.SoundEffects;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
@@ -28,7 +28,7 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomShulkerBullet;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -151,7 +151,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
 
     private void updatePeek() {
         byte peekTick = (byte) (isOpen ? Config.SHULKER_PEEK_HEIGHT : 0);
-        if (dB() != peekTick) {
+        if (dA() != peekTick) {
             a(peekTick);
         }
     }
@@ -183,7 +183,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
 
         Vector target = player.getEyeLocation().getDirection().normalize().multiply(25);
 
-        EntityCustomShulkerBullet bullet = new EntityCustomShulkerBullet(world, this, rider, null, dz().k());
+        EntityCustomShulkerBullet bullet = new EntityCustomShulkerBullet(world, this, rider, null, dy().k());
         bullet.shoot(target.getX(), target.getY(), target.getZ(), Config.SHULKER_SHOOT_SPEED, 5.0F);
         world.addEntity(bullet);
 
@@ -217,7 +217,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
         }
 
         protected AxisAlignedBB a(double d0) {
-            EnumDirection dir = ((EntityShulker) e).dz();
+            EnumDirection dir = ((EntityShulker) e).dy();
             return dir.k() == EnumDirection.EnumAxis.X ? e.getBoundingBox().grow(4.0D, d0, d0) : (dir.k() == EnumDirection.EnumAxis.Z ? e.getBoundingBox().grow(d0, d0, 4.0D) : e.getBoundingBox().grow(d0, 4.0D, d0));
         }
     }
@@ -232,7 +232,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
         }
 
         protected AxisAlignedBB a(double d0) {
-            EnumDirection dir = ((EntityShulker) e).dz();
+            EnumDirection dir = ((EntityShulker) e).dy();
             return dir.k() == EnumDirection.EnumAxis.X ? e.getBoundingBox().grow(4.0D, d0, d0) : (dir.k() == EnumDirection.EnumAxis.Z ? e.getBoundingBox().grow(d0, d0, 4.0D) : e.getBoundingBox().grow(d0, 4.0D, d0));
         }
     }
@@ -273,7 +273,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
                 if (distance < 400.0D) {
                     if (attackTime <= 0) {
                         attackTime = 20 + shulker.random.nextInt(10) * 20 / 2;
-                        EntityShulkerBullet bullet = new EntityShulkerBullet(shulker.world, shulker, target, shulker.dz().k());
+                        EntityShulkerBullet bullet = new EntityShulkerBullet(shulker.world, shulker, target, shulker.dy().k());
                         shulker.world.addEntity(bullet);
                         shulker.a(SoundEffects.ENTITY_SHULKER_SHOOT, 2.0F, (shulker.random.nextFloat() - shulker.random.nextFloat()) * 0.2F + 1.0F);
                     }

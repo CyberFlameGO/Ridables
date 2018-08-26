@@ -1,19 +1,19 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.DragonControllerManager;
-import net.minecraft.server.v1_13_R1.DragonControllerPhase;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityComplexPart;
-import net.minecraft.server.v1_13_R1.EntityEnderDragon;
-import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumMoveType;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.NBTTagCompound;
-import net.minecraft.server.v1_13_R1.Vec3D;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.DragonControllerManager;
+import net.minecraft.server.v1_13_R2.DragonControllerPhase;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityComplexPart;
+import net.minecraft.server.v1_13_R2.EntityEnderDragon;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumMoveType;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.Vec3D;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 
 import java.lang.reflect.Field;

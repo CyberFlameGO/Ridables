@@ -1,21 +1,21 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import com.google.common.collect.Maps;
-import net.minecraft.server.v1_13_R1.BlockPosition;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityAgeable;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.EntityTypes;
-import net.minecraft.server.v1_13_R1.MinecraftKey;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityTypes;
+import net.minecraft.server.v1_13_R2.MinecraftKey;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 
 import java.util.Map;
@@ -88,7 +88,7 @@ public class RidableType {
     }
 
     public static RidableEntity getRidable(org.bukkit.entity.Entity entity) {
-        net.minecraft.server.v1_13_R1.Entity craftEntity = ((CraftEntity) entity).getHandle();
+        net.minecraft.server.v1_13_R2.Entity craftEntity = ((CraftEntity) entity).getHandle();
         return craftEntity instanceof RidableEntity ? (RidableEntity) craftEntity : null;
     }
 

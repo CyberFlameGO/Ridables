@@ -1,18 +1,18 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.BlockPosition;
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.DamageSource;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityPhantom;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumMoveType;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.IBlockData;
-import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.SoundEffectType;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityPhantom;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumMoveType;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IBlockData;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.SoundEffectType;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
@@ -146,7 +146,7 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
             if (!damageEntity(DamageSource.FALL, (float) i)) {
                 return;
             }
-            a(n(i), 1.0F, 1.0F);
+            a(m(i), 1.0F, 1.0F);
             int j = MathHelper.floor(locX);
             int k = MathHelper.floor(locY - 0.2D);
             int l = MathHelper.floor(locZ);

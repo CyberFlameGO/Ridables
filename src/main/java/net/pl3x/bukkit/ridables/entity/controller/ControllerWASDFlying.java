@@ -1,7 +1,7 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 
 public class ControllerWASDFlying extends ControllerWASD {

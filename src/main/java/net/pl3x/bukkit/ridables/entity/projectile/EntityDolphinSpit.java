@@ -1,20 +1,20 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
-import net.minecraft.server.v1_13_R1.AxisAlignedBB;
-import net.minecraft.server.v1_13_R1.DamageSource;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityLlamaSpit;
-import net.minecraft.server.v1_13_R1.IProjectile;
-import net.minecraft.server.v1_13_R1.Material;
-import net.minecraft.server.v1_13_R1.MathHelper;
-import net.minecraft.server.v1_13_R1.MovingObjectPosition;
-import net.minecraft.server.v1_13_R1.NBTTagCompound;
-import net.minecraft.server.v1_13_R1.Particles;
-import net.minecraft.server.v1_13_R1.Vec3D;
-import net.minecraft.server.v1_13_R1.World;
-import net.minecraft.server.v1_13_R1.WorldServer;
+import net.minecraft.server.v1_13_R2.AxisAlignedBB;
+import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityLlamaSpit;
+import net.minecraft.server.v1_13_R2.IProjectile;
+import net.minecraft.server.v1_13_R2.Material;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.MovingObjectPosition;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.Particles;
+import net.minecraft.server.v1_13_R2.Vec3D;
+import net.minecraft.server.v1_13_R2.World;
+import net.minecraft.server.v1_13_R2.WorldServer;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDolphin;
 
@@ -54,7 +54,7 @@ public class EntityDolphinSpit extends EntityLlamaSpit implements IProjectile {
                     locX + random.nextFloat() / 2 - 0.25F,
                     locY + random.nextFloat() / 2 - 0.25F,
                     locZ + random.nextFloat() / 2 - 0.25F,
-                    1, 0, 0, 0, 0);
+                    1, 0, 0, 0, 0, true);
         }
 
         if (!(world.a(getBoundingBox(), Material.AIR) || world.a(getBoundingBox(), Material.WATER))) {

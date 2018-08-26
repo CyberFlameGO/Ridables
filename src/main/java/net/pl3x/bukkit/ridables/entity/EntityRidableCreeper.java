@@ -1,28 +1,28 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.DataWatcherObject;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityAreaEffectCloud;
-import net.minecraft.server.v1_13_R1.EntityCreeper;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityOcelot;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumHand;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.MobEffect;
-import net.minecraft.server.v1_13_R1.PathfinderGoalAvoidTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_13_R1.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R1.PathfinderGoalRandomStrollLand;
-import net.minecraft.server.v1_13_R1.PathfinderGoalSwell;
-import net.minecraft.server.v1_13_R1.SoundEffects;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.DataWatcherObject;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAreaEffectCloud;
+import net.minecraft.server.v1_13_R2.EntityCreeper;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityOcelot;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.MobEffect;
+import net.minecraft.server.v1_13_R2.PathfinderGoalAvoidTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
+import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
+import net.minecraft.server.v1_13_R2.PathfinderGoalSwell;
+import net.minecraft.server.v1_13_R2.SoundEffects;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.ServerType;
@@ -97,7 +97,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
             if (isIgnited()) {
                 a(1); // setSwellState
             }
-            int state = dA(); // getSwellState
+            int state = dz(); // getSwellState
             if (state > 0 && fuseTicks == 0) {
                 a(SoundEffects.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
             }
@@ -210,7 +210,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
      */
     public void setIgnited(boolean ignited) {
         if (ignited) {
-            dC();
+            dB();
         } else {
             try {
                 getDataWatcher().set((DataWatcherObject<Boolean>) ignited_field.get(this), false);

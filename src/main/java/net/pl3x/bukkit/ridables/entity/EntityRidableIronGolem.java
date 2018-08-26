@@ -1,13 +1,13 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityIronGolem;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EnumHand;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityIronGolem;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
@@ -111,9 +111,9 @@ public class EntityRidableIronGolem extends EntityIronGolem implements RidableEn
 
     private void handleClick(EnumHand hand) {
         if (hand == EnumHand.OFF_HAND) {
-            a(dA() == 0); // toggle rose on right click
+            a(dz() == 0); // toggle rose on right click
         } else {
-            if (dA() > 0) {
+            if (dz() > 0) {
                 a(false); // remove rose
             }
             world.broadcastEntityEffect(this, (byte) 4);

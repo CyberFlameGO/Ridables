@@ -1,8 +1,8 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 
 public class BlankLookController extends ControllerLook {
     public BlankLookController(EntityInsentient entityInsentient) {

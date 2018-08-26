@@ -1,20 +1,20 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R1.ControllerLook;
-import net.minecraft.server.v1_13_R1.ControllerMove;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityIronGolem;
-import net.minecraft.server.v1_13_R1.EntityLiving;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntitySlime;
-import net.minecraft.server.v1_13_R1.EntityTypes;
-import net.minecraft.server.v1_13_R1.GenericAttributes;
-import net.minecraft.server.v1_13_R1.MobEffects;
-import net.minecraft.server.v1_13_R1.PathfinderGoal;
-import net.minecraft.server.v1_13_R1.PathfinderGoalNearestAttackableTargetInsentient;
-import net.minecraft.server.v1_13_R1.PathfinderGoalTargetNearestPlayer;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityIronGolem;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntitySlime;
+import net.minecraft.server.v1_13_R2.EntityTypes;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.MobEffects;
+import net.minecraft.server.v1_13_R2.PathfinderGoal;
+import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTargetInsentient;
+import net.minecraft.server.v1_13_R2.PathfinderGoalTargetNearestPlayer;
+import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
@@ -259,13 +259,13 @@ public class EntityRidableSlime extends EntitySlime implements RidableEntity {
                         }
                     }
                     if (jumpDelay-- <= 0) {
-                        jumpDelay = slime.ds();
+                        jumpDelay = slime.dr();
                         if (isAggressive) {
                             jumpDelay /= 3;
                         }
                         slime.getControllerJump().a();
-                        if (slime.dA()) {
-                            slime.a(slime.dx(), slime.cD(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) * 0.8F);
+                        if (slime.dz()) {
+                            slime.a(slime.dw(), slime.cD(), ((slime.getRandom().nextFloat() - slime.getRandom().nextFloat()) * 0.2F + 1.0F) * 0.8F);
                         }
                     } else {
                         slime.bh = 0.0F;
