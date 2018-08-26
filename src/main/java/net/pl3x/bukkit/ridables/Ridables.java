@@ -50,13 +50,22 @@ public class Ridables extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
-        // 1.13+ only!
+        if (serverType == ServerType.PAPER) {
+            Logger.error("This server is unsupported for this specific build!");
+            Logger.error("This specific build of Ridables was made before Paper 1.13.1 was released.");
+            Logger.error("All Paper specific code is non-existent in this build.");
+            Logger.error("Please download a newer version of this plugin which has the Paper specifics re-added.");
+            Logger.error("Ridables will now disable itself to prevent harm to your server.");
+            disabled = true;
+            return;
+        }
+
+        // 1.13.1 only!
         try {
-            // test for 1.13+ by looking for the Dolphin interface
-            Class.forName("org.bukkit.entity.Dolphin");
+            Class.forName("import net.minecraft.server.v1_13_R2.Entity");
         } catch (ClassNotFoundException e) {
             Logger.error("This server is unsupported!");
-            Logger.error("Only 1.13+ servers are supported!");
+            Logger.error("Only 1.13.1 servers are supported!");
             disabled = true;
             return;
         }

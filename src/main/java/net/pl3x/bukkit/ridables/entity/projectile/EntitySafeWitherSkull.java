@@ -56,9 +56,6 @@ public class EntitySafeWitherSkull extends EntityWitherSkull {
         if (mop != null && mop.entity != null) {
             if (mop.entity == wither || mop.entity == player) {
                 mop = null; // dont hit self
-            } else if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
-                    CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
-                mop = null;
             }
         }
         if (mop != null) {

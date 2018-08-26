@@ -65,9 +65,6 @@ public class EntityGhastFireball extends EntityLargeFireball {
         if (mop != null && mop.entity != null) {
             if (mop.entity == ghast || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
-                    CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
-                mop = null;
             }
         }
         if (mop != null) {

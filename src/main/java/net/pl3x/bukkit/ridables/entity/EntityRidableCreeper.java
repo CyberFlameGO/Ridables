@@ -261,9 +261,6 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
         if (collection.isEmpty()) {
             return;
         }
-        if (Ridables.getInstance().getServerType() == ServerType.PAPER && world.paperConfig.disableCreeperLingeringEffect) {
-            return;
-        }
         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, locX, locY, locZ);
         cloud.setSource(this);
         cloud.setRadius(2.5F);
