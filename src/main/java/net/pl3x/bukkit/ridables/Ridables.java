@@ -52,7 +52,7 @@ public class Ridables extends JavaPlugin {
 
         // 1.13.1 only!
         try {
-            Class.forName("import net.minecraft.server.v1_13_R2.Entity");
+            Class.forName("net.minecraft.server.v1_13_R2.Entity");
         } catch (ClassNotFoundException e) {
             Logger.error("This server is unsupported!");
             Logger.error("Only 1.13.1 servers are supported!");
