@@ -50,16 +50,6 @@ public class Ridables extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
-        if (serverType == ServerType.PAPER) {
-            Logger.error("This server is unsupported for this specific build!");
-            Logger.error("This specific build of Ridables was made before Paper 1.13.1 was released.");
-            Logger.error("All Paper specific code is non-existent in this build.");
-            Logger.error("Please download a newer version of this plugin which has the Paper specifics re-added.");
-            Logger.error("Ridables will now disable itself to prevent harm to your server.");
-            disabled = true;
-            return;
-        }
-
         // 1.13.1 only!
         try {
             Class.forName("import net.minecraft.server.v1_13_R2.Entity");

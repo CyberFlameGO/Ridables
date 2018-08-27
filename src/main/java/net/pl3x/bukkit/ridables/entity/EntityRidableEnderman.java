@@ -325,11 +325,27 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         }
 
         private boolean tryEscape() {
-            return true;
+            try {
+                return new com.destroystokyo.paper.event.entity.EndermanEscapeEvent(
+                        (org.bukkit.craftbukkit.v1_13_R2.entity.CraftEnderman) enderman.getBukkitEntity(),
+                        com.destroystokyo.paper.event.entity.EndermanEscapeEvent.Reason.STARE)
+                        .callEvent();
+            } catch (NoClassDefFoundError ignore) {
+                return true;
+            }
         }
 
         private boolean shouldAttack(EntityHuman entityhuman) {
             boolean shouldAttack = shouldAttack_real(entityhuman);
+            try {
+                com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent event =
+                        new com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent(
+                                (org.bukkit.entity.Enderman) enderman.getBukkitEntity(),
+                                (org.bukkit.entity.Player) entityhuman.getBukkitEntity());
+                event.setCancelled(!shouldAttack);
+                return event.callEvent();
+            } catch (NoClassDefFoundError ignore) {
+            }
             return shouldAttack;
         }
 

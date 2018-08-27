@@ -113,7 +113,16 @@ public class RidableType {
             EntityType bukkitType = EntityType.fromName(name);
 
             if (RegistryHax.injectReplacementEntityTypes(name, nmsTypes, key, newType, spawnEgg, fishBucket)) {
+                try {
+                    // these fields are only available on Paper
+                    EntityTypes.clsToKeyMap.put(clazz, key);
+                    EntityTypes.clsToTypeMap.put(clazz, bukkitType);
+                    Logger.debug("Updated Paper's extra maps");
+                } catch (NoSuchFieldError ignore) {
+                }
+
                 Logger.info("Successfully injected replacement entity: &a" + name);
+
                 RidableType ridableTypes = new RidableType(newType, waterBucket);
                 BY_BUKKIT_TYPE.put(bukkitType, ridableTypes);
                 return ridableTypes;
