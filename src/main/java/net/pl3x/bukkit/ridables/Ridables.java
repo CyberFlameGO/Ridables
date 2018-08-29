@@ -18,6 +18,8 @@ import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,8 +56,12 @@ public class Ridables extends JavaPlugin {
         try {
             Class.forName("net.minecraft.server.v1_13_R2.Entity");
         } catch (ClassNotFoundException e) {
-            Logger.error("This server is unsupported!");
-            Logger.error("Only 1.13.1 servers are supported!");
+            Logger.error("##########################################");
+            Logger.error("#                                        #");
+            Logger.error("#      This server is unsupported!       #");
+            Logger.error("#   Only 1.13.1 servers are supported!   #");
+            Logger.error("#                                        #");
+            Logger.error("##########################################");
             disabled = true;
             return;
         }
@@ -79,10 +85,17 @@ public class Ridables extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Metrics(this).addCustomChart(new Metrics.SimplePie("server_type", () -> serverType.name));
+
+        UpdateListener.checkForUpdate();
+
         if (disabled) {
-            Logger.error("Plugin is now disabling itself!");
-            Logger.error("Scroll up in the log to see more info!");
-            getServer().getPluginManager().disablePlugin(this);
+            Logger.error("##########################################");
+            Logger.error("#                                        #");
+            Logger.error("#    Plugin is now disabling itself!     #");
+            Logger.error("# Scroll up in the log to see more info! #");
+            Logger.error("#                                        #");
+            Logger.error("##########################################");
             return;
         }
 
@@ -94,16 +107,19 @@ public class Ridables extends JavaPlugin {
 
         getCommand("ridables").setExecutor(new CmdRidables(this));
 
-        new Metrics(this).addCustomChart(new Metrics.SimplePie("server_type", () -> serverType.name));
-
-        UpdateListener.checkForUpdate();
-
         Logger.info("Finished enabling");
     }
 
     @Override
     public void onDisable() {
         Logger.info("Finished disabling");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Lang.send(sender, "&cThis plugin is currently disabled!");
+        Lang.send(sender, "&cCheck your startup log to find out why.");
+        return true;
     }
 
     /**
