@@ -99,8 +99,6 @@ public class WaterBucketListener implements Listener {
         Player player = event.getPlayer();
         if (override.remove(player.getUniqueId())) {
             // this prevents the new cod bucket from emptying water in the same right click
-            // bug in CraftBukkit create a desync block of water here
-            // https://hub.spigotmc.org/jira/browse/SPIGOT-4238
             event.setCancelled(true);
             return;
         }
