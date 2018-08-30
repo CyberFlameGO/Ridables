@@ -98,7 +98,7 @@ public class WaterBucketListener implements Listener {
 
         Player player = event.getPlayer();
         if (override.remove(player.getUniqueId())) {
-            // this prevents the new cod bucket from emptying water in the same right click
+            // this prevents the new cod bucket from emptying water in the same right click as collecting the creature
             event.setCancelled(true);
             return;
         }
