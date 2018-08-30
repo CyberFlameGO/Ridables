@@ -104,7 +104,7 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
         if (Config.PIG_SADDLE_BACK && entityhuman.isSneaking() && hasSaddle() && !isVehicle()) {
             setSaddle(false);
-            getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
+            ((Entity) this).getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
                     new ItemStack(Material.SADDLE));
             return true;
         }

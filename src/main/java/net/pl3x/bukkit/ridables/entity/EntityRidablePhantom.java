@@ -18,7 +18,7 @@ import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
 import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Phantom;
 import org.bukkit.util.Vector;
 
 public class EntityRidablePhantom extends EntityPhantom implements RidableEntity {
@@ -101,14 +101,14 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
 
     public boolean onSpacebar() {
         EntityPlayer rider = getRider();
-        if (rider != null && rider.getBukkitEntity().hasPermission("allow.shoot.phantom")) {
+        if (rider != null && ((Entity) rider).getBukkitEntity().hasPermission("allow.shoot.phantom")) {
             shoot(getRider());
         }
         return false;
     }
 
     public boolean shoot(EntityPlayer rider) {
-        Location loc = ((LivingEntity) getBukkitEntity()).getEyeLocation();
+        Location loc = ((Phantom) ((Entity) this).getBukkitEntity()).getEyeLocation();
         loc.setPitch(-loc.getPitch());
         Vector target = loc.getDirection().normalize().multiply(100).add(loc.toVector());
 

@@ -2,6 +2,7 @@ package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityLargeFireball;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.MathHelper;
@@ -46,11 +47,11 @@ public class EntityGhastFireball extends EntityLargeFireball {
     }
 
     public Ghast getGhast() {
-        return (Ghast) ghast.getBukkitEntity();
+        return (Ghast) ((Entity) ghast).getBukkitEntity();
     }
 
     public Player getRider() {
-        return rider.getBukkitEntity();
+        return (Player) ((Entity) rider).getBukkitEntity();
     }
 
     public void tick() {

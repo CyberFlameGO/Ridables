@@ -111,13 +111,13 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
             return false;
         }
 
-        CraftPlayer player = rider.getBukkitEntity();
+        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
         if (!player.hasPermission("allow.shoot.ghast")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }
 
-        Vector direction = rider.getBukkitEntity().getEyeLocation().getDirection()
+        Vector direction = player.getEyeLocation().getDirection()
                 .normalize().multiply(25).add(new Vector(0, 2.5, 0)).normalize().multiply(25);
 
         a(SoundEffects.ENTITY_GHAST_WARN, 1.0F, 1.0F);

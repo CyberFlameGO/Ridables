@@ -175,7 +175,7 @@ public class EntityRidableShulker extends EntityShulker implements RidableEntity
             return false;
         }
 
-        CraftPlayer player = rider.getBukkitEntity();
+        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
         if (!player.hasPermission("allow.shoot.shulker")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;

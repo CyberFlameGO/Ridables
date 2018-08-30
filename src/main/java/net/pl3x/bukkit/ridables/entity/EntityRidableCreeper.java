@@ -168,7 +168,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
             if (rider != null && rider.bj == 0 && rider.bh == 0 &&
-                    rider.getBukkitEntity().hasPermission("allow.special.creeper")) {
+                    ((Entity) rider).getBukkitEntity().hasPermission("allow.special.creeper")) {
                 setIgnited(true);
                 return true;
             }
@@ -242,7 +242,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     }
 
     public void explode() {
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(((Entity) this).getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             aX = true; // duplicate of isDead

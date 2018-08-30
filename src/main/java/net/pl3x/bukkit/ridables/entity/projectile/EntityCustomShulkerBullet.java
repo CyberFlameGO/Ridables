@@ -39,11 +39,11 @@ public class EntityCustomShulkerBullet extends EntityShulkerBullet implements IP
     }
 
     public Shulker getShulker() {
-        return (Shulker) shulker.getBukkitEntity();
+        return (Shulker) ((Entity) shulker).getBukkitEntity();
     }
 
     public Player getRider() {
-        return player.getBukkitEntity();
+        return (Player) ((Entity) player).getBukkitEntity();
     }
 
     public void tick() {

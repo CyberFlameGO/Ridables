@@ -2,6 +2,7 @@ package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityWitherSkull;
@@ -38,11 +39,11 @@ public class EntitySafeWitherSkull extends EntityWitherSkull {
     }
 
     public Wither getWither() {
-        return (Wither) wither.getBukkitEntity();
+        return (Wither) ((Entity) wither).getBukkitEntity();
     }
 
     public Player getRider() {
-        return player.getBukkitEntity();
+        return (Player) ((Entity) player).getBukkitEntity();
     }
 
     public void tick() {
@@ -109,7 +110,7 @@ public class EntitySafeWitherSkull extends EntityWitherSkull {
                 }
             }
         }
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), 1.0F, false);
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(((Entity) this).getBukkitEntity(), 1.0F, false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), Config.WITHER_SHOOT_GRIEF);

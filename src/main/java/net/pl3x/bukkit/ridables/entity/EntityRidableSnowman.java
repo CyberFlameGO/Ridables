@@ -16,8 +16,8 @@ import net.minecraft.server.v1_13_R2.IBlockData;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.Material;
@@ -159,7 +159,7 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
                 itemstack.subtract(1);
             }
         } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
-            getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
+            ((Entity) this).getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
                     new ItemStack(Material.CARVED_PUMPKIN));
         }
         return super.a(player, hand);

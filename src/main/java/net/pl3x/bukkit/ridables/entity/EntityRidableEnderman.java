@@ -132,7 +132,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         }
 
         EntityPlayer rider = getRider();
-        if (rider == null || !rider.getBukkitEntity().hasPermission("allow.special.enderman")) {
+        if (rider == null || !((Entity) rider).getBukkitEntity().hasPermission("allow.special.enderman")) {
             return false;
         }
 
@@ -327,7 +327,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         private boolean tryEscape() {
             try {
                 return new com.destroystokyo.paper.event.entity.EndermanEscapeEvent(
-                        (org.bukkit.craftbukkit.v1_13_R2.entity.CraftEnderman) enderman.getBukkitEntity(),
+                        (org.bukkit.entity.Enderman) ((Entity) enderman).getBukkitEntity(),
                         com.destroystokyo.paper.event.entity.EndermanEscapeEvent.Reason.STARE)
                         .callEvent();
             } catch (NoClassDefFoundError ignore) {
@@ -340,8 +340,8 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
             try {
                 com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent event =
                         new com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent(
-                                (org.bukkit.entity.Enderman) enderman.getBukkitEntity(),
-                                (org.bukkit.entity.Player) entityhuman.getBukkitEntity());
+                                (org.bukkit.entity.Enderman) ((Entity) enderman).getBukkitEntity(),
+                                (org.bukkit.entity.Player) ((Entity) entityhuman).getBukkitEntity());
                 event.setCancelled(!shouldAttack);
                 return event.callEvent();
             } catch (NoClassDefFoundError ignore) {
