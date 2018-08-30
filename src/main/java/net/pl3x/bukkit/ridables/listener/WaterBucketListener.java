@@ -158,6 +158,7 @@ public class WaterBucketListener implements Listener {
 
         Cod codFish = (Cod) event.getEntity();
         if (Bucket.isFromBucket(codFish)) {
+            // do not spawn a cod while placing a collected creature
             event.setCancelled(true);
         }
     }
