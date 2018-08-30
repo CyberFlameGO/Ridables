@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables;
 
+import net.pl3x.bukkit.ridables.bstats.Metrics;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
@@ -17,7 +18,6 @@ import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
