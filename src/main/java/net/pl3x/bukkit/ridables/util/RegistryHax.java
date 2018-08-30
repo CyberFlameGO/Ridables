@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables.util;
 
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.server.v1_13_R2.BiomeBase;
@@ -41,17 +40,16 @@ public class RegistryHax {
     private static Field registry_field_b;
     private static Field registry_field_c;
     private static Field registry_field_d;
-    private static Field materials_field_a;
-    //private static Field materials_field_b;
+    private static Field materials_field_b;
     private static Field materials_field_c;
     private static Field field_modifiers;
-    private static Field item_field_a;
-    private static Field item_field_d;
+    private static Field item_fishType;
+    private static Field item_entityType;
     private static Method registry_method_d;
     private static Method registry_method_e;
-    private static Method biomebase_method_a;
-    private static Method biomebase_method_a2;
-    private static Method entitypositiontypes_a;
+    private static Method biomebase_registerBiome;
+    private static Method biomebase_addSpawn;
+    private static Method entitypositiontypes_register;
 
     static {
         try {
@@ -61,28 +59,26 @@ public class RegistryHax {
             registry_field_c.setAccessible(true);
             registry_field_d = RegistryID.class.getDeclaredField("d");
             registry_field_d.setAccessible(true);
-            materials_field_a = RegistryMaterials.class.getDeclaredField("b"); // RegistryID<V>
-            materials_field_a.setAccessible(true);
-            //materials_field_b = RegistryMaterials.class.getDeclaredField("b"); // Map<V,K>
-            //materials_field_b.setAccessible(true);
-            materials_field_c = RegistryMaterials.class.getDeclaredField("c"); // Map<K,V> // BiMap<MinecraftKey,V>
+            materials_field_b = RegistryMaterials.class.getDeclaredField("b"); // RegistryID<V>
+            materials_field_b.setAccessible(true);
+            materials_field_c = RegistryMaterials.class.getDeclaredField("c"); // BiMap<MinecraftKey,V>
             materials_field_c.setAccessible(true);
             field_modifiers = Field.class.getDeclaredField("modifiers");
             field_modifiers.setAccessible(true);
-            item_field_a = ItemFishBucket.class.getDeclaredField("a");
-            item_field_a.setAccessible(true);
-            item_field_d = ItemMonsterEgg.class.getDeclaredField("d");
-            item_field_d.setAccessible(true);
+            item_fishType = ItemFishBucket.class.getDeclaredField("a");
+            item_fishType.setAccessible(true);
+            item_entityType = ItemMonsterEgg.class.getDeclaredField("d");
+            item_entityType.setAccessible(true);
             registry_method_d = RegistryID.class.getDeclaredMethod("d", Object.class);
             registry_method_d.setAccessible(true);
             registry_method_e = RegistryID.class.getDeclaredMethod("e", int.class);
             registry_method_e.setAccessible(true);
-            biomebase_method_a = BiomeBase.class.getDeclaredMethod("a", int.class, String.class, BiomeBase.class);
-            biomebase_method_a.setAccessible(true);
-            biomebase_method_a2 = BiomeBase.class.getDeclaredMethod("a", EnumCreatureType.class, BiomeBase.BiomeMeta.class);
-            biomebase_method_a2.setAccessible(true);
-            entitypositiontypes_a = EntityPositionTypes.class.getDeclaredMethod("a", EntityTypes.class, EntityPositionTypes.Surface.class, HeightMap.Type.class);
-            entitypositiontypes_a.setAccessible(true);
+            biomebase_registerBiome = BiomeBase.class.getDeclaredMethod("a", int.class, String.class, BiomeBase.class);
+            biomebase_registerBiome.setAccessible(true);
+            biomebase_addSpawn = BiomeBase.class.getDeclaredMethod("a", EnumCreatureType.class, BiomeBase.BiomeMeta.class);
+            biomebase_addSpawn.setAccessible(true);
+            entitypositiontypes_register = EntityPositionTypes.class.getDeclaredMethod("a", EntityTypes.class, EntityPositionTypes.Surface.class, HeightMap.Type.class);
+            entitypositiontypes_register.setAccessible(true);
 
         } catch (NoSuchFieldException | NoSuchMethodException ignore) {
         }
@@ -101,7 +97,7 @@ public class RegistryHax {
     public static boolean injectReplacementEntityTypes(String name, EntityTypes entityTypes, MinecraftKey key, EntityTypes<?> newType, Material spawnEggMaterial, Material fishBucketMaterial) {
         Logger.debug("Attempting to inject replacement entity: &3" + name);
         try {
-            RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_field_a.get(IRegistry.ENTITY_TYPE);
+            RegistryID<EntityTypes<?>> registry = (RegistryID<EntityTypes<?>>) materials_field_b.get(IRegistry.ENTITY_TYPE);
             int id = registry.getId(entityTypes);
 
             Logger.debug("Detected original id: " + id);
@@ -193,14 +189,6 @@ public class RegistryHax {
             Logger.debug("Injecting c[newIndex] reference: " + newIndex + ":" + id);
             array_c[newIndex] = id;
 
-            /*Logger.debug("Updating RegistryMaterials mapB");
-            Map<EntityTypes<?>, MinecraftKey> map_b_old = (Map<EntityTypes<?>, MinecraftKey>) materials_field_b.get(IRegistry.ENTITY_TYPE);
-            Map<EntityTypes<?>, MinecraftKey> map_b_new = HashBiMap.create();
-            for (Map.Entry<EntityTypes<?>, MinecraftKey> entry : map_b_old.entrySet()) {
-                if (entry.getKey() != entityTypes) map_b_new.put(entry.getKey(), entry.getValue());
-                else map_b_new.put(newType, key);
-            }*/
-
             Logger.debug("Updating RegistrySimple mapC");
             Map<MinecraftKey, EntityTypes<?>> map_c = (Map<MinecraftKey, EntityTypes<?>>) materials_field_c.get(IRegistry.ENTITY_TYPE);
             map_c.put(key, newType);
@@ -214,21 +202,20 @@ public class RegistryHax {
             registry_field_b.set(registry, array_b);
             registry_field_c.set(registry, array_c);
             registry_field_d.set(registry, array_d);
-            materials_field_a.set(IRegistry.ENTITY_TYPE, registry);
-            //materials_field_b.set(IRegistry.ENTITY_TYPE, map_b_new);
+            materials_field_b.set(IRegistry.ENTITY_TYPE, registry);
             materials_field_c.set(IRegistry.ENTITY_TYPE, map_c);
 
             if (spawnEggMaterial != null) {
                 Logger.debug("Updating spawn egg reference");
                 Item spawnEgg = CraftItemStack.asNMSCopy(new ItemStack(spawnEggMaterial)).getItem();
-                item_field_d.set(spawnEgg, newType);
+                item_entityType.set(spawnEgg, newType);
             }
 
             if (fishBucketMaterial != null) {
                 Logger.debug("Updating fish bucket");
                 Item fishBucket = CraftItemStack.asNMSCopy(new ItemStack(fishBucketMaterial)).getItem();
-                field_modifiers.setInt(item_field_a, item_field_a.getModifiers() & ~Modifier.FINAL);
-                item_field_a.set(fishBucket, newType);
+                field_modifiers.setInt(item_fishType, item_fishType.getModifiers() & ~Modifier.FINAL);
+                item_fishType.set(fishBucket, newType);
             }
             return true;
         } catch (IllegalAccessException | InvocationTargetException | ArrayIndexOutOfBoundsException e) {
@@ -274,7 +261,7 @@ public class RegistryHax {
         Logger.info("Rebuilding biome mob lists");
 
         try {
-            entitypositiontypes_a.invoke(null, EntityTypes.ILLUSIONER, EntityPositionTypes.Surface.ON_GROUND, HeightMap.Type.MOTION_BLOCKING_NO_LEAVES);
+            entitypositiontypes_register.invoke(null, EntityTypes.ILLUSIONER, EntityPositionTypes.Surface.ON_GROUND, HeightMap.Type.MOTION_BLOCKING_NO_LEAVES);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -376,19 +363,19 @@ public class RegistryHax {
     private static void rebuildBiome(String field, int id, String name, BiomeBase biome) {
         Logger.debug(" - rebuilding biome: " + name);
         try {
-            biomebase_method_a.invoke(null, id, name, biome);
+            biomebase_registerBiome.invoke(null, id, name, biome);
             Field biomes_field = Biomes.class.getDeclaredField(field);
             biomes_field.setAccessible(true);
             field_modifiers.setInt(biomes_field, biomes_field.getModifiers() & ~Modifier.FINAL);
             biomes_field.set(null, biome);
             if (Config.GIANT_SPAWN_NATURALLY && Config.GIANT_SPAWN_BIOMES.contains(id)) {
                 Logger.debug("   - Adding giants to spawn list");
-                biomebase_method_a2.invoke(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GIANT,
+                biomebase_addSpawn.invoke(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GIANT,
                         Config.GIANT_SPAWN_WEIGHT, Config.GIANT_SPAWN_MIN_GROUP, Config.GIANT_SPAWN_MAX_GROUP));
             }
             if (Config.ILLUSIONER_SPAWN_NATURALLY && Config.ILLUSIONER_SPAWN_BIOMES.contains(id)) {
                 Logger.debug("   - Adding illusioners to spawn list");
-                biomebase_method_a2.invoke(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ILLUSIONER,
+                biomebase_addSpawn.invoke(biome, EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ILLUSIONER,
                         Config.ILLUSIONER_SPAWN_WEIGHT, Config.ILLUSIONER_SPAWN_MIN_GROUP, Config.ILLUSIONER_SPAWN_MAX_GROUP));
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
