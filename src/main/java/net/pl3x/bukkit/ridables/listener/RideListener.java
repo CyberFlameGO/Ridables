@@ -154,9 +154,7 @@ public class RideListener implements Listener {
                 net.minecraft.server.v1_13_R2.Entity oldEntity = ((CraftEntity) entity).getHandle();
                 net.minecraft.server.v1_13_R2.Entity newEntity = ridableType.spawn(event.getLocation(),
                         oldEntity instanceof EntityAgeable && ((EntityAgeable) oldEntity).isBaby());
-                if (oldEntity.hasCustomName()) {
-                    newEntity.setCustomName(oldEntity.getCustomName());
-                }
+                newEntity.v(oldEntity); // copyDataFromOld
                 entity.remove();
             }
         }.runTaskLater(plugin, 1);
