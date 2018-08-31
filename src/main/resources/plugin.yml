@@ -25,13 +25,6 @@ permissions:
       allow.collect.turtle:
         description: Allow to collect turtles in water buckets
         default: op
-  allow.dash.*:
-    description: Allow to make all supported creatures dash
-    default: op
-    children:
-      allow.dash.dolphin:
-        description: Allow to make dolphins dash
-        default: op
   allow.ride.*:
     description: Allow to ride all supported creatures
     default: op
@@ -223,6 +216,9 @@ permissions:
     children:
       allow.special.creeper:
         description: Allow to make creepers ignite
+        default: op
+      allow.special.dolphin:
+        description: Allow to make dolphins dash
         default: op
       allow.special.enderman:
         description: Allow to make endermen pick up and place blocks

@@ -196,7 +196,7 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
     public boolean dash(EntityPlayer rider) {
         spacebarCooldown = Config.DOLPHIN_DASH_COOLDOWN;
         if (!dashing) {
-            if (rider != null && !((Entity) rider).getBukkitEntity().hasPermission("allow.dash.dolphin")) {
+            if (rider != null && !((Entity) rider).getBukkitEntity().hasPermission("allow.special.dolphin")) {
                 return false;
             }
 
