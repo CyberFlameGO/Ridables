@@ -5,11 +5,22 @@ import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityDrowned;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.EnumItemSlot;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.ItemStack;
+import net.minecraft.server.v1_13_R2.Items;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomTrident;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.util.Vector;
 
 public class EntityRidableDrowned extends EntityDrowned implements RidableEntity {
     private ControllerMove aiController;
@@ -17,6 +28,7 @@ public class EntityRidableDrowned extends EntityDrowned implements RidableEntity
     private ControllerLook defaultLookController;
     private BlankLookController blankLookController;
     private EntityPlayer rider;
+    private int shootCooldown = 0;
 
     public EntityRidableDrowned(World world) {
         super(world);
@@ -36,6 +48,10 @@ public class EntityRidableDrowned extends EntityDrowned implements RidableEntity
     }
 
     protected void mobTick() {
+        if (shootCooldown > 0) {
+            shootCooldown--;
+        }
+
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
@@ -89,5 +105,63 @@ public class EntityRidableDrowned extends EntityDrowned implements RidableEntity
             moveController = wasdController;
             lookController = blankLookController;
         }
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return handleClick();
+    }
+
+    public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
+        return handleClick();
+    }
+
+    public boolean onClick(EnumHand hand) {
+        return handleClick();
+    }
+
+    private boolean handleClick() {
+        if (shootCooldown == 0) {
+            EntityPlayer rider = getRider();
+            if (rider != null) {
+                if (!Config.DROWNED_SHOOT_REQUIRE_TRIDENT || hasTrident()) {
+                    return throwTrident(rider);
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean throwTrident(EntityPlayer rider) {
+        shootCooldown = Config.DROWNED_SHOOT_COOLDOWN;
+
+        if (rider == null) {
+            return false;
+        }
+
+        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
+        if (!player.hasPermission("allow.shoot.drowned")) {
+            Lang.send(player, Lang.SHOOT_NO_PERMISSION);
+            return false;
+        }
+
+        Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 3, 0));
+
+        EntityCustomTrident trident = new EntityCustomTrident(this.world, this, rider, new ItemStack(Items.TRIDENT));
+        trident.shoot(direction.getX(), direction.getY(), direction.getZ(), 1.6F * Config.DROWNED_SHOOT_SPEED, 0);
+        world.addEntity(trident);
+
+        a(SoundEffects.ENTITY_DROWNED_SHOOT, 1.0F, 1.0F);
+
+        return true;
+    }
+
+    /**
+     * Check if this drowned has a trident in it's hands
+     *
+     * @return True if trident in either hand
+     */
+    public boolean hasTrident() {
+        return getEquipment(EnumItemSlot.MAINHAND).getItem() == Items.TRIDENT ||
+                getEquipment(EnumItemSlot.OFFHAND).getItem() == Items.TRIDENT;
     }
 }

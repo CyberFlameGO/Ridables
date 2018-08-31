@@ -31,6 +31,10 @@ public class Config {
     public static float BLAZE_SPEED = 1.0F;
     public static float BLAZE_VERTICAL = 0.5F;
     public static float BLAZE_GRAVITY = 0.04F;
+    public static int BLAZE_SHOOT_COOLDOWN = 20;
+    public static float BLAZE_SHOOT_SPEED = 1.0F;
+    public static float BLAZE_SHOOT_DAMAGE = 5.0F;
+    public static boolean BLAZE_SHOOT_GRIEF = true;
 
     public static boolean CAVE_SPIDER_ENABLED = false;
     public static float CAVE_SPIDER_SPEED = 1.0F;
@@ -74,6 +78,11 @@ public class Config {
     public static boolean DROWNED_ENABLED = false;
     public static float DROWNED_SPEED = 1.0F;
     public static float DROWNED_JUMP_POWER = 0.5F;
+    public static int DROWNED_SHOOT_COOLDOWN = 20;
+    public static float DROWNED_SHOOT_SPEED = 1.0F;
+    public static float DROWNED_SHOOT_DAMAGE = 8.0F;
+    public static boolean DROWNED_SHOOT_CHANNELING = true;
+    public static boolean DROWNED_SHOOT_REQUIRE_TRIDENT = false;
 
     public static boolean ELDER_GUARDIAN_ENABLED = false;
     public static float ELDER_GUARDIAN_SPEED = 1.0F;
@@ -312,6 +321,10 @@ public class Config {
         BLAZE_SPEED = (float) config.getDouble("blaze.speed", 1.0D);
         BLAZE_VERTICAL = (float) config.getDouble("blaze.vertical", 0.5D);
         BLAZE_GRAVITY = (float) config.getDouble("blaze.gravity", 0.04D);
+        BLAZE_SHOOT_COOLDOWN = (int) config.getDouble("blaze.shoot.cooldown", 20);
+        BLAZE_SHOOT_SPEED = (float) config.getDouble("blaze.shoot.speed", 1.0D);
+        BLAZE_SHOOT_DAMAGE = (float) config.getDouble("blaze.shoot.damage", 5.0D);
+        BLAZE_SHOOT_GRIEF = config.getBoolean("blaze.shoot.grief", true);
 
         CAVE_SPIDER_ENABLED = config.getBoolean("cave-spider.enabled", false);
         CAVE_SPIDER_SPEED = (float) config.getDouble("cave-spider.speed", 1.0D);
@@ -355,6 +368,11 @@ public class Config {
         DROWNED_ENABLED = config.getBoolean("drowned.enabled", false);
         DROWNED_SPEED = (float) config.getDouble("drowned.speed", 1.0D);
         DROWNED_JUMP_POWER = (float) config.getDouble("drowned.jump-power", 0.5D);
+        DROWNED_SHOOT_COOLDOWN = (int) config.getDouble("drowned.shoot.cooldown", 20);
+        DROWNED_SHOOT_SPEED = (float) config.getDouble("drowned.shoot.speed", 1.0D);
+        DROWNED_SHOOT_DAMAGE = (float) config.getDouble("drowned.shoot.damage", 8.0D);
+        DROWNED_SHOOT_CHANNELING = config.getBoolean("drowned.shoot.channeling", true);
+        DROWNED_SHOOT_REQUIRE_TRIDENT = config.getBoolean("drowned.shoot.require-trident", false);
 
         ELDER_GUARDIAN_ENABLED = config.getBoolean("elder-guardian.enabled", false);
         ELDER_GUARDIAN_SPEED = (float) config.getDouble("elder-guardian.speed", 1.0D);

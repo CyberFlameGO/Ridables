@@ -12,7 +12,6 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.ServerType;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
@@ -24,18 +23,27 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 public class EntityCustomFireball extends EntityLargeFireball {
     private final EntityLiving ridable;
     private final EntityPlayer rider;
+    private final float speed;
+    private final float damage;
+    private final boolean grief;
     private int f;
 
     public EntityCustomFireball(World world) {
         super(world);
         this.ridable = null;
         this.rider = null;
+        this.speed = 1.0F;
+        this.damage = 0;
+        this.grief = false;
     }
 
-    public EntityCustomFireball(World world, EntityLiving ridable, EntityPlayer rider, double x, double y, double z) {
+    public EntityCustomFireball(World world, EntityLiving ridable, EntityPlayer rider, double x, double y, double z, float speed, float damage, boolean grief) {
         super(world, rider, x, y, z);
         this.ridable = ridable;
         this.rider = rider;
+        this.speed = speed;
+        this.damage = damage;
+        this.grief = grief;
 
         setPositionRotation(ridable.locX, ridable.locY, ridable.locZ, ridable.yaw, ridable.pitch);
         setPosition(locX, locY, locZ);
@@ -77,9 +85,9 @@ public class EntityCustomFireball extends EntityLargeFireball {
                 CraftEventFactory.callProjectileHitEvent(this, mop);
             }
         }
-        locX += motX * Config.GHAST_SHOOT_SPEED;
-        locY += motY * Config.GHAST_SHOOT_SPEED;
-        locZ += motZ * Config.GHAST_SHOOT_SPEED;
+        locX += motX * speed;
+        locY += motY * speed;
+        locZ += motZ * speed;
         ProjectileHelper.a(this, 0.2F);
         double f = (double) k();
         if (isInWater()) {
@@ -101,15 +109,15 @@ public class EntityCustomFireball extends EntityLargeFireball {
     // onImpact
     protected void a(MovingObjectPosition mop) {
         if (mop.entity != null) {
-            if (Config.GHAST_SHOOT_DAMAGE > 0) {
-                mop.entity.damageEntity(DamageSource.fireball(this, shooter), Config.GHAST_SHOOT_DAMAGE);
+            if (damage > 0) {
+                mop.entity.damageEntity(DamageSource.fireball(this, shooter), damage);
                 a(shooter, mop.entity);
             }
         }
         ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(world.getServer(), this));
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
-            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), Config.GHAST_SHOOT_GRIEF);
+            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), grief);
         }
         die();
     }

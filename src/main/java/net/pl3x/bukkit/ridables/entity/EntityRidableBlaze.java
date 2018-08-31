@@ -25,7 +25,7 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     private ControllerLook defaultLookController;
     private BlankLookController blankLookController;
     private EntityPlayer rider;
-    private int spacebarCooldown = 0;
+    private int shootCooldown = 0;
 
     public EntityRidableBlaze(World world) {
         super(world);
@@ -45,8 +45,8 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     protected void mobTick() {
-        if (spacebarCooldown > 0) {
-            spacebarCooldown--;
+        if (shootCooldown > 0) {
+            shootCooldown--;
         }
 
         EntityPlayer rider = updateRider();
@@ -110,7 +110,7 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     private boolean handleClick() {
-        if (spacebarCooldown == 0) {
+        if (shootCooldown == 0) {
             EntityPlayer rider = getRider();
             if (rider != null) {
                 return shoot(rider);
@@ -120,7 +120,7 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        spacebarCooldown = Config.GHAST_SHOOT_COOLDOWN;
+        shootCooldown = Config.BLAZE_SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -134,8 +134,8 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
 
         Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 1, 0));
 
-        EntityCustomFireball fireball = new EntityCustomFireball(world, this,
-                rider, direction.getX(), direction.getY(), direction.getZ());
+        EntityCustomFireball fireball = new EntityCustomFireball(world, this, rider, direction.getX(), direction.getY(), direction.getZ(),
+                Config.BLAZE_SHOOT_SPEED, Config.BLAZE_SHOOT_DAMAGE, Config.BLAZE_SHOOT_GRIEF);
         world.addEntity(fireball);
 
         a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F);

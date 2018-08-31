@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables;
 
+import net.minecraft.server.v1_13_R2.EntityThrownTrident;
 import net.pl3x.bukkit.ridables.bstats.Metrics;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
@@ -8,6 +9,7 @@ import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomFireball;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomShulkerBullet;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomTrident;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
 import net.pl3x.bukkit.ridables.entity.projectile.EntitySafeWitherSkull;
@@ -71,9 +73,10 @@ public class Ridables extends JavaPlugin {
         RidableType.getRidableType(EntityType.DOLPHIN);
 
         // inject new entities
+        RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", EntityCustomFireball.class, EntityCustomFireball::new);
+        RegistryHax.injectNewEntityTypes("custom_trident", "trident", EntityCustomTrident.class, EntityCustomTrident::new);
         RegistryHax.injectNewEntityTypes("custom_shulker_bullet", "shulker_bullet", EntityCustomShulkerBullet.class, EntityCustomShulkerBullet::new);
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", EntityDolphinSpit.class, EntityDolphinSpit::new);
-        RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", EntityCustomFireball.class, EntityCustomFireball::new);
         RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", EntityPhantomFlames.class, EntityPhantomFlames::new);
         RegistryHax.injectNewEntityTypes("safe_wither_skull", "wither_skull", EntitySafeWitherSkull.class, EntitySafeWitherSkull::new);
 

@@ -125,8 +125,9 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         new BukkitRunnable() {
             @Override
             public void run() {
-                EntityCustomFireball fireball = new EntityCustomFireball(world, EntityRidableGhast.this,
-                        rider, direction.getX(), direction.getY(), direction.getZ());
+                EntityCustomFireball fireball = new EntityCustomFireball(world, EntityRidableGhast.this, rider,
+                        direction.getX(), direction.getY(), direction.getZ(),
+                        Config.GHAST_SHOOT_SPEED, Config.GHAST_SHOOT_DAMAGE, Config.GHAST_SHOOT_GRIEF);
                 world.addEntity(fireball);
 
                 a(SoundEffects.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);

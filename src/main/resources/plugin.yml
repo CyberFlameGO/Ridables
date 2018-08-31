@@ -202,6 +202,9 @@ permissions:
       allow.shoot.dolphin:
         description: Allow to make dolphins shoot spit
         default: op
+      allow.shoot.drowned:
+        description: Allow to make drownedd throw tridents
+        default: op
       allow.shoot.ghast:
         description: Allow to make ghasts shoot fireballs
         default: op

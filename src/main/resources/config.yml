@@ -43,6 +43,11 @@ blaze:
   speed: 1.0         # riding speed modifier
   vertical: 0.5      # vertical boost when pressing spacebar
   gravity: 0.04      # amount of gravity while not in motion
+  shoot:
+    cooldown: 20     # ticks to wait between shooting
+    speed: 1.0       # projectile speed
+    damage: 5.0      # damage per hit (1 heart = 2.0 damage)
+    grief: true      # whether fireballs can damage the blocks in the world
 
 # Cave Spider options
 cave-spider:
@@ -104,6 +109,12 @@ drowned:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  shoot:
+    cooldown: 20     # ticks to wait between shooting
+    speed: 1.0       # projectile speed
+    damage: 8.0      # damage per hit (1 heart = 2.0 damage)
+    channeling: true # thrown tridents have channeling enchantment (strike lightning during rain)
+    require-trident: false # drowned is required to be holding a trident to throw
 
 # Elder Guardian options
 elder-guardian:
@@ -140,7 +151,7 @@ ghast:
     cooldown: 20     # ticks to wait between shooting
     speed: 1.0       # projectile speed
     damage: 5.0      # damage per hit (1 heart = 2.0 damage)
-    grief: true      # whether ghast fireballs can damage the blocks in the world
+    grief: true      # whether fireballs can damage the blocks in the world
 
 # Giant options
 giant:
