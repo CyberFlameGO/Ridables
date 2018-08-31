@@ -13,7 +13,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityGhastFireball;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomFireball;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -125,7 +125,7 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         new BukkitRunnable() {
             @Override
             public void run() {
-                EntityGhastFireball fireball = new EntityGhastFireball(world, EntityRidableGhast.this,
+                EntityCustomFireball fireball = new EntityCustomFireball(world, EntityRidableGhast.this,
                         rider, direction.getX(), direction.getY(), direction.getZ());
                 world.addEntity(fireball);
 

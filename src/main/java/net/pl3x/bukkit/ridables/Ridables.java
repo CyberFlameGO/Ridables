@@ -6,9 +6,9 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomFireball;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomShulkerBullet;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityGhastFireball;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
 import net.pl3x.bukkit.ridables.entity.projectile.EntitySafeWitherSkull;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
@@ -56,12 +56,13 @@ public class Ridables extends JavaPlugin {
         try {
             Class.forName("net.minecraft.server.v1_13_R2.Entity");
         } catch (ClassNotFoundException e) {
-            Logger.error("##########################################");
-            Logger.error("#                                        #");
-            Logger.error("#      This server is unsupported!       #");
-            Logger.error("#   Only 1.13.1 servers are supported!   #");
-            Logger.error("#                                        #");
-            Logger.error("##########################################");
+            Logger.error("############################################");
+            Logger.error("#                                          #");
+            Logger.error("#       This server is unsupported!        #");
+            Logger.error("#    Only 1.13.1 servers are supported!    #");
+            Logger.error("# Download Ridables v2.35 for 1.13 support #");
+            Logger.error("#                                          #");
+            Logger.error("############################################");
             disabled = true;
             return;
         }
@@ -72,7 +73,7 @@ public class Ridables extends JavaPlugin {
         // inject new entities
         RegistryHax.injectNewEntityTypes("custom_shulker_bullet", "shulker_bullet", EntityCustomShulkerBullet.class, EntityCustomShulkerBullet::new);
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", EntityDolphinSpit.class, EntityDolphinSpit::new);
-        RegistryHax.injectNewEntityTypes("ghast_fireball", "large_fireball", EntityGhastFireball.class, EntityGhastFireball::new);
+        RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", EntityCustomFireball.class, EntityCustomFireball::new);
         RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", EntityPhantomFlames.class, EntityPhantomFlames::new);
         RegistryHax.injectNewEntityTypes("safe_wither_skull", "wither_skull", EntitySafeWitherSkull.class, EntitySafeWitherSkull::new);
 

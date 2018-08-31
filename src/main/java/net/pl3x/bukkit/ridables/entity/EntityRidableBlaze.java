@@ -5,11 +5,19 @@ import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityBlaze;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
+import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomFireball;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.util.Vector;
 
 public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     private ControllerMove aiController;
@@ -17,6 +25,7 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     private ControllerLook defaultLookController;
     private BlankLookController blankLookController;
     private EntityPlayer rider;
+    private int spacebarCooldown = 0;
 
     public EntityRidableBlaze(World world) {
         super(world);
@@ -36,6 +45,10 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     protected void mobTick() {
+        if (spacebarCooldown > 0) {
+            spacebarCooldown--;
+        }
+
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
@@ -82,5 +95,51 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
             moveController = wasdController;
             lookController = blankLookController;
         }
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return handleClick();
+    }
+
+    public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
+        return handleClick();
+    }
+
+    public boolean onClick(EnumHand hand) {
+        return handleClick();
+    }
+
+    private boolean handleClick() {
+        if (spacebarCooldown == 0) {
+            EntityPlayer rider = getRider();
+            if (rider != null) {
+                return shoot(rider);
+            }
+        }
+        return false;
+    }
+
+    public boolean shoot(EntityPlayer rider) {
+        spacebarCooldown = Config.GHAST_SHOOT_COOLDOWN;
+
+        if (rider == null) {
+            return false;
+        }
+
+        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
+        if (!player.hasPermission("allow.shoot.blaze")) {
+            Lang.send(player, Lang.SHOOT_NO_PERMISSION);
+            return false;
+        }
+
+        Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 1, 0));
+
+        EntityCustomFireball fireball = new EntityCustomFireball(world, this,
+                rider, direction.getX(), direction.getY(), direction.getZ());
+        world.addEntity(fireball);
+
+        a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F);
+
+        return true;
     }
 }

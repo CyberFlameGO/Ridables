@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityLargeFireball;
+import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.MovingObjectPosition;
@@ -13,31 +14,30 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.ServerType;
-import net.pl3x.bukkit.ridables.entity.EntityRidableGhast;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Explosive;
-import org.bukkit.entity.Ghast;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-public class EntityGhastFireball extends EntityLargeFireball {
-    private final EntityRidableGhast ghast;
+public class EntityCustomFireball extends EntityLargeFireball {
+    private final EntityLiving ridable;
     private final EntityPlayer rider;
     private int f;
 
-    public EntityGhastFireball(World world) {
+    public EntityCustomFireball(World world) {
         super(world);
-        this.ghast = null;
+        this.ridable = null;
         this.rider = null;
     }
 
-    public EntityGhastFireball(World world, EntityRidableGhast ghast, EntityPlayer rider, double x, double y, double z) {
+    public EntityCustomFireball(World world, EntityLiving ridable, EntityPlayer rider, double x, double y, double z) {
         super(world, rider, x, y, z);
-        this.ghast = ghast;
+        this.ridable = ridable;
         this.rider = rider;
 
-        setPositionRotation(ghast.locX, ghast.locY, ghast.locZ, ghast.yaw, ghast.pitch);
+        setPositionRotation(ridable.locX, ridable.locY, ridable.locZ, ridable.yaw, ridable.pitch);
         setPosition(locX, locY, locZ);
 
         double d3 = (double) MathHelper.sqrt(x * x + y * y + z * z);
@@ -46,8 +46,8 @@ public class EntityGhastFireball extends EntityLargeFireball {
         this.dirZ = z / d3 * 0.1D;
     }
 
-    public Ghast getGhast() {
-        return (Ghast) ((Entity) ghast).getBukkitEntity();
+    public LivingEntity getEntity() {
+        return (LivingEntity) ((Entity) ridable).getBukkitEntity();
     }
 
     public Player getRider() {
@@ -64,7 +64,7 @@ public class EntityGhastFireball extends EntityLargeFireball {
         setOnFire(1);
         MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
         if (mop != null && mop.entity != null) {
-            if (mop.entity == ghast || mop.entity == rider) {
+            if (mop.entity == ridable || mop.entity == rider) {
                 mop = null; // dont hit self
             } else if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
                     CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
@@ -98,6 +98,7 @@ public class EntityGhastFireball extends EntityLargeFireball {
         setPosition(locX, locY, locZ);
     }
 
+    // onImpact
     protected void a(MovingObjectPosition mop) {
         if (mop.entity != null) {
             if (Config.GHAST_SHOOT_DAMAGE > 0) {

@@ -196,6 +196,9 @@ permissions:
     description: Allow to make all supported creatures shoot
     default: op
     children:
+      allow.shoot.blaze:
+        description: Allow to make blazes shoot fireballs
+        default: op
       allow.shoot.dolphin:
         description: Allow to make dolphins shoot spit
         default: op
@@ -206,7 +209,7 @@ permissions:
         description: Allow to make phantoms shoot flames
         default: op
       allow.shoot.shulker:
-        description: Allow to make withers shoot skulls
+        description: Allow to make withers shoot shulker bullets
         default: op
       allow.shoot.wither:
         description: Allow to make withers shoot skulls
