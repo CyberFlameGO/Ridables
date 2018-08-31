@@ -19,5 +19,3 @@ target/
 .floo*
 
 dependency-reduced-pom.xml
-
-*Metrics.java

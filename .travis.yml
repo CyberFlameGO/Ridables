@@ -1,5 +1,11 @@
 language: java
 jdk:
 - oraclejdk8
+sudo: false
+cache:
+  directories:
+  - $HOME/.m2
 before_install:
-- if [ ! -d "$HOME/.m2/repository/com/destroystokyo" ]; then ./installPaper.sh 1.12 ; else echo "Not compiling Paper because it is already in our maven" ; fi
+- if [ ! -d "$HOME/.m2/repository/com/destroystokyo" ] ; then ./installPaper.sh ; fi
+install:
+- mvn install -DfinalName=release -DskipTests=true -Dmaven.javadoc.skip=true -B -V
