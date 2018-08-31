@@ -63,7 +63,7 @@ public class EntityCustomFireball extends EntityLargeFireball {
     }
 
     public void tick() {
-        if (!world.isClientSide && (shooter != null && shooter.dead || !world.isLoaded(new BlockPosition(this)))) {
+        if (shooter != null && shooter.dead || !world.isLoaded(new BlockPosition(this))) {
             die();
             return;
         }
