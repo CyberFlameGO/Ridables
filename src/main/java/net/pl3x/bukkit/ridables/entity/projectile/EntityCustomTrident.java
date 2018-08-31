@@ -26,6 +26,7 @@ import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.EntityRidableDrowned;
+import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
 
@@ -147,7 +148,7 @@ public class EntityCustomTrident extends EntityThrownTrident {
                 }
             }
             if (mop != null && mop.entity != null && Ridables.getInstance().getServerType() == ServerType.PAPER) {
-                com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory.callProjectileCollideEvent(this, mop);
+                com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = CraftEventFactory.callProjectileCollideEvent(this, mop);
                 if (event.isCancelled()) {
                     mop = null;
                 }

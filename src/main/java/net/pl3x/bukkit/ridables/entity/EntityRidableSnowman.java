@@ -138,7 +138,7 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
             z = MathHelper.floor(locZ + (double) ((float) (l / 2 % 2 * 2 - 1) * 0.25F));
             BlockPosition pos = new BlockPosition(x, y, z);
             if (world.getType(pos).isAir() && world.getBiome(pos).c(pos) < 0.8F && block.canPlace(world, pos)) {
-                org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory.handleBlockFormEvent(world, pos, block, this);
+                CraftEventFactory.handleBlockFormEvent(world, pos, block, this);
             }
         }
     }
