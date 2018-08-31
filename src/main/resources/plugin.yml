@@ -223,6 +223,9 @@ permissions:
       allow.special.enderman:
         description: Allow to make endermen pick up and place blocks
         default: op
+      allow.special.evoker:
+        description: Allow to make evokers cast fangs spell
+        default: op
   command.ridables:
     description: Allow to reload config
     default: op

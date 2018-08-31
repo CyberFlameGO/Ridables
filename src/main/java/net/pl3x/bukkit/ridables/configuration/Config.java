@@ -101,6 +101,8 @@ public class Config {
     public static boolean EVOKER_ENABLED = false;
     public static float EVOKER_SPEED = 1.0F;
     public static float EVOKER_JUMP_POWER = 0.5F;
+    public static int EVOKER_SPELL_COOLDOWN = 40;
+    public static float EVOKER_SPELL_DAMAGE = 6.0F;
 
     public static boolean GHAST_ENABLED = false;
     public static float GHAST_SPEED = 1.0F;
@@ -391,6 +393,8 @@ public class Config {
         EVOKER_ENABLED = config.getBoolean("evoker.enabled", false);
         EVOKER_SPEED = (float) config.getDouble("evoker.speed", 1.0D);
         EVOKER_JUMP_POWER = (float) config.getDouble("evoker.jump-power", 0.5D);
+        EVOKER_SPELL_COOLDOWN = (int) config.getDouble("evoker.spell.cooldown", 40);
+        EVOKER_SPELL_DAMAGE = (float) config.getDouble("evoker.spell.damage", 6.0D);
 
         GHAST_ENABLED = config.getBoolean("ghast.enabled", false);
         GHAST_SPEED = (float) config.getDouble("ghast.speed", 1.0D);

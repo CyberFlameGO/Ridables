@@ -142,6 +142,9 @@ evoker:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  spell:
+    cooldown: 40     # ticks to wait between casting
+    damage: 6.0      # damage per hit (1 heart = 2.0 damage)
 
 # Ghast options
 ghast:

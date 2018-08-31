@@ -82,9 +82,7 @@ public class EntityCustomTrident extends EntityThrownTrident {
         if (c > 4) { // timeInGround
             setDamageBeenDealt();
         }
-        if (!world.isClientSide) {
-            setFlag(6, bc());
-        }
+        setFlag(6, bc());
         W();
         boolean flag = q();
         if (lastPitch == 0.0F && lastYaw == 0.0F) {
