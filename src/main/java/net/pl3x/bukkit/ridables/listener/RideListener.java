@@ -207,7 +207,12 @@ public class RideListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (RidableType.getRidableType(player.getVehicle().getType()) == null) {
+        Entity vehicle = player.getVehicle();
+        if (vehicle == null) {
+            return; // not riding a creature
+        }
+
+        if (RidableType.getRidableType(vehicle.getType()) == null) {
             return; // not a valid creature
         }
 
