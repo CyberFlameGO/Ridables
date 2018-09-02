@@ -157,6 +157,7 @@ public class RidableType {
      * Spawn this ridable entity in the world at given location
      *
      * @param loc Location to spawn at
+     * @return The spawned entity
      */
     public Entity spawn(Location loc) {
         return spawn(loc, false);
@@ -167,6 +168,7 @@ public class RidableType {
      *
      * @param loc  Location to spawn at
      * @param baby True to make baby
+     * @return The spawned entity
      */
     public Entity spawn(Location loc, boolean baby) {
         Entity entity = entityTypes.a(((CraftWorld) loc.getWorld()).getHandle());
