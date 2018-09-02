@@ -88,15 +88,18 @@ public class EntityRidableSquid extends EntitySquid implements RidableEntity {
             this.squid = squid;
         }
 
+        // shouldExecute
         public boolean a() {
             EntityLiving target = squid.getLastDamager();
             return squid.rider == null && squid.isInWater() && target != null && squid.h(target) < 100.0D;
         }
 
+        // startExecuting
         public void c() {
             ticks = 0;
         }
 
+        // updateTask
         public void e() {
             if (rider != null) {
                 return;
