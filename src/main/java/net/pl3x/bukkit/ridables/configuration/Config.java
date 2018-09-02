@@ -237,6 +237,9 @@ public class Config {
     public static boolean SPIDER_CLIMB_WALLS = true;
     public static float SPIDER_CLIMB_SPEED = 1.0F;
 
+    public static boolean SQUID_ENABLED = false;
+    public static float SQUID_SPEED = 1.0F;
+
     public static boolean STRAY_ENABLED = false;
     public static float STRAY_SPEED = 1.0F;
     public static float STRAY_JUMP_POWER = 0.5F;
@@ -534,6 +537,9 @@ public class Config {
         SPIDER_JUMP_POWER = (float) config.getDouble("spider.jump-power", 0.5D);
         SPIDER_CLIMB_WALLS = config.getBoolean("spider.climb-walls", true);
         SPIDER_CLIMB_SPEED = (float) config.getDouble("spider.climb-speed", 1.0D);
+
+        SQUID_ENABLED = config.getBoolean("squid.enabled", false);
+        SQUID_SPEED = (float) config.getDouble("squid.speed", 1.0D);
 
         STRAY_ENABLED = config.getBoolean("stray.enabled", false);
         STRAY_SPEED = (float) config.getDouble("stray.speed", 1.0D);

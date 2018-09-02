@@ -332,6 +332,11 @@ spider:
   climb-walls: true  # enable climbing walls
   climb-speed: 1.0   # speed of vertical climb
 
+# Squid options
+squid:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+
 # Stray options
 stray:
   enabled: false     # enable custom ridable entity

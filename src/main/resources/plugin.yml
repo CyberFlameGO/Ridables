@@ -146,6 +146,9 @@ permissions:
       allow.ride.spider:
         description: Allow to ride spiders
         default: op
+      allow.ride.squid:
+        description: Allow to ride squids
+        default: op
       allow.ride.stray:
         description: Allow to ride strays
         default: op
