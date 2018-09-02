@@ -95,7 +95,7 @@ permissions:
       allow.ride.magma_cube:
         description: Allow to ride magma cubes
         default: op
-      allow.ride.mooshroom:
+      allow.ride.mushroom_cow:
         description: Allow to ride mooshrooms
         default: op
       allow.ride.ocelot:
