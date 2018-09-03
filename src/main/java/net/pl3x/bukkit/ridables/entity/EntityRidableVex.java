@@ -155,7 +155,12 @@ public class EntityRidableVex extends EntityVex implements RidableEntity {
             a.motY *= 0.9F;
             a.motZ *= 0.95F;
 
-            a.o((float) (e = ridable.getSpeed()));
+            float speed = ridable.getSpeed();
+            if (a.onGround) {
+                speed *= 0.05F;
+            }
+
+            a.o((float) (e = speed));
             a.s(vertical);
             a.t(strafe);
             a.r(forward);
