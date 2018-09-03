@@ -355,6 +355,12 @@ turtle:
     on-land: 1.0     # riding speed modifier on land
     in-water: 1.0    # riding speed modifier in water
 
+# Vex options
+vex:
+  enabled: false     # enable custom ridable entity
+  speed: 1.0         # riding speed modifier
+  noclip: false      # set to true to allow clipping through walls
+
 # Villager options
 villager:
   # (DO NOT enable this one if you use another plugin with custom NPCs, like Citizens, etc)

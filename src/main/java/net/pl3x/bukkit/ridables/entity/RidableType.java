@@ -67,6 +67,7 @@ public class RidableType {
     public static final RidableType STRAY = inject(Config.STRAY_ENABLED, "stray", EntityTypes.STRAY, Material.STRAY_SPAWN_EGG, EntityRidableStray.class, EntityRidableStray::new);
     public static final RidableType TROPICAL_FISH = inject(Config.TROPICAL_FISH_ENABLED, "tropical_fish", EntityTypes.TROPICAL_FISH, Material.TROPICAL_FISH_SPAWN_EGG, EntityRidableTropicalFish.class, EntityRidableTropicalFish::new, Material.TROPICAL_FISH_BUCKET);
     public static final RidableType TURTLE = inject(Config.TURTLE_ENABLED, "turtle", EntityTypes.TURTLE, Material.TURTLE_SPAWN_EGG, EntityRidableTurtle.class, EntityRidableTurtle::new, Bucket.TURTLE);
+    public static final RidableType VEX = inject(Config.VEX_ENABLED, "vex", EntityTypes.VEX, Material.VEX_SPAWN_EGG, EntityRidableVex.class, EntityRidableVex::new);
     public static final RidableType VILLAGER = inject(Config.VILLAGER_ENABLED, "villager", EntityTypes.VILLAGER, Material.VILLAGER_SPAWN_EGG, EntityRidableVillager.class, EntityRidableVillager::new);
     public static final RidableType VINDICATOR = inject(Config.VINDICATOR_ENABLED, "vindicator", EntityTypes.VINDICATOR, Material.VINDICATOR_SPAWN_EGG, EntityRidableVindicator.class, EntityRidableVindicator::new);
     public static final RidableType WITCH = inject(Config.WITCH_ENABLED, "witch", EntityTypes.WITCH, Material.WITCH_SPAWN_EGG, EntityRidableWitch.class, EntityRidableWitch::new);

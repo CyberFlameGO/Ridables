@@ -158,6 +158,9 @@ permissions:
       allow.ride.turtle:
         description: Allow to ride turtles
         default: op
+      allow.ride.vex:
+        description: Allow to ride vex
+        default: op
       allow.ride.villager:
         description: Allow to ride villagers
         default: op

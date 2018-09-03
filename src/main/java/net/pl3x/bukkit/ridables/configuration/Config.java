@@ -251,6 +251,10 @@ public class Config {
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
 
+    public static boolean VEX_ENABLED = false;
+    public static float VEX_SPEED = 1.0F;
+    public static boolean VEX_NOCLIP = false;
+
     public static boolean VILLAGER_ENABLED = false;
     public static float VILLAGER_SPEED = 1.0F;
     public static float VILLAGER_JUMP_POWER = 0.5F;
@@ -551,6 +555,10 @@ public class Config {
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", false);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
         TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
+
+        VEX_ENABLED = config.getBoolean("vex.enabled", false);
+        VEX_SPEED = (float) config.getDouble("vex.speed", 1.0D);
+        VEX_NOCLIP = config.getBoolean("vex.noclip", false);
 
         VILLAGER_ENABLED = config.getBoolean("villager.enabled", false);
         VILLAGER_SPEED = (float) config.getDouble("villager.speed", 1.0D);
