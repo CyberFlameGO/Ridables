@@ -28,6 +28,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import java.lang.reflect.Field;
@@ -164,6 +165,14 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
         }
     }
 
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        }
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
     public boolean onSpacebar() {
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
@@ -174,11 +183,6 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
             }
         }
         return false;
-    }
-
-    // processInteract
-    protected boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        return getRider() != null && super.a(entityhuman, enumhand);
     }
 
     // initEntityAI

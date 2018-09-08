@@ -1,11 +1,24 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R2.EntityAgeable;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityTameableAnimal;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.data.HandItem;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.listener.RideListener;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public interface RidableEntity {
     /**
@@ -14,18 +27,6 @@ public interface RidableEntity {
      * @return RidableType
      */
     RidableType getType();
-
-    /**
-     * Check if this item is an actionable item for this entity
-     * <p>
-     * An actionable item is something that makes the entity do something (eat, breed, tempt, etc)
-     *
-     * @param itemstack Itemstack to check
-     * @return True if itemstack is actionable
-     */
-    default boolean isActionableItem(ItemStack itemstack) {
-        return false;
-    }
 
     /**
      * Set the rotation of the entity
@@ -72,6 +73,39 @@ public interface RidableEntity {
      * @return Current rider, otherwise null
      */
     EntityPlayer updateRider();
+
+    default boolean tryRide(EntityHuman entityhuman) {
+        Player player = (Player) entityhuman.getBukkitEntity();
+        if (this instanceof EntityAgeable) {
+            if (!Config.ALLOW_RIDE_BABIES && ((EntityAgeable) this).isBaby()) {
+                return false; // do not ride babies
+            }
+        }
+        if (this instanceof EntityTameableAnimal) {
+            UUID owner = ((EntityTameableAnimal) this).getOwnerUUID();
+            if (owner == null || !player.getUniqueId().equals(owner)) {
+                return false; // player doesnt own this creature
+            }
+        }
+        if (!player.hasPermission("allow.ride." + ((EntityInsentient)this).getBukkitEntity().getType().name().toLowerCase())) {
+            Lang.send(player, Lang.RIDE_NO_PERMISSION);
+            return true;
+        }
+        if (Config.REQUIRE_SADDLE) {
+            HandItem saddle = ItemUtil.getItem(player, Material.SADDLE);
+            if (saddle == null) {
+                return false; // saddle is required
+            }
+            if (Config.CONSUME_SADDLE) {
+                ItemUtil.setItem(player, saddle.subtract(), saddle.getHand());
+            }
+        }
+        RideListener.override.add(player.getUniqueId());
+        boolean mounted = entityhuman.a((EntityInsentient) this, true);
+        RideListener.override.remove(player.getUniqueId());
+        ControllerWASD.setJumping(entityhuman);
+        return mounted;
+    }
 
     /**
      * Change to the vanilla AI controller

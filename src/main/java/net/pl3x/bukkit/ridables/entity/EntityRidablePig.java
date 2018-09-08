@@ -12,8 +12,8 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityRidablePig extends EntityPig implements RidableEntity {
@@ -33,10 +33,6 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
 
     public RidableType getType() {
         return RidableType.PIG;
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return f(CraftItemStack.asNMSCopy(itemstack)) || itemstack.getType() == Material.SADDLE;
     }
 
     // canBeRiddenInWater
@@ -102,12 +98,14 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (Config.PIG_SADDLE_BACK && entityhuman.isSneaking() && hasSaddle() && !isVehicle()) {
-            setSaddle(false);
-            ((Entity) this).getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
-                    new ItemStack(Material.SADDLE));
-            return true;
+        if (passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+                return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+            } else if (Config.PIG_SADDLE_BACK && ItemUtil.isEmpty(entityhuman)) {
+                setSaddle(false);
+                return !getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), new ItemStack(Material.SADDLE)).isEmpty();
+            }
         }
-        return super.a(entityhuman, enumhand);
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 }

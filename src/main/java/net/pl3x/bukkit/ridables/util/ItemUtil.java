@@ -1,5 +1,8 @@
 package net.pl3x.bukkit.ridables.util;
 
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.Items;
 import net.pl3x.bukkit.ridables.data.HandItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -78,5 +81,33 @@ public class ItemUtil {
             return new HandItem(item, EquipmentSlot.OFF_HAND);
         }
         return null;
+    }
+
+    /**
+     * Checks if a player is not holding any item at all, or holding a saddle in either hand
+     *
+     * @param player Player ot check
+     * @return True if holding a saddle or nothing at all
+     */
+    public static boolean isEmptyOrSaddle(EntityHuman player) {
+        net.minecraft.server.v1_13_R2.ItemStack stack = player.b(EnumHand.MAIN_HAND);
+        if (stack.isEmpty()) {
+            stack = player.b(EnumHand.OFF_HAND);
+            if (stack.isEmpty()) {
+                return true;
+            }
+            return stack.getItem() == Items.SADDLE;
+        }
+        return stack.getItem() == Items.SADDLE;
+    }
+
+    /**
+     * Checks if a player is not holding any item at all
+     *
+     * @param player Player ot check
+     * @return True if not holding any items
+     */
+    public static boolean isEmpty(EntityHuman player) {
+        return player.b(EnumHand.MAIN_HAND).isEmpty() && player.b(EnumHand.OFF_HAND).isEmpty();
     }
 }

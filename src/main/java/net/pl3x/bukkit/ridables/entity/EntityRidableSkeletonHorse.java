@@ -4,11 +4,11 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHorseSkeleton;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.listener.RideListener;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 
 public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements RidableEntity {
     private EntityPlayer rider;
@@ -19,10 +19,6 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
 
     public RidableType getType() {
         return RidableType.SKELETON_HORSE;
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return f(CraftItemStack.asNMSCopy(itemstack));
     }
 
     // canBeRiddenInWater
@@ -56,6 +52,14 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
     }
 
     public void useWASDController() {
+    }
+
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        }
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 
     // mountTo

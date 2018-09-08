@@ -2,9 +2,11 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySquid;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.Fluid;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IBlockData;
@@ -15,8 +17,9 @@ import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class EntityRidableSquid extends EntitySquid implements RidableEntity {
@@ -28,10 +31,6 @@ public class EntityRidableSquid extends EntitySquid implements RidableEntity {
 
     public RidableType getType() {
         return RidableType.SQUID;
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return false;
     }
 
     // canBeRiddenInWater
@@ -72,6 +71,14 @@ public class EntityRidableSquid extends EntitySquid implements RidableEntity {
     }
 
     public void useWASDController() {
+    }
+
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        }
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 
     // initEntityAI
@@ -190,14 +197,24 @@ public class EntityRidableSquid extends EntitySquid implements RidableEntity {
             }
         }
 
-        private void rotateVectorAroundY(Vector vector, double degrees) {
+        private Vector rotateVectorAroundY(Vector vector, double degrees) {
+            Vector newVector = vector.clone();
             double rad = Math.toRadians(degrees);
             double cos = Math.cos(rad);
             double sine = Math.sin(rad);
             double x = vector.getX();
             double z = vector.getZ();
-            vector.setX(cos * x - sine * z);
-            vector.setZ(sine * x + cos * z);
+            newVector.setX(cos * x - sine * z);
+            newVector.setZ(sine * x + cos * z);
+            return newVector;
+        }
+
+        public void someMethod(Player player) {
+            Vector middle = player.getEyeLocation().getDirection();
+            Vector left = rotateVectorAroundY(middle, -45);
+            Vector right = rotateVectorAroundY(middle, 45);
+
+            // do stuffs with those 3 vectors..
         }
     }
 }

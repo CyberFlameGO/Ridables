@@ -6,8 +6,10 @@ import net.minecraft.server.v1_13_R2.DragonControllerPhase;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityComplexPart;
 import net.minecraft.server.v1_13_R2.EntityEnderDragon;
+import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MathHelper;
@@ -15,6 +17,7 @@ import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 
 import java.lang.reflect.Field;
 
@@ -165,6 +168,14 @@ public class EntityRidableEnderDragon extends EntityEnderDragon implements Ridab
             isUsingCustomController = true;
             //this.moveController = new ControllerFlying(this);
         }
+    }
+
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        }
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 
     // writeEntityToNBT

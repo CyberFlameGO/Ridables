@@ -20,6 +20,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -45,10 +46,6 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
 
     public RidableType getType() {
         return RidableType.SNOWMAN;
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return PUMPKIN.isTagged(itemstack) || itemstack.getType() == Material.SHEARS;
     }
 
     protected boolean isTypeNotPersistent() {
@@ -116,6 +113,26 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
         }
     }
 
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        }
+        net.minecraft.server.v1_13_R2.ItemStack itemstack = entityhuman.b(enumhand);
+        if (!hasPumpkin() && PUMPKIN.isTagged(CraftItemStack.asCraftMirror(itemstack))) {
+            setHasPumpkin(true);
+            if (!entityhuman.abilities.canInstantlyBuild) {
+                itemstack.subtract(1);
+                return true;
+            }
+        } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
+            ((Entity) this).getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
+                    new ItemStack(Material.CARVED_PUMPKIN));
+            return true;
+        }
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
     // onLivingUpdate
     public void k() {
         super.k();
@@ -148,20 +165,5 @@ public class EntityRidableSnowman extends EntitySnowman implements RidableEntity
         if (getRider() == null) {
             super.a(target, distanceFactor);
         }
-    }
-
-    // processInteract
-    protected boolean a(EntityHuman player, EnumHand hand) {
-        net.minecraft.server.v1_13_R2.ItemStack itemstack = player.b(hand);
-        if (!hasPumpkin() && PUMPKIN.isTagged(CraftItemStack.asCraftMirror(itemstack))) {
-            setHasPumpkin(true);
-            if (!player.abilities.canInstantlyBuild) {
-                itemstack.subtract(1);
-            }
-        } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
-            ((Entity) this).getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
-                    new ItemStack(Material.CARVED_PUMPKIN));
-        }
-        return super.a(player, hand);
     }
 }

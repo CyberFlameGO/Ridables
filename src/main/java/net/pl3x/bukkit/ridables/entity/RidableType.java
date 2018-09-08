@@ -125,7 +125,7 @@ public class RidableType {
 
                 Logger.info("Successfully injected replacement entity: &a" + name);
 
-                RidableType ridableTypes = new RidableType(newType, waterBucket);
+                RidableType ridableTypes = new RidableType(newType, waterBucket, name);
                 BY_BUKKIT_TYPE.put(bukkitType, ridableTypes);
                 return ridableTypes;
             }
@@ -137,10 +137,21 @@ public class RidableType {
 
     private final EntityTypes<?> entityTypes;
     private final Bucket waterBucket;
+    private final String name;
 
-    private RidableType(EntityTypes<?> entityTypes, Bucket waterBucket) {
+    private RidableType(EntityTypes<?> entityTypes, Bucket waterBucket, String name) {
         this.entityTypes = entityTypes;
         this.waterBucket = waterBucket;
+        this.name = name;
+    }
+
+    /**
+     * Get the mojang name of this entity type
+     *
+     * @return Entity type name
+     */
+    public String getName() {
+        return name;
     }
 
     /**

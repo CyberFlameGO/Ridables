@@ -3,16 +3,16 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.ControllerLook;
 import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityMushroomCow;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
+import net.pl3x.bukkit.ridables.util.ItemUtil;
 
 public class EntityRidableMushroomCow extends EntityMushroomCow implements RidableEntity {
     private ControllerMove aiController;
@@ -31,10 +31,6 @@ public class EntityRidableMushroomCow extends EntityMushroomCow implements Ridab
 
     public RidableType getType() {
         return RidableType.MOOSHROOM;
-    }
-
-    public boolean isActionableItem(ItemStack itemstack) {
-        return f(CraftItemStack.asNMSCopy(itemstack)) || itemstack.getType() == Material.SHEARS;
     }
 
     // canBeRiddenInWater
@@ -96,5 +92,13 @@ public class EntityRidableMushroomCow extends EntityMushroomCow implements Ridab
             moveController = wasdController;
             lookController = blankLookController;
         }
+    }
+
+    // processInteract
+    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        }
+        return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 }
