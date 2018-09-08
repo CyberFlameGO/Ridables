@@ -8,6 +8,7 @@ import net.minecraft.server.v1_13_R2.EntityPig;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
@@ -99,11 +100,15 @@ public class EntityRidablePig extends EntityPig implements RidableEntity {
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
         if (passengers.isEmpty() && !entityhuman.isPassenger()) {
-            if (!entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-                return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
-            } else if (Config.PIG_SADDLE_BACK && ItemUtil.isEmpty(entityhuman)) {
-                setSaddle(false);
-                return !getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), new ItemStack(Material.SADDLE)).isEmpty();
+            if (!entityhuman.isSneaking()) {
+                if (ItemUtil.isEmptyOrSaddle(entityhuman)) {
+                    return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+                }
+            } else {
+                if (Config.PIG_SADDLE_BACK && hasSaddle() && entityhuman.b(enumhand).getItem() != Items.SADDLE) {
+                    setSaddle(false);
+                    return !getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), new ItemStack(Material.SADDLE)).isEmpty();
+                }
             }
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
