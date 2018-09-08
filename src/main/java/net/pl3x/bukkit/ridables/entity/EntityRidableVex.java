@@ -31,7 +31,7 @@ public class EntityRidableVex extends EntityVex implements RidableEntity {
     }
 
     public RidableType getType() {
-        return RidableType.COW;
+        return RidableType.VEX;
     }
 
     // canBeRiddenInWater
