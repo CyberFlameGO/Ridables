@@ -22,6 +22,9 @@ permissions:
       allow.collect.dolphin:
         description: Allow to collect dolphins in water buckets
         default: op
+      allow.collect.squid:
+        description: Allow to collect squids in water buckets
+        default: op
       allow.collect.turtle:
         description: Allow to collect turtles in water buckets
         default: op

@@ -63,7 +63,7 @@ public class RidableType {
     public static final RidableType SLIME = inject(Config.SLIME_ENABLED, "slime", EntityTypes.SLIME, Material.SLIME_SPAWN_EGG, EntityRidableSlime.class, EntityRidableSlime::new);
     public static final RidableType SNOWMAN = inject(Config.SNOWMAN_ENABLED, "snow_golem", EntityTypes.SNOW_GOLEM, null, EntityRidableSnowman.class, EntityRidableSnowman::new);
     public static final RidableType SPIDER = inject(Config.SPIDER_ENABLED, "spider", EntityTypes.SPIDER, Material.SPIDER_SPAWN_EGG, EntityRidableSpider.class, EntityRidableSpider::new);
-    public static final RidableType SQUID = inject(Config.SQUID_ENABLED, "squid", EntityTypes.SQUID, Material.SQUID_SPAWN_EGG, EntityRidableSquid.class, EntityRidableSquid::new);
+    public static final RidableType SQUID = inject(Config.SQUID_ENABLED, "squid", EntityTypes.SQUID, Material.SQUID_SPAWN_EGG, EntityRidableSquid.class, EntityRidableSquid::new, Bucket.SQUID);
     public static final RidableType STRAY = inject(Config.STRAY_ENABLED, "stray", EntityTypes.STRAY, Material.STRAY_SPAWN_EGG, EntityRidableStray.class, EntityRidableStray::new);
     public static final RidableType TROPICAL_FISH = inject(Config.TROPICAL_FISH_ENABLED, "tropical_fish", EntityTypes.TROPICAL_FISH, Material.TROPICAL_FISH_SPAWN_EGG, EntityRidableTropicalFish.class, EntityRidableTropicalFish::new, Material.TROPICAL_FISH_BUCKET);
     public static final RidableType TURTLE = inject(Config.TURTLE_ENABLED, "turtle", EntityTypes.TURTLE, Material.TURTLE_SPAWN_EGG, EntityRidableTurtle.class, EntityRidableTurtle::new, Bucket.TURTLE);

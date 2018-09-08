@@ -30,6 +30,11 @@ public class Bucket {
     public static final Bucket DOLPHIN = createBucket(EntityType.DOLPHIN);
 
     /**
+     * The squid bucket
+     */
+    public static final Bucket SQUID = createBucket(EntityType.SQUID);
+
+    /**
      * The turtle bucket
      */
     public static final Bucket TURTLE = createBucket(EntityType.TURTLE);
