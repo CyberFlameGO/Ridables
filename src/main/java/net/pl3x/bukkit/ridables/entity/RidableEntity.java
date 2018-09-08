@@ -87,7 +87,7 @@ public interface RidableEntity {
                 return false; // player doesnt own this creature
             }
         }
-        if (!player.hasPermission("allow.ride." + ((EntityInsentient)this).getBukkitEntity().getType().name().toLowerCase())) {
+        if (!player.hasPermission("allow.ride." + ((EntityInsentient) this).getBukkitEntity().getType().name().toLowerCase())) {
             Lang.send(player, Lang.RIDE_NO_PERMISSION);
             return true;
         }
