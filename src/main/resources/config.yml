@@ -1,14 +1,26 @@
+########################################################################
+#                                                                      #
+#   Standard Plugin Options                                            #
+#                                                                      #
+########################################################################
+
 # Language file (for translations)
 language-file: lang-en.yml
 
 # Debug mode. Enable this before reporting any issues, please
 debug-mode: false
 
+# Enabled the update checker (does NOT actually download updates!)
+update-checker: true
+
+########################################################################
+#                                                                      #
+#   Global Creature Options                                            #
+#                                                                      #
+########################################################################
+
 # Use the new WASD key yaw calculations
 use-new-wasd-yaw-calculations: true
-
-# Enabled the update checker (does not actually download updates!)
-update-checker: true
 
 # When players teleport for any reason, unmount from any creature they are riding
 # When set to false the creature will teleport with the player
@@ -33,6 +45,14 @@ allow-ride-babies: false
 
 # Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
 flying-max-y: 256
+
+########################################################################
+#                                                                      #
+#   Individual Creature Options                                        #
+#               For details about each mob visit the wiki at           #
+#               https://github.com/BillyGalbreath/Ridables/wiki/Mobs   #
+#                                                                      #
+########################################################################
 
 # Bat options
 bat:
@@ -173,7 +193,7 @@ giant:
     attack: 5.0      # Attack damage (1 heart = 2.0 damage)
   spawn:
     natural: false   # spawn naturally in world
-    max-light: 8         # maximum light level creature can spawn in
+    max-light: 8     # maximum light level creature can spawn in
     weight: 10       # weight of spawn attempt (0-100) (default is 10, which is similar to enderman spawn weight)
     min-group: 1     # minimum number to spawn in a group
     max-group: 1     # maximum number to spawn in a group
@@ -198,7 +218,7 @@ illusioner:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   spawn:
     natural: false   # spawn naturally in world
-    max-light: 8         # maximum light level creature can spawn in
+    max-light: 8     # maximum light level creature can spawn in
     weight: 5        # weight of spawn attempt (0-100) (default is 5, which is similar to witch spawn weight)
     min-group: 1     # minimum number to spawn in a group
     max-group: 1     # maximum number to spawn in a group
