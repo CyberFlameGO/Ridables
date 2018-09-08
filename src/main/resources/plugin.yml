@@ -56,7 +56,7 @@ permissions:
       allow.ride.drowned:
         description: Allow to ride drowned
         default: op
-      allow.ride.elder-guardian:
+      allow.ride.elder_guardian:
         description: Allow to ride elder guardians
         default: op
       allow.ride.ender_dragon:
@@ -95,7 +95,7 @@ permissions:
       allow.ride.magma_cube:
         description: Allow to ride magma cubes
         default: op
-      allow.ride.mushroom_cow:
+      allow.ride.mooshroom:
         description: Allow to ride mooshrooms
         default: op
       allow.ride.ocelot:
@@ -140,7 +140,7 @@ permissions:
       allow.ride.slime:
         description: Allow to ride slimes
         default: op
-      allow.ride.snowman:
+      allow.ride.snow_golem:
         description: Allow to ride snowman
         default: op
       allow.ride.spider:
