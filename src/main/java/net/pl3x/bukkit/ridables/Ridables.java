@@ -6,13 +6,13 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomEvokerFangs;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomFireball;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomShulkerBullet;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityCustomTrident;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
-import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
-import net.pl3x.bukkit.ridables.entity.projectile.EntitySafeWitherSkull;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomEvokerFangs;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomShulkerBullet;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
+import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
+import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
 import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
@@ -73,13 +73,13 @@ public class Ridables extends JavaPlugin {
         RidableType.getRidableType(EntityType.DOLPHIN);
 
         // inject new entities
-        RegistryHax.injectNewEntityTypes("custom_evoker_fangs", "evoker_fangs", EntityCustomEvokerFangs.class, EntityCustomEvokerFangs::new);
-        RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", EntityCustomFireball.class, EntityCustomFireball::new);
-        RegistryHax.injectNewEntityTypes("custom_shulker_bullet", "shulker_bullet", EntityCustomShulkerBullet.class, EntityCustomShulkerBullet::new);
-        RegistryHax.injectNewEntityTypes("custom_trident", "trident", EntityCustomTrident.class, EntityCustomTrident::new);
-        RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", EntityDolphinSpit.class, EntityDolphinSpit::new);
-        RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", EntityPhantomFlames.class, EntityPhantomFlames::new);
-        RegistryHax.injectNewEntityTypes("safe_wither_skull", "wither_skull", EntitySafeWitherSkull.class, EntitySafeWitherSkull::new);
+        RegistryHax.injectNewEntityTypes("custom_evoker_fangs", "evoker_fangs", CustomEvokerFangs.class, CustomEvokerFangs::new);
+        RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", CustomFireball.class, CustomFireball::new);
+        RegistryHax.injectNewEntityTypes("custom_shulker_bullet", "shulker_bullet", CustomShulkerBullet.class, CustomShulkerBullet::new);
+        RegistryHax.injectNewEntityTypes("custom_trident", "trident", CustomThrownTrident.class, CustomThrownTrident::new);
+        RegistryHax.injectNewEntityTypes("custom_wither_skull", "wither_skull", CustomWitherSkull.class, CustomWitherSkull::new);
+        RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", DolphinSpit.class, DolphinSpit::new);
+        RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", PhantomFlames.class, PhantomFlames::new);
 
         // Fix worldgen mob features
         RegistryHax.rebuildWorldGenMobs();
