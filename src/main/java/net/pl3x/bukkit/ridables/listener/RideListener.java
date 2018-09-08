@@ -68,14 +68,26 @@ public class RideListener implements Listener {
             return; // not riding
         }
 
+        player.leaveVehicle(); // always exit vehicle (fixes random teleport bug)
+
         RidableEntity ridable = RidableType.getRidable(vehicle);
         if (ridable == null) {
-            return; // not ridable
+            switch (vehicle.getType()) {
+                case DONKEY:
+                case HORSE:
+                case MULE:
+                    if (!player.hasPermission("allow.teleport." + vehicle.getType().name().toLowerCase())) {
+                        return; // no permission
+                    }
+                    break;
+                default:
+                    return; // not ridable
+            }
+        } else if (!ridable.hasTeleportPerm(player)) {
+            return; // no permission
         }
 
-        player.leaveVehicle();
-
-        if (!Config.UNMOUNT_ON_TELEPORT && ridable.hasTeleportPerm(player)) {
+        if (!Config.UNMOUNT_ON_TELEPORT) {
             new BukkitRunnable() {
                 @Override
                 public void run() {

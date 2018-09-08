@@ -260,6 +260,9 @@ permissions:
       allow.teleport.dolphin:
         description: Allow to teleport with dolphins
         default: op
+      allow.teleport.donkey:
+        description: Allow to teleport with donkeys
+        default: op
       allow.teleport.drowned:
         description: Allow to teleport with drowned
         default: op
@@ -287,6 +290,9 @@ permissions:
       allow.teleport.guardian:
         description: Allow to teleport with guardians
         default: op
+      allow.teleport.horse:
+        description: Allow to teleport with horses
+        default: op
       allow.teleport.husk:
         description: Allow to teleport with husks
         default: op
@@ -304,6 +310,9 @@ permissions:
         default: op
       allow.teleport.mooshroom:
         description: Allow to teleport with mooshrooms
+        default: op
+      allow.teleport.mule:
+        description: Allow to teleport with mules
         default: op
       allow.teleport.ocelot:
         description: Allow to teleport with tamed ocelots
