@@ -204,7 +204,7 @@ public class EntityRidableWither extends EntityWither implements RidableEntity {
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!player.hasPermission("allow.shoot.wither")) {
+        if (!hasShootPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }

@@ -123,7 +123,7 @@ public class EntityRidableGhast extends EntityGhast implements RidableEntity {
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!player.hasPermission("allow.shoot.ghast")) {
+        if (!hasShootPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }

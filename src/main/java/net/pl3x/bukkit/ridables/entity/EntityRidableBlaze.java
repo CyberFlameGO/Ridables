@@ -137,7 +137,7 @@ public class EntityRidableBlaze extends EntityBlaze implements RidableEntity {
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!player.hasPermission("allow.shoot.blaze")) {
+        if (!hasShootPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }

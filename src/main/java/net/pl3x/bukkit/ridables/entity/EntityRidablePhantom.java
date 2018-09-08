@@ -112,7 +112,7 @@ public class EntityRidablePhantom extends EntityPhantom implements RidableEntity
 
     public boolean onSpacebar() {
         EntityPlayer rider = getRider();
-        if (rider != null && ((Entity) rider).getBukkitEntity().hasPermission("allow.shoot.phantom")) {
+        if (rider != null && hasShootPerm(rider.getBukkitEntity())) {
             shoot(getRider());
         }
         return false;

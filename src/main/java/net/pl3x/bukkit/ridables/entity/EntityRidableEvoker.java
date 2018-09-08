@@ -154,7 +154,7 @@ public class EntityRidableEvoker extends EntityEvoker implements RidableEntity {
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!player.hasPermission("allow.special.evoker")) {
+        if (!hasSpecialPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }

@@ -176,8 +176,7 @@ public class EntityRidableCreeper extends EntityCreeper implements RidableEntity
     public boolean onSpacebar() {
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
-            if (rider != null && rider.bj == 0 && rider.bh == 0 &&
-                    ((Entity) rider).getBukkitEntity().hasPermission("allow.special.creeper")) {
+            if (rider != null && rider.bj == 0 && rider.bh == 0 && hasSpecialPerm(rider.getBukkitEntity())) {
                 setIgnited(true);
                 return true;
             }

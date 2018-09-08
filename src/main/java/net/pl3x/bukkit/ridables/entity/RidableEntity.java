@@ -87,7 +87,7 @@ public interface RidableEntity {
                 return false; // player doesnt own this creature
             }
         }
-        if (!player.hasPermission("allow.ride." + ((EntityInsentient) this).getBukkitEntity().getType().name().toLowerCase())) {
+        if (!hasRidePerm(player)) {
             Lang.send(player, Lang.RIDE_NO_PERMISSION);
             return true;
         }
@@ -105,6 +105,22 @@ public interface RidableEntity {
         RideListener.override.remove(player.getUniqueId());
         ControllerWASD.setJumping(entityhuman);
         return mounted;
+    }
+
+    default boolean hasCollectPerm(Player player) {
+        return player.hasPermission("allow.collect." + getType().getName());
+    }
+
+    default boolean hasRidePerm(Player player) {
+        return player.hasPermission("allow.ride." + getType().getName());
+    }
+
+    default boolean hasShootPerm(Player player) {
+        return player.hasPermission("allow.shoot." + getType().getName());
+    }
+
+    default boolean hasSpecialPerm(Player player) {
+        return player.hasPermission("allow.special." + getType().getName());
     }
 
     /**

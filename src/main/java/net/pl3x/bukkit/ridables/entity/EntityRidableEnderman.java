@@ -141,7 +141,7 @@ public class EntityRidableEnderman extends EntityEnderman implements RidableEnti
         }
 
         EntityPlayer rider = getRider();
-        if (rider == null || !((Entity) rider).getBukkitEntity().hasPermission("allow.special.enderman")) {
+        if (rider == null || !hasSpecialPerm(rider.getBukkitEntity())) {
             return false;
         }
 

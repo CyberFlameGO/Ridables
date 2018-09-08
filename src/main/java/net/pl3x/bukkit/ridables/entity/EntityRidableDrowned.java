@@ -149,7 +149,7 @@ public class EntityRidableDrowned extends EntityDrowned implements RidableEntity
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!player.hasPermission("allow.shoot.drowned")) {
+        if (!hasShootPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }

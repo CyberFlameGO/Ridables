@@ -181,7 +181,7 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!player.hasPermission("allow.shoot.dolphin")) {
+        if (!hasShootPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }
@@ -201,7 +201,7 @@ public class EntityRidableDolphin extends EntityDolphin implements RidableEntity
     public boolean dash(EntityPlayer rider) {
         spacebarCooldown = Config.DOLPHIN_DASH_COOLDOWN;
         if (!dashing) {
-            if (rider != null && !((Entity) rider).getBukkitEntity().hasPermission("allow.special.dolphin")) {
+            if (rider != null && !hasSpecialPerm(rider.getBukkitEntity())) {
                 return false;
             }
 

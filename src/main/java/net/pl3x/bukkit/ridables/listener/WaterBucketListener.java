@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.listener;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.Bucket;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Location;
@@ -42,12 +43,12 @@ public class WaterBucketListener implements Listener {
             return; // creature already removed from world
         }
 
-        RidableType ridable = RidableType.getRidableType(creature.getType());
+        RidableEntity ridable = RidableType.getRidable(creature);
         if (ridable == null) {
             return; // not a supported creature
         }
 
-        Bucket bucket = ridable.getWaterBucket();
+        Bucket bucket = ridable.getType().getWaterBucket();
         if (bucket == null) {
             return; // creature doesnt support water buckets
         }
@@ -67,7 +68,7 @@ public class WaterBucketListener implements Listener {
             return; // player is riding this creature
         }
 
-        if (!player.hasPermission("allow.collect." + creature.getType().name().toLowerCase())) {
+        if (!ridable.hasCollectPerm(player)) {
             Lang.send(player, Lang.COLLECT_NO_PERMISSION);
             return;
         }
