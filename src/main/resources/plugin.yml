@@ -232,6 +232,172 @@ permissions:
       allow.special.evoker:
         description: Allow to make evokers cast fangs spell
         default: op
+  allow.teleport.*:
+    description: Allow to teleport with all supported creatures
+    default: op
+    children:
+      allow.teleport.bat:
+        description: Allow to teleport with bats
+        default: op
+      allow.teleport.blaze:
+        description: Allow to teleport with blazes
+        default: op
+      allow.teleport.cave_spider:
+        description: Allow to teleport with cave spiders
+        default: op
+      allow.teleport.chicken:
+        description: Allow to teleport with chickens
+        default: op
+      allow.teleport.cod:
+        description: Allow to teleport with cod fish
+        default: op
+      allow.teleport.cow:
+        description: Allow to teleport with cows
+        default: op
+      allow.teleport.creeper:
+        description: Allow to teleport with creepers
+        default: op
+      allow.teleport.dolphin:
+        description: Allow to teleport with dolphins
+        default: op
+      allow.teleport.drowned:
+        description: Allow to teleport with drowned
+        default: op
+      allow.teleport.elder_guardian:
+        description: Allow to teleport with elder guardians
+        default: op
+      allow.teleport.ender_dragon:
+        description: Allow to teleport with ender dragon
+        default: op
+      allow.teleport.enderman:
+        description: Allow to teleport with endermen
+        default: op
+      allow.teleport.endermite:
+        description: Allow to teleport with endermites
+        default: op
+      allow.teleport.evoker:
+        description: Allow to teleport with evokers
+        default: op
+      allow.teleport.ghast:
+        description: Allow to teleport with ghast
+        default: op
+      allow.teleport.giant:
+        description: Allow to teleport with giants
+        default: op
+      allow.teleport.guardian:
+        description: Allow to teleport with guardians
+        default: op
+      allow.teleport.husk:
+        description: Allow to teleport with husks
+        default: op
+      allow.teleport.illusioner:
+        description: Allow to teleport with illusioners
+        default: op
+      allow.teleport.iron_golem:
+        description: Allow to teleport with iron golems
+        default: op
+      allow.teleport.llama:
+        description: Allow to teleport with llamas
+        default: op
+      allow.teleport.magma_cube:
+        description: Allow to teleport with magma cubes
+        default: op
+      allow.teleport.mooshroom:
+        description: Allow to teleport with mooshrooms
+        default: op
+      allow.teleport.ocelot:
+        description: Allow to teleport with tamed ocelots
+        default: op
+      allow.teleport.parrot:
+        description: Allow to teleport with parrots
+        default: op
+      allow.teleport.phantom:
+        description: Allow to teleport with phantoms
+        default: op
+      allow.teleport.pig:
+        description: Allow to teleport with pigs
+        default: op
+      allow.teleport.polar_bear:
+        description: Allow to teleport with polar bears
+        default: op
+      allow.teleport.pufferfish:
+        description: Allow to teleport with pufferfish
+        default: op
+      allow.teleport.rabbit:
+        description: Allow to teleport with rabbits
+        default: op
+      allow.teleport.salmon:
+        description: Allow to teleport with salmon
+        default: op
+      allow.teleport.sheep:
+        description: Allow to teleport with sheep
+        default: op
+      allow.teleport.shulker:
+        description: Allow to teleport with shulkers
+        default: op
+      allow.teleport.silverfish:
+        description: Allow to teleport with silverfish
+        default: op
+      allow.teleport.skeleton:
+        description: Allow to teleport with skeletons
+        default: op
+      allow.teleport.skeleton_horse:
+        description: Allow to teleport with skeleton horses
+        default: op
+      allow.teleport.slime:
+        description: Allow to teleport with slimes
+        default: op
+      allow.teleport.snow_golem:
+        description: Allow to teleport with snowman
+        default: op
+      allow.teleport.spider:
+        description: Allow to teleport with spiders
+        default: op
+      allow.teleport.squid:
+        description: Allow to teleport with squids
+        default: op
+      allow.teleport.stray:
+        description: Allow to teleport with strays
+        default: op
+      allow.teleport.tropical_fish:
+        description: Allow to teleport with tropical fish
+        default: op
+      allow.teleport.turtle:
+        description: Allow to teleport with turtles
+        default: op
+      allow.teleport.vex:
+        description: Allow to teleport with vex
+        default: op
+      allow.teleport.villager:
+        description: Allow to teleport with villagers
+        default: op
+      allow.teleport.vindicator:
+        description: Allow to teleport with vindicators
+        default: op
+      allow.teleport.witch:
+        description: Allow to teleport with witches
+        default: op
+      allow.teleport.wither:
+        description: Allow to teleport with withers
+        default: op
+      allow.teleport.wither_skeleton:
+        description: Allow to teleport with wither skeletons
+        default: op
+      allow.teleport.wolf:
+        description: Allow to teleport with tamed wolves
+        default: op
+      allow.teleport.zombie:
+        description: Allow to teleport with zombies
+        default: op
+      allow.teleport.zombie_horse:
+        description: Allow to teleport with zombie horses
+        default: op
+      allow.teleport.zombie_pigman:
+        description: Allow to teleport with zombie pigman
+        default: op
+      allow.teleport.zombie_villager:
+        description: Allow to teleport with zombie villagers
+        default: op
   command.ridables:
     description: Allow to reload config
     default: op

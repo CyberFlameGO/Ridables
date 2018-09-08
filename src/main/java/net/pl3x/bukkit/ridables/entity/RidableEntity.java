@@ -123,6 +123,10 @@ public interface RidableEntity {
         return player.hasPermission("allow.special." + getType().getName());
     }
 
+    default boolean hasTeleportPerm(Player player) {
+        return player.hasPermission("allow.teleport." + getType().getName());
+    }
+
     /**
      * Change to the vanilla AI controller
      */

@@ -75,7 +75,7 @@ public class RideListener implements Listener {
 
         player.leaveVehicle();
 
-        if (!Config.UNMOUNT_ON_TELEPORT) {
+        if (!Config.UNMOUNT_ON_TELEPORT && ridable.hasTeleportPerm(player)) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
