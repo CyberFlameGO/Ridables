@@ -112,7 +112,7 @@ public class RidableListener implements Listener {
                     // delay vehicle teleport to ensure player is not still on it
                     vehicle.teleport(event.getTo());
                 }
-            }.runTaskLater(plugin, 10);
+            }.runTaskLater(plugin, Config.TELEPORT_REATTACH_DELAY);
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -121,7 +121,7 @@ public class RidableListener implements Listener {
                     vehicle.addPassenger(player);
                     TP_OVERRIDE.remove(player.getUniqueId());
                 }
-            }.runTaskLater(plugin, 20);
+            }.runTaskLater(plugin, Config.TELEPORT_REATTACH_DELAY * 2);
         }
     }
 

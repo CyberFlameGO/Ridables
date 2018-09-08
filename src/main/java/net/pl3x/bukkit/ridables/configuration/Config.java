@@ -15,6 +15,7 @@ public class Config {
 
     public static boolean USE_NEW_WASD_YAW_CALCULATIONS = true;
     public static boolean UNMOUNT_ON_TELEPORT = true;
+    public static int TELEPORT_REATTACH_DELAY = 10;
     public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
     public static boolean REQUIRE_SADDLE = false;
     public static boolean CONSUME_SADDLE = false;
@@ -314,6 +315,7 @@ public class Config {
 
         USE_NEW_WASD_YAW_CALCULATIONS = config.getBoolean("use-new-wasd-yaw-calculations", true);
         UNMOUNT_ON_TELEPORT = config.getBoolean("unmount-on-teleport", true);
+        TELEPORT_REATTACH_DELAY = (int) config.getDouble("teleport-reattach-delay", 10);
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
         CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
