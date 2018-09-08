@@ -14,8 +14,7 @@ import net.pl3x.bukkit.ridables.entity.projectile.EntityDolphinSpit;
 import net.pl3x.bukkit.ridables.entity.projectile.EntityPhantomFlames;
 import net.pl3x.bukkit.ridables.entity.projectile.EntitySafeWitherSkull;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
-import net.pl3x.bukkit.ridables.listener.ExplosionListener;
-import net.pl3x.bukkit.ridables.listener.RideListener;
+import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
@@ -107,8 +106,7 @@ public class Ridables extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
-        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
-        getServer().getPluginManager().registerEvents(new RideListener(this), this);
+        getServer().getPluginManager().registerEvents(new RidableListener(this), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
 
         getCommand("ridables").setExecutor(new CmdRidables(this));

@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class WaterBucketListener implements Listener {
-    public static final Set<UUID> override = new HashSet<>();
+    public static final Set<UUID> WATER_BUCKET_OVERRIDE = new HashSet<>();
 
     private final Ridables plugin;
 
@@ -80,13 +80,13 @@ public class WaterBucketListener implements Listener {
         ItemUtil.setItem(player, bucket.getItemStack(), event.getHand());
 
         // prevent water from placing in PlayerBucketEmptyEvent which fires right after this
-        override.add(player.getUniqueId());
+        WATER_BUCKET_OVERRIDE.add(player.getUniqueId());
 
         // remove override on next tick in case PlayerBucketEmptyEvent doesnt fire
         new BukkitRunnable() {
             @Override
             public void run() {
-                override.remove(player.getUniqueId());
+                WATER_BUCKET_OVERRIDE.remove(player.getUniqueId());
             }
         }.runTaskLater(plugin, 1);
     }
@@ -98,7 +98,7 @@ public class WaterBucketListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (override.remove(player.getUniqueId())) {
+        if (WATER_BUCKET_OVERRIDE.remove(player.getUniqueId())) {
             // this prevents the new cod bucket from emptying water in the same right click as collecting the creature
             event.setCancelled(true);
             return;

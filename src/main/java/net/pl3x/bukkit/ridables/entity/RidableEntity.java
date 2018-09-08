@@ -10,7 +10,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.listener.RideListener;
+import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -100,9 +100,9 @@ public interface RidableEntity {
                 ItemUtil.setItem(player, saddle.subtract(), saddle.getHand());
             }
         }
-        RideListener.override.add(player.getUniqueId());
+        RidableListener.TP_OVERRIDE.add(player.getUniqueId());
         boolean mounted = entityhuman.a((EntityInsentient) this, true);
-        RideListener.override.remove(player.getUniqueId());
+        RidableListener.TP_OVERRIDE.remove(player.getUniqueId());
         ControllerWASD.setJumping(entityhuman);
         return mounted;
     }

@@ -14,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -23,11 +25,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class RideListener implements Listener {
-    public static final Set<UUID> override = new HashSet<>();
+public class RidableListener implements Listener {
+    public static final Set<UUID> TP_OVERRIDE = new HashSet<>();
+
     private final Ridables plugin;
 
-    public RideListener(Ridables plugin) {
+    public RidableListener(Ridables plugin) {
         this.plugin = plugin;
     }
 
@@ -55,11 +58,26 @@ public class RideListener implements Listener {
         }.runTaskLater(plugin, 1);
     }
 
+    @EventHandler
+    public void onExplosionDamageEntity(EntityDamageByEntityEvent event) {
+        RidableEntity ridable = RidableType.getRidable(event.getDamager());
+        if (ridable == null) {
+            return; // not caused by a ridable
+        }
+
+        if (ridable.getRider() == null) {
+            return; // no rider present
+        }
+
+        if (ridable.getType() == RidableType.CREEPER) {
+            event.setDamage(EntityDamageEvent.DamageModifier.BASE, Config.CREEPER_EXPLOSION_DAMAGE);
+        }
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        if (override.contains(player.getUniqueId())) {
+        if (TP_OVERRIDE.contains(player.getUniqueId())) {
             return; // overridden
         }
 
@@ -99,9 +117,9 @@ public class RideListener implements Listener {
                 @Override
                 public void run() {
                     // delay adding rider back to ensure client has received new vehicle location
-                    override.add(player.getUniqueId());
+                    TP_OVERRIDE.add(player.getUniqueId());
                     vehicle.addPassenger(player);
-                    override.remove(player.getUniqueId());
+                    TP_OVERRIDE.remove(player.getUniqueId());
                 }
             }.runTaskLater(plugin, 20);
         }

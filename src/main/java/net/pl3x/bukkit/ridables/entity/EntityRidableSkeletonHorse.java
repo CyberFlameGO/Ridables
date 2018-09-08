@@ -7,7 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.listener.RideListener;
+import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 
 public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements RidableEntity {
@@ -64,9 +64,9 @@ public class EntityRidableSkeletonHorse extends EntityHorseSkeleton implements R
 
     // mountTo
     protected void g(EntityHuman entityhuman) {
-        RideListener.override.add(entityhuman.getUniqueID());
+        RidableListener.TP_OVERRIDE.add(entityhuman.getUniqueID());
         super.g(entityhuman);
-        RideListener.override.remove(entityhuman.getUniqueID());
+        RidableListener.TP_OVERRIDE.remove(entityhuman.getUniqueID());
     }
 
     public boolean isTamed() {
