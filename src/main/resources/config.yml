@@ -74,7 +74,7 @@ blaze:
     grief: true      # whether fireballs can damage the blocks in the world
 
 # Cave Spider options
-cave-spider:
+cave_spider:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
@@ -142,7 +142,7 @@ drowned:
     require-trident: false # drowned is required to be holding a trident to throw
 
 # Elder Guardian options
-elder-guardian:
+elder_guardian:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
 
@@ -227,7 +227,7 @@ illusioner:
     biomes: [1,2,3,4,5,6,17,18,19,20,27,28,32,33,34,35,36,37,38,39,129,130,131,132,133,134,156,157,160,161,162,163,164,165,166,167]
 
 # Iron Golem options
-iron-golem:
+iron_golem:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
@@ -240,7 +240,7 @@ llama:
   caravan: true      # create caravan while riding llama
 
 # Magma Cube options
-magma-cube:
+magma_cube:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
 
@@ -280,7 +280,7 @@ phantom:
   shoot-damage: 1.0  # damage per hit (1 heart = 2.0 damage)
 
 # Polar Bear options
-polar-bear:
+polar_bear:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
@@ -331,7 +331,7 @@ skeleton:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Skeleton Horse options
-skeleton-horse:
+skeleton_horse:
   enabled: false     # enable custom ridable entity
 
 # Slime options
@@ -340,7 +340,7 @@ slime:
   speed: 1.0         # riding speed modifier
 
 # Snowman (Snow Golem) options
-snowman:
+snow_golem:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
@@ -369,7 +369,7 @@ stray:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Tropical Fish options
-tropical-fish:
+tropical_fish:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
 
@@ -418,7 +418,7 @@ wither:
     effect-duration: 10 # long (in seconds) the "wither" effect is effective for
 
 # Wither Skeleton options
-wither-skeleton:
+wither_skeleton:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
@@ -436,17 +436,17 @@ zombie:
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Zombie Horse options
-zombie-horse:
+zombie_horse:
   enabled: false     # enable custom ridable entity
 
 # Zombie Pigman options
-zombie-pigman:
+zombie_pigman:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
 
 # Zombie Villager options
-zombie-villager:
+zombie_villager:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
