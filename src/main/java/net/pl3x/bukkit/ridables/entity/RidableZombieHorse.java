@@ -62,13 +62,6 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 
-    // mountTo
-    protected void g(EntityHuman entityhuman) {
-        RidableListener.TP_OVERRIDE.add(entityhuman.getUniqueID());
-        super.g(entityhuman);
-        RidableListener.TP_OVERRIDE.remove(entityhuman.getUniqueID());
-    }
-
     public boolean isTamed() {
         return true;
     }

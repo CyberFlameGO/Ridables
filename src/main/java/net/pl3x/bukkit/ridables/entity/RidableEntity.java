@@ -100,9 +100,7 @@ public interface RidableEntity {
                 ItemUtil.setItem(player, saddle.subtract(), saddle.getHand());
             }
         }
-        RidableListener.TP_OVERRIDE.add(player.getUniqueId());
         boolean mounted = entityhuman.a((EntityInsentient) this, true);
-        RidableListener.TP_OVERRIDE.remove(player.getUniqueId());
         ControllerWASD.setJumping(entityhuman);
         return mounted;
     }

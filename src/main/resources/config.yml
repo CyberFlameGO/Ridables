@@ -22,14 +22,6 @@ update-checker: true
 # Use the new WASD key yaw calculations
 use-new-wasd-yaw-calculations: true
 
-# When players teleport for any reason, unmount from any creature they are riding
-# When set to false the creature will teleport with the player
-unmount-on-teleport: true
-
-# Amount of ticks to wait between teleporting your ridable creature
-# If you experience random glitches teleporting with creatures try adjusting this higher
-teleport-reattach-delay: 10
-
 # While player is riding a creature, disable all commands for them
 cancel-commands-while-riding: false
 

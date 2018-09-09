@@ -103,13 +103,6 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 
-    // mountTo
-    protected void g(EntityHuman entityhuman) {
-        RidableListener.TP_OVERRIDE.add(entityhuman.getUniqueID());
-        super.g(entityhuman);
-        RidableListener.TP_OVERRIDE.remove(entityhuman.getUniqueID());
-    }
-
     public boolean isLeashed() {
         return getRider() != null || super.isLeashed();
     }

@@ -18,16 +18,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 public class RidableListener implements Listener {
-    public static final Set<UUID> TP_OVERRIDE = new HashSet<>();
-
     private final Ridables plugin;
 
     public RidableListener(Ridables plugin) {
@@ -71,57 +64,6 @@ public class RidableListener implements Listener {
 
         if (ridable.getType() == RidableType.CREEPER) {
             event.setDamage(EntityDamageEvent.DamageModifier.BASE, Config.CREEPER_EXPLOSION_DAMAGE);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        Player player = event.getPlayer();
-        if (TP_OVERRIDE.contains(player.getUniqueId())) {
-            return; // overridden
-        }
-
-        Entity vehicle = player.getVehicle();
-        if (vehicle == null) {
-            return; // not riding
-        }
-
-        player.leaveVehicle(); // always exit vehicle (fixes random teleport bug)
-
-        RidableEntity ridable = RidableType.getRidable(vehicle);
-        if (ridable == null) {
-            switch (vehicle.getType()) {
-                case DONKEY:
-                case HORSE:
-                case MULE:
-                    if (!player.hasPermission("allow.teleport." + vehicle.getType().name().toLowerCase())) {
-                        return; // no permission
-                    }
-                    break;
-                default:
-                    return; // not ridable
-            }
-        } else if (!ridable.hasTeleportPerm(player)) {
-            return; // no permission
-        }
-
-        if (!Config.UNMOUNT_ON_TELEPORT) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    // delay vehicle teleport to ensure player is not still on it
-                    vehicle.teleport(event.getTo());
-                }
-            }.runTaskLater(plugin, Config.TELEPORT_REATTACH_DELAY);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    // delay adding rider back to ensure client has received new vehicle location
-                    TP_OVERRIDE.add(player.getUniqueId());
-                    vehicle.addPassenger(player);
-                    TP_OVERRIDE.remove(player.getUniqueId());
-                }
-            }.runTaskLater(plugin, Config.TELEPORT_REATTACH_DELAY * 2);
         }
     }
 
