@@ -19,7 +19,6 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class RidableSquid extends EntitySquid implements RidableEntity {
@@ -207,14 +206,6 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
             newVector.setX(cos * x - sine * z);
             newVector.setZ(sine * x + cos * z);
             return newVector;
-        }
-
-        public void someMethod(Player player) {
-            Vector middle = player.getEyeLocation().getDirection();
-            Vector left = rotateVectorAroundY(middle, -45);
-            Vector right = rotateVectorAroundY(middle, 45);
-
-            // do stuffs with those 3 vectors..
         }
     }
 }
