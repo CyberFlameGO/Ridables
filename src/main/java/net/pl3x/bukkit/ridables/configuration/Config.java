@@ -46,6 +46,7 @@ public class Config {
     public static boolean CHICKEN_ENABLED = false;
     public static float CHICKEN_SPEED = 1.0F;
     public static float CHICKEN_JUMP_POWER = 0.5F;
+    public static boolean CHICKEN_DROP_EGGS_WHILE_RIDING = false;
 
     public static boolean COD_ENABLED = false;
     public static float COD_SPEED = 1.0F;
@@ -346,6 +347,7 @@ public class Config {
         CHICKEN_ENABLED = config.getBoolean("chicken.enabled", false);
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);
         CHICKEN_JUMP_POWER = (float) config.getDouble("chicken.jump-power", 0.5D);
+        CHICKEN_DROP_EGGS_WHILE_RIDING = config.getBoolean("chicken.drop-eggs", false);
 
         COD_ENABLED = config.getBoolean("cod.enabled", false);
         COD_SPEED = (float) config.getDouble("cod.speed", 1.0D);
