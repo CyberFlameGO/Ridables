@@ -69,15 +69,19 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         prevSpacebarCharge = spacebarCharge;
     }
 
-    // jump
-    protected void cH() {
+    public float getJumpCharge() {
         float charge = 1F;
         if (rider != null && spacebarCharge > 0) {
             charge += 1F * (fallDistanceCharge = (spacebarCharge / 72F));
         } else {
             fallDistanceCharge = 0;
         }
-        motY = 0.42D * charge;
+        return charge;
+    }
+
+    // jump
+    protected void cH() {
+        motY = 0.42D * getJumpCharge();
         impulse = true;
     }
 
@@ -134,6 +138,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
     public boolean onSpacebar() {
         if (hasSpecialPerm(rider.getBukkitEntity())) {
+            System.out.println(getType().getName());
             spacebarCharge++;
             if (spacebarCharge > 50) {
                 spacebarCharge -= 2;

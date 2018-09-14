@@ -21,7 +21,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 public class RidableMagmaCube extends RidableSlime implements RidableEntity {
     public RidableMagmaCube(World world) {
         super(EntityTypes.MAGMA_CUBE, world);
-        this.fireProof = true;
+        fireProof = true;
     }
 
     public RidableType getType() {
@@ -34,22 +34,22 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.20000000298023224D);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.2D);
     }
 
     // canSpawn
-    public boolean a(GeneratorAccess generatoraccess) {
-        return generatoraccess.getDifficulty() != EnumDifficulty.PEACEFUL;
+    public boolean a(GeneratorAccess world) {
+        return world.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     // isNotColliding
-    public boolean a(IWorldReader iworldreader) {
-        return iworldreader.a_(this, this.getBoundingBox()) && iworldreader.getCubes(this, this.getBoundingBox()) && !iworldreader.containsLiquid(this.getBoundingBox());
+    public boolean a(IWorldReader world) {
+        return world.a_(this, getBoundingBox()) && world.getCubes(this, getBoundingBox()) && !world.containsLiquid(getBoundingBox());
     }
 
-    public void setSize(int i, boolean flag) {
-        super.setSize(i, flag);
-        this.getAttributeInstance(GenericAttributes.h).setValue((double) (i * 3));
+    public void setSize(int size, boolean flag) {
+        super.setSize(size, flag);
+        getAttributeInstance(GenericAttributes.h).setValue((double) (size * 3));
     }
 
     // getBrightness
@@ -64,7 +64,7 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
 
     // getLootTable
     protected MinecraftKey getDefaultLootTable() {
-        return this.dy() ? LootTables.a : LootTables.ap;
+        return dy() ? LootTables.a : LootTables.ap;
     }
 
     public boolean isBurning() {
@@ -78,33 +78,33 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
 
     // alterSquishAmount
     protected void ds() {
-        this.a *= 0.9F;
+        a *= 0.9F;
     }
 
     // jump
     protected void cH() {
-        this.motY = (double) (0.42F + (float) this.getSize() * 0.1F);
-        this.impulse = true;
+        motY = (double) (0.42F + (float) getSize() * 0.1F) * getJumpCharge();
+        impulse = true;
     }
 
     // handleFluidJump
     protected void c(Tag<FluidType> tag) {
         if (tag == TagsFluid.LAVA) {
-            this.motY = (double) (0.22F + (float) this.getSize() * 0.05F);
-            this.impulse = true;
+            motY = (double) (0.22F + (float) getSize() * 0.05F) * getJumpCharge();
+            impulse = true;
         } else {
             super.c(tag);
         }
-
     }
 
     // fall
     public void c(float f, float f1) {
+        // does not take fall damage
     }
 
     // canDamagePlayer
     protected boolean dt() {
-        return this.cP();
+        return cP();
     }
 
     // getAttackStrength
@@ -114,17 +114,17 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
 
     // getHurtSound
     protected SoundEffect d(DamageSource damagesource) {
-        return this.dz() ? SoundEffects.ENTITY_MAGMA_CUBE_HURT_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_HURT;
+        return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_HURT_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_HURT;
     }
 
     // getDeathSound
     protected SoundEffect cs() {
-        return this.dz() ? SoundEffects.ENTITY_MAGMA_CUBE_DEATH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_DEATH;
+        return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_DEATH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_DEATH;
     }
 
     // getSquishSound
     protected SoundEffect dv() {
-        return this.dz() ? SoundEffects.ENTITY_MAGMA_CUBE_SQUISH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_SQUISH;
+        return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_SQUISH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_SQUISH;
     }
 
     // getJumpSound
