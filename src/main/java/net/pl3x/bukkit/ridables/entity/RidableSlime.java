@@ -138,7 +138,6 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
     public boolean onSpacebar() {
         if (hasSpecialPerm(rider.getBukkitEntity())) {
-            System.out.println(getType().getName());
             spacebarCharge++;
             if (spacebarCharge > 50) {
                 spacebarCharge -= 2;
