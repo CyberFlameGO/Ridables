@@ -235,6 +235,9 @@ permissions:
       allow.special.evoker:
         description: Allow to make evokers cast fangs spell
         default: op
+      allow.special.slime:
+        description: Allow to make slimes jump higher
+        default: op
   command.ridables:
     description: Allow to reload config
     default: op

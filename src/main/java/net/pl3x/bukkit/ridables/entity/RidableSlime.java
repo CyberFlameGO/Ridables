@@ -26,6 +26,9 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     private ControllerLook defaultLookController;
     private BlankLookController blankLookController;
     private EntityPlayer rider;
+    private int spacebarCharge = 0;
+    private int prevSpacebarCharge = 0;
+    private float fallDistanceCharge = 0;
 
     public RidableSlime(World world) {
         this(EntityTypes.SLIME, world);
@@ -56,6 +59,34 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
             useWASDController();
         }
         super.mobTick();
+    }
+
+    public void k() {
+        super.k();
+        if (spacebarCharge == prevSpacebarCharge) {
+            spacebarCharge = 0;
+        }
+        prevSpacebarCharge = spacebarCharge;
+    }
+
+    // jump
+    protected void cH() {
+        float charge = 1F;
+        if (rider != null && spacebarCharge > 0) {
+            charge += 1F * (fallDistanceCharge = (spacebarCharge / 72F));
+        } else {
+            fallDistanceCharge = 0;
+        }
+        motY = 0.42D * charge;
+        impulse = true;
+    }
+
+    // fall
+    public void c(float distance, float damageMultiplier) {
+        if (rider != null && fallDistanceCharge > 0) {
+            distance = distance - fallDistanceCharge;
+        }
+        super.c(distance, damageMultiplier);
     }
 
     public void setRotation(float newYaw, float newPitch) {
@@ -102,7 +133,13 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     }
 
     public boolean onSpacebar() {
-        return false; // TODO: jump higher
+        if (hasSpecialPerm(rider.getBukkitEntity())) {
+            spacebarCharge++;
+            if (spacebarCharge > 50) {
+                spacebarCharge -= 2;
+            }
+        }
+        return false;
     }
 
     // initEntityAI
@@ -118,8 +155,8 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     static class PathfinderGoalSlimeIdle extends PathfinderGoal {
         private final RidableSlime slime;
 
-        public PathfinderGoalSlimeIdle(RidableSlime entityslime) {
-            slime = entityslime;
+        public PathfinderGoalSlimeIdle(RidableSlime slime) {
+            this.slime = slime;
             a(5);
         }
 
@@ -135,10 +172,10 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     static class PathfinderGoalSlimeRandomJump extends PathfinderGoal {
         private final RidableSlime slime;
 
-        public PathfinderGoalSlimeRandomJump(RidableSlime entityslime) {
-            slime = entityslime;
+        public PathfinderGoalSlimeRandomJump(RidableSlime slime) {
+            this.slime = slime;
             a(5);
-            entityslime.getNavigation().d(true);
+            slime.getNavigation().d(true);
         }
 
         public boolean a() {
@@ -158,8 +195,8 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         private float chosenDegrees;
         private int nextRandomizeTime;
 
-        public PathfinderGoalSlimeRandomDirection(RidableSlime entityslime) {
-            slime = entityslime;
+        public PathfinderGoalSlimeRandomDirection(RidableSlime slime) {
+            this.slime = slime;
             a(2);
         }
 
@@ -180,8 +217,8 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         private final RidableSlime slime;
         private int growTimer;
 
-        public PathfinderGoalSlimeNearestPlayer(RidableSlime entityslime) {
-            slime = entityslime;
+        public PathfinderGoalSlimeNearestPlayer(RidableSlime slime) {
+            this.slime = slime;
             a(2);
         }
 
@@ -216,7 +253,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
         public void e() {
             slime.a(slime.getGoalTarget(), 10.0F, 10.0F);
-            ((SlimeController) slime.getControllerMove()).a(slime.yaw, slime.du());
+            slime.getControllerMove().a(slime.yaw, slime.du());
         }
     }
 
@@ -226,10 +263,10 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         private final RidableSlime slime;
         private boolean isAggressive;
 
-        public SlimeController(RidableSlime entityslime) {
-            super(entityslime);
-            this.slime = entityslime;
-            this.yRot = 180.0F * entityslime.yaw / 3.1415927F;
+        public SlimeController(RidableSlime slime) {
+            super(slime);
+            this.slime = slime;
+            this.yRot = 180.0F * slime.yaw / 3.1415927F;
         }
 
         public void a(float yRot, boolean aggressive) {
