@@ -235,6 +235,9 @@ permissions:
       allow.special.evoker:
         description: Allow to make evokers cast fangs spell
         default: op
+      allow.special.magma_cube:
+        description: Allow to make magma cubes jump higher
+        default: op
       allow.special.slime:
         description: Allow to make slimes jump higher
         default: op
