@@ -239,6 +239,7 @@ public class Config {
 
     public static boolean SQUID_ENABLED = false;
     public static float SQUID_SPEED = 1.0F;
+    public static int SQUID_INK_COOLDOWN = 40;
 
     public static boolean STRAY_ENABLED = false;
     public static float STRAY_SPEED = 1.0F;
@@ -544,6 +545,7 @@ public class Config {
 
         SQUID_ENABLED = config.getBoolean("squid.enabled", false);
         SQUID_SPEED = (float) config.getDouble("squid.speed", 1.0D);
+        SQUID_INK_COOLDOWN = (int) config.getDouble("squid.ink-cooldown", 40);
 
         STRAY_ENABLED = config.getBoolean("stray.enabled", false);
         STRAY_SPEED = (float) config.getDouble("stray.speed", 1.0D);

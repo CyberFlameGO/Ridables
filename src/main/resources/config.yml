@@ -353,6 +353,7 @@ spider:
 squid:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
+  ink-cooldown: 40   # how many ticks for squirt ink cooldown
 
 # Stray options
 stray:

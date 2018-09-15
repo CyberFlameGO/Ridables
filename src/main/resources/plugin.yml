@@ -241,6 +241,9 @@ permissions:
       allow.special.slime:
         description: Allow to make slimes jump higher
         default: op
+      allow.special.squid:
+        description: Allow to make squids squirt ink
+        default: op
   command.ridables:
     description: Allow to reload config
     default: op

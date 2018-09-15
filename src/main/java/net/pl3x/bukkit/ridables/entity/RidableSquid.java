@@ -17,12 +17,27 @@ import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class RidableSquid extends EntitySquid implements RidableEntity {
+    private static Method dy;
+
+    static {
+        try {
+            dy = EntitySquid.class.getDeclaredMethod("dy");
+            dy.setAccessible(true);
+        } catch (NoSuchMethodException ignore) {
+        }
+    }
+
     private EntityPlayer rider;
+    private int spacebarCooldown = 0;
 
     public RidableSquid(World world) {
         super(world);
@@ -39,6 +54,9 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
 
     protected void mobTick() {
         updateRider();
+        if (spacebarCooldown > 0) {
+            spacebarCooldown--;
+        }
     }
 
     public void setRotation(float newYaw, float newPitch) {
@@ -70,6 +88,21 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
     }
 
     public void useWASDController() {
+    }
+
+    public boolean onSpacebar() {
+        if (spacebarCooldown == 0 && hasSpecialPerm(rider.getBukkitEntity())) {
+            spacebarCooldown = Config.SQUID_INK_COOLDOWN;
+            squirtInk();
+        }
+        return false;
+    }
+
+    public void squirtInk() {
+        try {
+            dy.invoke(this);
+        } catch (IllegalAccessException | InvocationTargetException ignore) {
+        }
     }
 
     // processInteract
@@ -107,9 +140,6 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
 
         // updateTask
         public void e() {
-            if (rider != null) {
-                return;
-            }
             ++ticks;
             EntityLiving target = squid.getLastDamager();
             if (target == null) {
@@ -167,6 +197,9 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
                     squid.c(x, y, z); // setMovementVector
                 }
             } else {
+                if (ControllerWASD.isJumping(rider)) {
+                    squid.onSpacebar();
+                }
                 float forward = rider.bj;
                 float strafe = rider.bh;
                 float speed = getSpeed() * 5;
@@ -196,16 +229,14 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
             }
         }
 
-        private Vector rotateVectorAroundY(Vector vector, double degrees) {
-            Vector newVector = vector.clone();
+        private void rotateVectorAroundY(Vector vector, double degrees) {
             double rad = Math.toRadians(degrees);
             double cos = Math.cos(rad);
             double sine = Math.sin(rad);
             double x = vector.getX();
             double z = vector.getZ();
-            newVector.setX(cos * x - sine * z);
-            newVector.setZ(sine * x + cos * z);
-            return newVector;
+            vector.setX(cos * x - sine * z);
+            vector.setZ(sine * x + cos * z);
         }
     }
 }
