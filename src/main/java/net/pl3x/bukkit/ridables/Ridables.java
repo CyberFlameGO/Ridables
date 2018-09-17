@@ -69,9 +69,6 @@ public class Ridables extends JavaPlugin {
             return;
         }
 
-        // setup creatures by calling something in the class
-        RidableType.getRidableType(EntityType.DOLPHIN);
-
         // inject new entities
         RegistryHax.injectNewEntityTypes("custom_evoker_fangs", "evoker_fangs", CustomEvokerFangs.class, CustomEvokerFangs::new);
         RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", CustomFireball.class, CustomFireball::new);
@@ -80,6 +77,9 @@ public class Ridables extends JavaPlugin {
         RegistryHax.injectNewEntityTypes("custom_wither_skull", "wither_skull", CustomWitherSkull.class, CustomWitherSkull::new);
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", DolphinSpit.class, DolphinSpit::new);
         RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", PhantomFlames.class, PhantomFlames::new);
+
+        // setup creatures by calling something in the class
+        RidableType.getRidableType(EntityType.DOLPHIN);
 
         // Fix worldgen mob features
         RegistryHax.rebuildWorldGenMobs();
