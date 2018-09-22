@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.command;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -31,6 +32,7 @@ public class CmdRidables implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("command.ridables")) {
+            Logger.debug("Perm Check: " + sender.getName() + " does NOT have permission for /ridables command");
             Lang.send(sender, Lang.COMMAND_NO_PERMISSION);
             return true;
         }

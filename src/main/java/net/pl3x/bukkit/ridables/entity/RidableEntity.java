@@ -12,6 +12,7 @@ import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -106,23 +107,35 @@ public interface RidableEntity {
     }
 
     default boolean hasCollectPerm(Player player) {
-        return player.hasPermission("allow.collect." + getType().getName());
+        boolean hasPerm = player.hasPermission("allow.collect." + getType().getName());
+        if (!hasPerm) {
+            Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to collect: " + getType().getName());
+        }
+        return hasPerm;
     }
 
     default boolean hasRidePerm(Player player) {
-        return player.hasPermission("allow.ride." + getType().getName());
+        boolean hasPerm =  player.hasPermission("allow.ride." + getType().getName());
+        if (!hasPerm) {
+            Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to ride: " + getType().getName());
+        }
+        return hasPerm;
     }
 
     default boolean hasShootPerm(Player player) {
-        return player.hasPermission("allow.shoot." + getType().getName());
+        boolean hasPerm =  player.hasPermission("allow.shoot." + getType().getName());
+        if (!hasPerm) {
+            Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to shoot: " + getType().getName());
+        }
+        return hasPerm;
     }
 
     default boolean hasSpecialPerm(Player player) {
-        return player.hasPermission("allow.special." + getType().getName());
-    }
-
-    default boolean hasTeleportPerm(Player player) {
-        return player.hasPermission("allow.teleport." + getType().getName());
+        boolean hasPerm =  player.hasPermission("allow.special." + getType().getName());
+        if (!hasPerm) {
+            Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to use special: " + getType().getName());
+        }
+        return hasPerm;
     }
 
     /**
