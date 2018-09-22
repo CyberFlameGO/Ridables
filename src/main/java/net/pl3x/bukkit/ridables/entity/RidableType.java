@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class RidableType {
-    private final static Map<EntityType, RidableType> BY_BUKKIT_TYPE = Maps.newHashMap();
+    public final static Map<EntityType, RidableType> BY_BUKKIT_TYPE = Maps.newHashMap();
 
     public static final RidableType BAT = inject(Config.BAT_ENABLED, "bat", EntityTypes.BAT, Material.BAT_SPAWN_EGG, RidableBat.class, RidableBat::new);
     public static final RidableType BLAZE = inject(Config.BLAZE_ENABLED, "blaze", EntityTypes.BLAZE, Material.BLAZE_SPAWN_EGG, RidableBlaze.class, RidableBlaze::new);

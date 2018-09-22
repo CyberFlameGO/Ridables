@@ -26,6 +26,15 @@ public class Logger {
     }
 
     /**
+     * Logs a warning message
+     *
+     * @param str String to log
+     */
+    public static void warn(String str) {
+        log("&6" + str);
+    }
+
+    /**
      * Logs an error message
      *
      * @param str String to log

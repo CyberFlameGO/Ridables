@@ -10,9 +10,9 @@ import net.pl3x.bukkit.ridables.entity.projectile.CustomEvokerFangs;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomShulkerBullet;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
 import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
-import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
 import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
@@ -69,7 +69,23 @@ public class Ridables extends JavaPlugin {
             return;
         }
 
-        // inject new entities
+        // setup creatures by calling something in the class
+        RidableType.getRidableType(EntityType.DOLPHIN);
+
+        // check if any entities are enabled
+        if (RidableType.BY_BUKKIT_TYPE.isEmpty()) {
+            Logger.warn("############################################");
+            Logger.warn("#                                          #");
+            Logger.warn("#        All entities are disabled!        #");
+            Logger.warn("#  Please follow the instructions on wiki  #");
+            Logger.warn("#          http://git.io/ridables          #");
+            Logger.warn("#                                          #");
+            Logger.warn("############################################");
+            disabled = true;
+            return;
+        }
+
+        // inject new custom entities
         RegistryHax.injectNewEntityTypes("custom_evoker_fangs", "evoker_fangs", CustomEvokerFangs.class, CustomEvokerFangs::new);
         RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", CustomFireball.class, CustomFireball::new);
         RegistryHax.injectNewEntityTypes("custom_shulker_bullet", "shulker_bullet", CustomShulkerBullet.class, CustomShulkerBullet::new);
@@ -77,9 +93,6 @@ public class Ridables extends JavaPlugin {
         RegistryHax.injectNewEntityTypes("custom_wither_skull", "wither_skull", CustomWitherSkull.class, CustomWitherSkull::new);
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", DolphinSpit.class, DolphinSpit::new);
         RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", PhantomFlames.class, PhantomFlames::new);
-
-        // setup creatures by calling something in the class
-        RidableType.getRidableType(EntityType.DOLPHIN);
 
         // Fix worldgen mob features
         RegistryHax.rebuildWorldGenMobs();
