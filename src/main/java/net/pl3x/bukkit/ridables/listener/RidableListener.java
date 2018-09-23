@@ -1,12 +1,13 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.minecraft.server.v1_13_R2.EntityAgeable;
+import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import net.pl3x.bukkit.ridables.util.Logger;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,14 +21,33 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Field;
+
 public class RidableListener implements Listener {
     private final Ridables plugin;
+    private static Field attributeMap;
+
+    static {
+        try {
+            attributeMap = EntityLiving.class.getDeclaredField("attributeMap");
+            attributeMap.setAccessible(true);
+        } catch (NoSuchFieldException ignore) {
+        }
+    }
+
+    private static void copyAttributes(EntityLiving newEntity, EntityLiving oldEntity) {
+        try {
+            attributeMap.set(newEntity, attributeMap.get(oldEntity)); // copy all attributes
+        } catch (IllegalAccessException ignore) {
+        }
+    }
 
     public RidableListener(Ridables plugin) {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    // listen on monitor to give plugins time to fill any custom entities with their datas
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         if (RidableType.getRidable(entity) != null) {
@@ -39,14 +59,20 @@ public class RidableListener implements Listener {
             return; // not a valid ridable
         }
 
+        // delay by a tick to allow plugins and server to finish filling entity datas
         new BukkitRunnable() {
             @Override
             public void run() {
-                net.minecraft.server.v1_13_R2.Entity oldEntity = ((CraftEntity) entity).getHandle();
-                net.minecraft.server.v1_13_R2.Entity newEntity = ridableType.spawn(event.getLocation(),
-                        oldEntity instanceof EntityAgeable && ((EntityAgeable) oldEntity).isBaby());
-                newEntity.v(oldEntity); // copyDataFromOld
-                entity.remove();
+                EntityLiving oldEntity = ((CraftLivingEntity) entity).getHandle();
+                if (oldEntity.getAttributeMap().a("miniaturepets.id") != null) {
+                    System.out.println(entity.getType());
+                    Logger.debug("MiniaturePets entity spawned, ignoring");
+                    return;
+                }
+                EntityLiving newEntity = ridableType.spawn(event.getLocation(), oldEntity.isBaby());
+                copyAttributes(newEntity, oldEntity); // copy all attributes (do this before copying nbt so server doesnt ignore custom attributes)
+                newEntity.v(oldEntity); // copy all nbt
+                entity.remove(); // remove old entity
             }
         }.runTaskLater(plugin, 1);
     }

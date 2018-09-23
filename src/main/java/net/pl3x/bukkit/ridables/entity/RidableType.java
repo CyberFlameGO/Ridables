@@ -5,6 +5,7 @@ import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.MinecraftKey;
 import net.minecraft.server.v1_13_R2.World;
@@ -182,8 +183,8 @@ public class RidableType {
      * @param baby True to make baby
      * @return The spawned entity
      */
-    public Entity spawn(Location loc, boolean baby) {
-        Entity entity = entityTypes.a(((CraftWorld) loc.getWorld()).getHandle());
+    public EntityLiving spawn(Location loc, boolean baby) {
+        EntityLiving entity = (EntityLiving) entityTypes.a(((CraftWorld) loc.getWorld()).getHandle());
         if (entity != null) {
             entity.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
             entity.world.addEntity(entity);
