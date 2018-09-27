@@ -5,14 +5,24 @@ import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityPotion;
 import net.minecraft.server.v1_13_R2.EntityWitch;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.ItemStack;
+import net.minecraft.server.v1_13_R2.Items;
+import net.minecraft.server.v1_13_R2.PotionUtil;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.util.Vector;
 
 public class RidableWitch extends EntityWitch implements RidableEntity {
     private ControllerMove aiController;
@@ -20,6 +30,7 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     private ControllerLook defaultLookController;
     private BlankLookController blankLookController;
     private EntityPlayer rider;
+    private int shootCooldown = 0;
 
     public RidableWitch(World world) {
         super(world);
@@ -39,6 +50,10 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     }
 
     protected void mobTick() {
+        if (shootCooldown > 0) {
+            shootCooldown--;
+        }
+
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
@@ -92,6 +107,53 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
             moveController = wasdController;
             lookController = blankLookController;
         }
+    }
+
+    public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
+        return handleClick();
+    }
+
+    public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
+        return handleClick();
+    }
+
+    public boolean onClick(EnumHand hand) {
+        return handleClick();
+    }
+
+    private boolean handleClick() {
+        if (shootCooldown == 0) {
+            EntityPlayer rider = getRider();
+            if (rider != null) {
+                return throwPotion(rider);
+            }
+        }
+        return false;
+    }
+
+    public boolean throwPotion(EntityPlayer rider) {
+        shootCooldown = Config.WITCH_SHOOT_COOLDOWN;
+
+        if (rider == null) {
+            return false;
+        }
+
+        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
+        if (!hasShootPerm(player)) {
+            Lang.send(player, Lang.SHOOT_NO_PERMISSION);
+            return false;
+        }
+
+        Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 3, 0));
+
+        EntityPotion entitypotion = new EntityPotion(world, this, PotionUtil.a(new ItemStack(Items.SPLASH_POTION), Config.WITCH_SHOOT_POTION_TYPE));
+        entitypotion.pitch -= -20.0F;
+        entitypotion.shoot(direction.getX(), direction.getY() + 10, direction.getZ(), 0.75F * Config.WITCH_SHOOT_SPEED, 0);
+        world.addEntity(entitypotion);
+
+        world.a(null, locX, locY, locZ, SoundEffects.ENTITY_WITCH_THROW, bV(), 1.0F, 0.8F + random.nextFloat() * 0.4F);
+
+        return true;
     }
 
     // processInteract

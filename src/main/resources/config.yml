@@ -397,6 +397,10 @@ witch:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  shoot:
+    cooldown: 40     # ticks to wait between shooting
+    speed: 1.0       # projectile speed
+    potion: "harming" # for complete list of available potion names see https://minecraft.gamepedia.com/Potion#Item_data
 
 # Wither options
 wither:

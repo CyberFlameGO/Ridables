@@ -216,6 +216,9 @@ permissions:
       allow.shoot.shulker:
         description: Allow to make withers shoot shulker bullets
         default: op
+      allow.shoot.witch:
+        description: Allow to make witches throw potions of harming
+        default: op
       allow.shoot.wither:
         description: Allow to make withers shoot skulls
         default: op

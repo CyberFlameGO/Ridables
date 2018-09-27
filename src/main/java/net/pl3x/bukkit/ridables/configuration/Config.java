@@ -1,6 +1,8 @@
 package net.pl3x.bukkit.ridables.configuration;
 
+import net.minecraft.server.v1_13_R2.PotionRegistry;
 import net.pl3x.bukkit.ridables.Ridables;
+import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -267,6 +269,9 @@ public class Config {
     public static boolean WITCH_ENABLED = false;
     public static float WITCH_SPEED = 1.0F;
     public static float WITCH_JUMP_POWER = 0.5F;
+    public static int WITCH_SHOOT_COOLDOWN = 40;
+    public static float WITCH_SHOOT_SPEED = 1.0F;
+    public static PotionRegistry WITCH_SHOOT_POTION_TYPE = PotionRegistry.a("harming");
 
     public static boolean WITHER_ENABLED = false;
     public static float WITHER_SPEED = 1.0F;
@@ -573,6 +578,17 @@ public class Config {
         WITCH_ENABLED = config.getBoolean("witch.enabled", false);
         WITCH_SPEED = (float) config.getDouble("witch.speed", 1.0D);
         WITCH_JUMP_POWER = (float) config.getDouble("witch.jump-power", 0.5D);
+        WITCH_SHOOT_COOLDOWN = (int) config.getDouble("witch.shoot.cooldown", 40);
+        WITCH_SHOOT_SPEED = (float) config.getDouble("witch.shoot.speed", 1.0D);
+        String potion = config.getString("witch.shoot.potion", "harming").toLowerCase();
+        PotionRegistry potionType = PotionRegistry.a(potion);
+        if (potionType != null) {
+            WITCH_SHOOT_POTION_TYPE = potionType;
+        } else {
+            Logger.error("Unknown potion type for witch.shoot.potion: " + potion);
+            Logger.error("Using potion of harming as default");
+            WITCH_SHOOT_POTION_TYPE = PotionRegistry.a("harming");
+        }
 
         WITHER_ENABLED = config.getBoolean("wither.enabled", false);
         WITHER_SPEED = (float) config.getDouble("wither.speed", 1.0D);
