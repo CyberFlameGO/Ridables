@@ -20,6 +20,8 @@ import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -110,6 +112,34 @@ public class Ridables extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
 
         getCommand("ridables").setExecutor(new CmdRidables(this));
+
+        if (serverType == ServerType.PAPER) {
+            try {
+                World.class.getDeclaredMethod("getChunkAtAsync", Location.class);
+            } catch (Exception e) {
+                Logger.warn("############################################");
+                Logger.warn("#                                          #");
+                Logger.warn("#     Detected an old build of Paper!      #");
+                Logger.warn("#                                          #");
+                Logger.warn("#   Upgrading to build 302+ can severely   #");
+                Logger.warn("#      help your server's performance      #");
+                Logger.warn("#                                          #");
+                Logger.warn("#       https://papermc.io/downloads       #");
+                Logger.warn("#                                          #");
+                Logger.warn("############################################");
+            }
+        } else {
+            Logger.warn("############################################");
+            Logger.warn("#                                          #");
+            Logger.warn("#     Detected non-Paper server type!      #");
+            Logger.warn("#                                          #");
+            Logger.warn("#   Upgrading to Paper 302+ can severely   #");
+            Logger.warn("#      help your server's performance      #");
+            Logger.warn("#                                          #");
+            Logger.warn("#       https://papermc.io/downloads       #");
+            Logger.warn("#                                          #");
+            Logger.warn("############################################");
+        }
 
         Logger.info("Finished enabling");
     }
