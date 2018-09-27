@@ -4,6 +4,7 @@ import net.pl3x.bukkit.ridables.bstats.Metrics;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.data.DisabledReason;
 import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomEvokerFangs;
@@ -28,7 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Ridables extends JavaPlugin {
     private static Ridables instance;
 
-    private boolean disabled = false;
+    private DisabledReason disabledReason = null;
     private final ServerType serverType;
 
     public Ridables() {
@@ -54,18 +55,15 @@ public class Ridables extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
+        // TODO
+        // change to Paper only (eventually)
+
         // 1.13.1 only!
         try {
             Class.forName("net.minecraft.server.v1_13_R2.Entity");
         } catch (ClassNotFoundException e) {
-            Logger.error("############################################");
-            Logger.error("#                                          #");
-            Logger.error("#       This server is unsupported!        #");
-            Logger.error("#    Only 1.13.1 servers are supported!    #");
-            Logger.error("# Download Ridables v2.35 for 1.13 support #");
-            Logger.error("#                                          #");
-            Logger.error("############################################");
-            disabled = true;
+            disabledReason = DisabledReason.UNSUPPORTED_SERVER_VERSION;
+            disabledReason.printError();
             return;
         }
 
@@ -74,14 +72,8 @@ public class Ridables extends JavaPlugin {
 
         // check if any entities are enabled
         if (RidableType.BY_BUKKIT_TYPE.isEmpty()) {
-            Logger.warn("############################################");
-            Logger.warn("#                                          #");
-            Logger.warn("#        All entities are disabled!        #");
-            Logger.warn("#  Please follow the instructions on wiki  #");
-            Logger.warn("#          http://git.io/ridables          #");
-            Logger.warn("#                                          #");
-            Logger.warn("############################################");
-            disabled = true;
+            disabledReason = DisabledReason.ALL_ENTITIES_DISABLED;
+            disabledReason.printError();
             return;
         }
 
@@ -107,13 +99,8 @@ public class Ridables extends JavaPlugin {
 
         UpdateListener.checkForUpdate();
 
-        if (disabled) {
-            Logger.error("##########################################");
-            Logger.error("#                                        #");
-            Logger.error("#    Plugin is now disabling itself!     #");
-            Logger.error("# Scroll up in the log to see more info! #");
-            Logger.error("#                                        #");
-            Logger.error("##########################################");
+        if (disabledReason != null) {
+            disabledReason.printError(true);
             return;
         }
 
@@ -136,8 +123,7 @@ public class Ridables extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Lang.send(sender, "&cThis plugin is currently disabled!");
-        Lang.send(sender, "&cCheck your startup log to find out why.");
+        disabledReason.printError(sender);
         return true;
     }
 
