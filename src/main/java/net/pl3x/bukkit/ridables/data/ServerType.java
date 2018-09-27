@@ -1,18 +1,20 @@
 package net.pl3x.bukkit.ridables.data;
 
+import org.bukkit.Bukkit;
+
 public enum ServerType {
     /**
      * CraftBukkit Server (or unknown)
      */
-    CRAFTBUKKIT("CraftBukkit"),
+    CRAFTBUKKIT(Bukkit.getName()),
     /**
      * Spigot Server
      */
-    SPIGOT("Spigot"),
+    SPIGOT(Bukkit.getVersion().startsWith("git-Spigot") ? "Spigot" : Bukkit.getName()),
     /**
      * Paper Server
      */
-    PAPER("Paper");
+    PAPER(Bukkit.getName());
 
     public final String name;
 
