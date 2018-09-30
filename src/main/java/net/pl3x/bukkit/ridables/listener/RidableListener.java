@@ -1,14 +1,19 @@
 package net.pl3x.bukkit.ridables.listener;
 
 import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.RidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +23,9 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
@@ -75,6 +82,29 @@ public class RidableListener implements Listener {
                 entity.remove(); // remove old entity
             }
         }.runTaskLater(plugin, 1);
+    }
+
+    @EventHandler
+    public void onClickEnderDragon(PlayerInteractAtEntityEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return; // dont fire twice
+        }
+
+        Entity dragon = event.getRightClicked();
+        if (dragon.isDead() || !dragon.isValid() || dragon.getType() != EntityType.COMPLEX_PART) {
+            return; // not a valid dragon entity
+        }
+
+        RidableEntity ridable = RidableType.getRidable(((ComplexEntityPart) dragon).getParent());
+        if (ridable == null) {
+            return; // ridable dragon not enabled
+        }
+
+        // processInteract on dragon
+        RidableEnderDragon nmsDragon = (RidableEnderDragon) ridable;
+        if (nmsDragon.a(((CraftPlayer) event.getPlayer()).getHandle(), EnumHand.MAIN_HAND)) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
