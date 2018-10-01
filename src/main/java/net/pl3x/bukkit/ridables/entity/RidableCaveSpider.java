@@ -35,7 +35,7 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.CAVE_SPIDER_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

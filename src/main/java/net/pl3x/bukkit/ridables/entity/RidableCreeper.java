@@ -75,7 +75,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.CREEPER_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

@@ -35,7 +35,7 @@ public class RidableZombieVillager extends EntityZombieVillager implements Ridab
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.ZOMBIE_VILLAGER_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

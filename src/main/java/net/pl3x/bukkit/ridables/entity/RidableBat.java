@@ -35,7 +35,7 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.BAT_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

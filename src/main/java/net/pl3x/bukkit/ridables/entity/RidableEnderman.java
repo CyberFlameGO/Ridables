@@ -59,7 +59,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return !Config.ENDERMAN_EJECT_WHEN_WET;
+        return Config.ENDERMAN_RIDABLE_IN_WATER && !Config.ENDERMAN_EJECT_WHEN_WET;
     }
 
     protected void mobTick() {

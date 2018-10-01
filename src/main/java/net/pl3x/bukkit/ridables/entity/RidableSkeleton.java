@@ -35,7 +35,7 @@ public class RidableSkeleton extends EntitySkeleton implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.SKELETON_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

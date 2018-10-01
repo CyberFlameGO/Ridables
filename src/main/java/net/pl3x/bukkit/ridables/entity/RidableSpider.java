@@ -35,7 +35,7 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.SPIDER_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

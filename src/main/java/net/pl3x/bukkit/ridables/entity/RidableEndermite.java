@@ -35,7 +35,7 @@ public class RidableEndermite extends EntityEndermite implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.ENDERMITE_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

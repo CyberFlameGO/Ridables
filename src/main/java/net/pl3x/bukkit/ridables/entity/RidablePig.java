@@ -38,7 +38,7 @@ public class RidablePig extends EntityPig implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.PIG_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

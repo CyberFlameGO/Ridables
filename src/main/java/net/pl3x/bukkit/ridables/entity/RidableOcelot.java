@@ -35,7 +35,7 @@ public class RidableOcelot extends EntityOcelot implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.OCELOT_RIDABLE_IN_WATER;
     }
 
     public void mobTick() {

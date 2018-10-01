@@ -45,7 +45,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return false;
+        return Config.PHANTOM_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

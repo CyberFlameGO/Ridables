@@ -7,7 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.listener.RidableListener;
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 
 public class RidableZombieHorse extends EntityHorseZombie implements RidableEntity {
@@ -23,7 +23,7 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.ZOMBIE_HORSE_RIDABLE_IN_WATER;
     }
 
     public void mobTick() {

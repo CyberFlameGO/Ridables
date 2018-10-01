@@ -39,7 +39,7 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.POLAR_BEAR_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

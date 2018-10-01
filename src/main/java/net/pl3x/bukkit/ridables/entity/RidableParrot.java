@@ -41,7 +41,7 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.PARROT_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

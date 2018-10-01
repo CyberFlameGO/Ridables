@@ -46,7 +46,7 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.WITCH_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

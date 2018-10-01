@@ -43,7 +43,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.BLAZE_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

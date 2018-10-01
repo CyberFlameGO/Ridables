@@ -35,7 +35,7 @@ public class RidableMushroomCow extends EntityMushroomCow implements RidableEnti
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.MOOSHROOM_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

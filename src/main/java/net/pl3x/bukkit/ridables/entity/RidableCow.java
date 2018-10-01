@@ -35,7 +35,7 @@ public class RidableCow extends EntityCow implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.COW_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

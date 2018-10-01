@@ -38,7 +38,7 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.ILLUSIONER_RIDABLE_IN_WATER;
     }
 
     // isValidLightLevel

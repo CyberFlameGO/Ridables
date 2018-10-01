@@ -37,7 +37,7 @@ public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.IRON_GOLEM_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

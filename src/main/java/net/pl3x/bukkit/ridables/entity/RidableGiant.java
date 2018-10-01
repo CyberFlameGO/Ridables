@@ -49,7 +49,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.GIANT_RIDABLE_IN_WATER;
     }
 
     // isValidLightLevel

@@ -48,7 +48,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.CHICKEN_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

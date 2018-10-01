@@ -36,7 +36,7 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.LLAMA_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

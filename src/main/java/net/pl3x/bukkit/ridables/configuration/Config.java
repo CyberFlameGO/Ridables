@@ -27,11 +27,13 @@ public class Config {
     public static float BAT_SPEED = 1.0F;
     public static float BAT_VERTICAL = 1.0F;
     public static float BAT_GRAVITY = 0.04F;
+    public static boolean BAT_RIDABLE_IN_WATER = true;
 
     public static boolean BLAZE_ENABLED = false;
     public static float BLAZE_SPEED = 1.0F;
     public static float BLAZE_VERTICAL = 0.5F;
     public static float BLAZE_GRAVITY = 0.04F;
+    public static boolean BLAZE_RIDABLE_IN_WATER = true;
     public static int BLAZE_SHOOT_COOLDOWN = 20;
     public static float BLAZE_SHOOT_SPEED = 1.0F;
     public static float BLAZE_SHOOT_DAMAGE = 5.0F;
@@ -40,12 +42,14 @@ public class Config {
     public static boolean CAVE_SPIDER_ENABLED = false;
     public static float CAVE_SPIDER_SPEED = 1.0F;
     public static float CAVE_SPIDER_JUMP_POWER = 0.5F;
+    public static boolean CAVE_SPIDER_RIDABLE_IN_WATER = true;
     public static boolean CAVE_SPIDER_CLIMB_WALLS = true;
     public static float CAVE_SPIDER_CLIMB_SPEED = 1.0F;
 
     public static boolean CHICKEN_ENABLED = false;
     public static float CHICKEN_SPEED = 1.0F;
     public static float CHICKEN_JUMP_POWER = 0.5F;
+    public static boolean CHICKEN_RIDABLE_IN_WATER = true;
     public static boolean CHICKEN_DROP_EGGS_WHILE_RIDING = false;
     public static int CHICKEN_EGG_DELAY_MIN = 6000;
     public static int CHICKEN_EGG_DELAY_MAX = 12000;
@@ -56,10 +60,12 @@ public class Config {
     public static boolean COW_ENABLED = false;
     public static float COW_SPEED = 1.0F;
     public static float COW_JUMP_POWER = 0.5F;
+    public static boolean COW_RIDABLE_IN_WATER = true;
 
     public static boolean CREEPER_ENABLED = false;
     public static float CREEPER_SPEED = 1.0F;
     public static float CREEPER_JUMP_POWER = 0.5F;
+    public static boolean CREEPER_RIDABLE_IN_WATER = true;
     public static float CREEPER_EXPLOSION_DAMAGE = 5.0F;
     public static int CREEPER_EXPLOSION_RADIUS = 3;
     public static boolean CREEPER_EXPLOSION_GRIEF = true;
@@ -82,6 +88,7 @@ public class Config {
     public static boolean DROWNED_ENABLED = false;
     public static float DROWNED_SPEED = 1.0F;
     public static float DROWNED_JUMP_POWER = 0.5F;
+    public static boolean DROWNED_RIDABLE_IN_WATER = true;
     public static int DROWNED_SHOOT_COOLDOWN = 20;
     public static float DROWNED_SHOOT_SPEED = 1.0F;
     public static float DROWNED_SHOOT_DAMAGE = 8.0F;
@@ -94,6 +101,7 @@ public class Config {
     public static boolean ENDERMAN_ENABLED = false;
     public static float ENDERMAN_SPEED = 1.0F;
     public static float ENDERMAN_JUMP_POWER = 0.5F;
+    public static boolean ENDERMAN_RIDABLE_IN_WATER = true;
     public static boolean ENDERMAN_DAMAGE_WHEN_WET = true;
     public static boolean ENDERMAN_EJECT_WHEN_WET = true;
     public static boolean ENDERMAN_TELEPORT_WHEN_DAMAGED = true;
@@ -101,15 +109,18 @@ public class Config {
     public static boolean ENDERMITE_ENABLED = false;
     public static float ENDERMITE_SPEED = 1.0F;
     public static float ENDERMITE_JUMP_POWER = 0.5F;
+    public static boolean ENDERMITE_RIDABLE_IN_WATER = true;
 
     public static boolean EVOKER_ENABLED = false;
     public static float EVOKER_SPEED = 1.0F;
     public static float EVOKER_JUMP_POWER = 0.5F;
+    public static boolean EVOKER_RIDABLE_IN_WATER = true;
     public static int EVOKER_SPELL_COOLDOWN = 40;
     public static float EVOKER_SPELL_DAMAGE = 6.0F;
 
     public static boolean GHAST_ENABLED = false;
     public static float GHAST_SPEED = 1.0F;
+    public static boolean GHAST_RIDABLE_IN_WATER = true;
     public static int GHAST_SHOOT_COOLDOWN = 20;
     public static float GHAST_SHOOT_SPEED = 1.0F;
     public static float GHAST_SHOOT_DAMAGE = 5.0F;
@@ -118,6 +129,7 @@ public class Config {
     public static boolean GIANT_ENABLED = false;
     public static float GIANT_SPEED = 1.0F;
     public static float GIANT_JUMP_POWER = 0.5F;
+    public static boolean GIANT_RIDABLE_IN_WATER = true;
     public static boolean GIANT_AI_ENABLED = true;
     public static float GIANT_MAX_HEALTH = 100F;
     public static float GIANT_AI_SPEED = 0.5F;
@@ -139,10 +151,12 @@ public class Config {
     public static boolean HUSK_ENABLED = false;
     public static float HUSK_SPEED = 1.0F;
     public static float HUSK_JUMP_POWER = 0.5F;
+    public static boolean HUSK_RIDABLE_IN_WATER = true;
 
     public static boolean ILLUSIONER_ENABLED = false;
     public static float ILLUSIONER_SPEED = 1.0F;
     public static float ILLUSIONER_JUMP_POWER = 0.5F;
+    public static boolean ILLUSIONER_RIDABLE_IN_WATER = true;
     public static boolean ILLUSIONER_SPAWN_NATURALLY = false;
     public static int ILLUSIONER_SPAWN_LIGHT_LEVEL = 8;
     public static int ILLUSIONER_SPAWN_WEIGHT = 5;
@@ -155,36 +169,44 @@ public class Config {
     public static boolean IRON_GOLEM_ENABLED = false;
     public static float IRON_GOLEM_SPEED = 1.0F;
     public static float IRON_GOLEM_JUMP_POWER = 0.5F;
+    public static boolean IRON_GOLEM_RIDABLE_IN_WATER = true;
 
     public static boolean LLAMA_ENABLED = false;
     public static float LLAMA_SPEED = 1.0F;
     public static float LLAMA_JUMP_POWER = 0.5F;
+    public static boolean LLAMA_RIDABLE_IN_WATER = true;
     public static boolean LLAMA_CARAVAN = true;
 
     public static boolean MAGMA_CUBE_ENABLED = false;
     public static float MAGMA_CUBE_SPEED = 1.0F;
+    public static boolean MAGMA_CUBE_RIDABLE_IN_WATER = true;
 
     public static boolean MOOSHROOM_ENABLED = false;
     public static float MOOSHROOM_SPEED = 1.0F;
     public static float MOOSHROOM_JUMP_POWER = 0.5F;
+    public static boolean MOOSHROOM_RIDABLE_IN_WATER = true;
 
     public static boolean OCELOT_ENABLED = false;
     public static float OCELOT_SPEED = 1.0F;
     public static float OCELOT_JUMP_POWER = 0.5F;
+    public static boolean OCELOT_RIDABLE_IN_WATER = true;
 
     public static boolean PARROT_ENABLED = false;
     public static float PARROT_SPEED = 1.0F;
     public static float PARROT_VERTICAL = 1.0F;
     public static float PARROT_GRAVITY = 0.04F;
+    public static boolean PARROT_RIDABLE_IN_WATER = true;
 
     public static boolean PIG_ENABLED = false;
     public static float PIG_SPEED = 1.0F;
     public static float PIG_JUMP_POWER = 0.5F;
+    public static boolean PIG_RIDABLE_IN_WATER = true;
     public static boolean PIG_SADDLE_BACK = true;
 
     public static boolean PHANTOM_ENABLED = false;
     public static float PHANTOM_SPEED = 1.0F;
     public static double PHANTOM_GRAVITY = 0.05D;
+    public static boolean PHANTOM_RIDABLE_IN_WATER = false;
     public static boolean PHANTOM_FALL_DAMAGE = true;
     public static boolean PHANTOM_BURN_IN_SUNLIGHT = true;
     public static float PHANTOM_SHOOT_DAMAGE = 1.0F;
@@ -192,6 +214,7 @@ public class Config {
     public static boolean POLAR_BEAR_ENABLED = false;
     public static float POLAR_BEAR_SPEED = 1.0F;
     public static float POLAR_BEAR_JUMP_POWER = 0.5F;
+    public static boolean POLAR_BEAR_RIDABLE_IN_WATER = true;
     public static float POLAR_BEAR_STEP_HEIGHT = 1.0F;
     public static boolean POLAR_BEAR_STAND = true;
 
@@ -201,6 +224,7 @@ public class Config {
     public static boolean RABBIT_ENABLED = false;
     public static float RABBIT_SPEED = 1.0F;
     public static float RABBIT_JUMP_POWER = 0.5F;
+    public static boolean RABBIT_RIDABLE_IN_WATER = true;
 
     public static boolean SALMON_ENABLED = false;
     public static float SALMON_SPEED = 1.0F;
@@ -208,6 +232,7 @@ public class Config {
     public static boolean SHEEP_ENABLED = false;
     public static float SHEEP_SPEED = 1.0F;
     public static float SHEEP_JUMP_POWER = 0.5F;
+    public static boolean SHEEP_RIDABLE_IN_WATER = true;
 
     public static boolean SHULKER_ENABLED = false;
     public static int SHULKER_PEEK_HEIGHT = 33;
@@ -218,15 +243,19 @@ public class Config {
     public static boolean SILVERFISH_ENABLED = false;
     public static float SILVERFISH_SPEED = 1.0F;
     public static float SILVERFISH_JUMP_POWER = 0.5F;
+    public static boolean SILVERFISH_RIDABLE_IN_WATER = true;
 
     public static boolean SKELETON_ENABLED = false;
     public static float SKELETON_SPEED = 1.0F;
     public static float SKELETON_JUMP_POWER = 0.5F;
+    public static boolean SKELETON_RIDABLE_IN_WATER = true;
 
     public static boolean SKELETON_HORSE_ENABLED = false;
+    public static boolean SKELETON_HORSE_RIDABLE_IN_WATER = true;
 
     public static boolean SLIME_ENABLED = false;
     public static float SLIME_SPEED = 1.0F;
+    public static boolean SLIME_RIDABLE_IN_WATER = true;
 
     public static boolean SNOWMAN_ENABLED = false;
     public static float SNOWMAN_SPEED = 1.0F;
@@ -238,6 +267,7 @@ public class Config {
     public static boolean SPIDER_ENABLED = false;
     public static float SPIDER_SPEED = 1.0F;
     public static float SPIDER_JUMP_POWER = 0.5F;
+    public static boolean SPIDER_RIDABLE_IN_WATER = true;
     public static boolean SPIDER_CLIMB_WALLS = true;
     public static float SPIDER_CLIMB_SPEED = 1.0F;
 
@@ -248,6 +278,7 @@ public class Config {
     public static boolean STRAY_ENABLED = false;
     public static float STRAY_SPEED = 1.0F;
     public static float STRAY_JUMP_POWER = 0.5F;
+    public static boolean STRAY_RIDABLE_IN_WATER = true;
 
     public static boolean TROPICAL_FISH_ENABLED = false;
     public static float TROPICAL_FISH_SPEED = 1.0F;
@@ -259,24 +290,29 @@ public class Config {
     public static boolean VEX_ENABLED = false;
     public static float VEX_SPEED = 1.0F;
     public static boolean VEX_NOCLIP = false;
+    public static boolean VEX_RIDABLE_IN_WATER = true;
 
     public static boolean VILLAGER_ENABLED = false;
     public static float VILLAGER_SPEED = 1.0F;
     public static float VILLAGER_JUMP_POWER = 0.5F;
+    public static boolean VILLAGER_RIDABLE_IN_WATER = true;
 
     public static boolean VINDICATOR_ENABLED = false;
     public static float VINDICATOR_SPEED = 1.0F;
     public static float VINDICATOR_JUMP_POWER = 0.5F;
+    public static boolean VINDICATOR_RIDABLE_IN_WATER = true;
 
     public static boolean WITCH_ENABLED = false;
     public static float WITCH_SPEED = 1.0F;
     public static float WITCH_JUMP_POWER = 0.5F;
+    public static boolean WITCH_RIDABLE_IN_WATER = true;
     public static int WITCH_SHOOT_COOLDOWN = 40;
     public static float WITCH_SHOOT_SPEED = 1.0F;
     public static PotionRegistry WITCH_SHOOT_POTION_TYPE = PotionRegistry.a("harming");
 
     public static boolean WITHER_ENABLED = false;
     public static float WITHER_SPEED = 1.0F;
+    public static boolean WITHER_RIDABLE_IN_WATER = true;
     public static int WITHER_SHOOT_COOLDOWN = 20;
     public static float WITHER_SHOOT_SPEED = 1.0F;
     public static float WITHER_SHOOT_DAMAGE = 1.0F;
@@ -287,24 +323,30 @@ public class Config {
     public static boolean WITHER_SKELETON_ENABLED = false;
     public static float WITHER_SKELETON_SPEED = 1.0F;
     public static float WITHER_SKELETON_JUMP_POWER = 0.5F;
+    public static boolean WITHER_SKELETON_RIDABLE_IN_WATER = true;
 
     public static boolean WOLF_ENABLED = false;
     public static float WOLF_SPEED = 1.0F;
     public static float WOLF_JUMP_POWER = 0.5F;
+    public static boolean WOLF_RIDABLE_IN_WATER = true;
 
     public static boolean ZOMBIE_ENABLED = false;
     public static float ZOMBIE_SPEED = 1.0F;
     public static float ZOMBIE_JUMP_POWER = 0.5F;
+    public static boolean ZOMBIE_RIDABLE_IN_WATER = true;
 
     public static boolean ZOMBIE_HORSE_ENABLED = false;
+    public static boolean ZOMBIE_HORSE_RIDABLE_IN_WATER = true;
 
     public static boolean ZOMBIE_PIGMAN_ENABLED = false;
     public static float ZOMBIE_PIGMAN_SPEED = 1.0F;
     public static float ZOMBIE_PIGMAN_JUMP_POWER = 0.5F;
+    public static boolean ZOMBIE_PIGMAN_RIDABLE_IN_WATER = true;
 
     public static boolean ZOMBIE_VILLAGER_ENABLED = false;
     public static float ZOMBIE_VILLAGER_SPEED = 1.0F;
     public static float ZOMBIE_VILLAGER_JUMP_POWER = 0.5F;
+    public static boolean ZOMBIE_VILLAGER_RIDABLE_IN_WATER = true;
 
     /**
      * Reload the config.yml from disk
@@ -332,11 +374,13 @@ public class Config {
         BAT_SPEED = (float) config.getDouble("bat.speed", 1.0D);
         BAT_VERTICAL = (float) config.getDouble("bat.vertical", 1.0D);
         BAT_GRAVITY = (float) config.getDouble("bat.gravity", 0.04D);
+        BAT_RIDABLE_IN_WATER = config.getBoolean("bat.ride-in-water", true);
 
         BLAZE_ENABLED = config.getBoolean("blaze.enabled", false);
         BLAZE_SPEED = (float) config.getDouble("blaze.speed", 1.0D);
         BLAZE_VERTICAL = (float) config.getDouble("blaze.vertical", 0.5D);
         BLAZE_GRAVITY = (float) config.getDouble("blaze.gravity", 0.04D);
+        BLAZE_RIDABLE_IN_WATER = config.getBoolean("blaze.ride-in-water", true);
         BLAZE_SHOOT_COOLDOWN = (int) config.getDouble("blaze.shoot.cooldown", 20);
         BLAZE_SHOOT_SPEED = (float) config.getDouble("blaze.shoot.speed", 1.0D);
         BLAZE_SHOOT_DAMAGE = (float) config.getDouble("blaze.shoot.damage", 5.0D);
@@ -345,12 +389,14 @@ public class Config {
         CAVE_SPIDER_ENABLED = config.getBoolean("cave_spider.enabled", false);
         CAVE_SPIDER_SPEED = (float) config.getDouble("cave_spider.speed", 1.0D);
         CAVE_SPIDER_JUMP_POWER = (float) config.getDouble("cave_spider.jump-power", 0.5D);
+        CAVE_SPIDER_RIDABLE_IN_WATER = config.getBoolean("cave_spider.ride-in-water", true);
         CAVE_SPIDER_CLIMB_WALLS = config.getBoolean("cave_spider.climb-walls", true);
         CAVE_SPIDER_CLIMB_SPEED = (float) config.getDouble("cave_spider.climb-speed", 1.0D);
 
         CHICKEN_ENABLED = config.getBoolean("chicken.enabled", false);
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);
         CHICKEN_JUMP_POWER = (float) config.getDouble("chicken.jump-power", 0.5D);
+        CHICKEN_RIDABLE_IN_WATER = config.getBoolean("chicken.ride-in-water", true);
         CHICKEN_DROP_EGGS_WHILE_RIDING = config.getBoolean("chicken.drop-eggs", false);
         CHICKEN_EGG_DELAY_MIN = (int) config.getDouble("chicken.egg-delay.min", 6000);
         CHICKEN_EGG_DELAY_MAX = (int) config.getDouble("chicken.egg-delay.max", 12000);
@@ -368,10 +414,12 @@ public class Config {
         COW_ENABLED = config.getBoolean("cow.enabled", false);
         COW_SPEED = (float) config.getDouble("cow.speed", 1.0D);
         COW_JUMP_POWER = (float) config.getDouble("cow.jump-power", 0.5D);
+        COW_RIDABLE_IN_WATER = config.getBoolean("cow.ride-in-water", true);
 
         CREEPER_ENABLED = config.getBoolean("creeper.enabled", false);
         CREEPER_SPEED = (float) config.getDouble("creeper.speed", 1.0D);
         CREEPER_JUMP_POWER = (float) config.getDouble("creeper.jump-power", 0.5D);
+        CREEPER_RIDABLE_IN_WATER = config.getBoolean("creeper.ride-in-water", true);
         CREEPER_EXPLOSION_DAMAGE = (float) config.getDouble("creeper.explosion.damage", 5.0D);
         CREEPER_EXPLOSION_RADIUS = (int) config.getDouble("creeper.explosion.radius", 3.0D);
         CREEPER_EXPLOSION_GRIEF = config.getBoolean("creeper.explosion.grief", true);
@@ -394,6 +442,7 @@ public class Config {
         DROWNED_ENABLED = config.getBoolean("drowned.enabled", false);
         DROWNED_SPEED = (float) config.getDouble("drowned.speed", 1.0D);
         DROWNED_JUMP_POWER = (float) config.getDouble("drowned.jump-power", 0.5D);
+        DROWNED_RIDABLE_IN_WATER = config.getBoolean("drowned.ride-in-water", true);
         DROWNED_SHOOT_COOLDOWN = (int) config.getDouble("drowned.shoot.cooldown", 20);
         DROWNED_SHOOT_SPEED = (float) config.getDouble("drowned.shoot.speed", 1.0D);
         DROWNED_SHOOT_DAMAGE = (float) config.getDouble("drowned.shoot.damage", 8.0D);
@@ -406,6 +455,7 @@ public class Config {
         ENDERMAN_ENABLED = config.getBoolean("enderman.enabled", false);
         ENDERMAN_SPEED = (float) config.getDouble("enderman.speed", 1.0D);
         ENDERMAN_JUMP_POWER = (float) config.getDouble("enderman.jump-power", 0.5D);
+        ENDERMAN_RIDABLE_IN_WATER = config.getBoolean("enderman.ride-in-water", true);
         ENDERMAN_DAMAGE_WHEN_WET = config.getBoolean("enderman.when-wet.damage", true);
         ENDERMAN_EJECT_WHEN_WET = config.getBoolean("enderman.when-wet.eject", true);
         ENDERMAN_TELEPORT_WHEN_DAMAGED = config.getBoolean("enderman.teleport-on-damage", true);
@@ -413,15 +463,18 @@ public class Config {
         ENDERMITE_ENABLED = config.getBoolean("endermite.enabled", false);
         ENDERMITE_SPEED = (float) config.getDouble("endermite.speed", 1.0D);
         ENDERMITE_JUMP_POWER = (float) config.getDouble("endermite.jump-power", 0.5D);
+        ENDERMITE_RIDABLE_IN_WATER = config.getBoolean("endermite.ride-in-water", true);
 
         EVOKER_ENABLED = config.getBoolean("evoker.enabled", false);
         EVOKER_SPEED = (float) config.getDouble("evoker.speed", 1.0D);
         EVOKER_JUMP_POWER = (float) config.getDouble("evoker.jump-power", 0.5D);
+        EVOKER_RIDABLE_IN_WATER = config.getBoolean("evoker.ride-in-water", true);
         EVOKER_SPELL_COOLDOWN = (int) config.getDouble("evoker.spell.cooldown", 40);
         EVOKER_SPELL_DAMAGE = (float) config.getDouble("evoker.spell.damage", 6.0D);
 
         GHAST_ENABLED = config.getBoolean("ghast.enabled", false);
         GHAST_SPEED = (float) config.getDouble("ghast.speed", 1.0D);
+        GHAST_RIDABLE_IN_WATER = config.getBoolean("ghast.ride-in-water", true);
         GHAST_SHOOT_COOLDOWN = (int) config.getDouble("ghast.shoot.cooldown", 20);
         GHAST_SHOOT_SPEED = (float) config.getDouble("ghast.shoot.speed", 1.0D);
         GHAST_SHOOT_DAMAGE = (float) config.getDouble("ghast.shoot.damage", 5.0D);
@@ -430,6 +483,7 @@ public class Config {
         GIANT_ENABLED = config.getBoolean("giant.enabled", false);
         GIANT_SPEED = (float) config.getDouble("giant.speed", 1.0D);
         GIANT_JUMP_POWER = (float) config.getDouble("giant.jump-power", 0.5D);
+        GIANT_RIDABLE_IN_WATER = config.getBoolean("giant.ride-in-water", true);
         GIANT_AI_ENABLED = config.getBoolean("giant.ai.enabled", true);
         GIANT_MAX_HEALTH = (float) config.getDouble("giant.ai.health", 100D);
         GIANT_AI_SPEED = (float) config.getDouble("giant.ai.speed", 0.3D);
@@ -454,10 +508,12 @@ public class Config {
         HUSK_ENABLED = config.getBoolean("husk.enabled", false);
         HUSK_SPEED = (float) config.getDouble("husk.speed", 1.0D);
         HUSK_JUMP_POWER = (float) config.getDouble("husk.jump-power", 0.5D);
+        HUSK_RIDABLE_IN_WATER = config.getBoolean("husk.ride-in-water", true);
 
         ILLUSIONER_ENABLED = config.getBoolean("illusioner.enabled", false);
         ILLUSIONER_SPEED = (float) config.getDouble("illusioner.speed", 1.0D);
         ILLUSIONER_JUMP_POWER = (float) config.getDouble("illusioner.jump-power", 0.5D);
+        ILLUSIONER_RIDABLE_IN_WATER = config.getBoolean("illusioner.ride-in-water", true);
         ILLUSIONER_SPAWN_NATURALLY = config.getBoolean("illusioner.spawn.natural", false);
         ILLUSIONER_SPAWN_LIGHT_LEVEL = (int) config.getDouble("illusioner.spawn.max-light", 8);
         ILLUSIONER_SPAWN_WEIGHT = (int) config.getDouble("illusioner.spawn.weight", 5);
@@ -473,36 +529,44 @@ public class Config {
         IRON_GOLEM_ENABLED = config.getBoolean("iron_golem.enabled", false);
         IRON_GOLEM_SPEED = (float) config.getDouble("iron_golem.speed", 1.0D);
         IRON_GOLEM_JUMP_POWER = (float) config.getDouble("iron_golem.jump-power", 0.5D);
+        IRON_GOLEM_RIDABLE_IN_WATER = config.getBoolean("iron_golem.ride-in-water", true);
 
         LLAMA_ENABLED = config.getBoolean("llama.enabled", false);
         LLAMA_SPEED = (float) config.getDouble("llama.speed", 1.0D);
         LLAMA_JUMP_POWER = (float) config.getDouble("llama.jump-power", 0.5D);
+        LLAMA_RIDABLE_IN_WATER = config.getBoolean("llama.ride-in-water", true);
         LLAMA_CARAVAN = config.getBoolean("llama.caravan", true);
 
         MAGMA_CUBE_ENABLED = config.getBoolean("magma_cube.enabled", false);
         MAGMA_CUBE_SPEED = (float) config.getDouble("magma_cube.speed", 1.0D);
+        MAGMA_CUBE_RIDABLE_IN_WATER = config.getBoolean("magma_cube.ride-in-water", true);
 
         MOOSHROOM_ENABLED = config.getBoolean("mooshroom.enabled", false);
         MOOSHROOM_SPEED = (float) config.getDouble("mooshroom.speed", 1.0D);
         MOOSHROOM_JUMP_POWER = (float) config.getDouble("mooshroom.jump-power", 0.5D);
+        MOOSHROOM_RIDABLE_IN_WATER = config.getBoolean("mooshroom.ride-in-water", true);
 
         OCELOT_ENABLED = config.getBoolean("ocelot.enabled", false);
         OCELOT_SPEED = (float) config.getDouble("ocelot.speed", 1.0D);
         OCELOT_JUMP_POWER = (float) config.getDouble("ocelot.jump-power", 0.5D);
+        OCELOT_RIDABLE_IN_WATER = config.getBoolean("ocelot.ride-in-water", true);
 
         PARROT_ENABLED = config.getBoolean("parrot.enabled", false);
         PARROT_SPEED = (float) config.getDouble("parrot.speed", 1.0D);
         PARROT_VERTICAL = (float) config.getDouble("parrot.vertical", 1.0D);
         PARROT_GRAVITY = (float) config.getDouble("parrot.gravity", 0.04D);
+        PARROT_RIDABLE_IN_WATER = config.getBoolean("parrot.ride-in-water", true);
 
         PIG_ENABLED = config.getBoolean("pig.enabled", false);
         PIG_SPEED = (float) config.getDouble("pig.speed", 1.0D);
         PIG_JUMP_POWER = (float) config.getDouble("pig.jump-power", 0.5D);
+        PIG_RIDABLE_IN_WATER = config.getBoolean("pig.ride-in-water", true);
         PIG_SADDLE_BACK = config.getBoolean("pig.saddle-back", true);
 
         PHANTOM_ENABLED = config.getBoolean("phantom.enabled", false);
         PHANTOM_SPEED = (float) config.getDouble("phantom.speed", 1.0D);
         PHANTOM_GRAVITY = config.getDouble("phantom.gravity", 0.05D);
+        PHANTOM_RIDABLE_IN_WATER = config.getBoolean("phantom.ride-in-water", false);
         PHANTOM_FALL_DAMAGE = config.getBoolean("phantom.fall-damage", true);
         PHANTOM_BURN_IN_SUNLIGHT = config.getBoolean("phantom.burn-in-sun", true);
         PHANTOM_SHOOT_DAMAGE = (float) config.getDouble("phantom.shoot-damage", 1.0D);
@@ -510,6 +574,7 @@ public class Config {
         POLAR_BEAR_ENABLED = config.getBoolean("polar_bear.enabled", false);
         POLAR_BEAR_SPEED = (float) config.getDouble("polar_bear.speed", 1.0D);
         POLAR_BEAR_JUMP_POWER = (float) config.getDouble("polar_bear.jump-power", 0.5D);
+        POLAR_BEAR_RIDABLE_IN_WATER = config.getBoolean("polar_bear.ride-in-water", true);
         POLAR_BEAR_STEP_HEIGHT = (float) config.getDouble("polar_bear.step-height", 1.0D);
         POLAR_BEAR_STAND = config.getBoolean("polar_bear.stand", true);
 
@@ -519,6 +584,7 @@ public class Config {
         RABBIT_ENABLED = config.getBoolean("rabbit.enabled", false);
         RABBIT_SPEED = (float) config.getDouble("rabbit.speed", 1.0D);
         RABBIT_JUMP_POWER = (float) config.getDouble("rabbit.jump-power", 0.5D);
+        RABBIT_RIDABLE_IN_WATER = config.getBoolean("rabbit.ride-in-water", true);
 
         SALMON_ENABLED = config.getBoolean("salmon.enabled", false);
         SALMON_SPEED = (float) config.getDouble("salmon.speed", 1.0D);
@@ -526,6 +592,7 @@ public class Config {
         SHEEP_ENABLED = config.getBoolean("sheep.enabled", false);
         SHEEP_SPEED = (float) config.getDouble("sheep.speed", 1.0D);
         SHEEP_JUMP_POWER = (float) config.getDouble("sheep.jump-power", 0.5D);
+        SHEEP_RIDABLE_IN_WATER = config.getBoolean("sheep.ride-in-water", true);
 
         SHULKER_ENABLED = config.getBoolean("shulker.enabled", false);
         SHULKER_PEEK_HEIGHT = (int) config.getDouble("shulker.peek-height", 33);
@@ -536,15 +603,19 @@ public class Config {
         SILVERFISH_ENABLED = config.getBoolean("silverfish.enabled", false);
         SILVERFISH_SPEED = (float) config.getDouble("silverfish.speed", 1.0D);
         SILVERFISH_JUMP_POWER = (float) config.getDouble("silverfish.jump-power", 0.5D);
+        SILVERFISH_RIDABLE_IN_WATER = config.getBoolean("silverfish.ride-in-water", true);
 
         SKELETON_ENABLED = config.getBoolean("skeleton.enabled", false);
         SKELETON_SPEED = (float) config.getDouble("skeleton.speed", 1.0D);
         SKELETON_JUMP_POWER = (float) config.getDouble("skeleton.jump-power", 0.5D);
+        SKELETON_RIDABLE_IN_WATER = config.getBoolean("skeleton.ride-in-water", true);
 
         SKELETON_HORSE_ENABLED = config.getBoolean("skeleton_horse.enabled", false);
+        SKELETON_HORSE_RIDABLE_IN_WATER = config.getBoolean("skeleton_horse.ride-in-water", true);
 
         SLIME_ENABLED = config.getBoolean("slime.enabled", false);
         SLIME_SPEED = (float) config.getDouble("slime.speed", 1.0D);
+        SLIME_RIDABLE_IN_WATER = config.getBoolean("slime.ride-in-water", true);
 
         SNOWMAN_ENABLED = config.getBoolean("snow_golem.enabled", false);
         SNOWMAN_SPEED = (float) config.getDouble("snow_golem.speed", 1.0D);
@@ -556,6 +627,7 @@ public class Config {
         SPIDER_ENABLED = config.getBoolean("spider.enabled", false);
         SPIDER_SPEED = (float) config.getDouble("spider.speed", 1.0D);
         SPIDER_JUMP_POWER = (float) config.getDouble("spider.jump-power", 0.5D);
+        SPIDER_RIDABLE_IN_WATER = config.getBoolean("spider.ride-in-water", true);
         SPIDER_CLIMB_WALLS = config.getBoolean("spider.climb-walls", true);
         SPIDER_CLIMB_SPEED = (float) config.getDouble("spider.climb-speed", 1.0D);
 
@@ -566,6 +638,7 @@ public class Config {
         STRAY_ENABLED = config.getBoolean("stray.enabled", false);
         STRAY_SPEED = (float) config.getDouble("stray.speed", 1.0D);
         STRAY_JUMP_POWER = (float) config.getDouble("stray.jump-power", 0.5D);
+        STRAY_RIDABLE_IN_WATER = config.getBoolean("stray.ride-in-water", true);
 
         TROPICAL_FISH_ENABLED = config.getBoolean("tropical_fish.enabled", false);
         TROPICAL_FISH_SPEED = (float) config.getDouble("tropical_fish.speed", 1.0D);
@@ -577,18 +650,22 @@ public class Config {
         VEX_ENABLED = config.getBoolean("vex.enabled", false);
         VEX_SPEED = (float) config.getDouble("vex.speed", 1.0D);
         VEX_NOCLIP = config.getBoolean("vex.noclip", false);
+        VEX_RIDABLE_IN_WATER = config.getBoolean("vex.ride-in-water", true);
 
         VILLAGER_ENABLED = config.getBoolean("villager.enabled", false);
         VILLAGER_SPEED = (float) config.getDouble("villager.speed", 1.0D);
         VILLAGER_JUMP_POWER = (float) config.getDouble("villager.jump-power", 0.5D);
+        VILLAGER_RIDABLE_IN_WATER = config.getBoolean("villager.ride-in-water", true);
 
         VINDICATOR_ENABLED = config.getBoolean("vindicator.enabled", false);
         VINDICATOR_SPEED = (float) config.getDouble("vindicator.speed", 1.0D);
         VINDICATOR_JUMP_POWER = (float) config.getDouble("vindicator.jump-power", 0.5D);
+        VINDICATOR_RIDABLE_IN_WATER = config.getBoolean("vindicator.ride-in-water", true);
 
         WITCH_ENABLED = config.getBoolean("witch.enabled", false);
         WITCH_SPEED = (float) config.getDouble("witch.speed", 1.0D);
         WITCH_JUMP_POWER = (float) config.getDouble("witch.jump-power", 0.5D);
+        WITCH_RIDABLE_IN_WATER = config.getBoolean("witch.ride-in-water", true);
         WITCH_SHOOT_COOLDOWN = (int) config.getDouble("witch.shoot.cooldown", 40);
         WITCH_SHOOT_SPEED = (float) config.getDouble("witch.shoot.speed", 1.0D);
         String potion = config.getString("witch.shoot.potion", "harming").toLowerCase();
@@ -603,6 +680,7 @@ public class Config {
 
         WITHER_ENABLED = config.getBoolean("wither.enabled", false);
         WITHER_SPEED = (float) config.getDouble("wither.speed", 1.0D);
+        WITHER_RIDABLE_IN_WATER = config.getBoolean("wither.ride-in-water", true);
         WITHER_SHOOT_COOLDOWN = (int) config.getDouble("wither.shoot.cooldown", 20);
         WITHER_SHOOT_SPEED = (float) config.getDouble("wither.shoot.speed", 1.0D);
         WITHER_SHOOT_DAMAGE = (float) config.getDouble("wither.shoot.damage", 1.0D);
@@ -613,23 +691,29 @@ public class Config {
         WITHER_SKELETON_ENABLED = config.getBoolean("wither_skeleton.enabled", false);
         WITHER_SKELETON_SPEED = (float) config.getDouble("wither_skeleton.speed", 1.0D);
         WITHER_SKELETON_JUMP_POWER = (float) config.getDouble("wither_skeleton.jump-power", 0.5D);
+        WITHER_SKELETON_RIDABLE_IN_WATER = config.getBoolean("wither_skeleton.ride-in-water", true);
 
         WOLF_ENABLED = config.getBoolean("wolf.enabled", false);
         WOLF_SPEED = (float) config.getDouble("wolf.speed", 1.0D);
         WOLF_JUMP_POWER = (float) config.getDouble("wolf.jump-power", 0.5D);
+        WOLF_RIDABLE_IN_WATER = config.getBoolean("wolf.ride-in-water", true);
 
         ZOMBIE_ENABLED = config.getBoolean("zombie.enabled", false);
         ZOMBIE_SPEED = (float) config.getDouble("zombie.speed", 1.0D);
         ZOMBIE_JUMP_POWER = (float) config.getDouble("zombie.jump-power", 0.5D);
+        ZOMBIE_RIDABLE_IN_WATER = config.getBoolean("zombie.ride-in-water", true);
 
         ZOMBIE_HORSE_ENABLED = config.getBoolean("zombie_horse.enabled", false);
+        ZOMBIE_HORSE_RIDABLE_IN_WATER = config.getBoolean("zombie_horse.ride-in-water", true);
 
         ZOMBIE_PIGMAN_ENABLED = config.getBoolean("zombie_pigman.enabled", false);
         ZOMBIE_PIGMAN_SPEED = (float) config.getDouble("zombie_pigman.speed", 1.0D);
         ZOMBIE_PIGMAN_JUMP_POWER = (float) config.getDouble("zombie_pigman.jump-power", 0.5D);
+        ZOMBIE_PIGMAN_RIDABLE_IN_WATER = config.getBoolean("zombie_pigman.ride-in-water", true);
 
         ZOMBIE_VILLAGER_ENABLED = config.getBoolean("zombie_villager.enabled", false);
         ZOMBIE_VILLAGER_SPEED = (float) config.getDouble("zombie_villager.speed", 1.0D);
         ZOMBIE_VILLAGER_JUMP_POWER = (float) config.getDouble("zombie_villager.jump-power", 0.5D);
+        ZOMBIE_VILLAGER_RIDABLE_IN_WATER = config.getBoolean("zombie_villager.ride-in-water", true);
     }
 }

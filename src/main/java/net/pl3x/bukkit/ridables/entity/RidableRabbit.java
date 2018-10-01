@@ -36,7 +36,7 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.RABBIT_RIDABLE_IN_WATER;
     }
 
     public void mobTick() {

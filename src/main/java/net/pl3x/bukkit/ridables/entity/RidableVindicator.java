@@ -35,7 +35,7 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.VINDICATOR_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

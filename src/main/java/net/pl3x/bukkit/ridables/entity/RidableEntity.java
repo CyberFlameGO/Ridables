@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTameableAnimal;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -10,7 +11,6 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.Material;
@@ -28,6 +28,15 @@ public interface RidableEntity {
      * @return RidableType
      */
     RidableType getType();
+
+    /**
+     * Get if ridable in water
+     *
+     * @return True if ridable in water
+     */
+    default boolean canBeRiddenInWater() {
+        return ((EntityLiving) this).aY();
+    }
 
     /**
      * Set the rotation of the entity
@@ -115,7 +124,7 @@ public interface RidableEntity {
     }
 
     default boolean hasRidePerm(Player player) {
-        boolean hasPerm =  player.hasPermission("allow.ride." + getType().getName());
+        boolean hasPerm = player.hasPermission("allow.ride." + getType().getName());
         if (!hasPerm) {
             Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to ride: " + getType().getName());
         }
@@ -123,7 +132,7 @@ public interface RidableEntity {
     }
 
     default boolean hasShootPerm(Player player) {
-        boolean hasPerm =  player.hasPermission("allow.shoot." + getType().getName());
+        boolean hasPerm = player.hasPermission("allow.shoot." + getType().getName());
         if (!hasPerm) {
             Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to shoot: " + getType().getName());
         }
@@ -131,7 +140,7 @@ public interface RidableEntity {
     }
 
     default boolean hasSpecialPerm(Player player) {
-        boolean hasPerm =  player.hasPermission("allow.special." + getType().getName());
+        boolean hasPerm = player.hasPermission("allow.special." + getType().getName());
         if (!hasPerm) {
             Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to use special: " + getType().getName());
         }

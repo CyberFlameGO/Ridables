@@ -35,7 +35,7 @@ public class RidableSheep extends EntitySheep implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.SHEEP_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

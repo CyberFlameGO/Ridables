@@ -48,7 +48,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.SLIME_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

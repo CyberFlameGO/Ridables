@@ -35,7 +35,7 @@ public class RidableWolf extends EntityWolf implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.WOLF_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

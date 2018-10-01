@@ -54,7 +54,7 @@ public class RidableSnowman extends EntitySnowman implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return false;
     }
 
     protected void mobTick() {

@@ -35,7 +35,7 @@ public class RidableVillager extends EntityVillager implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.VILLAGER_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

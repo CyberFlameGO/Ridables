@@ -35,7 +35,7 @@ public class RidableSilverfish extends EntitySilverfish implements RidableEntity
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.SILVERFISH_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

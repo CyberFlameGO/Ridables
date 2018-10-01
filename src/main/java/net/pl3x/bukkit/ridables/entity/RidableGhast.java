@@ -43,7 +43,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.GHAST_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

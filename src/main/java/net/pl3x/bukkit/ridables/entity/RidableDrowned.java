@@ -46,7 +46,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.DROWNED_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

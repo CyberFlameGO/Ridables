@@ -35,7 +35,7 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.ZOMBIE_PIGMAN_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {

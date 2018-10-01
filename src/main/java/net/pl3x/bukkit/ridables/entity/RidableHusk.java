@@ -35,7 +35,7 @@ public class RidableHusk extends EntityZombieHusk implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return true;
+        return Config.HUSK_RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {
