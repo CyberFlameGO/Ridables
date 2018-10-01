@@ -79,6 +79,9 @@ chicken:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   drop-eggs: false   # able to drop eggs while riding
+  egg-delay:
+    min: 6000        # minimum amount of time between laying eggs (in ticks)
+    max: 12000       # maximum amount of time between laying eggs (in ticks)
 
 # Cod options
 cod:

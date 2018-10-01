@@ -47,6 +47,8 @@ public class Config {
     public static float CHICKEN_SPEED = 1.0F;
     public static float CHICKEN_JUMP_POWER = 0.5F;
     public static boolean CHICKEN_DROP_EGGS_WHILE_RIDING = false;
+    public static int CHICKEN_EGG_DELAY_MIN = 6000;
+    public static int CHICKEN_EGG_DELAY_MAX = 12000;
 
     public static boolean COD_ENABLED = false;
     public static float COD_SPEED = 1.0F;
@@ -350,6 +352,15 @@ public class Config {
         CHICKEN_SPEED = (float) config.getDouble("chicken.speed", 1.0D);
         CHICKEN_JUMP_POWER = (float) config.getDouble("chicken.jump-power", 0.5D);
         CHICKEN_DROP_EGGS_WHILE_RIDING = config.getBoolean("chicken.drop-eggs", false);
+        CHICKEN_EGG_DELAY_MIN = (int) config.getDouble("chicken.egg-delay.min", 6000);
+        CHICKEN_EGG_DELAY_MAX = (int) config.getDouble("chicken.egg-delay.max", 12000);
+        if (CHICKEN_EGG_DELAY_MIN > CHICKEN_EGG_DELAY_MAX) {
+            Logger.error("Chicken egg delay min and max values are backwards");
+            Logger.error("Swapping values in memory");
+            CHICKEN_EGG_DELAY_MIN = CHICKEN_EGG_DELAY_MIN ^ CHICKEN_EGG_DELAY_MAX;
+            CHICKEN_EGG_DELAY_MAX = CHICKEN_EGG_DELAY_MIN ^ CHICKEN_EGG_DELAY_MAX;
+            CHICKEN_EGG_DELAY_MIN = CHICKEN_EGG_DELAY_MIN ^ CHICKEN_EGG_DELAY_MAX;
+        }
 
         COD_ENABLED = config.getBoolean("cod.enabled", false);
         COD_SPEED = (float) config.getDouble("cod.speed", 1.0D);
