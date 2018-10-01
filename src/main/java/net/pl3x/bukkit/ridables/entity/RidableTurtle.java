@@ -48,6 +48,7 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.TURTLE_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

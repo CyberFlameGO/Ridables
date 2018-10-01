@@ -39,6 +39,7 @@ public class RidableWitherSkeleton extends EntitySkeletonWither implements Ridab
     }
 
     protected void mobTick() {
+        Q = Config.WITHER_SKELETON_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

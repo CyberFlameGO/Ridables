@@ -39,6 +39,7 @@ public class RidableSheep extends EntitySheep implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.SHEEP_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

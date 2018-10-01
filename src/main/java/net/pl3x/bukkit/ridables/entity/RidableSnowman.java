@@ -58,6 +58,7 @@ public class RidableSnowman extends EntitySnowman implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.SNOWMAN_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

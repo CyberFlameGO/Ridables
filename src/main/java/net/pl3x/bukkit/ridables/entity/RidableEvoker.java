@@ -53,7 +53,7 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         if (spellCooldown > 0) {
             spellCooldown--;
         }
-
+        Q = Config.EVOKER_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

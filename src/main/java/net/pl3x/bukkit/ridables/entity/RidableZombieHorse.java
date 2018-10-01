@@ -27,6 +27,7 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
     }
 
     public void mobTick() {
+        Q = Config.ZOMBIE_HORSE_STEP_HEIGHT;
         updateRider();
         super.mobTick();
     }

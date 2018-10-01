@@ -39,6 +39,7 @@ public class RidableStray extends EntitySkeletonStray implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.STRAY_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

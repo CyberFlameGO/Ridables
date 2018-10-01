@@ -39,6 +39,7 @@ public class RidableWolf extends EntityWolf implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.WOLF_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             if (isSitting()) {

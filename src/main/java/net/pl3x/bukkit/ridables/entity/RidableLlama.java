@@ -40,6 +40,7 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.LLAMA_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

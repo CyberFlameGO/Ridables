@@ -27,6 +27,7 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
     }
 
     public void mobTick() {
+        Q = Config.SKELETON_HORSE_STEP_HEIGHT;
         updateRider();
         super.mobTick();
     }

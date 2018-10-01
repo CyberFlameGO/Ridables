@@ -39,6 +39,7 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
     }
 
     protected void mobTick() {
+        Q = Config.VINDICATOR_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

@@ -39,6 +39,7 @@ public class RidableVillager extends EntityVillager implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.VILLAGER_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

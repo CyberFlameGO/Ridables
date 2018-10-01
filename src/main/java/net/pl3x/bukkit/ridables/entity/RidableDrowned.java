@@ -53,7 +53,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-
+        Q = Config.DROWNED_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

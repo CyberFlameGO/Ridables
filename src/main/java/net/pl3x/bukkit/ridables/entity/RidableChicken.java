@@ -52,6 +52,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.CHICKEN_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

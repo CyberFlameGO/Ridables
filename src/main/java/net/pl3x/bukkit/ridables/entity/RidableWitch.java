@@ -53,7 +53,7 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-
+        Q = Config.WITCH_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

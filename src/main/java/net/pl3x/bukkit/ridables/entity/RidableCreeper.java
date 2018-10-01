@@ -79,6 +79,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.CREEPER_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

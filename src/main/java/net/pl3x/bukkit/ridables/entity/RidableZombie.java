@@ -39,6 +39,7 @@ public class RidableZombie extends EntityZombie implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.ZOMBIE_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

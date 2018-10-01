@@ -39,6 +39,7 @@ public class RidableOcelot extends EntityOcelot implements RidableEntity {
     }
 
     public void mobTick() {
+        Q = Config.OCELOT_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             if (isSitting()) {

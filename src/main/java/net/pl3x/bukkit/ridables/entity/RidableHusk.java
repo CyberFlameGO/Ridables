@@ -39,6 +39,7 @@ public class RidableHusk extends EntityZombieHusk implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.HUSK_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

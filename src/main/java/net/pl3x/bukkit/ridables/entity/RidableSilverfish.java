@@ -39,6 +39,7 @@ public class RidableSilverfish extends EntitySilverfish implements RidableEntity
     }
 
     protected void mobTick() {
+        Q = Config.SILVERFISH_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

@@ -39,6 +39,7 @@ public class RidableMushroomCow extends EntityMushroomCow implements RidableEnti
     }
 
     protected void mobTick() {
+        Q = Config.MOOSHROOM_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

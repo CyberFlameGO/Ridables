@@ -39,6 +39,7 @@ public class RidableEndermite extends EntityEndermite implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.ENDERMITE_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

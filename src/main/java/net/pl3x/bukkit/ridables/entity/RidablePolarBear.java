@@ -30,7 +30,6 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
         wasdController = new ControllerWASD(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-        Q = Config.POLAR_BEAR_STEP_HEIGHT;
     }
 
     public RidableType getType() {
@@ -43,9 +42,9 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.POLAR_BEAR_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
-            Q = Config.POLAR_BEAR_STEP_HEIGHT;
             setGoalTarget(null, null, false);
             setRotation(rider.yaw, rider.pitch);
             useWASDController();

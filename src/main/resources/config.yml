@@ -81,6 +81,7 @@ chicken:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   drop-eggs: false   # able to drop eggs while riding
   egg-delay:
@@ -97,6 +98,7 @@ cow:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Creeper options
@@ -104,6 +106,7 @@ creeper:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   explosion:
     damage: 5.0      # damage per hit (1 heart = 2.0 damage) set to negative value to let vanilla handle the damage modifier
@@ -135,6 +138,7 @@ drowned:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   shoot:
     cooldown: 20     # ticks to wait between shooting
@@ -153,6 +157,7 @@ enderman:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   when-wet:          # Wet meaning in water or rain
     damage: true     # Damage the enderman
@@ -164,6 +169,7 @@ endermite:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Evoker options
@@ -171,6 +177,7 @@ evoker:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   spell:
     cooldown: 40     # ticks to wait between casting
@@ -192,6 +199,7 @@ giant:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   ai:
     enabled: true    # Enable AI in giants
@@ -218,6 +226,7 @@ husk:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Illusioner options
@@ -225,6 +234,7 @@ illusioner:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   spawn:
     natural: false   # spawn naturally in world
@@ -240,6 +250,7 @@ iron_golem:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Llama options
@@ -247,6 +258,7 @@ llama:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   caravan: true      # create caravan while riding llama
 
@@ -261,6 +273,7 @@ mooshroom:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Ocelot options
@@ -268,6 +281,7 @@ ocelot:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Parrot options
@@ -283,6 +297,7 @@ pig:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.5   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   saddle-back: true  # Get your saddle back by shift clicking the pig
 
@@ -301,8 +316,8 @@ polar_bear:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  ride-in-water: true # allow mob to be ridden in water
   step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
+  ride-in-water: true # allow mob to be ridden in water
   stand: true        # make polar bear stand and roar when pressing spacebar (while not moving)
 
 # Pufferfish options
@@ -327,6 +342,7 @@ sheep:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Shulker options
@@ -343,6 +359,7 @@ silverfish:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Skeleton options
@@ -350,11 +367,13 @@ skeleton:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Skeleton Horse options
 skeleton_horse:
   enabled: false     # enable custom ridable entity
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Slime options
@@ -368,6 +387,7 @@ snow_golem:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   damage:
     when-hot: true   # snowman takes damage when wet (rain/water)
     when-wet: true   # snowman takes damage when too hot (hot biomes)
@@ -393,6 +413,7 @@ stray:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Tropical Fish options
@@ -406,6 +427,7 @@ turtle:
   speed:
     on-land: 1.0     # riding speed modifier on land
     in-water: 1.0    # riding speed modifier in water
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
 
 # Vex options
 vex:
@@ -420,6 +442,7 @@ villager:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Vindicator options
@@ -427,6 +450,7 @@ vindicator:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Witch options
@@ -434,6 +458,7 @@ witch:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
   shoot:
     cooldown: 40     # ticks to wait between shooting
@@ -458,6 +483,7 @@ wither_skeleton:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Wolf options
@@ -465,6 +491,7 @@ wolf:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Zombie options
@@ -472,11 +499,13 @@ zombie:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Zombie Horse options
 zombie_horse:
   enabled: false     # enable custom ridable entity
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Zombie Pigman options
@@ -484,6 +513,7 @@ zombie_pigman:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Zombie Villager options
@@ -491,4 +521,5 @@ zombie_villager:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
+  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water

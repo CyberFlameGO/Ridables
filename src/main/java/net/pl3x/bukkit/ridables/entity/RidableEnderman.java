@@ -63,6 +63,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.ENDERMAN_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

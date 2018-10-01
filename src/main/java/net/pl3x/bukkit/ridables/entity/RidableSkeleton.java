@@ -39,6 +39,7 @@ public class RidableSkeleton extends EntitySkeleton implements RidableEntity {
     }
 
     protected void mobTick() {
+        Q = Config.SKELETON_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

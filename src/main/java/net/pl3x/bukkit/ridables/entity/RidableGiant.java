@@ -40,7 +40,6 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
         wasdController = new ControllerWASD(this);
         defaultLookController = lookController;
         blankLookController = new BlankLookController(this);
-        Q = 3;
     }
 
     public RidableType getType() {
@@ -69,7 +68,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
     }
 
     protected void mobTick() {
-        Q = 3;
+        Q = Config.GIANT_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);

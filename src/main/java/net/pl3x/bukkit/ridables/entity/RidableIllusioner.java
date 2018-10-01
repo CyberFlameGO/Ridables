@@ -58,6 +58,7 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
     }
 
     protected void mobTick() {
+        Q = Config.ILLUSIONER_STEP_HEIGHT;
         EntityPlayer rider = updateRider();
         if (rider != null) {
             setGoalTarget(null, null, false);
