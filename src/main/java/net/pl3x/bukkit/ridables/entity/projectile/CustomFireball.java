@@ -11,7 +11,7 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Explosive;
@@ -73,7 +73,7 @@ public class CustomFireball extends EntityLargeFireball {
         if (mop != null && mop.entity != null) {
             if (mop.entity == ridable || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.isPaper() && PaperOnly.CallProjectileCollideEvent(this, mop)) {
+            } else if (Ridables.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
         }

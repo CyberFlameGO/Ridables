@@ -13,6 +13,7 @@ import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
 import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
+import net.pl3x.bukkit.ridables.hook.PlugMan;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
 import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.listener.UpdateListener;
@@ -21,6 +22,7 @@ import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
 import net.pl3x.bukkit.ridables.util.Timings;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -95,6 +97,10 @@ public class Ridables extends JavaPlugin {
     @Override
     public void onEnable() {
         new Metrics(this).addCustomChart(new Metrics.SimplePie("server_type", () -> serverType.name));
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlugMan")) {
+            PlugMan.configurePlugMan();
+        }
 
         UpdateListener.checkForUpdate();
 

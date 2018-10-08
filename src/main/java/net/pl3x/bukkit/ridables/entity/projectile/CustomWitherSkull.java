@@ -14,7 +14,7 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableWither;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -56,7 +56,7 @@ public class CustomWitherSkull extends EntityWitherSkull {
         if (mop != null && mop.entity != null) {
             if (mop.entity == wither || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.isPaper() && PaperOnly.CallProjectileCollideEvent(this, mop)) {
+            } else if (Ridables.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
         }

@@ -1,4 +1,4 @@
-package net.pl3x.bukkit.ridables.util;
+package net.pl3x.bukkit.ridables.hook;
 
 import com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent;
 import com.destroystokyo.paper.event.entity.EndermanEscapeEvent;
@@ -19,7 +19,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 
-public class PaperOnly {
+public class Paper {
     public static boolean DisableCreeperLingeringEffect(World world) {
         return world.paperConfig.disableCreeperLingeringEffect;
     }

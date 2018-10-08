@@ -1,9 +1,9 @@
-package net.pl3x.bukkit.ridables.util;
+package net.pl3x.bukkit.ridables.hook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 
-public class SpigotOnly {
+public class Spigot {
     public static boolean CallEntityMountEvent(Entity vehicle, Entity passenger) {
         org.spigotmc.event.entity.EntityMountEvent event = new org.spigotmc.event.entity.EntityMountEvent(passenger, vehicle);
         Bukkit.getPluginManager().callEvent(event);

@@ -4,7 +4,7 @@ import net.minecraft.server.v1_13_R2.MobEffects;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 
 public class AISlimeFaceRandom extends PathfinderGoal {
     private final RidableSlime slime;
@@ -42,7 +42,7 @@ public class AISlimeFaceRandom extends PathfinderGoal {
                 if (!slime.canWander()) {
                     return;
                 }
-                float newYaw = PaperOnly.CallSlimeChangeDirectionEvent(slime, (float) this.slime.getRandom().nextInt(360));
+                float newYaw = Paper.CallSlimeChangeDirectionEvent(slime, (float) this.slime.getRandom().nextInt(360));
                 if (newYaw == Float.MIN_VALUE) {
                     return;
                 }

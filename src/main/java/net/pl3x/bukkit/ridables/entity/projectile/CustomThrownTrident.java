@@ -25,7 +25,7 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableDrowned;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
 
@@ -146,7 +146,7 @@ public class CustomThrownTrident extends EntityThrownTrident {
                     mop = null;
                 }
             }
-            if (mop != null && mop.entity != null && Ridables.isPaper() && PaperOnly.CallProjectileCollideEvent(this, mop)) {
+            if (mop != null && mop.entity != null && Ridables.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
             if (mop != null && !flag) {

@@ -4,7 +4,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableEnderman;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 
 public class AIEndermanFindPlayer extends PathfinderGoalNearestAttackableTarget<EntityHuman> {
     private final RidableEnderman enderman;
@@ -68,7 +68,7 @@ public class AIEndermanFindPlayer extends PathfinderGoalNearestAttackableTarget<
         } else {
             if (d != null) {
                 if (enderman.shouldAttack(d)) {
-                    if (d.h(enderman) < 16.0D && (!Ridables.isPaper() || PaperOnly.CallEndermanEscapeEvent(enderman))) {
+                    if (d.h(enderman) < 16.0D && (!Ridables.isPaper() || Paper.CallEndermanEscapeEvent(enderman))) {
                         enderman.dz(); // teleportRandomly
                     }
                     teleportTime = 0;

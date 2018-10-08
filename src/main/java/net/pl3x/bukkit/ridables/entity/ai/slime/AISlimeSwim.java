@@ -3,7 +3,7 @@ package net.pl3x.bukkit.ridables.entity.ai.slime;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 
 public class AISlimeSwim extends PathfinderGoal {
     private final RidableSlime slime;
@@ -18,7 +18,7 @@ public class AISlimeSwim extends PathfinderGoal {
     public boolean a() {
         if (slime.isInWater() || slime.ax()) {
             if (Ridables.isPaper()) {
-                return slime.canWander() && PaperOnly.CallSlimeSwimEvent(slime);
+                return slime.canWander() && Paper.CallSlimeSwimEvent(slime);
             }
             return true;
         }

@@ -32,7 +32,7 @@ import net.pl3x.bukkit.ridables.entity.ai.enderman.AIEndermanPlaceBlock;
 import net.pl3x.bukkit.ridables.entity.ai.enderman.AIEndermanTakeBlock;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 
@@ -127,42 +127,63 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
         }
 
         if (getCarried() == null) {
-            return pickUpBlock(block.getX(), block.getY(), block.getZ());
+            return tryTakeBlock(block.getX(), block.getY(), block.getZ());
         }
 
         block = block.getRelative(blockFace);
-        return placeBlock(block.getX(), block.getY(), block.getZ());
+        return tryPlaceBlock(block.getX(), block.getY(), block.getZ());
     }
 
-    public boolean pickUpBlock(int x, int y, int z) {
+    public boolean tryTakeBlock(int x, int y, int z) {
         BlockPosition pos = new BlockPosition(x, y, z);
         IBlockData state = world.getType(pos);
-        Block block = state.getBlock();
-        MovingObjectPosition movingobjectposition = world.rayTrace(new Vec3D((double) ((float) MathHelper.floor(locX) + 0.5F), (double) ((float) y + 0.5F), (double) ((float) MathHelper.floor(locZ) + 0.5F)), new Vec3D((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F)), FluidCollisionOption.NEVER, true, false);
-        boolean flag = movingobjectposition != null && movingobjectposition.a().equals(pos);
-        if (block.a(TagsBlock.ENDERMAN_HOLDABLE) && flag) {
-            if (!CraftEventFactory.callEntityChangeBlockEvent(this, pos, Blocks.AIR.getBlockData()).isCancelled()) {
-                world.setAir(pos);
-                setCarried(Block.b(state, world, pos));
-                return true;
-            }
+        if (!state.getBlock().a(TagsBlock.ENDERMAN_HOLDABLE)) {
+            return false; // not a holdable block
         }
-        return false;
+        MovingObjectPosition rayTrace = world.rayTrace(
+                new Vec3D(MathHelper.floor(locX) + 0.5F, y + 0.5F, MathHelper.floor(locZ) + 0.5F),
+                new Vec3D(x + 0.5F, y + 0.5F, z + 0.5F),
+                FluidCollisionOption.NEVER, true, false);
+        if (rayTrace == null) {
+            return false; // no target block in range (shouldn't happen?)
+        }
+        if (rayTrace.a().equals(pos)) {
+            return false; // block in the way
+        }
+        if (CraftEventFactory.callEntityChangeBlockEvent(this, pos, Blocks.AIR.getBlockData()).isCancelled()) {
+            return false; // plugin cancelled
+        }
+        world.setAir(pos);
+        setCarried(Block.b(state, world, pos));
+        return true;
     }
 
-    public boolean placeBlock(int x, int y, int z) {
-        BlockPosition pos = new BlockPosition(x, y, z);
-        IBlockData state = world.getType(pos);
-        IBlockData state1 = world.getType(pos.down());
-        IBlockData state2 = Block.b(getCarried(), world, pos);
-        if (state2 != null && state.isAir() && !state1.isAir() && state1.g() && state2.canPlace(world, pos)) {
-            if (!CraftEventFactory.callEntityChangeBlockEvent(this, pos, state2).isCancelled()) {
-                world.setTypeAndData(pos, state2, 3);
-                setCarried(null);
-                return true;
-            }
+    public boolean tryPlaceBlock(int x, int y, int z) {
+        IBlockData carried = getCarried();
+        if (carried == null) {
+            return false; // not carrying a block
         }
-        return false;
+        BlockPosition pos = new BlockPosition(x, y, z);
+        if (!world.getType(pos).isAir()) {
+            return false; // cannot place in non-air block
+        }
+        IBlockData stateDown = world.getType(pos.down());
+        if (stateDown.isAir() || !stateDown.g()) {
+            return false; // cannot place on air or non-full cube
+        }
+        IBlockData newState = Block.b(carried, world, pos); // getValidBlockForPosition
+        if (newState == null) {
+            return false; // no valid blockstate for position
+        }
+        if (!newState.canPlace(world, pos)) {
+            return false; // cannot place this block here
+        }
+        if (CraftEventFactory.callEntityChangeBlockEvent(this, pos, newState).isCancelled()) {
+            return false; // plugin cancelled
+        }
+        world.setTypeAndData(pos, newState, 3);
+        setCarried(null);
+        return true;
     }
 
     public boolean damageEntity(DamageSource damagesource, float f) {
@@ -175,7 +196,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     public boolean shouldAttack(EntityHuman player) {
         boolean shouldAttack = shouldAttack_real(player);
         if (Ridables.isPaper()) {
-            return PaperOnly.CallEndermanAttackPlayerEvent(this, player, shouldAttack);
+            return Paper.CallEndermanAttackPlayerEvent(this, player, shouldAttack);
         }
         return shouldAttack;
     }

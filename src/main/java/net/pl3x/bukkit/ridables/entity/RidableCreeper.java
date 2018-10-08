@@ -9,8 +9,6 @@ import net.minecraft.server.v1_13_R2.EntityOcelot;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.MobEffect;
-import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
@@ -25,16 +23,13 @@ import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.creeper.AICreeperSwell;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
-import net.pl3x.bukkit.ridables.util.PaperOnly;
+import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 
 public class RidableCreeper extends EntityCreeper implements RidableEntity {
-    private PathfinderGoalNearestAttackableTarget goalTargetPlayer;
-    private PathfinderGoalHurtByTarget goalTargetHurtBy;
-
     public RidableCreeper(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -148,7 +143,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         if (collection.isEmpty()) {
             return;
         }
-        if (Ridables.isPaper() && PaperOnly.DisableCreeperLingeringEffect(world)) {
+        if (Ridables.isPaper() && Paper.DisableCreeperLingeringEffect(world)) {
             return;
         }
         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, locX, locY, locZ);

@@ -4,6 +4,8 @@ version: "${project.version}"
 description: "${project.artifactId} CraftBukkit/Spigot/Paper Plugin"
 author: "BillyGalbreath"
 api-version: 1.13
+softdepend:
+- PlugMan
 
 commands:
   ridables:
