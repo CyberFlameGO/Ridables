@@ -3,6 +3,8 @@ package net.pl3x.bukkit.ridables.listener;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.event.RidableClickEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +21,18 @@ public class ClickListener implements Listener {
             return; // dont fire twice
         }
 
+        EquipmentSlot hand = EquipmentSlot.HAND;
+        switch (event.getAction()) {
+            case RIGHT_CLICK_BLOCK:
+            case RIGHT_CLICK_AIR:
+                hand = EquipmentSlot.OFF_HAND;
+            case LEFT_CLICK_BLOCK:
+            case LEFT_CLICK_AIR:
+                break;
+            default:
+                return; // only handle click events (not physical)
+        }
+
         Entity vehicle = event.getPlayer().getVehicle();
         if (vehicle == null) {
             return; // not riding
@@ -27,6 +41,15 @@ public class ClickListener implements Listener {
         RidableEntity ridable = RidableType.getRidable(vehicle);
         if (ridable == null) {
             return; // not ridable
+        }
+
+        RidableClickEvent clickEvent = new RidableClickEvent(ridable, event.getClickedBlock(), event.getBlockFace(), hand);
+        Bukkit.getPluginManager().callEvent(clickEvent);
+        if (clickEvent.isCancelled() || clickEvent.isHandled()) {
+            if (clickEvent.isHandled()) {
+                event.setCancelled(true);
+            }
+            return;
         }
 
         boolean cancel = false;
@@ -61,17 +84,28 @@ public class ClickListener implements Listener {
             return; // not riding
         }
 
-        RidableEntity ridable = RidableType.getRidable(vehicle);
-        if (ridable == null) {
-            return; // not ridable
-        }
-
         Entity clicked = event.getRightClicked();
         if (clicked == vehicle) {
             return; // clicked own vehicle
         }
 
-        ridable.onClick(clicked, EnumHand.OFF_HAND);
+        RidableEntity ridable = RidableType.getRidable(vehicle);
+        if (ridable == null) {
+            return; // not ridable
+        }
+
+        RidableClickEvent clickEvent = new RidableClickEvent(ridable, clicked, EquipmentSlot.OFF_HAND);
+        Bukkit.getPluginManager().callEvent(clickEvent);
+        if (clickEvent.isCancelled() || clickEvent.isHandled()) {
+            if (clickEvent.isHandled()) {
+                event.setCancelled(true);
+            }
+            return;
+        }
+
+        if (ridable.onClick(clicked, EnumHand.OFF_HAND)) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -85,16 +119,27 @@ public class ClickListener implements Listener {
             return; // not riding
         }
 
-        RidableEntity ridable = RidableType.getRidable(vehicle);
-        if (ridable == null) {
-            return; // not ridable
-        }
-
         Entity clicked = event.getEntity();
         if (clicked == vehicle) {
             return; // clicked own vehicle
         }
 
-        ridable.onClick(clicked, EnumHand.MAIN_HAND);
+        RidableEntity ridable = RidableType.getRidable(vehicle);
+        if (ridable == null) {
+            return; // not ridable
+        }
+
+        RidableClickEvent clickEvent = new RidableClickEvent(ridable, clicked, EquipmentSlot.HAND);
+        Bukkit.getPluginManager().callEvent(clickEvent);
+        if (clickEvent.isCancelled() || clickEvent.isHandled()) {
+            if (clickEvent.isHandled()) {
+                event.setCancelled(true);
+            }
+            return;
+        }
+
+        if (ridable.onClick(clicked, EnumHand.MAIN_HAND)) {
+            event.setCancelled(true);
+        }
     }
 }

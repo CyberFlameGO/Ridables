@@ -1,31 +1,22 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
-import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityDolphin;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
+import org.bukkit.Bukkit;
 
 public class ControllerWASDWater extends ControllerWASD {
-    public ControllerWASDWater(EntityInsentient entity) {
+    public ControllerWASDWater(RidableEntity entity) {
         super(entity);
     }
 
-    // onUpdate
-    public void a() {
-        EntityPlayer rider = ridable.getRider();
-        if (rider == null) {
-            ridable.useAIController();
-            return;
-        }
-
-        // do not target anything while being ridden
-        a.setGoalTarget(null, null, false);
-
-        // rotation
-        ridable.setRotation(rider.yaw, rider.pitch);
-
-        // controls
+    public void tick(EntityPlayer rider) {
         float forward = rider.bj;
         float strafe = rider.bh;
         float vertical = -(rider.pitch / 90);
+
         if (forward < 0.0F) {
             forward *= 0.25F;
             vertical = -vertical * 0.1F;
@@ -34,17 +25,18 @@ public class ControllerWASDWater extends ControllerWASD {
             vertical = 0F;
         }
 
-        // jump
         if (isJumping(rider)) {
-            ridable.onSpacebar();
+            RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled() && !event.isHandled()) {
+                ridable.onSpacebar();
+            }
         }
 
-        float speed = ridable.getSpeed();
-
-        a.o(speed);
-        a.s(vertical * speed * 1.5F);
-        a.t(strafe * speed);
-        a.r(forward * speed);
+        a.o((float) (e = a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ridable.getSpeed()));
+        a.s(vertical * 1.5F);
+        a.t(strafe);
+        a.r(forward);
 
         f = a.bj;
         g = a.bh;

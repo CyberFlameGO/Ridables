@@ -24,9 +24,8 @@ import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.RidableDrowned;
-import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
+import net.pl3x.bukkit.ridables.util.PaperOnly;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
 
@@ -72,11 +71,11 @@ public class CustomThrownTrident extends EntityThrownTrident {
     }
 
     public Drowned getDrowned() {
-        return (Drowned) ((Entity) drowned).getBukkitEntity();
+        return (Drowned) drowned.getBukkitEntity();
     }
 
     public Player getRider() {
-        return (Player) ((Entity) rider).getBukkitEntity();
+        return rider.getBukkitEntity();
     }
 
     public void tick() {
@@ -147,11 +146,8 @@ public class CustomThrownTrident extends EntityThrownTrident {
                     mop = null;
                 }
             }
-            if (mop != null && mop.entity != null && Ridables.getInstance().getServerType() == ServerType.PAPER) {
-                com.destroystokyo.paper.event.entity.ProjectileCollideEvent event = CraftEventFactory.callProjectileCollideEvent(this, mop);
-                if (event.isCancelled()) {
-                    mop = null;
-                }
+            if (mop != null && mop.entity != null && Ridables.isPaper() && PaperOnly.CallProjectileCollideEvent(this, mop)) {
+                mop = null;
             }
             if (mop != null && !flag) {
                 a(mop);

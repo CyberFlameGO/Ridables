@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables;
 
-import net.pl3x.bukkit.ridables.bstats.Metrics;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
@@ -20,6 +19,8 @@ import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
+import net.pl3x.bukkit.ridables.util.Timings;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -33,9 +34,11 @@ public class Ridables extends JavaPlugin {
 
     private DisabledReason disabledReason = null;
     private final ServerType serverType;
+    private final Timings timings;
 
     public Ridables() {
         instance = this;
+        timings = new Timings(this);
 
         ServerType type;
         try {
@@ -87,12 +90,6 @@ public class Ridables extends JavaPlugin {
         RegistryHax.injectNewEntityTypes("custom_wither_skull", "wither_skull", CustomWitherSkull.class, CustomWitherSkull::new);
         RegistryHax.injectNewEntityTypes("dolphin_spit", "llama_spit", DolphinSpit.class, DolphinSpit::new);
         RegistryHax.injectNewEntityTypes("phantom_flames", "llama_spit", PhantomFlames.class, PhantomFlames::new);
-
-        // Fix worldgen mob features
-        RegistryHax.rebuildWorldGenMobs();
-
-        // Fix biome's mobs
-        RegistryHax.rebuildBiomes();
     }
 
     @Override
@@ -108,8 +105,8 @@ public class Ridables extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
-        getServer().getPluginManager().registerEvents(new RidableListener(this), this);
-        getServer().getPluginManager().registerEvents(new WaterBucketListener(this), this);
+        getServer().getPluginManager().registerEvents(new RidableListener(), this);
+        getServer().getPluginManager().registerEvents(new WaterBucketListener(), this);
 
         getCommand("ridables").setExecutor(new CmdRidables(this));
 
@@ -133,7 +130,7 @@ public class Ridables extends JavaPlugin {
             Logger.warn("#                                          #");
             Logger.warn("#     Detected non-Paper server type!      #");
             Logger.warn("#                                          #");
-            Logger.warn("#   Upgrading to Paper 302+ can severely   #");
+            Logger.warn("#     Upgrading to Paper can severely      #");
             Logger.warn("#      help your server's performance      #");
             Logger.warn("#                                          #");
             Logger.warn("#       https://papermc.io/downloads       #");
@@ -173,5 +170,27 @@ public class Ridables extends JavaPlugin {
      */
     public static Ridables getInstance() {
         return instance;
+    }
+
+    /**
+     * Check if server environment is running Paper
+     *
+     * @return True if running Paper
+     */
+    public static boolean isPaper() {
+        return instance.serverType == ServerType.PAPER;
+    }
+
+    /**
+     * Check if server environment is running Spigot
+     *
+     * @return True if running Spigot
+     */
+    public static boolean isSpigot() {
+        return instance.serverType == ServerType.SPIGOT;
+    }
+
+    public static Timings timings() {
+        return instance.timings;
     }
 }

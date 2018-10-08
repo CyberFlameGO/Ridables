@@ -1,36 +1,29 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
-import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
+import org.bukkit.Bukkit;
 
 public class ControllerWASDFlying extends ControllerWASD {
-    public ControllerWASDFlying(EntityInsentient entity) {
+    public ControllerWASDFlying(RidableEntity entity) {
         super(entity);
     }
 
-    // onUpdate
-    public void a() {
-        EntityPlayer rider = ridable.getRider();
-        if (rider == null) {
-            ridable.useAIController();
-            return;
-        }
-
-        // do not target anything while being ridden
-        a.setGoalTarget(null, null, false);
-
-        // rotation
-        ridable.setRotation(rider.yaw, rider.pitch);
-
-        // controls
+    @Override
+    public void tick(EntityPlayer rider) {
         float forward = Math.max(0, rider.bj);
         float vertical = forward == 0 ? 0 : -(rider.pitch / 45);
         float strafe = rider.bh;
 
-        // jump
         if (isJumping(rider)) {
-            ridable.onSpacebar();
+            RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled() && !event.isHandled()) {
+                ridable.onSpacebar();
+            }
         }
 
         if (a.locY >= Config.FLYING_MAX_Y) {
@@ -41,6 +34,7 @@ public class ControllerWASDFlying extends ControllerWASD {
         }
 
         a.setNoGravity(forward > 0);
+        a.o((float) (e = a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ridable.getSpeed()));
         a.s(vertical);
         a.t(strafe);
         a.r(forward);

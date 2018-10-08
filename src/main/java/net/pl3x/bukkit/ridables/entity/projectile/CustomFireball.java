@@ -2,7 +2,6 @@ package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
-import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityLargeFireball;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -12,7 +11,7 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.data.ServerType;
+import net.pl3x.bukkit.ridables.util.PaperOnly;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Explosive;
@@ -55,11 +54,11 @@ public class CustomFireball extends EntityLargeFireball {
     }
 
     public LivingEntity getEntity() {
-        return (LivingEntity) ((Entity) ridable).getBukkitEntity();
+        return (LivingEntity) ridable.getBukkitEntity();
     }
 
     public Player getRider() {
-        return (Player) ((Entity) rider).getBukkitEntity();
+        return rider.getBukkitEntity();
     }
 
     public void tick() {
@@ -74,8 +73,7 @@ public class CustomFireball extends EntityLargeFireball {
         if (mop != null && mop.entity != null) {
             if (mop.entity == ridable || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
-                    CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
+            } else if (Ridables.isPaper() && PaperOnly.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
         }

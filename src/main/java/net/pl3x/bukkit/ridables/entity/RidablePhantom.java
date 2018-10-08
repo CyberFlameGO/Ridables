@@ -1,46 +1,80 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
-import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.DifficultyDamageScaler;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPhantom;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.EnumMoveType;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
-import net.minecraft.server.v1_13_R2.IBlockData;
+import net.minecraft.server.v1_13_R2.GroupDataEntity;
 import net.minecraft.server.v1_13_R2.MathHelper;
-import net.minecraft.server.v1_13_R2.SoundEffectType;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomAttack;
+import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomOrbitPoint;
+import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomPickAttack;
+import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomSweepAttack;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Location;
-import org.bukkit.entity.Phantom;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
+import javax.annotation.Nullable;
+
 public class RidablePhantom extends EntityPhantom implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASDFlying wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
+    public Vec3D orbitOffset;
+    public BlockPosition orbitPosition;
+    public AttackPhase phase;
 
     public RidablePhantom(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDFlying(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new PhantomWASDController(this);
+        lookController = new PhantomLookController(this);
+        orbitOffset = Vec3D.a;
+        orbitPosition = BlockPosition.ZERO;
+        phase = AttackPhase.CIRCLE;
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.PHANTOM;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(1, new AIPhantomPickAttack(this));
+        goalSelector.a(2, new AIPhantomSweepAttack(this));
+        goalSelector.a(3, new AIPhantomOrbitPoint(this));
+        targetSelector.a(1, new AIPhantomAttack(this));
+    }
+
+    // readNBT
+    public void a(NBTTagCompound nbt) {
+        super.a(nbt);
+        if (nbt.hasKey("AX")) {
+            orbitPosition = new BlockPosition(nbt.getInt("AX"), nbt.getInt("AY"), nbt.getInt("AZ"));
+        }
+    }
+
+    // writeNBT
+    public void b(NBTTagCompound nbt) {
+        super.b(nbt);
+        nbt.setInt("AX", orbitPosition.getX());
+        nbt.setInt("AY", orbitPosition.getY());
+        nbt.setInt("AZ", orbitPosition.getZ());
+    }
+
+    public GroupDataEntity prepare(DifficultyDamageScaler scaler, @Nullable GroupDataEntity group, @Nullable NBTTagCompound nbt) {
+        orbitPosition = (new BlockPosition(this)).up(5);
+        return super.prepare(scaler, group, nbt);
     }
 
     // canBeRiddenInWater
@@ -49,65 +83,37 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     protected void mobTick() {
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
-            if (rider.bj == 0) {
-                motY -= Config.PHANTOM_GRAVITY;
-            } else {
-                fallDistance = 0;
-            }
-        } else {
-            fallDistance = 0;
+        if (getRider() != null && getRider().bj == 0) {
+            motY -= Config.PHANTOM_GRAVITY;
         }
         super.mobTick();
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = -newPitch * 0.75F);
-        aS = aQ = yaw;
+    // onLivingUpdate
+    public void k() {
+        super.k();
+        if (!Config.PHANTOM_BURN_IN_SUNLIGHT) {
+            extinguish(); // dont burn in sunlight
+        }
+        if (dq()) {
+            setGoalTarget(null, null, false);
+        }
     }
 
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.PHANTOM_SPEED * (onGround ? 1 : 3F);
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return Config.PHANTOM_SPEED * (onGround ? 1F : 3F);
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onSpacebar() {
@@ -119,7 +125,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        Location loc = ((Phantom) ((Entity) this).getBukkitEntity()).getEyeLocation();
+        Location loc = ((LivingEntity) getBukkitEntity()).getEyeLocation();
         loc.setPitch(-loc.getPitch());
         Vector target = loc.getDirection().normalize().multiply(100).add(loc.toVector());
 
@@ -129,68 +135,74 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         return true;
     }
 
-    // onLivingUpdate
-    public void k() {
-        super.k();
-        if (!Config.PHANTOM_BURN_IN_SUNLIGHT) {
-            extinguish(); // dont burn in sunlight
+    public boolean canAttack() {
+        return !Config.PHANTOM_ATTACK_IN_DAYLIGHT && dq();
+    }
+
+    class PhantomLookController extends LookController {
+        PhantomLookController(RidableEntity ridable) {
+            super(ridable);
+        }
+
+        @Override
+        public void tick(EntityPlayer rider) {
+            setYawPitch(rider.yaw, -rider.pitch * 0.75F);
         }
     }
 
-    // updateFallState
-    protected void a(double d0, boolean flag, IBlockData iblockdata, BlockPosition blockposition) {
-        if (flag) {
-            if (Config.PHANTOM_FALL_DAMAGE && fallDistance > 0.0F) {
-                iblockdata.getBlock().fallOn(world, blockposition, this, fallDistance);
+    class PhantomWASDController extends ControllerWASDFlying {
+        private final RidablePhantom phantom;
+        private float speed = 0.1F;
+
+        PhantomWASDController(RidablePhantom phantom) {
+            super(phantom);
+            this.phantom = phantom;
+        }
+
+        public void tick() {
+            if (phantom.positionChanged) {
+                phantom.yaw += 180.0F;
+                speed = 0.1F;
             }
-            fallDistance = 0.0F;
-        } else if (d0 < 0.0D) {
-            fallDistance = (float) ((double) fallDistance - (d0 / 2));
+
+            float f = (float) (phantom.orbitOffset.x - phantom.locX);
+            float f1 = (float) (phantom.orbitOffset.y - phantom.locY);
+            float f2 = (float) (phantom.orbitOffset.z - phantom.locZ);
+            double d0 = (double) MathHelper.c(f * f + f2 * f2);
+            double d1 = 1.0D - (double) MathHelper.e(f1 * 0.7F) / d0;
+
+            f = (float) ((double) f * d1);
+            f2 = (float) ((double) f2 * d1);
+            d0 = (double) MathHelper.c(f * f + f2 * f2);
+            double d2 = (double) MathHelper.c(f * f + f2 * f2 + f1 * f1);
+            float f3 = phantom.yaw;
+            float f4 = (float) MathHelper.c((double) f2, (double) f);
+            float f5 = MathHelper.g(phantom.yaw + 90.0F);
+            float f6 = MathHelper.g(f4 * 57.295776F);
+
+            phantom.yaw = MathHelper.c(f5, f6, 4.0F) - 90.0F;
+            phantom.aQ = phantom.yaw;
+            if (MathHelper.d(f3, phantom.yaw) < 3.0F) {
+                speed = MathHelper.b(speed, 1.8F, 0.005F * (1.8F / speed));
+            } else {
+                speed = MathHelper.b(speed, 0.2F, 0.025F);
+            }
+
+            float f7 = (float) (-(MathHelper.c((double) (-f1), d0) * 57.2957763671875D));
+
+            phantom.pitch = f7;
+            float f8 = phantom.yaw + 90.0F;
+            double d3 = (double) (speed * MathHelper.cos(f8 * 0.017453292F)) * Math.abs((double) f / d2);
+            double d4 = (double) (speed * MathHelper.sin(f8 * 0.017453292F)) * Math.abs((double) f2 / d2);
+            double d5 = (double) (speed * MathHelper.sin(f7 * 0.017453292F)) * Math.abs((double) f1 / d2);
+
+            phantom.motX += (d3 - phantom.motX) * 0.2D;
+            phantom.motY += (d5 - phantom.motY) * 0.2D;
+            phantom.motZ += (d4 - phantom.motZ) * 0.2D;
         }
     }
 
-    // fall
-    public void c(float f, float f1) {
-        super.c(f, f1);
-        int i = (int) (MathHelper.f((f - 3.0F) * f1) * -(motY));
-        if (i > 0) {
-            if (!damageEntity(DamageSource.FALL, (float) i)) {
-                return;
-            }
-            a(m(i), 1.0F, 1.0F);
-            int j = MathHelper.floor(locX);
-            int k = MathHelper.floor(locY - 0.2D);
-            int l = MathHelper.floor(locZ);
-            IBlockData iblockdata = world.getType(new BlockPosition(j, k, l));
-            if (!iblockdata.isAir()) {
-                SoundEffectType soundeffecttype = iblockdata.getBlock().getStepSound();
-                a(soundeffecttype.g(), soundeffecttype.a() * 0.5F, soundeffecttype.b() * 0.75F);
-            }
-        }
-    }
-
-    // travel
-    public void a(float strafe, float vertical, float forward) {
-        if (getRider() == null) {
-            super.a(strafe, vertical, forward);
-            return;
-        }
-
-        a(strafe, vertical, forward, 0.02F * getSpeed());
-        move(EnumMoveType.PLAYER, motX, motY, motZ);
-
-        motX *= 0.91F;
-        motY *= 0.91F;
-        motZ *= 0.91F;
-
-        aI = aJ;
-        double d0 = locX - lastX;
-        double d1 = locZ - lastZ;
-        float f = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
-        if (f > 1.0F) {
-            f = 1.0F;
-        }
-        aJ += (f - aJ) * 0.4F;
-        aK += aJ;
+    public enum AttackPhase {
+        CIRCLE, SWOOP
     }
 }

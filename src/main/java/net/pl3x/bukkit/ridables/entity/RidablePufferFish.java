@@ -1,44 +1,58 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityPufferFish;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IEntitySelector;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishSwim;
+import net.pl3x.bukkit.ridables.entity.ai.fish.pufferfish.AIPuffUp;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 import java.lang.reflect.Field;
 
 public class RidablePufferFish extends EntityPufferFish implements RidableEntity {
-    private static Field puffCounter;
+    private static Field puffTimer;
+    private static Field deflateTimer;
 
     static {
         try {
-            puffCounter = EntityPufferFish.class.getDeclaredField("c");
-            puffCounter.setAccessible(true);
+            puffTimer = EntityPufferFish.class.getDeclaredField("c");
+            puffTimer.setAccessible(true);
+            deflateTimer = EntityPufferFish.class.getDeclaredField("bC");
+            deflateTimer.setAccessible(true);
         } catch (NoSuchFieldException ignore) {
         }
     }
 
-    private ControllerMove aiController;
-    private ControllerWASDWater wasdController;
-    private EntityPlayer rider;
     private int spacebarCooldown = 0;
 
     public RidablePufferFish(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDWater(this);
+        moveController = new RidableCod.FishWASDController(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.PUFFERFISH;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(0, new AIPanic(this, 1.25D));
+        goalSelector.a(2, new AIAvoidTarget<>(this, EntityHuman.class, 8.0F, 1.6D, 1.4D, IEntitySelector.f));
+        goalSelector.a(4, new AIFishSwim(this));
+        goalSelector.a(5, new AIPuffUp(this));
     }
 
     // canBeRiddenInWater
@@ -51,11 +65,7 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
         if (spacebarCooldown > 0) {
             spacebarCooldown--;
         }
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
+        if (getRider() != null) {
             motY += 0.005D;
         }
         super.k();
@@ -84,47 +94,21 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
         super.a(strafe, vertical, forward);
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.PUFFERFISH_SPEED * 0.25F;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-        }
+        return Config.PUFFERFISH_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onSpacebar() {
@@ -132,10 +116,10 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
             spacebarCooldown = 20;
             if (getPuffState() > 0) {
                 setPuffState(0);
-                setPuffCount(0);
+                setPuffTimer(0);
             } else {
                 setPuffState(1);
-                setPuffCount(1);
+                setPuffTimer(1);
             }
             return true;
         }
@@ -143,26 +127,51 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
     }
 
     /**
-     * Get puff up count
+     * Get puff timer
      *
-     * @return Count
+     * @return Puff timer
      */
-    public int getPuffCount() {
+    public int getPuffTimer() {
         try {
-            return puffCounter.getInt(this);
+            return puffTimer.getInt(this);
         } catch (IllegalAccessException ignore) {
             return 0;
         }
     }
 
     /**
-     * Set puff up count
+     * Set puff timer
      *
-     * @param count New count
+     * @param time New puff timer
      */
-    public void setPuffCount(int count) {
+    public void setPuffTimer(int time) {
         try {
-            puffCounter.set(this, count);
+            puffTimer.set(this, time);
+        } catch (IllegalAccessException ignore) {
+        }
+    }
+
+    /**
+     * Get the deflate timer
+     *
+     * @return Deflate timer
+     */
+    public int getDeflateTimer() {
+        try {
+            return deflateTimer.getInt(this);
+        } catch (IllegalAccessException ignore) {
+            return 0;
+        }
+    }
+
+    /**
+     * Set the deflate timer
+     *
+     * @param time New deflate timer
+     */
+    public void setDeflateTimer(int time) {
+        try {
+            deflateTimer.setInt(this, time);
         } catch (IllegalAccessException ignore) {
         }
     }

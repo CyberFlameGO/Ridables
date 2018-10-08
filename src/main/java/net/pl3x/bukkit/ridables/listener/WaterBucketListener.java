@@ -1,115 +1,34 @@
 package net.pl3x.bukkit.ridables.listener;
 
-import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.minecraft.server.v1_13_R2.Items;
 import net.pl3x.bukkit.ridables.data.Bucket;
-import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Cod;
-import org.bukkit.entity.Entity;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import org.bukkit.inventory.PlayerInventory;
 
 public class WaterBucketListener implements Listener {
-    public static final Set<UUID> WATER_BUCKET_OVERRIDE = new HashSet<>();
-
-    private final Ridables plugin;
-
-    public WaterBucketListener(Ridables plugin) {
-        this.plugin = plugin;
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onCollectCreature(PlayerInteractAtEntityEvent event) {
-        Entity creature = event.getRightClicked();
-        if (creature.isDead() || !creature.isValid()) {
-            return; // creature already removed from world
-        }
-
-        RidableEntity ridable = RidableType.getRidable(creature);
-        if (ridable == null) {
-            return; // not a supported creature
-        }
-
-        Bucket bucket = ridable.getType().getWaterBucket();
-        if (bucket == null) {
-            return; // creature doesnt support water buckets
-        }
-
-        if (!creature.getPassengers().isEmpty()) {
-            return; // creature has a rider
-        }
-
-        Player player = event.getPlayer();
-        ItemStack hand = ItemUtil.getItem(player, event.getHand());
-        if (hand == null || hand.getType() != Material.WATER_BUCKET) {
-            return; // not a water bucket
-        }
-
-        Entity vehicle = player.getVehicle();
-        if (vehicle != null && vehicle.getUniqueId().equals(creature.getUniqueId())) {
-            return; // player is riding this creature
-        }
-
-        if (!ridable.hasCollectPerm(player)) {
-            Lang.send(player, Lang.COLLECT_NO_PERMISSION);
-            return;
-        }
-
-        // remove creature
-        creature.remove();
-
-        // give player creature's bucket
-        ItemUtil.setItem(player, bucket.getItemStack(), event.getHand());
-
-        // prevent water from placing in PlayerBucketEmptyEvent which fires right after this
-        WATER_BUCKET_OVERRIDE.add(player.getUniqueId());
-
-        // remove override on next tick in case PlayerBucketEmptyEvent doesnt fire
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                WATER_BUCKET_OVERRIDE.remove(player.getUniqueId());
-            }
-        }.runTaskLater(plugin, 1);
-    }
-
     @EventHandler(ignoreCancelled = true)
     public void onPlaceCreature(PlayerBucketEmptyEvent event) {
         if (event.getBucket() != Material.COD_BUCKET) {
             return; // not a valid creature bucket
         }
 
-        Player player = event.getPlayer();
-        if (WATER_BUCKET_OVERRIDE.remove(player.getUniqueId())) {
-            // this prevents the new cod bucket from emptying water in the same right click as collecting the creature
-            event.setCancelled(true);
-            return;
-        }
+        PlayerInventory inv = event.getPlayer().getInventory();
 
         // get the bucket used
-        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        ItemStack itemStack = inv.getItemInMainHand();
         EquipmentSlot hand = EquipmentSlot.HAND;
         Bucket bucket = Bucket.getBucket(itemStack);
         if (bucket == null) {
-            itemStack = player.getInventory().getItemInOffHand();
+            itemStack = inv.getItemInOffHand();
             hand = EquipmentSlot.OFF_HAND;
             bucket = Bucket.getBucket(itemStack);
             if (bucket == null) {
@@ -123,31 +42,31 @@ public class WaterBucketListener implements Listener {
         }
 
         // spawn the creature
-        Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-        Location loc = block.getLocation();
-        loc.setX(loc.getBlockX() + 0.5);
-        loc.setY(loc.getBlockY() + 0.5);
-        loc.setZ(loc.getBlockZ() + 0.5);
-        loc.setYaw(player.getLocation().getYaw());
-        loc.setPitch(player.getLocation().getPitch());
-        ridable.spawn(loc);
+        ridable.spawn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation());
 
         // handle the bucket in hand
-        ItemUtil.subtract(itemStack);
+        itemStack.setAmount(Math.max(0, itemStack.getAmount() - 1));
         if (itemStack.getAmount() <= 0) {
             // replace with empty bucket
-            ItemUtil.setItem(player, new ItemStack(Material.BUCKET), hand);
+            if (hand == EquipmentSlot.HAND) {
+                inv.setItemInMainHand(new ItemStack(Material.BUCKET));
+            } else {
+                inv.setItemInOffHand(new ItemStack(Material.BUCKET));
+            }
         } else {
             // add subtracted amount back
-            ItemUtil.setItem(player, itemStack, hand);
+            if (hand == EquipmentSlot.HAND) {
+                inv.setItemInMainHand(itemStack);
+            } else {
+                inv.setItemInOffHand(itemStack);
+            }
             // add empty bucket to inventory
-            player.getInventory().addItem(new ItemStack(Material.BUCKET))
-                    // or drop to ground if inventory is full
-                    .values().forEach(leftover -> player.getWorld().dropItem(player.getLocation(), leftover));
+            ((CraftPlayer) event.getPlayer()).getHandle().inventory
+                    .pickup(new net.minecraft.server.v1_13_R2.ItemStack(Items.BUCKET));
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true)
     public void onSpawnCodFish(CreatureSpawnEvent event) {
         if (event.getEntityType() != EntityType.COD) {
             return; // not a cod
@@ -157,9 +76,7 @@ public class WaterBucketListener implements Listener {
             return; // not from a bucket
         }
 
-        Cod codFish = (Cod) event.getEntity();
-        if (Bucket.isFromBucket(codFish)) {
-            // do not spawn a cod while placing a collected creature
+        if (Bucket.isFromBucket(event.getEntity())) {
             event.setCancelled(true);
         }
     }

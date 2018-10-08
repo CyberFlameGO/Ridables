@@ -1,7 +1,5 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.DataWatcherObject;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityAreaEffectCloud;
@@ -10,67 +8,58 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityOcelot;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MobEffect;
-import net.minecraft.server.v1_13_R2.PathfinderGoalAvoidTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
 import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
-import net.minecraft.server.v1_13_R2.PathfinderGoalSwell;
-import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.data.ServerType;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.creeper.AICreeperSwell;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
+import net.pl3x.bukkit.ridables.util.PaperOnly;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 
 public class RidableCreeper extends EntityCreeper implements RidableEntity {
-    private static Field ignited_field;
-    private static Field fuseTicks_field;
-    private static Field lastActive_field;
-
-    static {
-        try {
-            ignited_field = EntityCreeper.class.getDeclaredField("c");
-            ignited_field.setAccessible(true);
-            fuseTicks_field = EntityCreeper.class.getDeclaredField("fuseTicks");
-            fuseTicks_field.setAccessible(true);
-            lastActive_field = EntityCreeper.class.getDeclaredField("bC");
-            lastActive_field.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private ControllerMove aiController;
-    private ControllerWASD wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
-
     private PathfinderGoalNearestAttackableTarget goalTargetPlayer;
     private PathfinderGoalHurtByTarget goalTargetHurtBy;
 
     public RidableCreeper(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASD(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASD(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.CREEPER;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(1, new AISwim(this));
+        goalSelector.a(2, new AICreeperSwell(this));
+        goalSelector.a(3, new AIAvoidTarget<>(this, EntityOcelot.class, 6.0F, 1.0D, 1.2D));
+        goalSelector.a(4, new AIMeleeAttack(this, 1.0D, false));
+        goalSelector.a(5, new AIWanderAvoidWater(this, 0.8D));
+        goalSelector.a(6, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(6, new AILookIdle(this));
+        targetSelector.a(1, new AIAttackNearest<>(this, EntityHuman.class, true));
+        targetSelector.a(2, new AIHurtByTarget(this, false));
     }
 
     // canBeRiddenInWater
@@ -78,15 +67,16 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         return Config.CREEPER_RIDABLE_IN_WATER;
     }
 
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return isIgnited() ? 0 : Config.CREEPER_JUMP_POWER;
+    }
+
     protected void mobTick() {
         Q = Config.CREEPER_STEP_HEIGHT;
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
-            if (rider.bj != 0 || rider.bh != 0) {
-                disarm();
+        if (getRider() != null) {
+            if (getRider().bj != 0 || getRider().bh != 0) {
+                setIgnitedFlag(false);
             }
         }
         super.mobTick();
@@ -94,159 +84,52 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     public void tick() {
         if (isAlive()) {
-            int fuseTicks = getFuseTicks();
-            setLastActive(fuseTicks);
-            if (isIgnited()) {
-                a(1); // setSwellState
-            }
-            int state = dz(); // getSwellState
-            if (state > 0 && fuseTicks == 0) {
-                a(SoundEffects.ENTITY_CREEPER_PRIMED, 1.0F, 0.5F);
-            }
-            fuseTicks += state;
-            if (fuseTicks < 0) {
-                setFuseTicks(0);
-            }
-            if (fuseTicks >= maxFuseTicks) {
-                setFuseTicks(maxFuseTicks);
+            int fuse = getFuseTicks();
+            int state = dz();
+            fuse += state;
+            if (fuse >= maxFuseTicks) {
+                fuse = maxFuseTicks;
                 explode();
             }
+            fuse -= state; // dont let super.tick() double count the fuse
+            setFuseTicks(fuse);
         }
         super.tick();
     }
 
-    // getJumpUpwardsMotion
-    protected float cG() {
-        return super.cG() * getJumpPower() * 2.2F;
-    }
-
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
-    public float getJumpPower() {
-        return isIgnited() ? 0 : Config.CREEPER_JUMP_POWER;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.CREEPER_SPEED;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-            targetSelector.a(1, goalTargetPlayer);
-            targetSelector.a(2, goalTargetHurtBy);
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-            targetSelector.a(goalTargetPlayer);
-            targetSelector.a(goalTargetHurtBy);
-            disarm();
-        }
+        return Config.CREEPER_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onSpacebar() {
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
             if (rider != null && rider.bj == 0 && rider.bh == 0 && hasSpecialPerm(rider.getBukkitEntity())) {
-                setIgnited(true);
+                setIgnitedFlag(true);
                 return true;
             }
         }
         return false;
     }
 
-    // initEntityAI
-    protected void n() {
-        goalTargetPlayer = new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true);
-        goalTargetHurtBy = new PathfinderGoalHurtByTarget(this, false, new Class[0]);
-
-        goalSelector.a(1, new PathfinderGoalFloat(this));
-        goalSelector.a(2, new PathfinderGoalSwell(this));
-        goalSelector.a(3, new PathfinderGoalAvoidTarget(this, EntityOcelot.class, 6.0F, 1.0D, 1.2D));
-        goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 1.0D, false));
-        goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 0.8D));
-        goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
-
-        targetSelector.a(1, goalTargetPlayer);
-        targetSelector.a(2, goalTargetHurtBy);
-    }
-
-    public void disarm() {
-        setIgnited(false);
-        a(-1); // setSwellState
-    }
-
     /**
-     * Set ignited state of a ridable creeper
-     *
-     * @param ignited Ignited state to set
+     * Make the creeper explode
      */
-    public void setIgnited(boolean ignited) {
-        if (ignited) {
-            dB();
-        } else {
-            try {
-                getDataWatcher().set((DataWatcherObject<Boolean>) ignited_field.get(this), false);
-            } catch (IllegalAccessException ignore) {
-            }
-        }
-    }
-
-    public int getFuseTicks() {
-        try {
-            return fuseTicks_field.getInt(this);
-        } catch (IllegalAccessException ignore) {
-        }
-        return 0;
-    }
-
-    public void setFuseTicks(int fuseTicks) {
-        try {
-            fuseTicks_field.set(this, fuseTicks);
-        } catch (IllegalAccessException ignore) {
-        }
-    }
-
-    public void setLastActive(int lastActive) {
-        try {
-            lastActive_field.set(this, lastActive);
-        } catch (IllegalAccessException ignore) {
-        }
-    }
-
     public void explode() {
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(((Entity) this).getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             aX = true; // duplicate of isDead
@@ -256,7 +139,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
             spawnCloud();
         } else {
             setFuseTicks(0);
-            setIgnited(false);
+            setIgnitedFlag(false);
         }
     }
 
@@ -265,7 +148,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         if (collection.isEmpty()) {
             return;
         }
-        if (Ridables.getInstance().getServerType() == ServerType.PAPER && world.paperConfig.disableCreeperLingeringEffect) {
+        if (Ridables.isPaper() && PaperOnly.DisableCreeperLingeringEffect(world)) {
             return;
         }
         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, locX, locY, locZ);
@@ -279,5 +162,62 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
             cloud.a(new MobEffect(mobEffect));
         }
         world.addEntity(cloud);
+    }
+
+    // Use reflection for non-Paper environments :sad-face:
+
+    private static Field ignited_field;
+    private static Field fuseTicks_field;
+
+    static {
+        try {
+            ignited_field = EntityCreeper.class.getDeclaredField("c");
+            ignited_field.setAccessible(true);
+            fuseTicks_field = EntityCreeper.class.getDeclaredField("fuseTicks");
+            fuseTicks_field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Set the ignited datawatcher flag
+     *
+     * @param ignited True to mark as ignited
+     */
+    public void setIgnitedFlag(boolean ignited) {
+        if (ignited) {
+            dB(); // setIgnited()
+        } else {
+            try {
+                getDataWatcher().set((DataWatcherObject<Boolean>) ignited_field.get(this), false);
+            } catch (IllegalAccessException ignore) {
+            }
+        }
+    }
+
+    /**
+     * Get the current fuseTicks
+     *
+     * @return Current fuseTicks
+     */
+    public int getFuseTicks() {
+        try {
+            return fuseTicks_field.getInt(this);
+        } catch (IllegalAccessException ignore) {
+        }
+        return 0;
+    }
+
+    /**
+     * Set the current fuseTicks
+     *
+     * @param fuseTicks New fuseTicks
+     */
+    public void setFuseTicks(int fuseTicks) {
+        try {
+            fuseTicks_field.set(this, fuseTicks);
+        } catch (IllegalAccessException ignore) {
+        }
     }
 }

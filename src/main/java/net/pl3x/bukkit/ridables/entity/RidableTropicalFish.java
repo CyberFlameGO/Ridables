@@ -1,31 +1,32 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTropicalFish;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableTropicalFish extends EntityTropicalFish implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASDWater wasdController;
-    private EntityPlayer rider;
-
     public RidableTropicalFish(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDWater(this);
+        moveController = new RidableCod.FishWASDController(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.TROPICAL_FISH;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
     }
 
     // canBeRiddenInWater
@@ -35,11 +36,7 @@ public class RidableTropicalFish extends EntityTropicalFish implements RidableEn
 
     // onLivingUpdate
     public void k() {
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
+        if (getRider() != null) {
             motY += 0.005D;
         }
         super.k();
@@ -68,46 +65,20 @@ public class RidableTropicalFish extends EntityTropicalFish implements RidableEn
         super.a(strafe, vertical, forward);
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.TROPICAL_FISH_SPEED * 0.25F;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-        }
+        return Config.TROPICAL_FISH_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 }

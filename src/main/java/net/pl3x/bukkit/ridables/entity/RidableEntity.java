@@ -3,17 +3,17 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
-import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTameableAnimal;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.ItemStack;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.event.RidableMountEvent;
 import net.pl3x.bukkit.ridables.util.Logger;
-import org.bukkit.Material;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -30,31 +30,12 @@ public interface RidableEntity {
     RidableType getType();
 
     /**
-     * Get if ridable in water
+     * Get the Bukkit entity
      *
-     * @return True if ridable in water
+     * @return Bukkit entity
      */
-    default boolean canBeRiddenInWater() {
-        return ((EntityLiving) this).aY();
-    }
-
-    /**
-     * Set the rotation of the entity
-     * <p>
-     * This is used internally for keeping the entity at the same rotation as the player. It is advised to not use this method
-     *
-     * @param yaw   Yaw to set
-     * @param pitch Pitch to set
-     */
-    void setRotation(float yaw, float pitch);
-
-    /**
-     * Get the configured jump power of this entity
-     *
-     * @return Jump power
-     */
-    default float getJumpPower() {
-        return 0;
+    default Entity getBukkitEntity() {
+        return ((EntityInsentient) this).getBukkitEntity();
     }
 
     /**
@@ -73,18 +54,18 @@ public interface RidableEntity {
      *
      * @return Current rider, otherwise null
      */
-    EntityPlayer getRider();
+    default EntityPlayer getRider() {
+        return ((ControllerWASD) ((EntityInsentient) this).getControllerMove()).rider;
+    }
 
     /**
-     * Update and get the rider of this entity
-     * <p>
-     * This method should never be called directly. It is updated once per tick already.
+     * Tries to let player mount this creature
      *
-     * @return Current rider, otherwise null
+     * @param entityhuman Player trying to mount
+     * @param itemStack   Item in player's hand
+     * @return True if mount was successful
      */
-    EntityPlayer updateRider();
-
-    default boolean tryRide(EntityHuman entityhuman) {
+    default boolean tryRide(EntityHuman entityhuman, ItemStack itemStack) {
         Player player = (Player) entityhuman.getBukkitEntity();
         if (this instanceof EntityAgeable) {
             if (!Config.ALLOW_RIDE_BABIES && ((EntityAgeable) this).isBaby()) {
@@ -102,19 +83,44 @@ public interface RidableEntity {
             return true;
         }
         if (Config.REQUIRE_SADDLE) {
-            HandItem saddle = ItemUtil.getItem(player, Material.SADDLE);
-            if (saddle == null) {
+            if (itemStack == null || itemStack.isEmpty()) {
                 return false; // saddle is required
             }
             if (Config.CONSUME_SADDLE) {
-                ItemUtil.setItem(player, saddle.subtract(), saddle.getHand());
+                itemStack.subtract(1);
             }
         }
-        boolean mounted = entityhuman.a((EntityInsentient) this, true);
-        ControllerWASD.setJumping(entityhuman);
+        RidableMountEvent mountEvent = new RidableMountEvent(this, player);
+        Bukkit.getPluginManager().callEvent(mountEvent);
+        if (mountEvent.isCancelled()) {
+            return false;
+        }
+        boolean mounted = entityhuman.startRiding((EntityInsentient) this);
+        ControllerWASD.resetJumping(entityhuman);
         return mounted;
     }
 
+    /**
+     * Calls the dismount event
+     *
+     * @param passenger Passenger dismounting
+     * @return True if dismount event was not cancelled
+     */
+    default boolean dismountPassenger(Entity passenger) {
+        if (passenger instanceof Player) {
+            RidableDismountEvent dismountEvent = new RidableDismountEvent(this, (Player) passenger);
+            Bukkit.getPluginManager().callEvent(dismountEvent);
+            return !dismountEvent.isCancelled();
+        }
+        return true;
+    }
+
+    /**
+     * Check if player has permission to collect this creature in a water bucket
+     *
+     * @param player Player to check
+     * @return True if player had permission
+     */
     default boolean hasCollectPerm(Player player) {
         boolean hasPerm = player.hasPermission("allow.collect." + getType().getName());
         if (!hasPerm) {
@@ -123,6 +129,12 @@ public interface RidableEntity {
         return hasPerm;
     }
 
+    /**
+     * Check if player has permission to mount this creature
+     *
+     * @param player Player to check
+     * @return True if player had permission
+     */
     default boolean hasRidePerm(Player player) {
         boolean hasPerm = player.hasPermission("allow.ride." + getType().getName());
         if (!hasPerm) {
@@ -131,6 +143,12 @@ public interface RidableEntity {
         return hasPerm;
     }
 
+    /**
+     * Check if player has permission to make this creature shoot projectiles
+     *
+     * @param player Player to check
+     * @return True if player had permission
+     */
     default boolean hasShootPerm(Player player) {
         boolean hasPerm = player.hasPermission("allow.shoot." + getType().getName());
         if (!hasPerm) {
@@ -139,6 +157,12 @@ public interface RidableEntity {
         return hasPerm;
     }
 
+    /**
+     * Check if player has permission to make this creature perform special actions
+     *
+     * @param player Player to check
+     * @return True if player had permission
+     */
     default boolean hasSpecialPerm(Player player) {
         boolean hasPerm = player.hasPermission("allow.special." + getType().getName());
         if (!hasPerm) {
@@ -146,16 +170,6 @@ public interface RidableEntity {
         }
         return hasPerm;
     }
-
-    /**
-     * Change to the vanilla AI controller
-     */
-    void useAIController();
-
-    /**
-     * Change to the WASD custom controller
-     */
-    void useWASDController();
 
     /**
      * This method is called when the spacebar is pressed by the current rider

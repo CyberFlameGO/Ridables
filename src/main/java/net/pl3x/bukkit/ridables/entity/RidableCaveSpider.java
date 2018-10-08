@@ -1,36 +1,49 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityCaveSpider;
 import net.minecraft.server.v1_13_R2.EntityHuman;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILeapAtTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.spider.AISpiderAttack;
+import net.pl3x.bukkit.ridables.entity.ai.spider.AISpiderTarget;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASD wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
-
     public RidableCaveSpider(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASD(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASD(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.CAVE_SPIDER;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(1, new AISwim(this));
+        goalSelector.a(3, new AILeapAtTarget(this, 0.4F));
+        goalSelector.a(4, new AISpiderAttack(this));
+        goalSelector.a(5, new AIWanderAvoidWater(this, 0.8D));
+        goalSelector.a(6, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(6, new AILookIdle(this));
+        targetSelector.a(1, new AIHurtByTarget(this, false));
+        targetSelector.a(2, new AISpiderTarget<>(this, EntityHuman.class));
+        targetSelector.a(3, new AISpiderTarget<>(this, EntityIronGolem.class));
     }
 
     // canBeRiddenInWater
@@ -38,76 +51,31 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
         return Config.CAVE_SPIDER_RIDABLE_IN_WATER;
     }
 
-    protected void mobTick() {
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
-        }
-        super.mobTick();
-    }
-
     // getJumpUpwardsMotion
     protected float cG() {
-        return super.cG() * getJumpPower() * 2.2F;
-    }
-
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
-    public float getJumpPower() {
         return Config.CAVE_SPIDER_JUMP_POWER;
     }
 
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.CAVE_SPIDER_SPEED;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return Config.CAVE_SPIDER_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
     }
 
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
     // isOnLadder
     public boolean z_() {
-        if (getRider() == null) {
-            return l(); // isBesideClimbableBlock
-        }
-        return Config.CAVE_SPIDER_CLIMB_WALLS && l();
+        return getRider() == null ? l() : Config.CAVE_SPIDER_CLIMB_WALLS && l(); // isBesideClimbableBlock
     }
 
     // travel

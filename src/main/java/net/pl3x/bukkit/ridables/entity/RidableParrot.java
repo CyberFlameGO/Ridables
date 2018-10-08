@@ -1,42 +1,49 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.AttributeInstance;
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityParrot;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.data.MaterialSetTag;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.AISit;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.parrot.AIParrotFollowEntity;
+import net.pl3x.bukkit.ridables.entity.ai.parrot.AIParrotFollowOwner;
+import net.pl3x.bukkit.ridables.entity.ai.parrot.AIParrotLandOnOwnersShoulder;
+import net.pl3x.bukkit.ridables.entity.ai.parrot.AIParrotWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
-import org.bukkit.Material;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableParrot extends EntityParrot implements RidableEntity {
-    public static final MaterialSetTag FOOD = new MaterialSetTag()
-            .add(Material.WHEAT_SEEDS, Material.MELON_SEEDS, Material.PUMPKIN_SEEDS, Material.BEETROOT_SEEDS);
-
-    private ControllerMove aiController;
-    private ControllerWASDFlyingWithSpacebar wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
-
     public RidableParrot(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDFlyingWithSpacebar(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASDFlyingWithSpacebar(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.PARROT;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSit = new AISit(this);
+
+        goalSelector.a(0, new AIPanic(this, 1.25D));
+        goalSelector.a(0, new AISwim(this));
+        goalSelector.a(1, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(2, goalSit);
+        goalSelector.a(2, new AIParrotFollowOwner(this, 1.0D, 5.0F, 1.0F));
+        goalSelector.a(2, new AIParrotWanderAvoidWater(this, 1.0D));
+        goalSelector.a(3, new AIParrotLandOnOwnersShoulder(this));
+        goalSelector.a(3, new AIParrotFollowEntity(this, 1.0D, 3.0F, 7.0F));
     }
 
     // canBeRiddenInWater
@@ -45,60 +52,26 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
     }
 
     protected void mobTick() {
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
+        if (getRider() != null) {
             motY += bi > 0 ? 0.07F * Config.PARROT_VERTICAL : 0.04704F - Config.PARROT_GRAVITY;
         }
         super.mobTick();
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
     public float getSpeed() {
-        AttributeInstance attr = getAttributeInstance(GenericAttributes.e);
-        float speed = (float) (attr != null ? attr.getValue() : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
-        return speed * Config.PARROT_SPEED;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return Config.PARROT_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 }

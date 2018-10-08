@@ -2,7 +2,6 @@ package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
-import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityWitherSkull;
@@ -14,8 +13,8 @@ import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.data.ServerType;
 import net.pl3x.bukkit.ridables.entity.RidableWither;
+import net.pl3x.bukkit.ridables.util.PaperOnly;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -25,25 +24,25 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class CustomWitherSkull extends EntityWitherSkull {
     private RidableWither wither;
-    private EntityPlayer player;
+    private EntityPlayer rider;
     private int f;
 
     public CustomWitherSkull(World world) {
         super(world);
     }
 
-    public CustomWitherSkull(World world, RidableWither wither, EntityPlayer player, double x, double y, double z) {
-        super(world, player, x, y, z);
+    public CustomWitherSkull(World world, RidableWither wither, EntityPlayer rider, double x, double y, double z) {
+        super(world, rider, x, y, z);
         this.wither = wither;
-        this.player = player;
+        this.rider = rider;
     }
 
     public Wither getWither() {
-        return (Wither) ((Entity) wither).getBukkitEntity();
+        return (Wither) wither.getBukkitEntity();
     }
 
     public Player getRider() {
-        return (Player) ((Entity) player).getBukkitEntity();
+        return rider.getBukkitEntity();
     }
 
     public void tick() {
@@ -55,10 +54,9 @@ public class CustomWitherSkull extends EntityWitherSkull {
         W();
         MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
         if (mop != null && mop.entity != null) {
-            if (mop.entity == wither || mop.entity == player) {
+            if (mop.entity == wither || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.getInstance().getServerType() == ServerType.PAPER &&
-                    CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
+            } else if (Ridables.isPaper() && PaperOnly.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
         }
@@ -110,7 +108,7 @@ public class CustomWitherSkull extends EntityWitherSkull {
                 }
             }
         }
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(((Entity) this).getBukkitEntity(), 1.0F, false);
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), 1.0F, false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), Config.WITHER_SHOOT_GRIEF);

@@ -1,47 +1,111 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityDrowned;
 import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityIronGolem;
+import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityTurtle;
+import net.minecraft.server.v1_13_R2.EntityVillager;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumItemSlot;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
+import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
+import net.pl3x.bukkit.ridables.entity.ai.AIWander;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.AIZombieAttackTurtleEgg;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedAttack;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedGoToBeach;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedGoToWater;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedSwimUp;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedTridentAttack;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableDrowned extends EntityDrowned implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASD wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
+    private boolean swimUp;
     private int shootCooldown = 0;
 
     public RidableDrowned(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASD(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new DrownedWASDController(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.DROWNED;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        // from EntityZombie
+        goalSelector.a(4, new AIZombieAttackTurtleEgg(Blocks.TURTLE_EGG, this, 1.0D, 3));
+        goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));
+        goalSelector.a(8, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(8, new AILookIdle(this));
+
+        // from EntityDrowned
+        goalSelector.a(1, new AIDrownedGoToWater(this, 1.0D));
+        goalSelector.a(2, new AIDrownedTridentAttack(this, 1.0D, 40, 10.0F));
+        goalSelector.a(2, new AIDrownedAttack(this, 1.0D, false));
+        goalSelector.a(5, new AIDrownedGoToBeach(this, 1.0D));
+        goalSelector.a(6, new AIDrownedSwimUp(this, 1.0D, this.world.getSeaLevel()));
+        goalSelector.a(7, new AIWander(this, 1.0D));
+        targetSelector.a(1, new AIHurtByTarget(this, true, EntityDrowned.class));
+        targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, 10, true, false, e -> e != null && (!e.world.L() || e.isInWater())));
+        targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
+        targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, true));
+        targetSelector.a(5, new AIAttackNearest<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bC));
+    }
+
+    public void setGroundNavigation() {
+        navigation = b;
+    }
+
+    public void setWaterNavigation() {
+        navigation = a;
+    }
+
+    public boolean isCloseToPathTarget() {
+        return dD();
+    }
+
+    public void setSwimmingUp(boolean swimUp) {
+        super.a(swimUp);
+        this.swimUp = swimUp;
+    }
+
+    // overrides private method
+    public boolean isSwimmingUp(boolean checkTarget) {
+        if (checkTarget) {
+            if (swimUp) {
+                return true;
+            }
+            EntityLiving target = getGoalTarget();
+            return target != null && target.isInWater();
+        }
+        return swimUp;
     }
 
     // canBeRiddenInWater
@@ -49,72 +113,34 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         return Config.DROWNED_RIDABLE_IN_WATER;
     }
 
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return Config.DROWNED_JUMP_POWER;
+    }
+
     protected void mobTick() {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
         Q = Config.DROWNED_STEP_HEIGHT;
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
-        }
         super.mobTick();
     }
 
-    // getJumpUpwardsMotion
-    protected float cG() {
-        return super.cG() * getJumpPower() * 2.2F;
-    }
-
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
-    public float getJumpPower() {
-        return Config.DROWNED_JUMP_POWER;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.DROWNED_SPEED * 0.8F;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return Config.DROWNED_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
@@ -173,5 +199,43 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
     public boolean hasTrident() {
         return getEquipment(EnumItemSlot.MAINHAND).getItem() == Items.TRIDENT ||
                 getEquipment(EnumItemSlot.OFFHAND).getItem() == Items.TRIDENT;
+    }
+
+    static class DrownedWASDController extends ControllerWASD {
+        private final RidableDrowned drowned;
+
+        public DrownedWASDController(RidableDrowned drowned) {
+            super(drowned);
+            this.drowned = drowned;
+        }
+
+        public void tick() {
+            EntityLiving target = drowned.getGoalTarget();
+            if (drowned.isSwimmingUp(true) && drowned.isInWater()) {
+                if (target != null && target.locY > drowned.locY || drowned.isSwimmingUp(false)) {
+                    drowned.motY += 0.002D;
+                }
+                if (h != Operation.MOVE_TO || drowned.getNavigation().p()) {
+                    drowned.o(0.0F);
+                    return;
+                }
+                double x = b - drowned.locX;
+                double y = c - drowned.locY;
+                double z = d - drowned.locZ;
+                y /= (double) MathHelper.sqrt(x * x + y * y + z * z);
+                drowned.yaw = a(drowned.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F);
+                drowned.aQ = drowned.yaw;
+                float speed = (float) (e * drowned.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
+                drowned.o(drowned.cK() + (speed - drowned.cK()) * 0.125F);
+                drowned.motY += (double) drowned.cK() * y * 0.1D;
+                drowned.motX += (double) drowned.cK() * x * 0.005D;
+                drowned.motZ += (double) drowned.cK() * z * 0.005D;
+            } else {
+                if (!drowned.onGround) {
+                    drowned.motY -= 0.008D;
+                }
+                super_tick();
+            }
+        }
     }
 }

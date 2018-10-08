@@ -2,7 +2,6 @@ package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.AxisAlignedBB;
 import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
@@ -12,51 +11,61 @@ import net.minecraft.server.v1_13_R2.EntityShulkerBullet;
 import net.minecraft.server.v1_13_R2.EnumDifficulty;
 import net.minecraft.server.v1_13_R2.EnumDirection;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IMonster;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
 import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomShulkerBullet;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableShulker extends EntityShulker implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASD wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
     private boolean isOpen = true;
     private int shootCooldown = 0;
     private int spacebarCooldown = 0;
 
     public RidableShulker(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASD(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASD(this);
+        lookController = new ControllerLook(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.SHULKER;
     }
 
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(1, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(4, new AIAttack(this));
+        goalSelector.a(7, new AIPeek(this));
+        goalSelector.a(8, new AILookIdle(this));
+        targetSelector.a(1, new AIHurtByTarget(this, true));
+        targetSelector.a(2, new AIAttackNearest(this));
+        targetSelector.a(3, new AIDefenseAttack(this)); // TODO (finish these)
+    }
+
     // canBeRiddenInWater
     public boolean aY() {
         return false;
+    }
+
+    // tryTeleportToNewPosition
+    protected boolean l() {
+        return getRider() != null || super.l();
     }
 
     protected void mobTick() {
@@ -66,63 +75,27 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
+        if (getRider() != null) {
             updatePeek();
         }
         super.mobTick();
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
-    public float getJumpPower() {
-        return 0;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return 0;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onSpacebar() {
@@ -150,7 +123,12 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
     }
 
     private void handleClick() {
-        shoot();
+        if (shootCooldown == 0 && isOpen()) {
+            EntityPlayer rider = getRider();
+            if (rider != null) {
+                shoot(rider);
+            }
+        }
     }
 
     private void updatePeek() {
@@ -168,11 +146,7 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         return isOpen;
     }
 
-    public boolean shoot() {
-        if (shootCooldown > 0 || !isOpen()) {
-            return false;
-        }
-
+    public boolean shoot(EntityPlayer rider) {
         shootCooldown = Config.SHULKER_SHOOT_COOLDOWN;
 
         if (rider == null) {
@@ -193,22 +167,6 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
 
         a(SoundEffects.ENTITY_SHULKER_SHOOT, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
         return true;
-    }
-
-    // tryTeleportToNewPosition
-    protected boolean l() {
-        return getRider() != null || super.l();
-    }
-
-    // initEntityAI
-    protected void n() {
-        goalSelector.a(1, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        goalSelector.a(4, new AIAttack(this));
-        goalSelector.a(7, new AIPeek(this));
-        goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
-        targetSelector.a(1, new PathfinderGoalHurtByTarget(this, true));
-        targetSelector.a(2, new AIAttackNearest(this));
-        targetSelector.a(3, new AIDefenseAttack(this));
     }
 
     static class AIDefenseAttack extends PathfinderGoalNearestAttackableTarget<EntityLiving> {

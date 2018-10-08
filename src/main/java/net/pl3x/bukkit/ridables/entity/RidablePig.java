@@ -1,24 +1,21 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.EnchantmentManager;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPig;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.MobEffect;
 import net.minecraft.server.v1_13_R2.MobEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,22 +38,22 @@ public class RidablePig extends EntityPig implements RidableEntity {
         }
     }
 
-    private ControllerMove aiController;
-    private ControllerWASD wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
-
     public RidablePig(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASD(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASD(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.PIG;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
     }
 
     // canBeRiddenInWater
@@ -64,17 +61,17 @@ public class RidablePig extends EntityPig implements RidableEntity {
         return Config.PIG_RIDABLE_IN_WATER;
     }
 
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return Config.PIG_JUMP_POWER;
+    }
+
     protected void mobTick() {
         Q = Config.PIG_STEP_HEIGHT;
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
-        }
         super.mobTick();
     }
 
+    // travel
     public void a(float strafe, float vertical, float forward) {
         if (isVehicle() && dh()) {
             if (Q < 1.0F) {
@@ -106,67 +103,27 @@ public class RidablePig extends EntityPig implements RidableEntity {
         }
     }
 
-    // getJumpUpwardsMotion
-    protected float cG() {
-        return super.cG() * getJumpPower() * 2.2F;
-    }
-
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
-    public float getJumpPower() {
-        return Config.PIG_JUMP_POWER;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.PIG_SPEED;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return Config.PIG_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
         if (passengers.isEmpty() && !entityhuman.isPassenger()) {
             if (!entityhuman.isSneaking()) {
-                if (ItemUtil.isEmptyOrSaddle(entityhuman)) {
-                    return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
-                }
-            } else {
-                if (Config.PIG_SADDLE_BACK && hasSaddle() && entityhuman.b(enumhand).getItem() != Items.SADDLE) {
-                    setSaddle(false);
-                    return !getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), new ItemStack(Material.SADDLE)).isEmpty();
-                }
+                return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
+            }
+            if (Config.PIG_SADDLE_BACK && hasSaddle() && entityhuman.b(enumhand).getItem() != Items.SADDLE) {
+                setSaddle(false);
+                return !getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(), new ItemStack(Material.SADDLE)).isEmpty();
             }
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     private boolean isBoosting() {
@@ -201,7 +158,7 @@ public class RidablePig extends EntityPig implements RidableEntity {
     }
 
     // modified travel method from EntityLiving
-    public void super_a(float strafe, float vertical, float forward) {
+    private void super_a(float strafe, float vertical, float forward) {
         double gravity = 0.08D;
         if (motY <= 0.0D && hasEffect(MobEffects.SLOW_FALLING)) {
             gravity = 0.01D;
@@ -271,8 +228,9 @@ public class RidablePig extends EntityPig implements RidableEntity {
                 if (positionChanged && z_()) { // isOnLadder
                     motY = 0.2D;
                 }
-                if (hasEffect(MobEffects.LEVITATION)) {
-                    motY += (0.05D * (double) (getEffect(MobEffects.LEVITATION).getAmplifier() + 1) - motY) * 0.2D;
+                MobEffect levitation = getEffect(MobEffects.LEVITATION);
+                if (levitation != null) {
+                    motY += (0.05D * (double) (levitation.getAmplifier() + 1) - motY) * 0.2D;
                     fallDistance = 0.0F;
                 } else {
                     pos.e(locX, 0.0D, locZ); // setPos

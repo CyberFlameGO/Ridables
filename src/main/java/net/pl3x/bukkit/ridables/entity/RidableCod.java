@@ -3,29 +3,45 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityCod;
+import net.minecraft.server.v1_13_R2.EntityFish;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.IEntitySelector;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishFollowLeader;
+import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishSwim;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableCod extends EntityCod implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASDWater wasdController;
-    private EntityPlayer rider;
-
     public RidableCod(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDWater(this);
+        moveController = new FishWASDController(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.COD;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(0, new AIPanic(this, 1.25D));
+        goalSelector.a(2, new AIAvoidTarget<>(this, EntityHuman.class, 8.0F, 1.6D, 1.4D, IEntitySelector.f));
+        goalSelector.a(4, new AIFishSwim(this));
+        goalSelector.a(5, new AIFishFollowLeader(this));
     }
 
     // canBeRiddenInWater
@@ -35,11 +51,7 @@ public class RidableCod extends EntityCod implements RidableEntity {
 
     // onLivingUpdate
     public void k() {
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
+        if (getRider() != null) {
             motY += 0.005D;
         }
         super.k();
@@ -68,46 +80,47 @@ public class RidableCod extends EntityCod implements RidableEntity {
         super.a(strafe, vertical, forward);
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.COD_SPEED * 0.25F;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-        }
+        return Config.COD_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public static class FishWASDController extends ControllerWASDWater {
+        private final EntityFish fish;
+
+        public FishWASDController(RidableEntity ridable) {
+            super(ridable);
+            this.fish = (EntityFish) ridable;
+        }
+
+        public void tick() {
+            if (fish.a(TagsFluid.WATER)) {
+                fish.motY += 0.005D;
+            }
+            if (this.h == ControllerMove.Operation.MOVE_TO && !fish.getNavigation().p()) {
+                double x = b - fish.locX;
+                double y = c - fish.locY;
+                double z = d - fish.locZ;
+                y /= (double) MathHelper.sqrt(x * x + y * y + z * z);
+                fish.yaw = a(fish.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F);
+                fish.aQ = fish.yaw;
+                fish.o(fish.cK() + ((float) (e * fish.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()) - fish.cK()) * 0.125F);
+                fish.motY += (double) fish.cK() * y * 0.1D;
+            } else {
+                fish.o(0.0F);
+            }
+        }
     }
 }

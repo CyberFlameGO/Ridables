@@ -224,6 +224,7 @@ public class Config {
     public static boolean PHANTOM_RIDABLE_IN_WATER = false;
     public static boolean PHANTOM_FALL_DAMAGE = true;
     public static boolean PHANTOM_BURN_IN_SUNLIGHT = true;
+    public static boolean PHANTOM_ATTACK_IN_DAYLIGHT = true;
     public static float PHANTOM_SHOOT_DAMAGE = 1.0F;
 
     public static boolean POLAR_BEAR_ENABLED = false;
@@ -307,6 +308,7 @@ public class Config {
     public static boolean TURTLE_ENABLED = false;
     public static float TURTLE_SPEED_LAND = 1.0F;
     public static float TURTLE_SPEED_WATER = 1.0F;
+    public static float TURTLE_JUMP_POWER = 0.5F;
     public static float TURTLE_STEP_HEIGHT = 1.0F;
 
     public static boolean VEX_ENABLED = false;
@@ -615,6 +617,7 @@ public class Config {
         PHANTOM_RIDABLE_IN_WATER = config.getBoolean("phantom.ride-in-water", false);
         PHANTOM_FALL_DAMAGE = config.getBoolean("phantom.fall-damage", true);
         PHANTOM_BURN_IN_SUNLIGHT = config.getBoolean("phantom.burn-in-sun", true);
+        PHANTOM_ATTACK_IN_DAYLIGHT = config.getBoolean("phantom.attack-in-sun", true);
         PHANTOM_SHOOT_DAMAGE = (float) config.getDouble("phantom.shoot-damage", 1.0D);
 
         POLAR_BEAR_ENABLED = config.getBoolean("polar_bear.enabled", false);
@@ -698,6 +701,7 @@ public class Config {
         TURTLE_ENABLED = config.getBoolean("turtle.enabled", false);
         TURTLE_SPEED_LAND = (float) config.getDouble("turtle.speed.on-land", 1.0D);
         TURTLE_SPEED_WATER = (float) config.getDouble("turtle.speed.in-water", 1.0D);
+        TURTLE_JUMP_POWER = (float) config.getDouble("turtle.jump-power", 0.5D);
         TURTLE_STEP_HEIGHT = (float) config.getDouble("turtle.step-height", 1.0D);
 
         VEX_ENABLED = config.getBoolean("vex.enabled", false);

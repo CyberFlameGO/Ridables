@@ -3,22 +3,26 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHorseZombie;
 import net.minecraft.server.v1_13_R2.EntityHuman;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.PathfinderGoalFloat;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 
 public class RidableZombieHorse extends EntityHorseZombie implements RidableEntity {
-    private EntityPlayer rider;
-
     public RidableZombieHorse(World world) {
         super(world);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.ZOMBIE_HORSE;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
     }
 
     // canBeRiddenInWater
@@ -28,39 +32,20 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
 
     public void mobTick() {
         Q = Config.ZOMBIE_HORSE_STEP_HEIGHT;
-        updateRider();
         super.mobTick();
-    }
-
-    public void setRotation(float newYaw, float newPitch) {
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-    }
-
-    public void useWASDController() {
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean isTamed() {
@@ -69,6 +54,6 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
 
     // addSwimmingPathfinder
     protected void dI() {
-        goalSelector.a(0, new PathfinderGoalFloat(this));
+        goalSelector.a(0, new AISwim(this));
     }
 }

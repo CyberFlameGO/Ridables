@@ -1,8 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
@@ -11,7 +9,6 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityWither;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMonsterType;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.minecraft.server.v1_13_R2.PathfinderGoalArrowAttack;
@@ -23,10 +20,9 @@ import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -38,61 +34,31 @@ public class RidableWither extends EntityWither implements RidableEntity {
     private static final Predicate<Entity> NOT_UNDEAD = (entity) -> entity instanceof EntityLiving &&
             ((EntityLiving) entity).getMonsterType() != EnumMonsterType.UNDEAD && ((EntityLiving) entity).df();
 
-    private ControllerMove aiController;
-    private ControllerWASDFlying wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-
-    private PathfinderGoalArrowAttack goalArrowAttack;
-    private PathfinderGoalRandomStrollLand goalRandomStroll;
-    private PathfinderGoalLookAtPlayer goalLookAtPlayer;
-    private PathfinderGoalRandomLookaround goalLookAround;
-    private PathfinderGoalHurtByTarget goalHurtByTarget;
-    private PathfinderGoalNearestAttackableTarget goalNearestTarget;
-    private EntityPlayer rider;
     private int shootCooldown = 0;
 
     public RidableWither(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDFlying(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASDFlying(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.WITHER;
     }
 
-    // initEntityAI
+    // initAI - override vanilla AI
     protected void n() {
-        goalArrowAttack = new PathfinderGoalArrowAttack(this, 1.0D, 40, 20.0F);
-        goalRandomStroll = new PathfinderGoalRandomStrollLand(this, 1.0D);
-        goalLookAtPlayer = new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F);
-        goalLookAround = new PathfinderGoalRandomLookaround(this);
-        goalHurtByTarget = new PathfinderGoalHurtByTarget(this, false, new Class[0]);
-        goalNearestTarget = new PathfinderGoalNearestAttackableTarget(this, EntityInsentient.class, 0, false, false, NOT_UNDEAD);
+    }
 
+    private void initAI() {
         goalSelector.a(0, new DoNothing());
-        addAI();
-    }
-
-    private void addAI() {
-        goalSelector.a(2, goalArrowAttack);
-        goalSelector.a(5, goalRandomStroll);
-        goalSelector.a(6, goalLookAtPlayer);
-        goalSelector.a(7, goalLookAround);
-        targetSelector.a(1, goalHurtByTarget);
-        targetSelector.a(2, goalNearestTarget);
-    }
-
-    private void removeAI() {
-        goalSelector.a(goalArrowAttack);
-        goalSelector.a(goalRandomStroll);
-        goalSelector.a(goalLookAtPlayer);
-        goalSelector.a(goalLookAround);
-        targetSelector.a(goalHurtByTarget);
-        targetSelector.a(goalNearestTarget);
+        goalSelector.a(2, new PathfinderGoalArrowAttack(this, 1.0D, 40, 20.0F));
+        goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 1.0D));
+        goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+        targetSelector.a(1, new PathfinderGoalHurtByTarget(this, false));
+        targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityInsentient.class, 0, false, false, NOT_UNDEAD));
     }
 
     // canBeRiddenInWater
@@ -104,73 +70,24 @@ public class RidableWither extends EntityWither implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            super.a(0, 0);
-            super.a(1, 0);
-            super.a(2, 0);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
-        }
         super.mobTick();
     }
 
-    public void a(float strafe, float vertical, float forward, float friction) {
-        float speed = 1F;
-        if (getRider() != null) {
-            speed = 2;
-            friction = 0.1F;
-        }
-        super.a(strafe / speed, vertical * speed, forward / speed, friction);
-    }
-
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.WITHER_SPEED;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-            setNoGravity(false);
-            addAI();
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-            removeAI();
-        }
+        return Config.WITHER_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onSpacebar() {

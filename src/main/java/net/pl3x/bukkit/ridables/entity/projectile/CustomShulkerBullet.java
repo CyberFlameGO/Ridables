@@ -23,27 +23,27 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 
 public class CustomShulkerBullet extends EntityShulkerBullet implements IProjectile {
     private final RidableShulker shulker;
-    private final EntityPlayer player;
+    private final EntityPlayer rider;
     private int life;
 
     public CustomShulkerBullet(World world) {
         super(world);
         this.shulker = null;
-        this.player = null;
+        this.rider = null;
     }
 
-    public CustomShulkerBullet(World world, RidableShulker shulker, EntityPlayer player, Entity target, EnumDirection.EnumAxis dir) {
+    public CustomShulkerBullet(World world, RidableShulker shulker, EntityPlayer rider, Entity target, EnumDirection.EnumAxis dir) {
         super(world, shulker, target, dir);
         this.shulker = shulker;
-        this.player = player;
+        this.rider = rider;
     }
 
     public Shulker getShulker() {
-        return (Shulker) ((Entity) shulker).getBukkitEntity();
+        return (Shulker) shulker.getBukkitEntity();
     }
 
     public Player getRider() {
-        return (Player) ((Entity) player).getBukkitEntity();
+        return rider.getBukkitEntity();
     }
 
     public void tick() {
@@ -84,10 +84,10 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         }
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
-        if (hitEntity != null && player != null) {
+        if (hitEntity != null && rider != null) {
             if (Config.SHULKER_SHOOT_DAMAGE > 0) {
-                if (hitEntity.damageEntity(DamageSource.a(this, player).c(), Config.SHULKER_SHOOT_DAMAGE)) {
-                    a(player, hitEntity);
+                if (hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.SHULKER_SHOOT_DAMAGE)) {
+                    a(rider, hitEntity);
                     hitEntity.addEffect(new MobEffect(MobEffects.LEVITATION, 200), EntityPotionEffectEvent.Cause.ATTACK);
                 }
             }
@@ -99,7 +99,7 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         EntityLiving entity = null;
         double d0 = 0.0D;
         for (Entity entity1 : world.getEntities(this, getBoundingBox().b(motX, motY, motZ).g(1.0D))) {
-            if (entity1 != shulker && entity1 != player && entity1 instanceof EntityLiving) {
+            if (entity1 != shulker && entity1 != rider && entity1 instanceof EntityLiving) {
                 AxisAlignedBB axisalignedbb = entity1.getBoundingBox().g(0.5D);
                 MovingObjectPosition movingobjectposition = axisalignedbb.b(vec3d, vec3d1);
                 if (movingobjectposition != null) {

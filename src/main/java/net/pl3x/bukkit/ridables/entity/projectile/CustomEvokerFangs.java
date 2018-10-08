@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R2.DamageSource;
-import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityEvokerFangs;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -48,11 +47,11 @@ public class CustomEvokerFangs extends EntityEvokerFangs {
     }
 
     public Evoker getEvoker() {
-        return (Evoker) ((Entity) evoker).getBukkitEntity();
+        return (Evoker) evoker.getBukkitEntity();
     }
 
     public Player getRider() {
-        return (Player) ((Entity) rider).getBukkitEntity();
+        return rider.getBukkitEntity();
     }
 
     public void tick() {

@@ -1,45 +1,57 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityBlaze;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
-import net.pl3x.bukkit.ridables.entity.controller.BlankLookController;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.blaze.AIBlazeFireballAttack;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
-import net.pl3x.bukkit.ridables.util.ItemUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableBlaze extends EntityBlaze implements RidableEntity {
-    private ControllerMove aiController;
-    private ControllerWASDFlyingWithSpacebar wasdController;
-    private ControllerLook defaultLookController;
-    private BlankLookController blankLookController;
-    private EntityPlayer rider;
     private int shootCooldown = 0;
 
     public RidableBlaze(World world) {
         super(world);
-        aiController = moveController;
-        wasdController = new ControllerWASDFlyingWithSpacebar(this);
-        defaultLookController = lookController;
-        blankLookController = new BlankLookController(this);
+        moveController = new ControllerWASDFlyingWithSpacebar(this);
+        lookController = new LookController(this);
+        initAI();
     }
 
     public RidableType getType() {
         return RidableType.BLAZE;
     }
+
+    // initAI - override vanilla AI
+    protected void n() {
+    }
+
+    private void initAI() {
+        goalSelector.a(4, new AIBlazeFireballAttack(this));
+        goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));
+        goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D, 0.0F));
+        goalSelector.a(8, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(8, new AILookIdle(this));
+        targetSelector.a(1, new AIHurtByTarget(this, true));
+        targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true));
+    }
+
 
     // canBeRiddenInWater
     public boolean aY() {
@@ -50,61 +62,27 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-
-        EntityPlayer rider = updateRider();
-        if (rider != null) {
-            setGoalTarget(null, null, false);
-            setRotation(rider.yaw, rider.pitch);
-            useWASDController();
+        if (getRider() != null) {
             motY += bi > 0 ? 0.07F * Config.BLAZE_VERTICAL : 0.04704F - Config.BLAZE_GRAVITY;
-            return;
         }
         super.mobTick();
     }
 
-    public void setRotation(float newYaw, float newPitch) {
-        setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
-        aS = aQ = yaw;
-    }
-
     public float getSpeed() {
-        return (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * Config.BLAZE_SPEED * 2;
-    }
-
-    public EntityPlayer getRider() {
-        return rider;
-    }
-
-    public EntityPlayer updateRider() {
-        if (passengers == null || passengers.isEmpty()) {
-            rider = null;
-        } else {
-            Entity entity = passengers.get(0);
-            rider = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
-        }
-        return rider;
-    }
-
-    public void useAIController() {
-        if (moveController != aiController) {
-            moveController = aiController;
-            lookController = defaultLookController;
-        }
-    }
-
-    public void useWASDController() {
-        if (moveController != wasdController) {
-            moveController = wasdController;
-            lookController = blankLookController;
-        }
+        return Config.BLAZE_SPEED;
     }
 
     // processInteract
     public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking() && ItemUtil.isEmptyOrSaddle(entityhuman)) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman);
+        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
+            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
         }
         return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
@@ -136,7 +114,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
             return false;
         }
 
-        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
+        CraftPlayer player = rider.getBukkitEntity();
         if (!hasShootPerm(player)) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;

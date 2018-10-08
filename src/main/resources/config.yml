@@ -309,6 +309,7 @@ phantom:
   ride-in-water: false # allow mob to be ridden in water
   fall-damage: true  # damage if fall too quickly
   burn-in-sun: true  # burn in sunlight
+  attack-in-sun: true # burn in sunlight
   shoot-damage: 1.0  # damage per hit (1 heart = 2.0 damage)
 
 # Polar Bear options
