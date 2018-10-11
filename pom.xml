@@ -49,12 +49,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.inventivetalent.spiget-update</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.4.0</version>
@@ -69,10 +63,6 @@
         <repository>
             <id>aikar</id>
             <url>http://repo.aikar.co/nexus/content/groups/aikar/</url>
-        </repository>
-        <repository>
-            <id>bstats-repo</id>
-            <url>http://repo.bstats.org/content/repositories/releases/</url>
         </repository>
         <repository>
             <id>inventive-repo</id>
@@ -114,7 +104,6 @@
                         <includes>
                             <include>io.papermc.lib:paperlib**</include>
                             <include>co.aikar:minecraft-timings**</include>
-                            <include>org.bstats:bstats-bukkit**</include>
                             <include>org.inventivetalent.spiget-update:bukkit**</include>
                         </includes>
                     </artifactSet>
@@ -126,10 +115,6 @@
                         <relocation>
                             <pattern>co.aikar.timings.lib</pattern>
                             <shadedPattern>net.pl3x.bukkit.ridables.timingslib</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bstats.bukkit</pattern>
-                            <shadedPattern>net.pl3x.bukkit.ridables.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.inventivetalent.update.spiget</pattern>
