@@ -1,19 +1,28 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityVex;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.vex.AIVexChargeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.vex.AIVexCopyOwnerTarget;
+import net.pl3x.bukkit.ridables.entity.ai.vex.AIVexMoveRandom;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableVex extends EntityVex implements RidableEntity {
     public RidableVex(World world) {
         super(world);
-        moveController = new ControllerWASDFlying(this);
+        moveController = new VexWASDController(this);
         lookController = new LookController(this);
         initAI();
     }
@@ -27,6 +36,14 @@ public class RidableVex extends EntityVex implements RidableEntity {
     }
 
     private void initAI() {
+        goalSelector.a(0, new AISwim(this));
+        goalSelector.a(4, new AIVexChargeAttack(this));
+        goalSelector.a(8, new AIVexMoveRandom(this));
+        goalSelector.a(9, new AIWatchClosest(this, EntityHuman.class, 3.0F, 1.0F));
+        goalSelector.a(10, new AIWatchClosest(this, EntityInsentient.class, 8.0F));
+        targetSelector.a(1, new AIHurtByTarget(this, true, EntityVex.class));
+        targetSelector.a(2, new AIVexCopyOwnerTarget(this));
+        targetSelector.a(3, new AIAttackNearest<>(this, EntityHuman.class, true));
     }
 
     // canBeRiddenInWater
@@ -56,72 +73,36 @@ public class RidableVex extends EntityVex implements RidableEntity {
         // no fall damage
     }
 
-    class ControllerWASDVex extends ControllerWASDFlying {
-        ControllerWASDVex(RidableEntity entity) {
-            super(entity);
+    static class VexWASDController extends ControllerWASDFlying {
+        private final RidableVex vex;
+
+        public VexWASDController(RidableVex vex) {
+            super(vex);
+            this.vex = vex;
         }
 
-        // onUpdate
-        public void a() {
-            EntityPlayer rider = ridable.getRider();
-            if (rider == null) {
-                //ridable.useAIController();
-                return;
+        public void tick() {
+            if (this.h == ControllerMove.Operation.MOVE_TO) {
+                double x = b - vex.locX;
+                double y = c - vex.locY;
+                double z = d - vex.locZ;
+                double distance = MathHelper.sqrt(x * x + y * y + z * z);
+                if (distance < vex.getBoundingBox().a()) { // getAverageEdgeLength
+                    h = ControllerMove.Operation.WAIT;
+                    vex.motX *= 0.5D;
+                    vex.motY *= 0.5D;
+                    vex.motZ *= 0.5D;
+                } else {
+                    vex.motX += x / distance * 0.05D * e;
+                    vex.motY += y / distance * 0.05D * e;
+                    vex.motZ += z / distance * 0.05D * e;
+                    if (vex.getGoalTarget() == null) {
+                        vex.aQ = vex.yaw = -((float) MathHelper.c(vex.motX, vex.motZ)) * (180F / (float) Math.PI);
+                    } else {
+                        vex.aQ = vex.yaw = -((float) MathHelper.c(vex.getGoalTarget().locX - vex.locX, vex.getGoalTarget().locZ - vex.locZ)) * (180F / (float) Math.PI);
+                    }
+                }
             }
-
-            // do not target anything while being ridden
-            a.setGoalTarget(null, null, false);
-
-            // rotation
-            //ridable.setRotation(rider.yaw, rider.pitch);
-
-            // controls
-            float forward = rider.bj;
-            float vertical = forward == 0 ? 0 : -(rider.pitch / 45);
-            float strafe = rider.bh;
-
-            if (forward < 0) {
-                forward *= 0.5;
-                strafe *= 0.5;
-                vertical *= -0.25;
-            }
-
-            // jump
-            if (isJumping(rider)) {
-                ridable.onSpacebar();
-            }
-
-            if (a.locY >= Config.FLYING_MAX_Y) {
-                a.motY = -0.05F;
-                vertical = 0;
-                forward = 0;
-                strafe = 0;
-            }
-            if (a.locY <= 0) {
-                a.motY = +0.05F;
-                vertical = 0;
-                forward = 0;
-                strafe = 0;
-            }
-
-            a.motX *= 0.95F;
-            a.motY *= 0.9F;
-            a.motZ *= 0.95F;
-
-            float speed = ridable.getSpeed();
-            if (a.onGround) {
-                speed *= 0.05F;
-            }
-
-            a.o((float) (e = speed));
-            a.s(vertical);
-            a.t(strafe);
-            a.r(forward);
-
-            f = a.bj;
-            g = a.bh;
-
-            a.noclip = Config.VEX_NOCLIP;
         }
     }
 }

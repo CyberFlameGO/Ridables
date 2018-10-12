@@ -1,24 +1,23 @@
 package net.pl3x.bukkit.ridables.entity.ai.parrot;
 
-import net.minecraft.server.v1_13_R2.EntityTameableAnimal;
-import net.minecraft.server.v1_13_R2.PathfinderGoalFollowOwner;
-import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.minecraft.server.v1_13_R2.PathfinderGoalFollowOwnerParrot;
+import net.pl3x.bukkit.ridables.entity.RidableParrot;
 
-public class AIParrotFollowOwner extends PathfinderGoalFollowOwner {
-    private final RidableEntity ridable;
+public class AIParrotFollowOwner extends PathfinderGoalFollowOwnerParrot {
+    private final RidableParrot parrot;
 
-    public AIParrotFollowOwner(RidableEntity ridable, double speed, float minDistance, float maxDistance) {
-        super((EntityTameableAnimal) ridable, speed, minDistance, maxDistance);
-        this.ridable = ridable;
+    public AIParrotFollowOwner(RidableParrot parrot, double speed, float minDistance, float maxDistance) {
+        super(parrot, speed, minDistance, maxDistance);
+        this.parrot = parrot;
     }
 
     // shouldExecute
     public boolean a() {
-        return ridable.getRider() == null && super.a();
+        return parrot.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
     public boolean b() {
-        return ridable.getRider() == null && super.b();
+        return parrot.getRider() == null && super.b();
     }
 }

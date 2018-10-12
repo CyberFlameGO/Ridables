@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.EnchantmentManager;
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPig;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -12,8 +13,17 @@ import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.MobEffect;
 import net.minecraft.server.v1_13_R2.MobEffects;
+import net.minecraft.server.v1_13_R2.RecipeItemStack;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
+import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AITempt;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import org.bukkit.Material;
@@ -22,6 +32,8 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 
 public class RidablePig extends EntityPig implements RidableEntity {
+    public static final RecipeItemStack TEMPTATION_ITEMS = RecipeItemStack.a(Items.CARROT, Items.POTATO, Items.BEETROOT, Items.CARROT_ON_A_STICK);
+
     private static Field boosting;
     private static Field boostTime;
     private static Field totalBoostTime;
@@ -54,6 +66,14 @@ public class RidablePig extends EntityPig implements RidableEntity {
     }
 
     private void initAI() {
+        goalSelector.a(0, new AISwim(this));
+        goalSelector.a(1, new AIPanic(this, 1.25D));
+        goalSelector.a(3, new AIBreed(this, 1.0D, EntityPig.class));
+        goalSelector.a(4, new AITempt(this, 1.2D, false, TEMPTATION_ITEMS));
+        goalSelector.a(5, new AIFollowParent(this, 1.1D));
+        goalSelector.a(6, new AIWanderAvoidWater(this, 1.0D));
+        goalSelector.a(7, new AIWatchClosest(this, EntityHuman.class, 6.0F));
+        goalSelector.a(8, new AILookIdle(this));
     }
 
     // canBeRiddenInWater
@@ -124,6 +144,15 @@ public class RidablePig extends EntityPig implements RidableEntity {
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidablePig createChild(EntityAgeable entity) {
+        return b(entity);
+    }
+
+    // createChild (bukkit's weird duplicate method)
+    public RidablePig b(EntityAgeable entity) {
+        return new RidablePig(world);
     }
 
     private boolean isBoosting() {

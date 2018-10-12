@@ -15,8 +15,10 @@ import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.Navigation;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
@@ -26,6 +28,7 @@ import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AIWander;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.AIZombieAttackTurtleEgg;
+import net.pl3x.bukkit.ridables.entity.ai.zombie.AIZombieBreakDoor;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedAttack;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedGoToBeach;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.drowned.AIDrownedGoToWater;
@@ -40,6 +43,7 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableDrowned extends EntityDrowned implements RidableEntity {
+    private final AIZombieBreakDoor breakDoorAI;
     private boolean swimUp;
     private int shootCooldown = 0;
 
@@ -48,6 +52,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         moveController = new DrownedWASDController(this);
         lookController = new LookController(this);
         initAI();
+        breakDoorAI = new AIZombieBreakDoor(this);
     }
 
     public RidableType getType() {
@@ -74,7 +79,9 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         goalSelector.a(7, new AIWander(this, 1.0D));
         targetSelector.a(1, new AIHurtByTarget(this, true, EntityDrowned.class));
         targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, 10, true, false, e -> e != null && (!e.world.L() || e.isInWater())));
-        targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
+        if ((Ridables.isSpigot() || Ridables.isPaper()) && world.spigotConfig.zombieAggressiveTowardsVillager) {
+            targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
+        }
         targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, true));
         targetSelector.a(5, new AIAttackNearest<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bC));
     }
@@ -96,7 +103,6 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         this.swimUp = swimUp;
     }
 
-    // overrides private method
     public boolean isSwimmingUp(boolean checkTarget) {
         if (checkTarget) {
             if (swimUp) {
@@ -116,6 +122,24 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
     // getJumpUpwardsMotion
     protected float cG() {
         return Config.DROWNED_JUMP_POWER;
+    }
+
+    // setBreakDoorsAITask
+    public void t(boolean enabled) {
+        if (dz()) { // canBreakDoors
+            if (dH() != enabled) {
+                RidableZombie.setBreakDoorsTask(this, enabled);
+                ((Navigation) this.getNavigation()).a(enabled); // setBreakDoors
+                if (enabled) {
+                    goalSelector.a(1, breakDoorAI); // addTask
+                } else {
+                    goalSelector.a(breakDoorAI); // removeTask
+                }
+            }
+        } else if (dH()) {
+            goalSelector.a(breakDoorAI); // removeTask
+            RidableZombie.setBreakDoorsTask(this, false);
+        }
     }
 
     protected void mobTick() {

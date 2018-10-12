@@ -38,9 +38,12 @@ public class RidableCod extends EntityCod implements RidableEntity {
     }
 
     private void initAI() {
+        // from EntityFish
         goalSelector.a(0, new AIPanic(this, 1.25D));
         goalSelector.a(2, new AIAvoidTarget<>(this, EntityHuman.class, 8.0F, 1.6D, 1.4D, IEntitySelector.f));
         goalSelector.a(4, new AIFishSwim(this));
+
+        // from EntityCod
         goalSelector.a(5, new AIFishFollowLeader(this));
     }
 

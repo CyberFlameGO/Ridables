@@ -1,15 +1,22 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R2.AxisAlignedBB;
+import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityGhast;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.ai.AIFindNearestPlayer;
+import net.pl3x.bukkit.ridables.entity.ai.ghast.AIGhastFireballAttack;
+import net.pl3x.bukkit.ridables.entity.ai.ghast.AIGhastLookAround;
+import net.pl3x.bukkit.ridables.entity.ai.ghast.AIGhastRandomFly;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
@@ -22,7 +29,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
 
     public RidableGhast(World world) {
         super(world);
-        moveController = new ControllerWASDFlying(this);
+        moveController = new GhastWASDController(this);
         lookController = new LookController(this);
         initAI();
     }
@@ -36,6 +43,10 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     }
 
     private void initAI() {
+        goalSelector.a(5, new AIGhastRandomFly(this));
+        goalSelector.a(7, new AIGhastLookAround(this));
+        goalSelector.a(7, new AIGhastFireballAttack(this));
+        targetSelector.a(1, new AIFindNearestPlayer(this));
     }
 
     // canBeRiddenInWater
@@ -108,5 +119,48 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
         }.runTaskLater(Ridables.getInstance(), 10);
 
         return true;
+    }
+
+    static class GhastWASDController extends ControllerWASDFlying {
+        private RidableGhast ghast;
+        private int courseChangeCooldown;
+
+        public GhastWASDController(RidableGhast ghast) {
+            super(ghast);
+            this.ghast = ghast;
+        }
+
+        public void tick() {
+            if (h == ControllerMove.Operation.MOVE_TO) {
+                double x = b - ghast.locX;
+                double y = c - ghast.locY;
+                double z = d - ghast.locZ;
+                double distance = x * x + y * y + z * z;
+                if (courseChangeCooldown-- <= 0) {
+                    courseChangeCooldown += ghast.getRandom().nextInt(5) + 2;
+                    distance = (double) MathHelper.sqrt(distance);
+                    if (isNotColliding(b, c, d, distance)) {
+                        ghast.motX += x / distance * 0.1D;
+                        ghast.motY += y / distance * 0.1D;
+                        ghast.motZ += z / distance * 0.1D;
+                    } else {
+                        h = ControllerMove.Operation.WAIT;
+                    }
+                }
+            }
+        }
+
+        private boolean isNotColliding(double x, double y, double z, double distance) {
+            double stepX = (x - ghast.locX) / distance;
+            double stepY = (y - ghast.locY) / distance;
+            double stepZ = (z - ghast.locZ) / distance;
+            AxisAlignedBB aabb = ghast.getBoundingBox();
+            for (int i = 1; (double) i < distance; ++i) {
+                if (!ghast.world.getCubes(ghast, aabb = aabb.d(stepX, stepY, stepZ))) { // offset
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

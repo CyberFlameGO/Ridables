@@ -241,6 +241,7 @@ public class Config {
     public static float RABBIT_SPEED = 1.0F;
     public static float RABBIT_JUMP_POWER = 0.5F;
     public static boolean RABBIT_RIDABLE_IN_WATER = true;
+    public static double RABBIT_SPAWN_KILLER_CHANCE = 0.0D;
 
     public static boolean SALMON_ENABLED = false;
     public static float SALMON_SPEED = 1.0F;
@@ -634,6 +635,7 @@ public class Config {
         RABBIT_SPEED = (float) config.getDouble("rabbit.speed", 1.0D);
         RABBIT_JUMP_POWER = (float) config.getDouble("rabbit.jump-power", 0.5D);
         RABBIT_RIDABLE_IN_WATER = config.getBoolean("rabbit.ride-in-water", true);
+        RABBIT_SPAWN_KILLER_CHANCE = config.getDouble("rabbit.killer-chance", 0);
 
         SALMON_ENABLED = config.getBoolean("salmon.enabled", false);
         SALMON_SPEED = (float) config.getDouble("salmon.speed", 1.0D);

@@ -1,19 +1,11 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.AxisAlignedBB;
 import net.minecraft.server.v1_13_R2.ControllerLook;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
-import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityShulker;
-import net.minecraft.server.v1_13_R2.EntityShulkerBullet;
-import net.minecraft.server.v1_13_R2.EnumDifficulty;
-import net.minecraft.server.v1_13_R2.EnumDirection;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.IMonster;
-import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
@@ -21,6 +13,10 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.shulker.AIShulkerAttack;
+import net.pl3x.bukkit.ridables.entity.ai.shulker.AIShulkerAttackPlayer;
+import net.pl3x.bukkit.ridables.entity.ai.shulker.AIShulkerDefenseAttack;
+import net.pl3x.bukkit.ridables.entity.ai.shulker.AIShulkerPeek;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomShulkerBullet;
 import org.bukkit.block.Block;
@@ -50,12 +46,12 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
 
     private void initAI() {
         goalSelector.a(1, new AIWatchClosest(this, EntityHuman.class, 8.0F));
-        goalSelector.a(4, new AIAttack(this));
-        goalSelector.a(7, new AIPeek(this));
+        goalSelector.a(4, new AIShulkerAttack(this));
+        goalSelector.a(7, new AIShulkerPeek(this));
         goalSelector.a(8, new AILookIdle(this));
         targetSelector.a(1, new AIHurtByTarget(this, true));
-        targetSelector.a(2, new AIAttackNearest(this));
-        targetSelector.a(3, new AIDefenseAttack(this)); // TODO (finish these)
+        targetSelector.a(2, new AIShulkerAttackPlayer(this));
+        targetSelector.a(3, new AIShulkerDefenseAttack(this));
     }
 
     // canBeRiddenInWater
@@ -167,117 +163,5 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
 
         a(SoundEffects.ENTITY_SHULKER_SHOOT, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
         return true;
-    }
-
-    static class AIDefenseAttack extends PathfinderGoalNearestAttackableTarget<EntityLiving> {
-        AIDefenseAttack(RidableShulker shulker) {
-            super(shulker, EntityLiving.class, 10, true, false, (e) -> e instanceof IMonster);
-        }
-
-        public boolean a() {
-            return ((RidableShulker) e).getRider() == null && e.be() != null && super.a();
-        }
-
-        protected AxisAlignedBB a(double d0) {
-            EnumDirection dir = ((EntityShulker) e).dy();
-            return dir.k() == EnumDirection.EnumAxis.X ? e.getBoundingBox().grow(4.0D, d0, d0) : (dir.k() == EnumDirection.EnumAxis.Z ? e.getBoundingBox().grow(d0, d0, 4.0D) : e.getBoundingBox().grow(d0, 4.0D, d0));
-        }
-    }
-
-    class AIAttackNearest extends PathfinderGoalNearestAttackableTarget<EntityHuman> {
-        AIAttackNearest(RidableShulker shulker) {
-            super(shulker, EntityHuman.class, true);
-        }
-
-        public boolean a() {
-            return ((RidableShulker) e).getRider() == null && e.world.getDifficulty() != EnumDifficulty.PEACEFUL && super.a();
-        }
-
-        protected AxisAlignedBB a(double d0) {
-            EnumDirection dir = ((EntityShulker) e).dy();
-            return dir.k() == EnumDirection.EnumAxis.X ? e.getBoundingBox().grow(4.0D, d0, d0) : (dir.k() == EnumDirection.EnumAxis.Z ? e.getBoundingBox().grow(d0, d0, 4.0D) : e.getBoundingBox().grow(d0, 4.0D, d0));
-        }
-    }
-
-    class AIAttack extends PathfinderGoal {
-        private RidableShulker shulker;
-        private int attackTime;
-
-        AIAttack(RidableShulker shulker) {
-            a(3); // setMutexBits
-            this.shulker = shulker;
-        }
-
-        public boolean a() {
-            EntityLiving target = shulker.getGoalTarget();
-            return shulker.getRider() == null && (target != null && target.isAlive()) && shulker.world.getDifficulty() != EnumDifficulty.PEACEFUL;
-        }
-
-        public void c() {
-            if (shulker.getRider() == null) {
-                attackTime = 20;
-                shulker.a(100);
-            }
-        }
-
-        public void d() {
-            if (shulker.getRider() == null) {
-                a(0); // setMutexBits
-            }
-        }
-
-        public void e() {
-            if (shulker.getRider() == null && shulker.world.getDifficulty() != EnumDifficulty.PEACEFUL) {
-                --attackTime;
-                EntityLiving target = shulker.getGoalTarget();
-                shulker.getControllerLook().a(target, 180.0F, 180.0F);
-                double distance = shulker.h(target);
-                if (distance < 400.0D) {
-                    if (attackTime <= 0) {
-                        attackTime = 20 + shulker.random.nextInt(10) * 20 / 2;
-                        EntityShulkerBullet bullet = new EntityShulkerBullet(shulker.world, shulker, target, shulker.dy().k());
-                        shulker.world.addEntity(bullet);
-                        shulker.a(SoundEffects.ENTITY_SHULKER_SHOOT, 2.0F, (shulker.random.nextFloat() - shulker.random.nextFloat()) * 0.2F + 1.0F);
-                    }
-                } else {
-                    shulker.setGoalTarget(null);
-                }
-                super.e();
-            }
-        }
-    }
-
-    class AIPeek extends PathfinderGoal {
-        private RidableShulker shulker;
-        private int peekTime;
-
-        AIPeek(RidableShulker shulker) {
-            this.shulker = shulker;
-        }
-
-        public boolean a() {
-            return shulker.getRider() == null && shulker.getGoalTarget() == null && shulker.random.nextInt(40) == 0;
-        }
-
-        public boolean b() {
-            return shulker.getRider() == null && shulker.getGoalTarget() == null && peekTime > 0;
-        }
-
-        public void c() {
-            if (shulker.getRider() == null) {
-                peekTime = 20 * (1 + shulker.random.nextInt(3));
-                shulker.a(30);
-            }
-        }
-
-        public void d() {
-            if (shulker.getRider() == null && shulker.getGoalTarget() == null) {
-                shulker.a(0);
-            }
-        }
-
-        public void e() {
-            --peekTime;
-        }
     }
 }

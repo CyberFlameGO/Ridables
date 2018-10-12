@@ -36,13 +36,11 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
 
     private void initAI() {
         goalSelector.a(1, new AISwim(this));
-
         goalSelector.a(3, new AILeapAtTarget(this, 0.4F));
         goalSelector.a(4, new AISpiderAttack(this));
         goalSelector.a(5, new AIWanderAvoidWater(this, 0.8D));
         goalSelector.a(6, new AIWatchClosest(this, EntityHuman.class, 8.0F));
         goalSelector.a(6, new AILookIdle(this));
-
         targetSelector.a(1, new AIHurtByTarget(this, false));
         targetSelector.a(2, new AISpiderTarget<>(this, EntityHuman.class));
         targetSelector.a(3, new AISpiderTarget<>(this, EntityIronGolem.class));

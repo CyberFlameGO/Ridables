@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityMushroomCow;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -58,5 +59,19 @@ public class RidableMooshroom extends EntityMushroomCow implements RidableEntity
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidableMooshroom createChild(EntityAgeable entity) {
+        return c(entity);
+    }
+
+    // createChild (bukkit's weird duplicate method)
+    public RidableMooshroom b(EntityAgeable entity) {
+        return c(entity);
+    }
+
+    // createChild (bukkit's weird triplicate method)
+    public RidableMooshroom c(EntityAgeable entity) {
+        return new RidableMooshroom(world);
     }
 }

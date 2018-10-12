@@ -13,6 +13,13 @@ import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import org.bukkit.block.Block;
@@ -39,6 +46,13 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     }
 
     private void initAI() {
+        goalSelector.a(1, new AISwim(this));
+        goalSelector.a(2, new AIAttackRanged(this, 1.0D, 60, 10.0F));
+        goalSelector.a(2, new AIWanderAvoidWater(this, 1.0D));
+        goalSelector.a(3, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(3, new AILookIdle(this));
+        targetSelector.a(1, new AIHurtByTarget(this, false));
+        targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true));
     }
 
     // canBeRiddenInWater

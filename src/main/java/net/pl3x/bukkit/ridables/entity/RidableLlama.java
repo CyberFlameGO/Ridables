@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLlama;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -59,6 +60,24 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidableLlama createChild(EntityAgeable entity) {
+        return b(entity);
+    }
+
+    // createChild (bukkit's weird duplicate method)
+    public RidableLlama b(EntityAgeable entity) {
+        RidableLlama baby = new RidableLlama(world);
+        a(entity, baby); // setOffspringAttributes
+        EntityLlama otherParent = (EntityLlama) entity;
+        int strength = random.nextInt(Math.max(getStrength(), otherParent.getStrength())) + 1;
+        if (random.nextFloat() < 0.03F) {
+            ++strength;
+        }
+        baby.setStrength(strength);
+        baby.setVariant(random.nextBoolean() ? getVariant() : otherParent.getVariant());
+        return baby;
     }
 
     public boolean isLeashed() {

@@ -1,14 +1,14 @@
 package net.pl3x.bukkit.ridables.entity.ai;
 
-import net.minecraft.server.v1_13_R2.EntityAnimal;
-import net.minecraft.server.v1_13_R2.PathfinderGoalBreed;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.PathfinderGoalOpenDoor;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 
-public class AIMate extends PathfinderGoalBreed {
+public class AIOpenDoor extends PathfinderGoalOpenDoor {
     private final RidableEntity ridable;
 
-    public AIMate(RidableEntity ridable, double speed, Class<? extends EntityAnimal> targetClass) {
-        super((EntityAnimal) ridable, speed, targetClass);
+    public AIOpenDoor(RidableEntity ridable, boolean shouldClose) {
+        super((EntityInsentient) ridable, shouldClose);
         this.ridable = ridable;
     }
 

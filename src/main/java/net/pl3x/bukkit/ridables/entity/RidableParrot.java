@@ -1,9 +1,12 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityParrot;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
@@ -20,7 +23,7 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 public class RidableParrot extends EntityParrot implements RidableEntity {
     public RidableParrot(World world) {
         super(world);
-        moveController = new ControllerWASDFlyingWithSpacebar(this);
+        moveController = new ParrotWASDController(this);
         lookController = new LookController(this);
         initAI();
     }
@@ -73,5 +76,41 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidableParrot createChild(EntityAgeable entity) {
+        return null;
+    }
+
+    public class ParrotWASDController extends ControllerWASDFlyingWithSpacebar {
+        private final RidableParrot parrot;
+
+        public ParrotWASDController(RidableParrot parrot) {
+            super(parrot);
+            this.parrot = parrot;
+        }
+
+        public void tick() {
+            if (h == Operation.MOVE_TO) {
+                h = Operation.WAIT;
+                parrot.setNoGravity(true);
+                double x = b - parrot.locX;
+                double y = c - parrot.locY;
+                double z = d - parrot.locZ;
+                if (x * x + y * y + z * z < 2.5D) {
+                    parrot.s(0.0F); // setMoveVertical
+                    parrot.r(0.0F); // setMoveForward
+                    return;
+                }
+                parrot.yaw = a(parrot.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 10.0F); // limitAngle
+                parrot.o((float) (e * parrot.getAttributeInstance(parrot.onGround ? GenericAttributes.MOVEMENT_SPEED : GenericAttributes.e).getValue()));
+                parrot.pitch = a(parrot.pitch, (float) (-(MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * (double) (180F / (float) Math.PI))), 10.0F); // limitAngle
+                parrot.s(y > 0.0D ? parrot.cK() : -parrot.cK()); // setMoveVertical getAIMoveSpeed
+            } else {
+                parrot.setNoGravity(false);
+                parrot.s(0.0F); // setMoveVertical
+                parrot.r(0.0F); // setMoveForward
+            }
+        }
     }
 }

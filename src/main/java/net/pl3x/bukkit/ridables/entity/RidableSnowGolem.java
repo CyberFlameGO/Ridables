@@ -5,15 +5,22 @@ import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntitySnowman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.IBlockData;
+import net.minecraft.server.v1_13_R2.IMonster;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.MaterialSetTag;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import org.bukkit.Material;
@@ -41,6 +48,11 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     }
 
     private void initAI() {
+        goalSelector.a(1, new AIAttackRanged(this, 1.25D, 20, 10.0F));
+        goalSelector.a(2, new AIWanderAvoidWater(this, 1.0D, 0.00001F));
+        goalSelector.a(3, new AIWatchClosest(this, EntityHuman.class, 6.0F));
+        goalSelector.a(4, new AILookIdle(this));
+        targetSelector.a(1, new AIAttackNearest<>(this, EntityInsentient.class, 10, true, false, IMonster.d));
     }
 
     // canBeRiddenInWater

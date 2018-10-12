@@ -32,6 +32,11 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
         return false;
     }
 
+    // canBeRidden
+    protected boolean n(Entity entity) {
+        return k <= 0; // rideCooldown
+    }
+
     // onLivingUpdate
     @Override
     public void k() {

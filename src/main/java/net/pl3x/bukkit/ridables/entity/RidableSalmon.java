@@ -6,8 +6,13 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySalmon;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
+import net.minecraft.server.v1_13_R2.IEntitySelector;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishFollowLeader;
+import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishSwim;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableSalmon extends EntitySalmon implements RidableEntity {
@@ -27,6 +32,13 @@ public class RidableSalmon extends EntitySalmon implements RidableEntity {
     }
 
     private void initAI() {
+        // from EntityFish
+        goalSelector.a(0, new AIPanic(this, 1.25D));
+        goalSelector.a(2, new AIAvoidTarget<>(this, EntityPlayer.class, 8.0F, 1.6D, 1.4D, IEntitySelector.f));
+        goalSelector.a(4, new AIFishSwim(this));
+
+        // from EntitySalmon
+        goalSelector.a(5, new AIFishFollowLeader(this));
     }
 
     // canBeRiddenInWater

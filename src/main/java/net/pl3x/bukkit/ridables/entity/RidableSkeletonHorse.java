@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHorseSkeleton;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -46,6 +47,10 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidableSkeletonHorse createChild(EntityAgeable entity) {
+        return new RidableSkeletonHorse(world);
     }
 
     public boolean isTamed() {

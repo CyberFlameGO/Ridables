@@ -6,18 +6,23 @@ import com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent;
 import com.destroystokyo.paper.event.entity.SlimeSwimEvent;
 import com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent;
 import com.destroystokyo.paper.event.entity.SlimeWanderEvent;
+import com.destroystokyo.paper.event.entity.TurtleLayEggEvent;
+import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityEnderman;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.MCUtil;
 import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
+import net.pl3x.bukkit.ridables.entity.RidableTurtle;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
+import org.bukkit.entity.Turtle;
 
 public class Paper {
     public static boolean DisableCreeperLingeringEffect(World world) {
@@ -53,5 +58,10 @@ public class Paper {
 
     public static boolean CallSlimeWanderEvent(RidableSlime slime) {
         return new SlimeWanderEvent((Slime) slime.getBukkitEntity()).callEvent();
+    }
+
+    public static int CallTurtleLayEggEvent(RidableTurtle turtle, BlockPosition position, int count) {
+        TurtleLayEggEvent layEggEvent = new TurtleLayEggEvent((Turtle) turtle.getBukkitEntity(), MCUtil.toLocation(turtle.world, position), count);
+        return layEggEvent.callEvent() ? layEggEvent.getEggCount() : 0;
     }
 }

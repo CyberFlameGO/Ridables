@@ -10,16 +10,16 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GeneratorAccess;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IWorldReader;
-import net.minecraft.server.v1_13_R2.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_13_R2.PathfinderGoalMoveTowardsRestriction;
-import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_13_R2.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_13_R2.PathfinderGoalRandomStrollLand;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
@@ -42,16 +42,16 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
     private void initAI() {
         if (Config.GIANT_AI_ENABLED) {
             goalSelector.a(0, new AISwim(this));
-            goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.0D, false));
-            goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D));
-            goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 16.0F));
-            goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
-            targetSelector.a(1, new PathfinderGoalHurtByTarget(this, true, EntityHuman.class));
+            goalSelector.a(2, new AIMeleeAttack(this, 1.0D, false));
+            goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D));
+            goalSelector.a(8, new AIWatchClosest(this, EntityHuman.class, 16.0F));
+            goalSelector.a(8, new AILookIdle(this));
+            targetSelector.a(1, new AIHurtByTarget(this, true, EntityHuman.class));
             if (Config.GIANT_HOSTILE) {
-                goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(this, 1.0D));
-                targetSelector.a(2, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
-                targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityVillager.class, false));
-                targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(this, EntityIronGolem.class, true));
+                goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));
+                targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true));
+                targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
+                targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, true));
             }
         }
     }

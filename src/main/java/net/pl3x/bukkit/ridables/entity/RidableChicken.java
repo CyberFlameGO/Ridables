@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityChicken;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityItem;
@@ -13,9 +14,9 @@ import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIMate;
 import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AITempt;
@@ -53,7 +54,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     private void initAI() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIPanic(this, 1.4D));
-        goalSelector.a(2, new AIMate(this, 1.0D, EntityChicken.class));
+        goalSelector.a(2, new AIBreed(this, 1.0D, EntityChicken.class));
         goalSelector.a(3, new AITempt(this, 1.0D, false, TEMPTATION_ITEMS));
         goalSelector.a(4, new AIFollowParent(this, 1.1D));
         goalSelector.a(5, new AIWanderAvoidWater(this, 1.0D));
@@ -127,6 +128,15 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidableChicken createChild(EntityAgeable entity) {
+        return b(entity);
+    }
+
+    // createChild (bukkit's weird duplicate method)
+    public RidableChicken b(EntityAgeable entity) {
+        return new RidableChicken(world);
     }
 
     private void calculateNewTimeUntilNextEgg() {

@@ -86,6 +86,11 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         return true;
     }
 
+    // canBeRidden
+    protected boolean n(Entity entity) {
+        return k <= 0; // rideCooldown
+    }
+
     public boolean nearTargetPos() {
         return dA();
     }
