@@ -7,8 +7,11 @@ import net.minecraft.server.v1_13_R2.EntitySkeleton;
 import net.minecraft.server.v1_13_R2.EntitySkeletonAbstract;
 import net.minecraft.server.v1_13_R2.EntityTurtle;
 import net.minecraft.server.v1_13_R2.EntityWolf;
+import net.minecraft.server.v1_13_R2.EnumDifficulty;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.PathfinderGoal;
+import net.minecraft.server.v1_13_R2.Items;
+import net.minecraft.server.v1_13_R2.PathfinderGoalBowShoot;
+import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
@@ -24,40 +27,14 @@ import net.pl3x.bukkit.ridables.entity.ai.skeleton.AISkeletonMeleeAttack;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
-import java.lang.reflect.Field;
-
 public class RidableSkeleton extends EntitySkeleton implements RidableEntity {
-    protected static Field aiShootBow;
-    protected static Field aiMeleeAttack;
-
-    static {
-        try {
-            aiShootBow = EntitySkeletonAbstract.class.getDeclaredField("b");
-            aiShootBow.setAccessible(true);
-            aiMeleeAttack = EntitySkeletonAbstract.class.getDeclaredField("c");
-            aiMeleeAttack.setAccessible(true);
-        } catch (NoSuchFieldException ignore) {
-        }
-    }
+    private final PathfinderGoalBowShoot<EntitySkeletonAbstract> aiArrowAttack = new AIShootBow<>(this, 1.0D, 20, 15.0F);
+    private final PathfinderGoalMeleeAttack aiMeleeAttack = new AISkeletonMeleeAttack(this, 1.2D, false);
 
     public RidableSkeleton(World world) {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-
-        try {
-            // remove default combat ai tasks
-            goalSelector.a((PathfinderGoal) aiShootBow.get(this));
-            goalSelector.a((PathfinderGoal) aiMeleeAttack.get(this));
-
-            // add new combat ai tasks
-            aiShootBow.set(this, new AIShootBow<>(this, 1.0D, 20, 15.0F));
-            aiMeleeAttack.set(this, new AISkeletonMeleeAttack(this, 1.2D, false));
-        } catch (IllegalAccessException ignore) {
-        }
-
-        initAI();
-        dz(); // setCombatTask
     }
 
     public RidableType getType() {
@@ -66,9 +43,6 @@ public class RidableSkeleton extends EntitySkeleton implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         // from EntitySkeletonAbstract
         goalSelector.a(2, new AIRestrictSun(this));
         goalSelector.a(3, new AIFleeSun(this, 1.0D));
@@ -112,5 +86,19 @@ public class RidableSkeleton extends EntitySkeleton implements RidableEntity {
     // removePassenger
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    // setCombatTask
+    public void dz() {
+        if (world != null) {
+            goalSelector.a(aiMeleeAttack); // removeTask
+            goalSelector.a(aiArrowAttack); // removeTask
+            if (getItemInMainHand().getItem() == Items.BOW) {
+                aiArrowAttack.b(world.getDifficulty() == EnumDifficulty.HARD ? 40 : 20); // setAttackCooldown
+                goalSelector.a(4, aiArrowAttack); // addTask
+            } else {
+                goalSelector.a(4, aiMeleeAttack); // addTask
+            }
+        }
     }
 }

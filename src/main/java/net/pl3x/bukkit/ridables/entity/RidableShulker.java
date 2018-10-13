@@ -33,7 +33,6 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new ControllerLook(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -42,9 +41,6 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AIWatchClosest(this, EntityHuman.class, 8.0F));
         goalSelector.a(4, new AIShulkerAttack(this));
         goalSelector.a(7, new AIShulkerPeek(this));

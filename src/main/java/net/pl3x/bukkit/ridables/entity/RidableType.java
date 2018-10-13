@@ -28,6 +28,7 @@ public class RidableType {
     public static final RidableType COW = inject(Config.COW_ENABLED, "cow", EntityTypes.COW, RidableCow.class, RidableCow::new);
     public static final RidableType CREEPER = inject(Config.CREEPER_ENABLED, "creeper", EntityTypes.CREEPER, RidableCreeper.class, RidableCreeper::new);
     public static final RidableType DOLPHIN = inject(Config.DOLPHIN_ENABLED, "dolphin", EntityTypes.DOLPHIN, RidableDolphin.class, RidableDolphin::new, Bucket.DOLPHIN);
+    public static final RidableType DONKEY = inject(Config.DONKEY_ENABLED, "donkey", EntityTypes.DONKEY, RidableDonkey.class, RidableDonkey::new);
     public static final RidableType DROWNED = inject(Config.DROWNED_ENABLED, "drowned", EntityTypes.DROWNED, RidableDrowned.class, RidableDrowned::new);
     public static final RidableType ELDER_GUARDIAN = inject(Config.ELDER_GUARDIAN_ENABLED, "elder_guardian", EntityTypes.ELDER_GUARDIAN, RidableElderGuardian.class, RidableElderGuardian::new);
     public static final RidableType ENDER_DRAGON = inject(Config.DRAGON_ENABLED, "ender_dragon", EntityTypes.ENDER_DRAGON, RidableEnderDragon.class, RidableEnderDragon::new);
@@ -37,12 +38,14 @@ public class RidableType {
     public static final RidableType GHAST = inject(Config.GHAST_ENABLED, "ghast", EntityTypes.GHAST, RidableGhast.class, RidableGhast::new);
     public static final RidableType GIANT = inject(Config.GIANT_ENABLED, "giant", EntityTypes.GIANT, RidableGiant.class, RidableGiant::new);
     public static final RidableType GUARDIAN = inject(Config.GUARDIAN_ENABLED, "guardian", EntityTypes.GUARDIAN, RidableGuardian.class, RidableGuardian::new);
+    public static final RidableType HORSE = inject(Config.HORSE_ENABLED, "horse", EntityTypes.HORSE, RidableHorse.class, RidableHorse::new);
     public static final RidableType HUSK = inject(Config.HUSK_ENABLED, "husk", EntityTypes.HUSK, RidableHusk.class, RidableHusk::new);
     public static final RidableType ILLUSIONER = inject(Config.ILLUSIONER_ENABLED, "illusioner", EntityTypes.ILLUSIONER, RidableIllusioner.class, RidableIllusioner::new);
     public static final RidableType IRON_GOLEM = inject(Config.IRON_GOLEM_ENABLED, "iron_golem", EntityTypes.IRON_GOLEM, RidableIronGolem.class, RidableIronGolem::new);
     public static final RidableType LLAMA = inject(Config.LLAMA_ENABLED, "llama", EntityTypes.LLAMA, RidableLlama.class, RidableLlama::new);
     public static final RidableType MAGMA_CUBE = inject(Config.MAGMA_CUBE_ENABLED, "magma_cube", EntityTypes.MAGMA_CUBE, RidableMagmaCube.class, RidableMagmaCube::new);
     public static final RidableType MOOSHROOM = inject(Config.MOOSHROOM_ENABLED, "mooshroom", EntityTypes.MOOSHROOM, RidableMooshroom.class, RidableMooshroom::new);
+    public static final RidableType MULE = inject(Config.MULE_ENABLED, "mule", EntityTypes.MULE, RidableMule.class, RidableMule::new);
     public static final RidableType OCELOT = inject(Config.OCELOT_ENABLED, "ocelot", EntityTypes.OCELOT, RidableOcelot.class, RidableOcelot::new);
     public static final RidableType PARROT = inject(Config.PARROT_ENABLED, "parrot", EntityTypes.PARROT, RidableParrot.class, RidableParrot::new);
     public static final RidableType PHANTOM = inject(Config.PHANTOM_ENABLED, "phantom", EntityTypes.PHANTOM, RidablePhantom.class, RidablePhantom::new);

@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
-import net.minecraft.server.v1_13_R2.EntityDolphin;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;

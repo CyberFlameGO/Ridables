@@ -47,7 +47,6 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
         super(world);
         moveController = new RabbitWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -56,9 +55,6 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(1, new AIRabbitPanic(this, 2.2D));
         goalSelector.a(2, new AIBreed(this, 0.8D, EntityRabbit.class));

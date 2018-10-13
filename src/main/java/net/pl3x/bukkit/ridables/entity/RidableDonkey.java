@@ -3,31 +3,27 @@ package net.pl3x.bukkit.ridables.entity;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHorseAbstract;
-import net.minecraft.server.v1_13_R2.EntityHorseSkeleton;
+import net.minecraft.server.v1_13_R2.EntityHorseDonkey;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.PathfinderGoalHorseTrap;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.horse.AIHorseBucking;
-import net.pl3x.bukkit.ridables.entity.ai.horse.skeleton_horse.AISkeletonHorseSwim;
 
-public class RidableSkeletonHorse extends EntityHorseSkeleton implements RidableEntity {
-    private final PathfinderGoalHorseTrap aiSkeletonTrap = new PathfinderGoalHorseTrap(this);
-    private boolean isTrap;
-
-    public RidableSkeletonHorse(World world) {
+public class RidableDonkey extends EntityHorseDonkey implements RidableEntity {
+    public RidableDonkey(World world) {
         super(world);
     }
 
     public RidableType getType() {
-        return RidableType.SKELETON_HORSE;
+        return RidableType.DONKEY;
     }
 
     // initAI - override vanilla AI
@@ -45,36 +41,20 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
 
     // initExtraAI
     protected void dI() {
-        goalSelector.a(0, new AISkeletonHorseSwim(this));
+        goalSelector.a(0, new AISwim(this));
     }
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.SKELETON_HORSE_RIDABLE_IN_WATER;
+        return Config.DONKEY_RIDABLE_IN_WATER;
     }
 
     public boolean isTamed() {
         return true;
     }
 
-    // isTrap
-    public boolean dy() {
-        return isTrap;
-    }
-
-    // setTrap
-    public void s(boolean flag) {
-        if (flag != isTrap) {
-            if (isTrap = flag) {
-                goalSelector.a(1, aiSkeletonTrap); // addTask
-            } else {
-                goalSelector.a(aiSkeletonTrap); // removeTask
-            }
-        }
-    }
-
     public void mobTick() {
-        Q = Config.SKELETON_HORSE_STEP_HEIGHT;
+        Q = Config.DONKEY_STEP_HEIGHT;
         super.mobTick();
     }
 
@@ -91,7 +71,7 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
-    public RidableSkeletonHorse createChild(EntityAgeable entity) {
-        return new RidableSkeletonHorse(world);
+    public RidableDonkey createChild(EntityAgeable entity) {
+        return new RidableDonkey(world);
     }
 }

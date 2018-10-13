@@ -31,7 +31,6 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         super(world);
         moveController = new ControllerWASDFlyingWithSpacebar(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -40,9 +39,6 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(4, new AIBlazeFireballAttack(this));
         goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));
         goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D, 0.0F));

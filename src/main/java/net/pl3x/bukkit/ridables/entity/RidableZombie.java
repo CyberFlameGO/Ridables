@@ -16,13 +16,13 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIMoveThroughVillage;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.AIZombieAttack;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.AIZombieAttackTurtleEgg;
 import net.pl3x.bukkit.ridables.entity.ai.zombie.AIZombieBreakDoor;
-import net.pl3x.bukkit.ridables.entity.ai.AIMoveThroughVillage;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
@@ -52,7 +52,6 @@ public class RidableZombie extends EntityZombie implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
         breakDoorAI = new AIZombieBreakDoor(this);
     }
 
@@ -62,9 +61,6 @@ public class RidableZombie extends EntityZombie implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         // from EntityZombie
         goalSelector.a(4, new AIZombieAttackTurtleEgg(Blocks.TURTLE_EGG, this, 1.0D, 3));
         goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));

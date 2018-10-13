@@ -12,7 +12,7 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
-import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWander;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
@@ -40,7 +40,6 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -49,11 +48,8 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AISwim(this));
-        goalSelector.a(4, new AIMeleeAttack(this, 1.0D, false));
+        goalSelector.a(4, new AIAttackMelee(this, 1.0D, false));
         goalSelector.a(8, new AIWander(this, 0.6D));
         goalSelector.a(9, new AIWatchClosest(this, EntityHuman.class, 3.0F, 1.0F));
         goalSelector.a(10, new AIWatchClosest(this, EntityInsentient.class, 8.0F));

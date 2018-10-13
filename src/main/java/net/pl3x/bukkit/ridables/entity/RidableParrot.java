@@ -25,7 +25,6 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
         super(world);
         moveController = new ParrotWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -34,9 +33,6 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSit = new AISit(this);
 
         goalSelector.a(0, new AIPanic(this, 1.25D));

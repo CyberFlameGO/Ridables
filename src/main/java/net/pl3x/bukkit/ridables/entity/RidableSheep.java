@@ -40,7 +40,6 @@ public class RidableSheep extends EntitySheep implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -49,9 +48,6 @@ public class RidableSheep extends EntitySheep implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         AISheepEatGrass eatGrass = new AISheepEatGrass(this);
 
         try {

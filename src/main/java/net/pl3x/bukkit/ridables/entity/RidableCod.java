@@ -26,7 +26,6 @@ public class RidableCod extends EntityCod implements RidableEntity {
         super(world);
         moveController = new FishWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -35,9 +34,6 @@ public class RidableCod extends EntityCod implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         // from EntityFish
         goalSelector.a(0, new AIPanic(this, 1.25D));
         goalSelector.a(2, new AIAvoidTarget<>(this, EntityHuman.class, 8.0F, 1.6D, 1.4D, IEntitySelector.f));

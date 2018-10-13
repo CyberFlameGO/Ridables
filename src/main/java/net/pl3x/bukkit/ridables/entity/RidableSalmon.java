@@ -20,7 +20,6 @@ public class RidableSalmon extends EntitySalmon implements RidableEntity {
         super(world);
         moveController = new RidableCod.FishWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -29,9 +28,6 @@ public class RidableSalmon extends EntitySalmon implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         // from EntityFish
         goalSelector.a(0, new AIPanic(this, 1.25D));
         goalSelector.a(2, new AIAvoidTarget<>(this, EntityPlayer.class, 8.0F, 1.6D, 1.4D, IEntitySelector.f));

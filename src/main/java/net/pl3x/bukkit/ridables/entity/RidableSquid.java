@@ -39,7 +39,6 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
         super(world);
         moveController = new ControllerWASDWater(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -48,9 +47,6 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AISquidMoveRandom(this));
         goalSelector.a(1, new AISquidFlee(this));
     }

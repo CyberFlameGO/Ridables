@@ -20,18 +20,18 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
+import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
+import net.pl3x.bukkit.ridables.entity.ai.AIWanderSwim;
+import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinBreath;
 import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinFindWater;
 import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinFollowBoat;
-import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
-import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
-import net.pl3x.bukkit.ridables.entity.ai.AIWanderSwim;
-import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
-import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinWaterJump;
 import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinPlayWithItems;
 import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinSwimToTreasure;
 import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinSwimWithPlayer;
+import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinWaterJump;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
@@ -54,7 +54,6 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         super(world);
         moveController = wasdController = new DolphinWASDController(this);
         lookController = new DolphinLookController(this, 10);
-        initAI();
     }
 
     public RidableType getType() {
@@ -63,9 +62,6 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AIDolphinBreath(this));
         goalSelector.a(0, new AIDolphinFindWater(this));
         goalSelector.a(1, new AIDolphinSwimToTreasure(this));
@@ -74,7 +70,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         goalSelector.a(4, new AILookIdle(this));
         goalSelector.a(5, new AIWatchClosest(this, EntityHuman.class, 6.0F));
         goalSelector.a(5, new AIDolphinWaterJump(this, 10));
-        goalSelector.a(6, new AIMeleeAttack(this, (double) 1.2F, true));
+        goalSelector.a(6, new AIAttackMelee(this, (double) 1.2F, true));
         goalSelector.a(8, new AIDolphinPlayWithItems(this));
         goalSelector.a(8, new AIDolphinFollowBoat(this));
         goalSelector.a(9, new AIAvoidTarget<>(this, EntityGuardian.class, 8.0F, 1.0D, 1.0D));

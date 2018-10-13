@@ -12,7 +12,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveThroughVillage;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsTarget;
@@ -30,7 +30,6 @@ public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -39,10 +38,7 @@ public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
-        goalSelector.a(1, new AIMeleeAttack(this, 1.0D, true));
+        goalSelector.a(1, new AIAttackMelee(this, 1.0D, true));
         goalSelector.a(2, new AIMoveTowardsTarget(this, 0.9D, 32.0F));
         goalSelector.a(3, new AIMoveThroughVillage(this, 0.6D, true));
         goalSelector.a(4, new AIMoveTowardsRestriction(this, 1.0D));

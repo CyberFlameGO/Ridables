@@ -48,7 +48,6 @@ public class RidableOcelot extends EntityOcelot implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -57,9 +56,6 @@ public class RidableOcelot extends EntityOcelot implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         PathfinderGoalTempt goalTempt = new AITempt(this, 0.6D, true, TEMPTATION_ITEMS);
         try {
             aiTempt.set(this, goalTempt);

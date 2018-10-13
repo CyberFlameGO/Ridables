@@ -86,7 +86,6 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
 
         moveController = new TurtleWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -95,9 +94,6 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AITurtlePanic(this, 1.2D));
         goalSelector.a(1, new AITurtleBreed(this, 1.0D));
         goalSelector.a(1, new AITurtleLayEgg(this, 1.0D));

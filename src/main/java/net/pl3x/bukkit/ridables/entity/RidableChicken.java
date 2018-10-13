@@ -36,7 +36,6 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
         calculateNewTimeUntilNextEgg();
-        initAI();
     }
 
     public RidableType getType() {
@@ -49,9 +48,6 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIPanic(this, 1.4D));
         goalSelector.a(2, new AIBreed(this, 1.0D, EntityChicken.class));

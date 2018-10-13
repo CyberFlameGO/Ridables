@@ -23,7 +23,6 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -32,9 +31,6 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(3, new AILeapAtTarget(this, 0.4F));
         goalSelector.a(4, new AISpiderAttack(this));

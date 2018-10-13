@@ -16,7 +16,7 @@ import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
@@ -34,7 +34,6 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -43,13 +42,10 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(2, new AICreeperSwell(this));
         goalSelector.a(3, new AIAvoidTarget<>(this, EntityOcelot.class, 6.0F, 1.0D, 1.2D));
-        goalSelector.a(4, new AIMeleeAttack(this, 1.0D, false));
+        goalSelector.a(4, new AIAttackMelee(this, 1.0D, false));
         goalSelector.a(5, new AIWanderAvoidWater(this, 0.8D));
         goalSelector.a(6, new AIWatchClosest(this, EntityHuman.class, 8.0F));
         goalSelector.a(6, new AILookIdle(this));
@@ -127,7 +123,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
-            aX = true; // duplicate of isDead
+            aX = true; // isDying
             boolean flag = getRider() == null ? world.getGameRules().getBoolean("mobGriefing") : Config.CREEPER_EXPLOSION_GRIEF;
             world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), flag);
             die();

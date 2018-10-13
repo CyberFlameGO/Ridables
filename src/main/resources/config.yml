@@ -128,6 +128,12 @@ dolphin:
     boost: 1.5       # riding speed multiplier boost
     duration: 20     # ticks boost lasts for with each spacebar press
 
+# Donkey options
+donkey:
+  enabled: false     # enable custom ridable entity
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
+  ride-in-water: true # allow mob to be ridden in water
+
 # Ender Dragon options
 dragon:
   enabled: false     # enable custom ridable entity
@@ -221,6 +227,12 @@ guardian:
   enabled: false     # enable custom ridable entity
   speed: 1.0         # riding speed modifier
 
+# Horse options
+horse:
+  enabled: false     # enable custom ridable entity
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
+  ride-in-water: true # allow mob to be ridden in water
+
 # Husk options
 husk:
   enabled: false     # enable custom ridable entity
@@ -274,6 +286,12 @@ mooshroom:
   speed: 1.0         # riding speed modifier
   jump-power: 0.5    # jumping power (keep in mind they take fall damage)
   step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
+  ride-in-water: true # allow mob to be ridden in water
+
+# Mule options
+mule:
+  enabled: false     # enable custom ridable entity
+  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
 
 # Ocelot options
@@ -377,6 +395,7 @@ skeleton_horse:
   enabled: false     # enable custom ridable entity
   step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
   ride-in-water: true # allow mob to be ridden in water
+  float-in-water: false # allow skeleton horse to float/swim when in water
 
 # Slime options
 slime:

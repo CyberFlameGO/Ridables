@@ -19,7 +19,7 @@ import net.pl3x.bukkit.ridables.entity.ai.AIFollowOwner;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILeapAtTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIOwnerHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIOwnerHurtTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AISit;
@@ -37,7 +37,6 @@ public class RidableWolf extends EntityWolf implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -46,16 +45,13 @@ public class RidableWolf extends EntityWolf implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSit = new AISit(this);
 
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(2, goalSit);
         goalSelector.a(3, new AIWolfAvoidEntity<>(this, EntityLlama.class, 24.0F, 1.5D, 1.5D));
         goalSelector.a(4, new AILeapAtTarget(this, 0.4F));
-        goalSelector.a(5, new AIMeleeAttack(this, 1.0D, true));
+        goalSelector.a(5, new AIAttackMelee(this, 1.0D, true));
         goalSelector.a(6, new AIFollowOwner(this, 1.0D, 10.0F, 2.0F));
         goalSelector.a(7, new AIBreed(this, 1.0D, EntityWolf.class));
         goalSelector.a(8, new AIWanderAvoidWater(this, 1.0D));

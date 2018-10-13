@@ -15,7 +15,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIMeleeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
@@ -28,7 +28,6 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -37,12 +36,9 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         if (Config.GIANT_AI_ENABLED) {
             goalSelector.a(0, new AISwim(this));
-            goalSelector.a(2, new AIMeleeAttack(this, 1.0D, false));
+            goalSelector.a(2, new AIAttackMelee(this, 1.0D, false));
             goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D));
             goalSelector.a(8, new AIWatchClosest(this, EntityHuman.class, 16.0F));
             goalSelector.a(8, new AILookIdle(this));

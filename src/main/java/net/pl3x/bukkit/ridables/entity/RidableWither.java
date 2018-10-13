@@ -40,7 +40,6 @@ public class RidableWither extends EntityWither implements RidableEntity {
         super(world);
         moveController = new ControllerWASDFlying(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -49,9 +48,6 @@ public class RidableWither extends EntityWither implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AIWitherDoNothing(this));
         goalSelector.a(2, new AIAttackRanged(this, 1.0D, 40, 20.0F));
         goalSelector.a(5, new AIWanderAvoidWater(this, 1.0D));

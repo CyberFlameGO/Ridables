@@ -31,7 +31,6 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
         super(world);
         moveController = new GhastWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -40,9 +39,6 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(5, new AIGhastRandomFly(this));
         goalSelector.a(7, new AIGhastLookAround(this));
         goalSelector.a(7, new AIGhastFireballAttack(this));

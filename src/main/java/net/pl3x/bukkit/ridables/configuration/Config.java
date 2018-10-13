@@ -85,6 +85,10 @@ public class Config {
     public static float DOLPHIN_DASH_BOOST = 1.5F;
     public static int DOLPHIN_DASH_DURATION = 20;
 
+    public static boolean DONKEY_ENABLED = false;
+    public static float DONKEY_STEP_HEIGHT = 1.0F;
+    public static boolean DONKEY_RIDABLE_IN_WATER = true;
+
     public static boolean DRAGON_ENABLED = false;
     public static float DRAGON_SPEED = 1.0F;
 
@@ -156,6 +160,10 @@ public class Config {
     public static boolean GUARDIAN_ENABLED = false;
     public static float GUARDIAN_SPEED = 1.0F;
 
+    public static boolean HORSE_ENABLED = false;
+    public static float HORSE_STEP_HEIGHT = 1.0F;
+    public static boolean HORSE_RIDABLE_IN_WATER = true;
+
     public static boolean HUSK_ENABLED = false;
     public static float HUSK_SPEED = 1.0F;
     public static float HUSK_JUMP_POWER = 0.5F;
@@ -198,6 +206,10 @@ public class Config {
     public static float MOOSHROOM_JUMP_POWER = 0.5F;
     public static float MOOSHROOM_STEP_HEIGHT = 0.6F;
     public static boolean MOOSHROOM_RIDABLE_IN_WATER = true;
+
+    public static boolean MULE_ENABLED = false;
+    public static float MULE_STEP_HEIGHT = 1.0F;
+    public static boolean MULE_RIDABLE_IN_WATER = true;
 
     public static boolean OCELOT_ENABLED = false;
     public static float OCELOT_SPEED = 1.0F;
@@ -273,6 +285,7 @@ public class Config {
     public static boolean SKELETON_HORSE_ENABLED = false;
     public static float SKELETON_HORSE_STEP_HEIGHT = 1.0F;
     public static boolean SKELETON_HORSE_RIDABLE_IN_WATER = true;
+    public static boolean SKELETON_HORSE_FLOATS_IN_WATER = false;
 
     public static boolean SLIME_ENABLED = false;
     public static float SLIME_SPEED = 1.0F;
@@ -473,6 +486,10 @@ public class Config {
         DOLPHIN_DASH_BOOST = (float) config.getDouble("dolphin.dash.boost", 1.5D);
         DOLPHIN_DASH_DURATION = (int) config.getDouble("dolphin.dash.duration", 20);
 
+        DONKEY_ENABLED = config.getBoolean("donkey.enabled", false);
+        DONKEY_STEP_HEIGHT = (float) config.getDouble("donkey.step-height", 1.0D);
+        DONKEY_RIDABLE_IN_WATER = config.getBoolean("donkey.ride-in-water", true);
+
         DRAGON_ENABLED = config.getBoolean("dragon.enabled", false);
         DRAGON_SPEED = (float) config.getDouble("dragon.speed", 1.0D);
 
@@ -547,6 +564,10 @@ public class Config {
         GUARDIAN_ENABLED = config.getBoolean("guardian.enabled", false);
         GUARDIAN_SPEED = (float) config.getDouble("guardian.speed", 1.0D);
 
+        HORSE_ENABLED = config.getBoolean("horse.enabled", false);
+        HORSE_STEP_HEIGHT = (float) config.getDouble("horse.step-height", 1.0D);
+        HORSE_RIDABLE_IN_WATER = config.getBoolean("horse.ride-in-water", true);
+
         HUSK_ENABLED = config.getBoolean("husk.enabled", false);
         HUSK_SPEED = (float) config.getDouble("husk.speed", 1.0D);
         HUSK_JUMP_POWER = (float) config.getDouble("husk.jump-power", 0.5D);
@@ -592,6 +613,10 @@ public class Config {
         MOOSHROOM_JUMP_POWER = (float) config.getDouble("mooshroom.jump-power", 0.5D);
         MOOSHROOM_STEP_HEIGHT = (float) config.getDouble("mooshroom.step-height", 0.6D);
         MOOSHROOM_RIDABLE_IN_WATER = config.getBoolean("mooshroom.ride-in-water", true);
+
+        MULE_ENABLED = config.getBoolean("mule.enabled", false);
+        MULE_STEP_HEIGHT = (float) config.getDouble("mule.step-height", 1.0D);
+        MULE_RIDABLE_IN_WATER = config.getBoolean("mule.ride-in-water", true);
 
         OCELOT_ENABLED = config.getBoolean("ocelot.enabled", false);
         OCELOT_SPEED = (float) config.getDouble("ocelot.speed", 1.0D);
@@ -667,6 +692,7 @@ public class Config {
         SKELETON_HORSE_ENABLED = config.getBoolean("skeleton_horse.enabled", false);
         SKELETON_HORSE_STEP_HEIGHT = (float) config.getDouble("skeleton_horse.step-height", 1.0D);
         SKELETON_HORSE_RIDABLE_IN_WATER = config.getBoolean("skeleton_horse.ride-in-water", true);
+        SKELETON_HORSE_FLOATS_IN_WATER = config.getBoolean("skeleton_horse.float-in-water", false);
 
         SLIME_ENABLED = config.getBoolean("slime.enabled", false);
         SLIME_SPEED = (float) config.getDouble("slime.speed", 1.0D);

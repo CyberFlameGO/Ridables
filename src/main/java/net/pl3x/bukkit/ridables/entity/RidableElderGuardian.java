@@ -57,8 +57,8 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
                 }
             }
         }
-        if (!dw()) {
-            a(new BlockPosition(this), 16);
+        if (!dw()) { // hasHome
+            a(new BlockPosition(this), 16); // setHomePosAndDistance
         }
     }
 

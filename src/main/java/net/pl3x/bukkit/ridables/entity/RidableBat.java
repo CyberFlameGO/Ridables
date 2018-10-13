@@ -14,7 +14,6 @@ public class RidableBat extends EntityBat implements RidableEntity {
         super(world);
         moveController = new ControllerWASDFlyingWithSpacebar(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -23,9 +22,6 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         // bat AI is in mobTick()
     }
 

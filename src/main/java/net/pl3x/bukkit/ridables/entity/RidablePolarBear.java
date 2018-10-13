@@ -28,7 +28,6 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -37,9 +36,6 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIPolarBearAttack(this));
         goalSelector.a(1, new AIPolarBearPanic(this));

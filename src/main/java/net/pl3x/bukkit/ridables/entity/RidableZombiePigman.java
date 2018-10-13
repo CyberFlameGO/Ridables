@@ -42,7 +42,6 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
         breakDoorAI = new AIZombieBreakDoor(this);
     }
 
@@ -52,9 +51,6 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         // from EntityZombie
         goalSelector.a(4, new AIZombieAttackTurtleEgg(Blocks.TURTLE_EGG, this, 1.0D, 3));
         goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));

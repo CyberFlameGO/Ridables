@@ -38,7 +38,6 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         orbitOffset = Vec3D.a;
         orbitPosition = BlockPosition.ZERO;
         phase = AttackPhase.CIRCLE;
-        initAI();
     }
 
     public RidableType getType() {
@@ -47,9 +46,6 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AIPhantomPickAttack(this));
         goalSelector.a(2, new AIPhantomSweepAttack(this));
         goalSelector.a(3, new AIPhantomOrbitPoint(this));

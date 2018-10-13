@@ -29,7 +29,6 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -38,9 +37,6 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIIllusionerCastingSpell(this));
         goalSelector.a(4, new AIIllusionerMirrorSpell(this));

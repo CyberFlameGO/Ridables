@@ -14,8 +14,8 @@ import net.pl3x.bukkit.ridables.entity.ai.AIFindNearestEntity;
 import net.pl3x.bukkit.ridables.entity.ai.AIFindNearestPlayer;
 import net.pl3x.bukkit.ridables.entity.ai.slime.AISlimeAttack;
 import net.pl3x.bukkit.ridables.entity.ai.slime.AISlimeFaceRandom;
-import net.pl3x.bukkit.ridables.entity.ai.slime.AISlimeSwim;
 import net.pl3x.bukkit.ridables.entity.ai.slime.AISlimeHop;
+import net.pl3x.bukkit.ridables.entity.ai.slime.AISlimeSwim;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
@@ -32,7 +32,6 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         super(entityTypes, world);
         moveController = new SlimeWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -41,9 +40,6 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AISlimeSwim(this));
         goalSelector.a(2, new AISlimeAttack(this));
         goalSelector.a(3, new AISlimeFaceRandom(this));

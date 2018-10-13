@@ -46,7 +46,6 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
         super(entityTypes, world);
         moveController = new GuardianWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -55,9 +54,6 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         AIMoveTowardsRestriction moveTowardsRestriction = new AIMoveTowardsRestriction(this, 1.0D);
         goalRandomStroll = new AIWander(this, 1.0D, 80);
 

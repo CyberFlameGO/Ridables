@@ -4,10 +4,10 @@ import net.minecraft.server.v1_13_R2.EntityCreature;
 import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 
-public class AIMeleeAttack extends PathfinderGoalMeleeAttack {
+public class AIAttackMelee extends PathfinderGoalMeleeAttack {
     private final RidableEntity ridable;
 
-    public AIMeleeAttack(RidableEntity ridable, double speed, boolean longMemory) {
+    public AIAttackMelee(RidableEntity ridable, double speed, boolean longMemory) {
         super((EntityCreature) ridable, speed, longMemory);
         this.ridable = ridable;
     }

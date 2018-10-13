@@ -34,7 +34,6 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -43,9 +42,6 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(2, new AIAttackRanged(this, 1.0D, 60, 10.0F));
         goalSelector.a(2, new AIWanderAvoidWater(this, 1.0D));

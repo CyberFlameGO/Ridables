@@ -36,7 +36,6 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
         super(world);
         moveController = new ControllerWASD(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -45,9 +44,6 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(1, new AIAttackRanged(this, 1.25D, 20, 10.0F));
         goalSelector.a(2, new AIWanderAvoidWater(this, 1.0D, 0.00001F));
         goalSelector.a(3, new AIWatchClosest(this, EntityHuman.class, 6.0F));

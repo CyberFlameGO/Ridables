@@ -24,7 +24,6 @@ public class RidableVex extends EntityVex implements RidableEntity {
         super(world);
         moveController = new VexWASDController(this);
         lookController = new LookController(this);
-        initAI();
     }
 
     public RidableType getType() {
@@ -33,9 +32,6 @@ public class RidableVex extends EntityVex implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-    }
-
-    private void initAI() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(4, new AIVexChargeAttack(this));
         goalSelector.a(8, new AIVexMoveRandom(this));
