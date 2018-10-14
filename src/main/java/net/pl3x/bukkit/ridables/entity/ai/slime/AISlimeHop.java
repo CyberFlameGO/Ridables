@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.ai.slime;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
@@ -18,7 +19,7 @@ public class AISlimeHop extends PathfinderGoal {
         if (slime.getRider() != null) {
             return false;
         }
-        if (Ridables.isPaper()) {
+        if (PaperLib.isPaper()) {
             return slime.canWander() && Paper.CallSlimeWanderEvent(slime);
         }
         return true;

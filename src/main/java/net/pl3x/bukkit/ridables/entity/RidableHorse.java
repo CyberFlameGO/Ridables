@@ -7,7 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityHorseAbstract;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.HorseConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -18,6 +18,8 @@ import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.horse.AIHorseBucking;
 
 public class RidableHorse extends EntityHorse implements RidableEntity {
+    public static final HorseConfig CONFIG = new HorseConfig();
+
     public RidableHorse(World world) {
         super(world);
     }
@@ -46,7 +48,7 @@ public class RidableHorse extends EntityHorse implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.HORSE_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     public boolean isTamed() {
@@ -54,16 +56,13 @@ public class RidableHorse extends EntityHorse implements RidableEntity {
     }
 
     public void mobTick() {
-        Q = Config.HORSE_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

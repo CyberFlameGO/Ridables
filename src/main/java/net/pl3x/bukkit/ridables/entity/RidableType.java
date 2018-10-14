@@ -1,14 +1,15 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import com.google.common.collect.Maps;
+import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.MobConfig;
 import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
-import net.pl3x.bukkit.ridables.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
@@ -31,7 +32,7 @@ public class RidableType {
     public static final RidableType DONKEY = inject(Config.DONKEY_ENABLED, "donkey", EntityTypes.DONKEY, RidableDonkey.class, RidableDonkey::new);
     public static final RidableType DROWNED = inject(Config.DROWNED_ENABLED, "drowned", EntityTypes.DROWNED, RidableDrowned.class, RidableDrowned::new);
     public static final RidableType ELDER_GUARDIAN = inject(Config.ELDER_GUARDIAN_ENABLED, "elder_guardian", EntityTypes.ELDER_GUARDIAN, RidableElderGuardian.class, RidableElderGuardian::new);
-    public static final RidableType ENDER_DRAGON = inject(Config.DRAGON_ENABLED, "ender_dragon", EntityTypes.ENDER_DRAGON, RidableEnderDragon.class, RidableEnderDragon::new);
+    public static final RidableType ENDER_DRAGON = inject(Config.ENDER_DRAGON_ENABLED, "ender_dragon", EntityTypes.ENDER_DRAGON, RidableEnderDragon.class, RidableEnderDragon::new);
     public static final RidableType ENDERMAN = inject(Config.ENDERMAN_ENABLED, "enderman", EntityTypes.ENDERMAN, RidableEnderman.class, RidableEnderman::new);
     public static final RidableType ENDERMITE = inject(Config.ENDERMITE_ENABLED, "endermite", EntityTypes.ENDERMITE, RidableEndermite.class, RidableEndermite::new);
     public static final RidableType EVOKER = inject(Config.EVOKER_ENABLED, "evoker", EntityTypes.EVOKER, RidableEvoker.class, RidableEvoker::new);
@@ -60,7 +61,7 @@ public class RidableType {
     public static final RidableType SKELETON = inject(Config.SKELETON_ENABLED, "skeleton", EntityTypes.SKELETON, RidableSkeleton.class, RidableSkeleton::new);
     public static final RidableType SKELETON_HORSE = inject(Config.SKELETON_HORSE_ENABLED, "skeleton_horse", EntityTypes.SKELETON_HORSE, RidableSkeletonHorse.class, RidableSkeletonHorse::new);
     public static final RidableType SLIME = inject(Config.SLIME_ENABLED, "slime", EntityTypes.SLIME, RidableSlime.class, RidableSlime::new);
-    public static final RidableType SNOWMAN = inject(Config.SNOWMAN_ENABLED, "snow_golem", EntityTypes.SNOW_GOLEM, RidableSnowGolem.class, RidableSnowGolem::new);
+    public static final RidableType SNOWMAN = inject(Config.SNOW_GOLEM_ENABLED, "snow_golem", EntityTypes.SNOW_GOLEM, RidableSnowGolem.class, RidableSnowGolem::new);
     public static final RidableType SPIDER = inject(Config.SPIDER_ENABLED, "spider", EntityTypes.SPIDER, RidableSpider.class, RidableSpider::new);
     public static final RidableType SQUID = inject(Config.SQUID_ENABLED, "squid", EntityTypes.SQUID, RidableSquid.class, RidableSquid::new, Bucket.SQUID);
     public static final RidableType STRAY = inject(Config.STRAY_ENABLED, "stray", EntityTypes.STRAY, RidableStray.class, RidableStray::new);
@@ -93,15 +94,15 @@ public class RidableType {
         return craftEntity instanceof RidableEntity ? (RidableEntity) craftEntity : null;
     }
 
-    private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function) {
+    private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function) {
         return inject(enabled, name, nmsTypes, clazz, function, null);
     }
 
-    private static RidableType inject(boolean enabled, String name, EntityTypes entityTypes, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function, Bucket waterBucket) {
+    private static RidableType inject(boolean enabled, String name, EntityTypes entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function, Bucket waterBucket) {
         if (enabled) {
-            if (RegistryHax.injectReplacementEntityTypes(entityTypes, clazz, function)) {
+            if (RegistryHax.injectReplacementEntityTypes(name, entityTypes, clazz, function)) {
                 Logger.info("Successfully injected replacement entity: &a" + name);
-                RidableType ridableTypes = new RidableType(entityTypes, waterBucket, name);
+                RidableType ridableTypes = new RidableType(name, entityTypes, clazz, waterBucket);
                 BY_BUKKIT_TYPE.put(EntityType.fromName(name), ridableTypes);
                 return ridableTypes;
             }
@@ -114,11 +115,21 @@ public class RidableType {
     private final EntityTypes<?> entityTypes;
     private final Bucket waterBucket;
     private final String name;
+    private final MobConfig config;
 
-    private RidableType(EntityTypes<?> entityTypes, Bucket waterBucket, String name) {
+    private RidableType(String name, EntityTypes<?> entityTypes, Class<? extends RidableEntity> clazz, Bucket waterBucket) {
         this.entityTypes = entityTypes;
         this.waterBucket = waterBucket;
         this.name = name;
+
+        MobConfig config;
+        try {
+            config = (MobConfig) clazz.getDeclaredField("CONFIG").get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            config = null;
+        }
+        this.config = config;
     }
 
     /**
@@ -128,6 +139,10 @@ public class RidableType {
      */
     public String getName() {
         return name;
+    }
+
+    public MobConfig getConfig() {
+        return config;
     }
 
     /**
@@ -148,6 +163,7 @@ public class RidableType {
      * @return The spawned entity
      */
     public Entity spawn(Location loc) {
-        return entityTypes.a(((CraftWorld) loc.getWorld()).getHandle(), null, null, null, Utils.toBlockPosition(loc), true, false);
+        return entityTypes.a(((CraftWorld) loc.getWorld()).getHandle(), null, null, null,
+                new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), true, false);
     }
 }

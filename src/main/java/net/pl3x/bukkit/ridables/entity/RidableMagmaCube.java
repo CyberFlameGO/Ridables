@@ -16,9 +16,11 @@ import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.Tag;
 import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.MagmaCubeConfig;
 
 public class RidableMagmaCube extends RidableSlime implements RidableEntity {
+    public static final MagmaCubeConfig CONFIG = new MagmaCubeConfig();
+
     public RidableMagmaCube(World world) {
         super(EntityTypes.MAGMA_CUBE, world);
         fireProof = true;
@@ -30,11 +32,11 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.MAGMA_CUBE_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     public float getSpeed() {
-        return Config.MAGMA_CUBE_SPEED;
+        return CONFIG.SPEED;
     }
 
     protected void initAttributes() {

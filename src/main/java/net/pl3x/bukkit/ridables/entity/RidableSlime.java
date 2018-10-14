@@ -9,7 +9,7 @@ import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.SlimeConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIFindNearestEntity;
 import net.pl3x.bukkit.ridables.entity.ai.AIFindNearestPlayer;
 import net.pl3x.bukkit.ridables.entity.ai.slime.AISlimeAttack;
@@ -20,6 +20,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableSlime extends EntitySlime implements RidableEntity {
+    public static final SlimeConfig CONFIG = new SlimeConfig();
+
     private int spacebarCharge = 0;
     private int prevSpacebarCharge = 0;
     private float fallDistanceCharge = 0;
@@ -50,7 +52,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.SLIME_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     public boolean canDamagePlayer() {
@@ -90,15 +92,12 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.SLIME_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

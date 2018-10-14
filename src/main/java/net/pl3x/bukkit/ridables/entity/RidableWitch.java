@@ -11,8 +11,8 @@ import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.PotionUtil;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.mob.WitchConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
@@ -28,6 +28,8 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableWitch extends EntityWitch implements RidableEntity {
+    public static final WitchConfig CONFIG = new WitchConfig();
+
     private int shootCooldown = 0;
 
     public RidableWitch(World world) {
@@ -53,24 +55,24 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.WITCH_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.WITCH_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-        Q = Config.WITCH_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.WITCH_SPEED;
+        return CONFIG.SPEED;
     }
 
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
@@ -96,7 +98,7 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     }
 
     public boolean throwPotion(EntityPlayer rider) {
-        shootCooldown = Config.WITCH_SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -110,9 +112,9 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
 
         Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 3, 0));
 
-        EntityPotion entitypotion = new EntityPotion(world, this, PotionUtil.a(new ItemStack(Items.SPLASH_POTION), Config.WITCH_SHOOT_POTION_TYPE));
+        EntityPotion entitypotion = new EntityPotion(world, this, PotionUtil.a(new ItemStack(Items.SPLASH_POTION), CONFIG.SHOOT_POTION_TYPE));
         entitypotion.pitch -= -20.0F;
-        entitypotion.shoot(direction.getX(), direction.getY() + 10, direction.getZ(), 0.75F * Config.WITCH_SHOOT_SPEED, 0);
+        entitypotion.shoot(direction.getX(), direction.getY() + 10, direction.getZ(), 0.75F * CONFIG.SHOOT_SPEED, 0);
         world.addEntity(entitypotion);
 
         world.a(null, locX, locY, locZ, SoundEffects.ENTITY_WITCH_THROW, bV(), 1.0F, 0.8F + random.nextFloat() * 0.4F);
@@ -121,11 +123,8 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

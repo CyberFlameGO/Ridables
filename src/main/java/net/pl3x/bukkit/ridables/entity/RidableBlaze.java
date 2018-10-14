@@ -7,8 +7,8 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.mob.BlazeConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -25,6 +25,8 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableBlaze extends EntityBlaze implements RidableEntity {
+    public static final BlazeConfig CONFIG = new BlazeConfig();
+
     private int shootCooldown = 0;
 
     public RidableBlaze(World world) {
@@ -51,7 +53,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.BLAZE_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {
@@ -59,21 +61,18 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
             shootCooldown--;
         }
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07F * Config.BLAZE_VERTICAL : 0.04704F - Config.BLAZE_GRAVITY;
+            motY += bi > 0 ? 0.07F * CONFIG.VERTICAL : 0.04704F - CONFIG.GRAVITY;
         }
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.BLAZE_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -104,7 +103,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        shootCooldown = Config.BLAZE_SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -119,7 +118,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 1, 0));
 
         CustomFireball fireball = new CustomFireball(world, this, rider, direction.getX(), direction.getY(), direction.getZ(),
-                Config.BLAZE_SHOOT_SPEED, Config.BLAZE_SHOOT_DAMAGE, Config.BLAZE_SHOOT_GRIEF);
+                CONFIG.SHOOT_SPEED, CONFIG.SHOOT_DAMAGE, CONFIG.SHOOT_GRIEF);
         world.addEntity(fireball);
 
         a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F);

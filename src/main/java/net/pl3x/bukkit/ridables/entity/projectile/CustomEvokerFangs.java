@@ -5,7 +5,6 @@ import net.minecraft.server.v1_13_R2.EntityEvokerFangs;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableEvoker;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Evoker;
@@ -86,13 +85,13 @@ public class CustomEvokerFangs extends EntityEvokerFangs {
         if (target.isAlive() && !target.bl() && target != owner) {
             if (owner == null) {
                 CraftEventFactory.entityDamage = this;
-                target.damageEntity(DamageSource.MAGIC, Config.EVOKER_SPELL_DAMAGE);
+                target.damageEntity(DamageSource.MAGIC, RidableEvoker.CONFIG.FANGS_DAMAGE);
                 CraftEventFactory.entityDamage = null;
             } else {
                 if (owner.r(target)) {
                     return;
                 }
-                target.damageEntity(DamageSource.c(this, owner), Config.EVOKER_SPELL_DAMAGE);
+                target.damageEntity(DamageSource.c(this, owner), RidableEvoker.CONFIG.FANGS_DAMAGE);
             }
         }
     }

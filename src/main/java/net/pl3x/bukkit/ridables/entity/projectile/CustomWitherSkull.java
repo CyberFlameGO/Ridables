@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.EntityLiving;
@@ -12,7 +13,6 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableWither;
 import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
@@ -56,7 +56,7 @@ public class CustomWitherSkull extends EntityWitherSkull {
         if (mop != null && mop.entity != null) {
             if (mop.entity == wither || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
+            } else if (PaperLib.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
         }
@@ -67,9 +67,9 @@ public class CustomWitherSkull extends EntityWitherSkull {
             }
         }
 
-        locX += motX * Config.WITHER_SHOOT_SPEED;
-        locY += motY * Config.WITHER_SHOOT_SPEED;
-        locZ += motZ * Config.WITHER_SHOOT_SPEED;
+        locX += motX * RidableWither.CONFIG.SHOOT_SPEED;
+        locY += motY * RidableWither.CONFIG.SHOOT_SPEED;
+        locZ += motZ * RidableWither.CONFIG.SHOOT_SPEED;
         ProjectileHelper.a(this, 0.2F);
         float f = k();
         if (isInWater()) {
@@ -89,29 +89,29 @@ public class CustomWitherSkull extends EntityWitherSkull {
     }
 
     protected void a(MovingObjectPosition mop) {
-        if (mop.entity != null && Config.WITHER_SHOOT_DAMAGE > 0) {
+        if (mop.entity != null && RidableWither.CONFIG.SHOOT_DAMAGE > 0) {
             boolean didDamage;
             if (shooter != null) {
-                didDamage = mop.entity.damageEntity(DamageSource.projectile(this, shooter), Config.WITHER_SHOOT_DAMAGE);
+                didDamage = mop.entity.damageEntity(DamageSource.projectile(this, shooter), RidableWither.CONFIG.SHOOT_DAMAGE);
                 if (didDamage) {
                     if (mop.entity.isAlive()) {
                         a(shooter, mop.entity);
                     }
-                    shooter.heal(Config.WITHER_SHOOT_HEAL_AMOUNT, EntityRegainHealthEvent.RegainReason.WITHER);
+                    shooter.heal(RidableWither.CONFIG.SHOOT_HEAL_AMOUNT, EntityRegainHealthEvent.RegainReason.WITHER);
                 }
             } else {
-                didDamage = mop.entity.damageEntity(DamageSource.MAGIC, Config.WITHER_SHOOT_DAMAGE);
+                didDamage = mop.entity.damageEntity(DamageSource.MAGIC, RidableWither.CONFIG.SHOOT_DAMAGE);
             }
             if (didDamage && mop.entity instanceof EntityLiving) {
-                if (Config.WITHER_SHOOT_EFFECT_DURATION > 0) {
-                    ((EntityLiving) mop.entity).addEffect(new MobEffect(MobEffects.WITHER, 20 * Config.WITHER_SHOOT_EFFECT_DURATION, 1), EntityPotionEffectEvent.Cause.ATTACK);
+                if (RidableWither.CONFIG.SHOOT_EFFECT_DURATION > 0) {
+                    ((EntityLiving) mop.entity).addEffect(new MobEffect(MobEffects.WITHER, 20 * RidableWither.CONFIG.SHOOT_EFFECT_DURATION, 1), EntityPotionEffectEvent.Cause.ATTACK);
                 }
             }
         }
         ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), 1.0F, false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
-            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), Config.WITHER_SHOOT_GRIEF);
+            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), RidableWither.CONFIG.SHOOT_GRIEF);
         }
         die();
     }

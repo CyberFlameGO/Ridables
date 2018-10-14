@@ -8,7 +8,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
 import net.minecraft.server.v1_13_R2.IEntitySelector;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.PufferfishConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
 import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishSwim;
@@ -18,6 +18,8 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import java.lang.reflect.Field;
 
 public class RidablePufferFish extends EntityPufferFish implements RidableEntity {
+    public static final PufferfishConfig CONFIG = new PufferfishConfig();
+
     private static Field puffTimer;
     private static Field deflateTimer;
 
@@ -94,15 +96,12 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
     }
 
     public float getSpeed() {
-        return Config.PUFFERFISH_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

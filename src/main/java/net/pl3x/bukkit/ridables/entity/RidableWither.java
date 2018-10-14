@@ -11,8 +11,8 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMonsterType;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.mob.WitherConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
@@ -31,6 +31,7 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import java.util.function.Predicate;
 
 public class RidableWither extends EntityWither implements RidableEntity {
+    public static final WitherConfig CONFIG = new WitherConfig();
     private static final Predicate<Entity> NOT_UNDEAD = (entity) -> entity instanceof EntityLiving &&
             ((EntityLiving) entity).getMonsterType() != EnumMonsterType.UNDEAD && ((EntityLiving) entity).df();
 
@@ -59,7 +60,7 @@ public class RidableWither extends EntityWither implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.WITHER_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // canBeRidden
@@ -75,15 +76,12 @@ public class RidableWither extends EntityWither implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.WITHER_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -116,7 +114,7 @@ public class RidableWither extends EntityWither implements RidableEntity {
             return false;
         }
 
-        shootCooldown = Config.WITHER_SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.SHOOT_COOLDOWN;
         if (rider == null) {
             return false;
         }

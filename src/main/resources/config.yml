@@ -38,509 +38,61 @@ allow-ride-babies: false
 # Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
 flying-max-y: 256
 
-########################################################################
-#                                                                      #
-#   Individual Creature Options                                        #
-#               For details about each mob visit the wiki at           #
-#               https://github.com/BillyGalbreath/Ridables/wiki/Mobs   #
-#                                                                      #
-########################################################################
-
-# Bat options
-bat:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  vertical: 1.0      # vertical boost when pressing spacebar
-  gravity: 0.04      # amount of gravity while not in motion
-  ride-in-water: true # allow mob to be ridden in water
-
-# Blaze options
-blaze:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  vertical: 0.5      # vertical boost when pressing spacebar
-  gravity: 0.04      # amount of gravity while not in motion
-  ride-in-water: true # allow mob to be ridden in water
-  shoot:
-    cooldown: 20     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    damage: 5.0      # damage per hit (1 heart = 2.0 damage)
-    grief: true      # whether fireballs can damage the blocks in the world
-
-# Cave Spider options
-cave_spider:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  ride-in-water: true # allow mob to be ridden in water
-  climb-walls: true  # enable climbing walls
-  climb-speed: 1.0   # speed of vertical climb
-
-# Chicken options
-chicken:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  drop-eggs: false   # able to drop eggs while riding
-  egg-delay:
-    min: 6000        # minimum amount of time between laying eggs (in ticks)
-    max: 12000       # maximum amount of time between laying eggs (in ticks)
-
-# Cod options
-cod:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Cow options
-cow:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Creeper options
-creeper:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  explosion:
-    damage: 5.0      # damage per hit (1 heart = 2.0 damage) set to negative value to let vanilla handle the damage modifier
-    grief: true      # whether ghast fireballs can damage the blocks in the world
-
-# Dolphin options
-dolphin:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  bounce: true       # enable small up/down bouncing motion when still
-  bubbles: true      # enable bubble trail when in motion
-  spacebar: "shoot"  # valid options are "shoot" or "dash"
-  shoot:
-    cooldown: 10     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    damage: 2.0      # damage per hit (1 heart = 2.0 damage)
-  dash:
-    cooldown: 100    # ticks to wait between dashing
-    boost: 1.5       # riding speed multiplier boost
-    duration: 20     # ticks boost lasts for with each spacebar press
-
-# Donkey options
-donkey:
-  enabled: false     # enable custom ridable entity
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Ender Dragon options
-dragon:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Drowned options
-drowned:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  shoot:
-    cooldown: 20     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    damage: 8.0      # damage per hit (1 heart = 2.0 damage)
-    channeling: true # thrown tridents have channeling enchantment (strike lightning during rain)
-    require-trident: false # drowned is required to be holding a trident to throw
-
-# Elder Guardian options
-elder_guardian:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Enderman options
-enderman:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  when-wet:          # Wet meaning in water or rain
-    damage: true     # Damage the enderman
-    eject: true      # Eject the rider
-  teleport-on-damage: true
-
-# Endermite options
-endermite:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Evoker options
-evoker:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  spell:
-    cooldown: 40     # ticks to wait between casting
-    damage: 6.0      # damage per hit (1 heart = 2.0 damage)
-
-# Ghast options
-ghast:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  ride-in-water: true # allow mob to be ridden in water
-  shoot:
-    cooldown: 20     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    damage: 5.0      # damage per hit (1 heart = 2.0 damage)
-    grief: true      # whether fireballs can damage the blocks in the world
-
-# Giant options
-giant:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  ai:
-    enabled: true    # Enable AI in giants
-    health: 100      # Max health of giants
-    follow: 32.0     # Follow distance (when looking for attackable targets, etc)
-    hostile: true    # Giants are hostile towards players (set to false to be neutral, meaning it will still attack if hit)
-    attack: 5.0      # Attack damage (1 heart = 2.0 damage)
-  spawn:
-    natural: false   # spawn naturally in world
-    max-light: 8     # maximum light level creature can spawn in
-    weight: 10       # weight of spawn attempt (0-100) (default is 10, which is similar to enderman spawn weight)
-    min-group: 1     # minimum number to spawn in a group
-    max-group: 1     # maximum number to spawn in a group
-    # list of biomes to spawn in (see https://minecraft.gamepedia.com/Biome#Biome_IDs)
-    biomes: [1,2,3,4,5,6,17,18,19,20,27,28,32,33,34,35,36,37,38,39,129,130,131,132,133,134,156,157,160,161,162,163,164,165,166,167]
-
-# Guardian options
-guardian:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Horse options
-horse:
-  enabled: false     # enable custom ridable entity
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Husk options
-husk:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Illusioner options
-illusioner:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  spawn:
-    natural: false   # spawn naturally in world
-    max-light: 8     # maximum light level creature can spawn in
-    weight: 5        # weight of spawn attempt (0-100) (default is 5, which is similar to witch spawn weight)
-    min-group: 1     # minimum number to spawn in a group
-    max-group: 1     # maximum number to spawn in a group
-    # list of biomes to spawn in (see https://minecraft.gamepedia.com/Biome#Biome_IDs)
-    biomes: [1,2,3,4,5,6,17,18,19,20,27,28,32,33,34,35,36,37,38,39,129,130,131,132,133,134,156,157,160,161,162,163,164,165,166,167]
-
-# Iron Golem options
-iron_golem:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Llama options
-llama:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  caravan: true      # create caravan while riding llama
-
-# Magma Cube options
-magma_cube:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  ride-in-water: true # allow mob to be ridden in water
-
-# Mooshroom (Mushroom Cow) options
-mooshroom:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Mule options
-mule:
-  enabled: false     # enable custom ridable entity
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Ocelot options
-ocelot:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Parrot options
-parrot:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  vertical: 1.0      # vertical boost when pressing spacebar
-  gravity: 0.04      # amount of gravity while not in motion
-  ride-in-water: true # allow mob to be ridden in water
-
-# Pig options
-pig:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.5   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  saddle-back: true  # Get your saddle back by shift clicking the pig
-
-# Phantom options
-phantom:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  gravity: 0.05      # amount of gravity while not in motion
-  ride-in-water: false # allow mob to be ridden in water
-  fall-damage: true  # damage if fall too quickly
-  burn-in-sun: true  # burn in sunlight
-  attack-in-sun: true # burn in sunlight
-  shoot-damage: 1.0  # damage per hit (1 heart = 2.0 damage)
-
-# Polar Bear options
-polar_bear:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  stand: true        # make polar bear stand and roar when pressing spacebar (while not moving)
-
-# Pufferfish options
-pufferfish:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Rabbit options
-rabbit:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  ride-in-water: true # allow mob to be ridden in water
-  killer-chance: 0.0 # chance (0-1) rabbit will spawn as killer bunny
-
-# Salmon options
-salmon:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Sheep options
-sheep:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Shulker options
-shulker:
-  enabled: false     # enable custom ridable entity
-  peek-height: 33    # height of shulker lid to be open when riding
-  shoot:
-    cooldown: 10     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    damage: 4.0      # damage per hit (1 heart = 2.0 damage)
-
-# Silverfish options
-silverfish:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Skeleton options
-skeleton:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Skeleton Horse options
-skeleton_horse:
-  enabled: false     # enable custom ridable entity
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  float-in-water: false # allow skeleton horse to float/swim when in water
-
-# Slime options
-slime:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  ride-in-water: true # allow mob to be ridden in water
-
-# Snowman (Snow Golem) options
-snow_golem:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  damage:
-    when-hot: true   # snowman takes damage when wet (rain/water)
-    when-wet: true   # snowman takes damage when too hot (hot biomes)
-  snow-trail: true   # leave a snow layer on ground where snowman walks
-
-# Spider options
-spider:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  ride-in-water: true # allow mob to be ridden in water
-  climb-walls: true  # enable climbing walls
-  climb-speed: 1.0   # speed of vertical climb
-
-# Squid options
-squid:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  ink-cooldown: 40   # how many ticks for squirt ink cooldown
-
-# Stray options
-stray:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Tropical Fish options
-tropical_fish:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-
-# Turtle options
-turtle:
-  enabled: false     # enable custom ridable entity
-  speed:
-    on-land: 1.0     # riding speed modifier on land
-    in-water: 1.0    # riding speed modifier in water
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-
-# Vex options
-vex:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  noclip: false      # set to true to allow clipping through walls
-  ride-in-water: true # allow mob to be ridden in water
-
-# Villager options
-villager:
-  # (DO NOT enable this one if you use another plugin with custom NPCs, like Citizens, etc)
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Vindicator options
-vindicator:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Witch options
-witch:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-  shoot:
-    cooldown: 40     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    potion: "harming" # for complete list of available potion names see https://minecraft.gamepedia.com/Potion#Item_data
-
-# Wither options
-wither:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  ride-in-water: true # allow mob to be ridden in water
-  shoot:
-    cooldown: 20     # ticks to wait between shooting
-    speed: 1.0       # projectile speed
-    damage: 1.0      # damage per hit (1 heart = 2.0 damage)
-    heal: 1.0        # how much health to "steal" from entities per hit
-    grief: true      # whether wither skulls can damage the blocks in the world
-    effect-duration: 10 # long (in seconds) the "wither" effect is effective for
-
-# Wither Skeleton options
-wither_skeleton:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Wolf options
-wolf:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Zombie options
-zombie:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Zombie Horse options
-zombie_horse:
-  enabled: false     # enable custom ridable entity
-  step-height: 1.0   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Zombie Pigman options
-zombie_pigman:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
-
-# Zombie Villager options
-zombie_villager:
-  enabled: false     # enable custom ridable entity
-  speed: 1.0         # riding speed modifier
-  jump-power: 0.5    # jumping power (keep in mind they take fall damage)
-  step-height: 0.6   # block height of step (1.0 means they can walk up 1 block like horses)
-  ride-in-water: true # allow mob to be ridden in water
+mobs:
+  bat: false
+  blaze: false
+  cave_spider: false
+  chicken: false
+  cod: false
+  cow: false
+  creeper: false
+  dolphin: false
+  donkey: false
+  dragon: false
+  drowned: false
+  elder_guardian: false
+  enderman: false
+  endermite: false
+  evoker: false
+  ghast: false
+  giant: false
+  guardian: false
+  horse: false
+  husk: false
+  illusioner: false
+  iron_golem: false
+  llama: false
+  magma_cube: false
+  mooshroom: false
+  mule: false
+  ocelot: false
+  parrot: false
+  pig: false
+  phantom: false
+  polar_bear: false
+  pufferfish: false
+  rabbit: false
+  salmon: false
+  sheep: false
+  shulker: false
+  silverfish: false
+  skeleton: false
+  skeleton_horse: false
+  slime: false
+  snow_golem: false
+  spider: false
+  squid: false
+  stray: false
+  tropical_fish: false
+  turtle: false
+  vex: false
+  villager: false
+  vindicator: false
+  witch: false
+  wither: false
+  wither_skeleton: false
+  wolf: false
+  zombie: false
+  zombie_horse: false
+  zombie_pigman: false
+  zombie_villager: false

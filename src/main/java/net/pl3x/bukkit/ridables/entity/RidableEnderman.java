@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.Block;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Blocks;
@@ -19,11 +20,11 @@ import net.minecraft.server.v1_13_R2.TagsBlock;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.EndermanConfig;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
@@ -37,6 +38,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 
 public class RidableEnderman extends EntityEnderman implements RidableEntity {
+    public static final EndermanConfig CONFIG = new EndermanConfig();
+
     private boolean skipTP;
 
     public RidableEnderman(World world) {
@@ -65,12 +68,12 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.ENDERMAN_RIDABLE_IN_WATER && !Config.ENDERMAN_EJECT_WHEN_WET;
+        return CONFIG.RIDABLE_IN_WATER && !CONFIG.EJECT_WHEN_WET;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.ENDERMAN_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     // randomlyTeleport
@@ -83,12 +86,12 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     }
 
     protected void mobTick() {
-        Q = Config.ENDERMAN_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         if (ap()) { // isWet
-            if (Config.ENDERMAN_EJECT_WHEN_WET && getRider() != null) {
+            if (CONFIG.EJECT_WHEN_WET && getRider() != null) {
                 ejectPassengers();
             }
-            if (Config.ENDERMAN_DAMAGE_WHEN_WET) {
+            if (CONFIG.DAMAGE_WHEN_WET) {
                 damageEntity(DamageSource.DROWN, 1.0F);
             }
         }
@@ -96,15 +99,12 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.ENDERMAN_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -183,7 +183,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     }
 
     public boolean damageEntity(DamageSource damagesource, float f) {
-        skipTP = !Config.ENDERMAN_TELEPORT_WHEN_DAMAGED;
+        skipTP = !CONFIG.TELEPORT_WHEN_DAMAGED;
         boolean result = super.damageEntity(damagesource, f);
         skipTP = false;
         return result;
@@ -191,7 +191,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     public boolean shouldAttack(EntityHuman player) {
         boolean shouldAttack = shouldAttack_real(player);
-        if (Ridables.isPaper()) {
+        if (PaperLib.isPaper()) {
             return Paper.CallEndermanAttackPlayerEvent(this, player, shouldAttack);
         }
         return shouldAttack;

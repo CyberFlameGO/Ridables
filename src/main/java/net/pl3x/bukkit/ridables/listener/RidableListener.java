@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.listener;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.RidableCreeper;
 import net.pl3x.bukkit.ridables.entity.RidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
@@ -57,7 +58,7 @@ public class RidableListener implements Listener {
         }
 
         if (ridable.getType() == RidableType.CREEPER) {
-            event.setDamage(EntityDamageEvent.DamageModifier.BASE, Config.CREEPER_EXPLOSION_DAMAGE);
+            event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableCreeper.CONFIG.EXPLOSION_DAMAGE);
         }
     }
 

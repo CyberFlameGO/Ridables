@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.ai.slime;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.MobEffects;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.Ridables;
@@ -21,7 +22,7 @@ public class AISlimeFaceRandom extends PathfinderGoal {
         if (slime.getRider() != null) {
             return false;
         }
-        if (Ridables.isPaper()) {
+        if (PaperLib.isPaper()) {
             if (!slime.canWander()) {
                 return false;
             }
@@ -38,7 +39,7 @@ public class AISlimeFaceRandom extends PathfinderGoal {
     public void e() {
         if (--timer <= 0) {
             timer = 40 + slime.getRandom().nextInt(60);
-            if (Ridables.isPaper()) {
+            if (PaperLib.isPaper()) {
                 if (!slime.canWander()) {
                     return;
                 }

@@ -8,7 +8,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.RecipeItemStack;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.SheepConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -24,6 +24,7 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import java.lang.reflect.Field;
 
 public class RidableSheep extends EntitySheep implements RidableEntity {
+    public static final SheepConfig CONFIG = new SheepConfig();
     public static final RecipeItemStack TEMPTATION_ITEMS = RecipeItemStack.a(Items.WHEAT);
 
     private static Field eatGrassGoal;
@@ -68,29 +69,26 @@ public class RidableSheep extends EntitySheep implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.SHEEP_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.SHEEP_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = Config.SHEEP_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.SHEEP_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

@@ -5,11 +5,13 @@ import net.minecraft.server.v1_13_R2.EntityBat;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.BatConfig;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableBat extends EntityBat implements RidableEntity {
+    public static final BatConfig CONFIG = new BatConfig();
+
     public RidableBat(World world) {
         super(world);
         moveController = new ControllerWASDFlyingWithSpacebar(this);
@@ -27,27 +29,24 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.BAT_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07F * Config.BAT_VERTICAL : 0.04704F - Config.BAT_GRAVITY;
+            motY += bi > 0 ? 0.07F * CONFIG.VERTICAL : 0.04704F - CONFIG.GRAVITY;
             return;
         }
         super.mobTick(); // <- bat AI here instead of PathfinderGoals
     }
 
     public float getSpeed() {
-        return Config.BAT_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

@@ -6,15 +6,17 @@ import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityItem;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntitySnowman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.IBlockData;
 import net.minecraft.server.v1_13_R2.IMonster;
+import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.SnowGolemConfig;
 import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
@@ -26,9 +28,12 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 
 public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
+    public static final SnowGolemConfig CONFIG = new SnowGolemConfig();
     public static final MaterialSetTag PUMPKIN = new MaterialSetTag()
             .add(Material.CARVED_PUMPKIN, Material.JACK_O_LANTERN, Material.PUMPKIN);
 
@@ -53,16 +58,16 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return false;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.SNOWMAN_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = Config.SNOWMAN_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
@@ -72,13 +77,13 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
         int x = MathHelper.floor(locX);
         int y = MathHelper.floor(locY);
         int z = MathHelper.floor(locZ);
-        if (ap() && Config.SNOWMAN_DAMAGE_WHEN_WET) { // isWet
+        if (ap() && CONFIG.DAMAGE_WHEN_WET) { // isWet
             damageEntity(DamageSource.DROWN, 1.0F);
         }
-        if (world.getBiome(new BlockPosition(x, 0, z)).c(new BlockPosition(x, y, z)) > 1.0F && Config.SNOWMAN_DAMAGE_WHEN_HOT) { // biome.getTemperature(pos)
+        if (world.getBiome(new BlockPosition(x, 0, z)).c(new BlockPosition(x, y, z)) > 1.0F && CONFIG.DAMAGE_WHEN_HOT) { // biome.getTemperature(pos)
             damageEntity(CraftEventFactory.MELTING, 1.0F);
         }
-        if (!(world.getGameRules().getBoolean("mobGriefing") && Config.SNOWMAN_LEAVE_SNOW_TRAIL)) {
+        if (!(world.getGameRules().getBoolean("mobGriefing") && CONFIG.LEAVE_SNOW_TRAIL)) {
             return; // not allowed to grief world (placing snow layers where walking)
         }
         IBlockData block = Blocks.SNOW.getBlockData();
@@ -94,27 +99,32 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.SNOWMAN_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        net.minecraft.server.v1_13_R2.ItemStack itemstack = entityhuman.b(enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        ItemStack itemstack = player.b(hand);
         if (!hasPumpkin() && PUMPKIN.isTagged(CraftItemStack.asCraftMirror(itemstack))) {
             setHasPumpkin(true);
-            if (!entityhuman.abilities.canInstantlyBuild) {
+            if (!player.abilities.canInstantlyBuild) {
                 itemstack.subtract(1);
-                return true;
             }
+            return true; // handled
         } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
-            getBukkitEntity().getWorld().dropItemNaturally(getBukkitEntity().getLocation(),
-                    new ItemStack(Material.CARVED_PUMPKIN));
-            return true;
+            PlayerShearEntityEvent event = new PlayerShearEntityEvent((Player) player.getBukkitEntity(), getBukkitEntity());
+            world.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return false;
+            }
+            setHasPumpkin(false);
+            itemstack.damage(1, player);
+            EntityItem pumpkin = new EntityItem(world, locX, locY, locZ, new ItemStack(Blocks.PUMPKIN.getItem()));
+            pumpkin.pickupDelay = 10;
+            world.addEntity(pumpkin, CreatureSpawnEvent.SpawnReason.CUSTOM);
+            return true; // handled
         }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

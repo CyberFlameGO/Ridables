@@ -8,11 +8,11 @@ import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.IMonster;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.IronGolemConfig;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveThroughVillage;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsTarget;
@@ -26,6 +26,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
+    public static final IronGolemConfig CONFIG = new IronGolemConfig();
+
     public RidableIronGolem(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -54,29 +56,26 @@ public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.IRON_GOLEM_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.IRON_GOLEM_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = Config.IRON_GOLEM_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.IRON_GOLEM_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

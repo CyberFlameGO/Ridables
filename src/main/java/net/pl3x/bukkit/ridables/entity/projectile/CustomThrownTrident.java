@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.AxisAlignedBB;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
@@ -23,7 +24,6 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableDrowned;
 import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.entity.Drowned;
@@ -146,7 +146,7 @@ public class CustomThrownTrident extends EntityThrownTrident {
                     mop = null;
                 }
             }
-            if (mop != null && mop.entity != null && Ridables.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
+            if (mop != null && mop.entity != null && PaperLib.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
             if (mop != null && !flag) {
@@ -209,7 +209,7 @@ public class CustomThrownTrident extends EntityThrownTrident {
     // onHitEntity
     protected void b(MovingObjectPosition mop) {
         Entity hitEntity = mop.entity;
-        float damage = Config.DROWNED_SHOOT_DAMAGE;
+        float damage = RidableDrowned.CONFIG.SHOOT_DAMAGE;
         if (hitEntity instanceof EntityLiving) {
             damage += EnchantmentManager.a(getItemStack(), ((EntityLiving) hitEntity).getMonsterType());
         }
@@ -228,7 +228,7 @@ public class CustomThrownTrident extends EntityThrownTrident {
         motY *= -0.1D;
         motZ *= -0.01D;
         float soundVolume = 1.0F;
-        if (world.Y() && Config.DROWNED_SHOOT_CHANNELING) {
+        if (world.Y() && RidableDrowned.CONFIG.SHOOT_CHANNELING) {
             BlockPosition pos = hitEntity.getChunkCoordinates();
             if (world.e(pos)) {
                 EntityLightning lightning = new EntityLightning(world, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, false);

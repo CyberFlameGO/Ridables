@@ -7,7 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityLlama;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.LlamaConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
@@ -26,6 +26,8 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import java.lang.reflect.Field;
 
 public class RidableLlama extends EntityLlama implements RidableEntity {
+    public static final LlamaConfig CONFIG = new LlamaConfig();
+
     private static Field didSpit;
 
     static {
@@ -64,12 +66,12 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.LLAMA_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.LLAMA_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public boolean didSpit() {
@@ -88,7 +90,7 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
     }
 
     public boolean isLeashed() {
-        return (Config.LLAMA_CARAVAN && getRider() != null) || super.isLeashed();
+        return (CONFIG.CARAVAN && getRider() != null) || super.isLeashed();
     }
 
     public Entity getLeashHolder() {
@@ -98,24 +100,21 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
 
     // hasCaravan
     public boolean em() {
-        return (Config.LLAMA_CARAVAN && getRider() != null) || super.em();
+        return (CONFIG.CARAVAN && getRider() != null) || super.em();
     }
 
     protected void mobTick() {
-        Q = Config.LLAMA_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.LLAMA_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

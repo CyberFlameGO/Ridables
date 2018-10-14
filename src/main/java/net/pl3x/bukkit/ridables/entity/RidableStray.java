@@ -13,7 +13,7 @@ import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.PathfinderGoalBowShoot;
 import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.StrayConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIFleeSun;
@@ -28,6 +28,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableStray extends EntitySkeletonStray implements RidableEntity {
+    public static final StrayConfig CONFIG = new StrayConfig();
+
     private final PathfinderGoalBowShoot<EntitySkeletonAbstract> aiArrowAttack = new AIShootBow<>(this, 1.0D, 20, 15.0F);
     private final PathfinderGoalMeleeAttack aiMeleeAttack = new AISkeletonMeleeAttack(this, 1.2D, false);
 
@@ -58,29 +60,26 @@ public class RidableStray extends EntitySkeletonStray implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.STRAY_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.STRAY_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = Config.STRAY_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.STRAY_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

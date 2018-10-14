@@ -6,7 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.CaveSpiderConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILeapAtTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -19,6 +19,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity {
+    public static final CaveSpiderConfig CONFIG = new CaveSpiderConfig();
+
     public RidableCaveSpider(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -44,24 +46,21 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.CAVE_SPIDER_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.CAVE_SPIDER_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public float getSpeed() {
-        return Config.CAVE_SPIDER_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -71,14 +70,14 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // isOnLadder
     public boolean z_() {
-        return getRider() == null ? l() : Config.CAVE_SPIDER_CLIMB_WALLS && l(); // isBesideClimbableBlock
+        return getRider() == null ? l() : CONFIG.CLIMB_WALLS && l(); // isBesideClimbableBlock
     }
 
     // travel
     public void a(float strafe, float vertical, float forward) {
         super.a(strafe, vertical, forward);
         if (positionChanged && z_() && getRider() != null) {
-            motY = 0.2D * Config.CAVE_SPIDER_CLIMB_SPEED;
+            motY = 0.2D * CONFIG.CLIMB_SPEED;
         }
     }
 }

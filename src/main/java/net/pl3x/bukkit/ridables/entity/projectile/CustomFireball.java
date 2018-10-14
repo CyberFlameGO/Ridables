@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.EntityLargeFireball;
@@ -10,7 +11,6 @@ import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
@@ -73,7 +73,7 @@ public class CustomFireball extends EntityLargeFireball {
         if (mop != null && mop.entity != null) {
             if (mop.entity == ridable || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (Ridables.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
+            } else if (PaperLib.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
                 mop = null;
             }
         }

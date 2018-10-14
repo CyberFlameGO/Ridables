@@ -11,7 +11,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GeneratorAccess;
 import net.minecraft.server.v1_13_R2.IWorldReader;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.IllusionerConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIShootBow;
@@ -25,6 +25,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableIllusioner extends EntityIllagerIllusioner implements RidableEntity {
+    public static IllusionerConfig CONFIG = new IllusionerConfig();
+
     public RidableIllusioner(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -53,12 +55,12 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.ILLUSIONER_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.ILLUSIONER_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public int getSpellTicks() {
@@ -72,7 +74,7 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
     // isValidLightLevel
     protected boolean K_() {
         BlockPosition pos = new BlockPosition(locX, getBoundingBox().b, locZ);
-        return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= Config.ILLUSIONER_SPAWN_LIGHT_LEVEL;
+        return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= CONFIG.SPAWN_LIGHT_LEVEL;
     }
 
     // func_205022_a
@@ -86,20 +88,17 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
     }
 
     protected void mobTick() {
-        Q = Config.ILLUSIONER_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.ILLUSIONER_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

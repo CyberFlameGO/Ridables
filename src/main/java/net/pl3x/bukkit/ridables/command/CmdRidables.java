@@ -3,6 +3,7 @@ package net.pl3x.bukkit.ridables.command;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -40,6 +41,12 @@ public class CmdRidables implements TabExecutor {
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             Config.reload();
             Lang.reload();
+
+            RidableType.BY_BUKKIT_TYPE.forEach((bukkit, ridable) -> {
+                if (ridable.getConfig() != null) {
+                    ridable.getConfig().reload();
+                }
+            });
 
             Lang.send(sender, "&e[&3Ridables&e]&a Reloaded configs");
             return true;

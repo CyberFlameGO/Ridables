@@ -6,7 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EntitySpider;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.SpiderConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILeapAtTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -19,6 +19,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableSpider extends EntitySpider implements RidableEntity {
+    public static final SpiderConfig CONFIG = new SpiderConfig();
+
     public RidableSpider(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -44,24 +46,21 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.SPIDER_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.SPIDER_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public float getSpeed() {
-        return Config.SPIDER_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -74,14 +73,14 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
         if (getRider() == null) {
             return l(); // isBesideClimbableBlock
         }
-        return Config.SPIDER_CLIMB_WALLS && l();
+        return CONFIG.CLIMB_WALLS && l();
     }
 
     // travel
     public void a(float strafe, float vertical, float forward) {
         super.a(strafe, vertical, forward);
         if (positionChanged && z_() && getRider() != null) {
-            motY = 0.2D * Config.SPIDER_CLIMB_SPEED;
+            motY = 0.2D * CONFIG.CLIMB_SPEED;
         }
     }
 }

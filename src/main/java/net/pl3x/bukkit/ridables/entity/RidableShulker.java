@@ -8,8 +8,8 @@ import net.minecraft.server.v1_13_R2.EntityShulker;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.mob.ShulkerConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
@@ -25,6 +25,8 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableShulker extends EntityShulker implements RidableEntity {
+    public static final ShulkerConfig CONFIG = new ShulkerConfig();
+
     private boolean isOpen = true;
     private int shootCooldown = 0;
     private int spacebarCooldown = 0;
@@ -78,11 +80,8 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -124,7 +123,7 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
     }
 
     private void updatePeek() {
-        byte peekTick = (byte) (isOpen ? Config.SHULKER_PEEK_HEIGHT : 0);
+        byte peekTick = (byte) (isOpen ? CONFIG.PEEK_HEIGHT : 0);
         if (dA() != peekTick) {
             a(peekTick);
         }
@@ -139,7 +138,7 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        shootCooldown = Config.SHULKER_SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -154,7 +153,7 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         Vector target = player.getEyeLocation().getDirection().normalize().multiply(25);
 
         CustomShulkerBullet bullet = new CustomShulkerBullet(world, this, rider, null, dy().k());
-        bullet.shoot(target.getX(), target.getY(), target.getZ(), Config.SHULKER_SHOOT_SPEED, 5.0F);
+        bullet.shoot(target.getX(), target.getY(), target.getZ(), CONFIG.SHOOT_SPEED, 5.0F);
         world.addEntity(bullet);
 
         a(SoundEffects.ENTITY_SHULKER_SHOOT, 2.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);

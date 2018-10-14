@@ -8,7 +8,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.RecipeItemStack;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.CowConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -21,6 +21,7 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableCow extends EntityCow implements RidableEntity {
+    public static final CowConfig CONFIG = new CowConfig();
     public static final RecipeItemStack TEMPTATION_ITEMS = RecipeItemStack.a(Items.WHEAT);
 
     public RidableCow(World world) {
@@ -34,7 +35,7 @@ public class RidableCow extends EntityCow implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.COW_SPEED;
+        return CONFIG.SPEED;
     }
 
     // initAI - override vanilla AI
@@ -51,25 +52,22 @@ public class RidableCow extends EntityCow implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.COW_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.COW_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = Config.COW_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

@@ -12,7 +12,7 @@ import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.PhantomConfig;
 import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomAttack;
 import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomOrbitPoint;
 import net.pl3x.bukkit.ridables.entity.ai.phantom.AIPhantomPickAttack;
@@ -27,6 +27,8 @@ import org.bukkit.util.Vector;
 import javax.annotation.Nullable;
 
 public class RidablePhantom extends EntityPhantom implements RidableEntity {
+    public static final PhantomConfig CONFIG = new PhantomConfig();
+
     public Vec3D orbitOffset;
     public BlockPosition orbitPosition;
     public AttackPhase phase;
@@ -75,12 +77,12 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.PHANTOM_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {
         if (getRider() != null && getRider().bj == 0) {
-            motY -= Config.PHANTOM_GRAVITY;
+            motY -= CONFIG.GRAVITY;
         }
         super.mobTick();
     }
@@ -88,7 +90,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     // onLivingUpdate
     public void k() {
         super.k();
-        if (!Config.PHANTOM_BURN_IN_SUNLIGHT) {
+        if (!CONFIG.BURN_IN_SUNLIGHT) {
             extinguish(); // dont burn in sunlight
         }
         if (dq()) {
@@ -97,15 +99,12 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.PHANTOM_SPEED * (onGround ? 1F : 3F);
+        return CONFIG.SPEED * (onGround ? 1F : 3F);
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     public boolean removePassenger(Entity passenger) {
@@ -132,7 +131,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     public boolean canAttack() {
-        return !Config.PHANTOM_ATTACK_IN_DAYLIGHT && dq();
+        return !CONFIG.ATTACK_IN_DAYLIGHT && dq();
     }
 
     class PhantomLookController extends LookController {

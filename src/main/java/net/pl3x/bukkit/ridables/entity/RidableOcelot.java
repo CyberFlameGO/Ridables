@@ -11,7 +11,7 @@ import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.PathfinderGoalTempt;
 import net.minecraft.server.v1_13_R2.RecipeItemStack;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.OcelotConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowOwner;
@@ -30,6 +30,7 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import java.lang.reflect.Field;
 
 public class RidableOcelot extends EntityOcelot implements RidableEntity {
+    public static final OcelotConfig CONFIG = new OcelotConfig();
     public static final RecipeItemStack TEMPTATION_ITEMS = RecipeItemStack.a(Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.PUFFERFISH);
 
     private static Field aiTempt;
@@ -91,29 +92,26 @@ public class RidableOcelot extends EntityOcelot implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.OCELOT_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.OCELOT_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public void mobTick() {
-        Q = Config.OCELOT_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.OCELOT_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

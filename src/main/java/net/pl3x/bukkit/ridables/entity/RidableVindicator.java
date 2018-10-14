@@ -9,10 +9,10 @@ import net.minecraft.server.v1_13_R2.EntityVillager;
 import net.minecraft.server.v1_13_R2.EntityVindicator;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.VindicatorConfig;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
-import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWander;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
 public class RidableVindicator extends EntityVindicator implements RidableEntity {
+    public static final VindicatorConfig CONFIG = new VindicatorConfig();
     public static final Predicate<Entity> JOHNNY_SELECTOR = (target) -> target instanceof EntityLiving && ((EntityLiving) target).df(); // attackable
 
     private static Field johnny;
@@ -62,12 +63,12 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.VINDICATOR_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.VINDICATOR_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public boolean isJohnnyMode() {
@@ -79,20 +80,17 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
     }
 
     protected void mobTick() {
-        Q = Config.VINDICATOR_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.VINDICATOR_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

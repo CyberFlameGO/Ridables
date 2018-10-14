@@ -13,13 +13,15 @@ import net.minecraft.server.v1_13_R2.PacketPlayOutGameStateChange;
 import net.minecraft.server.v1_13_R2.SoundEffect;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.ElderGuardianConfig;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class RidableElderGuardian extends RidableGuardian implements RidableEntity {
+    public static final ElderGuardianConfig CONFIG = new ElderGuardianConfig();
+
     public RidableElderGuardian(World world) {
         super(EntityTypes.ELDER_GUARDIAN, world);
         setSize(width * 2.35F, length * 2.35F);
@@ -63,7 +65,7 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
     }
 
     public float getSpeed() {
-        return Config.ELDER_GUARDIAN_SPEED;
+        return CONFIG.SPEED;
     }
 
     @Nullable

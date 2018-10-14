@@ -15,7 +15,6 @@ import net.minecraft.server.v1_13_R2.MobEffects;
 import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableShulker;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
@@ -85,8 +84,8 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
         if (hitEntity != null && rider != null) {
-            if (Config.SHULKER_SHOOT_DAMAGE > 0) {
-                if (hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.SHULKER_SHOOT_DAMAGE)) {
+            if (RidableShulker.CONFIG.SHOOT_DAMAGE > 0) {
+                if (hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidableShulker.CONFIG.SHOOT_DAMAGE)) {
                     a(rider, hitEntity);
                     hitEntity.addEffect(new MobEffect(MobEffects.LEVITATION, 200), EntityPotionEffectEvent.Cause.ATTACK);
                 }

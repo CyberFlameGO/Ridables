@@ -4,11 +4,12 @@ import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityVex;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.VexConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
@@ -20,6 +21,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableVex extends EntityVex implements RidableEntity {
+    public static final VexConfig CONFIG = new VexConfig();
+
     public RidableVex(World world) {
         super(world);
         moveController = new VexWASDController(this);
@@ -44,19 +47,21 @@ public class RidableVex extends EntityVex implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.VEX_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
+    }
+
+    public void k() {
+        noclip = CONFIG.NO_CLIP;
+        super.k();
     }
 
     public float getSpeed() {
-        return Config.VEX_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -75,6 +80,11 @@ public class RidableVex extends EntityVex implements RidableEntity {
         public VexWASDController(RidableVex vex) {
             super(vex);
             this.vex = vex;
+        }
+
+        public void tick(EntityPlayer rider) {
+            super.tick(rider);
+            vex.noclip = CONFIG.NO_CLIP;
         }
 
         public void tick() {

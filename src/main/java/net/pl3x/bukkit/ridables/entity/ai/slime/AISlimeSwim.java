@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.ai.slime;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
@@ -17,7 +18,7 @@ public class AISlimeSwim extends PathfinderGoal {
     // shouldExecute
     public boolean a() {
         if (slime.isInWater() || slime.ax()) {
-            if (Ridables.isPaper()) {
+            if (PaperLib.isPaper()) {
                 return slime.canWander() && Paper.CallSlimeSwimEvent(slime);
             }
             return true;

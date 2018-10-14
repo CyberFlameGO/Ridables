@@ -15,7 +15,6 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidablePhantom;
 
 public class PhantomFlames extends EntityLlamaSpit implements IProjectile {
@@ -103,8 +102,8 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile {
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
         if (hitEntity != null && rider != null) {
-            if (Config.PHANTOM_SHOOT_DAMAGE > 0) {
-                hitEntity.damageEntity(DamageSource.a(this, rider).c(), Config.PHANTOM_SHOOT_DAMAGE);
+            if (RidablePhantom.CONFIG.SHOOT_DAMAGE > 0) {
+                hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidablePhantom.CONFIG.SHOOT_DAMAGE);
                 hitEntity.setOnFire(100);
             }
             die();

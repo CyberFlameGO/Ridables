@@ -8,17 +8,19 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.PathfinderGoalHorseTrap;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.SkeletonHorseConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
+import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.horse.AIHorseBucking;
-import net.pl3x.bukkit.ridables.entity.ai.horse.skeleton_horse.AISkeletonHorseSwim;
 
 public class RidableSkeletonHorse extends EntityHorseSkeleton implements RidableEntity {
+    public static final SkeletonHorseConfig CONFIG = new SkeletonHorseConfig();
+
     private final PathfinderGoalHorseTrap aiSkeletonTrap = new PathfinderGoalHorseTrap(this);
     private boolean isTrap;
 
@@ -45,12 +47,17 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
 
     // initExtraAI
     protected void dI() {
-        goalSelector.a(0, new AISkeletonHorseSwim(this));
+        goalSelector.a(0, new AISwim(this) {
+            // shouldExecute
+            public boolean a() {
+                return CONFIG.FLOATS_IN_WATER && super.a();
+            }
+        });
     }
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.SKELETON_HORSE_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     public boolean isTamed() {
@@ -74,16 +81,13 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
     }
 
     public void mobTick() {
-        Q = Config.SKELETON_HORSE_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.ai.turtle;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.BlockTurtleEgg;
 import net.minecraft.server.v1_13_R2.Blocks;
@@ -59,7 +60,7 @@ public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
             turtle.setDigging(true);
         } else if (diggingTicks > 200) {
             int count = turtle.getRandom().nextInt(4) + 1;
-            if (Ridables.isPaper()) {
+            if (PaperLib.isPaper()) {
                 count = Paper.CallTurtleLayEggEvent(turtle, d.up(), count);
             }
             if (count > 0) {

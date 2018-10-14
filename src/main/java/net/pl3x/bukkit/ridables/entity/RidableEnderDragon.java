@@ -10,11 +10,13 @@ import net.minecraft.server.v1_13_R2.EnumMoveType;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.EnderDragonConfig;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableEnderDragon extends EntityEnderDragon implements RidableEntity {
+    public static final EnderDragonConfig CONFIG = new EnderDragonConfig();
+
     private boolean dirty;
 
     public RidableEnderDragon(World world) {
@@ -74,7 +76,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
     }
 
     public float getSpeed() {
-        return Config.DRAGON_SPEED;
+        return CONFIG.SPEED;
     }
 
     public boolean onSpacebar() {
@@ -83,11 +85,8 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

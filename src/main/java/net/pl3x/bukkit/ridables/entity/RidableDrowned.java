@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityDrowned;
@@ -19,8 +20,8 @@ import net.minecraft.server.v1_13_R2.Navigation;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.mob.DrownedConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -43,6 +44,8 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
 
 public class RidableDrowned extends EntityDrowned implements RidableEntity {
+    public static final DrownedConfig CONFIG = new DrownedConfig();
+
     private final AIZombieBreakDoor breakDoorAI;
     private boolean swimUp;
     private int shootCooldown = 0;
@@ -75,7 +78,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         goalSelector.a(7, new AIWander(this, 1.0D));
         targetSelector.a(1, new AIHurtByTarget(this, true, EntityDrowned.class));
         targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, 10, true, false, e -> e != null && (!e.world.L() || e.isInWater())));
-        if ((Ridables.isSpigot() || Ridables.isPaper()) && world.spigotConfig.zombieAggressiveTowardsVillager) {
+        if (PaperLib.isSpigot() && world.spigotConfig.zombieAggressiveTowardsVillager) {
             targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
         }
         targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, true));
@@ -112,12 +115,12 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.DROWNED_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.DROWNED_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask
@@ -142,20 +145,17 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-        Q = Config.DROWNED_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.DROWNED_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -179,7 +179,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         if (shootCooldown == 0) {
             EntityPlayer rider = getRider();
             if (rider != null) {
-                if (!Config.DROWNED_SHOOT_REQUIRE_TRIDENT || hasTrident()) {
+                if (!CONFIG.SHOOT_REQUIRE_TRIDENT || hasTrident()) {
                     return throwTrident(rider);
                 }
             }
@@ -188,7 +188,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
     }
 
     public boolean throwTrident(EntityPlayer rider) {
-        shootCooldown = Config.DROWNED_SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -203,7 +203,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 3, 0));
 
         CustomThrownTrident trident = new CustomThrownTrident(this.world, this, rider, new ItemStack(Items.TRIDENT));
-        trident.shoot(direction.getX(), direction.getY(), direction.getZ(), 1.6F * Config.DROWNED_SHOOT_SPEED, 0);
+        trident.shoot(direction.getX(), direction.getY(), direction.getZ(), 1.6F * CONFIG.SHOOT_SPEED, 0);
         world.addEntity(trident);
 
         a(SoundEffects.ENTITY_DROWNED_SHOOT, 1.0F, 1.0F);

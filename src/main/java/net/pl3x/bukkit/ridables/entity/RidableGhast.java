@@ -11,8 +11,8 @@ import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.mob.GhastConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIFindNearestPlayer;
 import net.pl3x.bukkit.ridables.entity.ai.ghast.AIGhastFireballAttack;
 import net.pl3x.bukkit.ridables.entity.ai.ghast.AIGhastLookAround;
@@ -25,6 +25,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class RidableGhast extends EntityGhast implements RidableEntity {
+    public static final GhastConfig CONFIG = new GhastConfig();
+
     private int spacebarCooldown = 0;
 
     public RidableGhast(World world) {
@@ -47,7 +49,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.GHAST_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     protected void mobTick() {
@@ -58,15 +60,12 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.GHAST_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -85,7 +84,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        spacebarCooldown = Config.GHAST_SHOOT_COOLDOWN;
+        spacebarCooldown = CONFIG.SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -107,7 +106,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
             public void run() {
                 CustomFireball fireball = new CustomFireball(world, RidableGhast.this, rider,
                         direction.getX(), direction.getY(), direction.getZ(),
-                        Config.GHAST_SHOOT_SPEED, Config.GHAST_SHOOT_DAMAGE, Config.GHAST_SHOOT_GRIEF);
+                        CONFIG.SHOOT_SPEED, CONFIG.SHOOT_DAMAGE, CONFIG.SHOOT_GRIEF);
                 world.addEntity(fireball);
 
                 a(SoundEffects.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);

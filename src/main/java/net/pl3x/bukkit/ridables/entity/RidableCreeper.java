@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.DataWatcherObject;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityAreaEffectCloud;
@@ -11,12 +12,12 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.MobEffect;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.CreeperConfig;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
@@ -30,6 +31,8 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 
 public class RidableCreeper extends EntityCreeper implements RidableEntity {
+    public static final CreeperConfig CONFIG = new CreeperConfig();
+
     public RidableCreeper(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -55,16 +58,16 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.CREEPER_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return isIgnited() ? 0 : Config.CREEPER_JUMP_POWER;
+        return isIgnited() ? 0 : CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = Config.CREEPER_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         if (getRider() != null) {
             if (getRider().bj != 0 || getRider().bh != 0) {
                 setIgnitedFlag(false);
@@ -89,15 +92,12 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.CREEPER_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -120,11 +120,11 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
      * Make the creeper explode
      */
     public void explode() {
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), Config.CREEPER_EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), CONFIG.EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             aX = true; // isDying
-            boolean flag = getRider() == null ? world.getGameRules().getBoolean("mobGriefing") : Config.CREEPER_EXPLOSION_GRIEF;
+            boolean flag = getRider() == null ? world.getGameRules().getBoolean("mobGriefing") : CONFIG.EXPLOSION_GRIEF;
             world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), flag);
             die();
             spawnCloud();
@@ -139,7 +139,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         if (collection.isEmpty()) {
             return;
         }
-        if (Ridables.isPaper() && Paper.DisableCreeperLingeringEffect(world)) {
+        if (PaperLib.isPaper() && Paper.DisableCreeperLingeringEffect(world)) {
             return;
         }
         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, locX, locY, locZ);

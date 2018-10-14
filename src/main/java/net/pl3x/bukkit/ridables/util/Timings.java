@@ -5,6 +5,8 @@ import co.aikar.timings.lib.TimingManager;
 import net.pl3x.bukkit.ridables.Ridables;
 
 public class Timings {
+    public static final Timings INSTANCE = new Timings(Ridables.getInstance());
+
     public final MCTiming chickenLayEgg;
 
     public Timings(Ridables plugin) {

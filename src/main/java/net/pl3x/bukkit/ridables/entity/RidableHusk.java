@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
@@ -12,7 +13,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.Navigation;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.HuskConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -27,6 +28,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableHusk extends EntityZombieHusk implements RidableEntity {
+    public static final HuskConfig CONFIG = new HuskConfig();
+
     private final AIZombieBreakDoor breakDoorAI;
 
     public RidableHusk(World world) {
@@ -54,7 +57,7 @@ public class RidableHusk extends EntityZombieHusk implements RidableEntity {
         goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D));
         targetSelector.a(1, new AIHurtByTarget(this, true, EntityPigZombie.class));
         targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true));
-        if ((Ridables.isSpigot() || Ridables.isPaper()) && world.spigotConfig.zombieAggressiveTowardsVillager) {
+        if (PaperLib.isSpigot() && world.spigotConfig.zombieAggressiveTowardsVillager) {
             targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
         }
         targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, true));
@@ -63,12 +66,12 @@ public class RidableHusk extends EntityZombieHusk implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.HUSK_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.HUSK_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask
@@ -90,20 +93,17 @@ public class RidableHusk extends EntityZombieHusk implements RidableEntity {
     }
 
     protected void mobTick() {
-        Q = Config.HUSK_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.HUSK_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

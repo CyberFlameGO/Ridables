@@ -13,7 +13,7 @@ import net.minecraft.server.v1_13_R2.IEntitySelector;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.CodConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AIPanic;
 import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishFollowLeader;
@@ -22,6 +22,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableCod extends EntityCod implements RidableEntity {
+    public static final CodConfig CONFIG = new CodConfig();
+
     public RidableCod(World world) {
         super(world);
         moveController = new FishWASDController(this);
@@ -80,15 +82,12 @@ public class RidableCod extends EntityCod implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.COD_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

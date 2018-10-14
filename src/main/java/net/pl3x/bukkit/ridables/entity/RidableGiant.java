@@ -11,11 +11,11 @@ import net.minecraft.server.v1_13_R2.GeneratorAccess;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IWorldReader;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.GiantConfig;
+import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
-import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
@@ -24,6 +24,8 @@ import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
 public class RidableGiant extends EntityGiantZombie implements RidableEntity {
+    public static GiantConfig CONFIG = new GiantConfig();
+
     public RidableGiant(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -36,14 +38,14 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
-        if (Config.GIANT_AI_ENABLED) {
+        if (CONFIG.AI_ENABLED) {
             goalSelector.a(0, new AISwim(this));
             goalSelector.a(2, new AIAttackMelee(this, 1.0D, false));
             goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D));
             goalSelector.a(8, new AIWatchClosest(this, EntityHuman.class, 16.0F));
             goalSelector.a(8, new AILookIdle(this));
             targetSelector.a(1, new AIHurtByTarget(this, true, EntityHuman.class));
-            if (Config.GIANT_HOSTILE) {
+            if (CONFIG.AI_HOSTILE) {
                 goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));
                 targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true));
                 targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
@@ -54,30 +56,30 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        if (Config.GIANT_AI_ENABLED) {
-            getAttributeInstance(GenericAttributes.maxHealth).setValue(Config.GIANT_MAX_HEALTH);
-            setHealth(Config.GIANT_MAX_HEALTH);
+        if (CONFIG.AI_ENABLED) {
+            getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.AI_HEALTH);
+            setHealth(CONFIG.AI_HEALTH);
 
-            getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(Config.GIANT_AI_SPEED);
-            getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(Config.GIANT_FOLLOW_RANGE);
-            getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(Config.GIANT_ATTACK_DAMAGE);
+            getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.AI_SPEED);
+            getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+            getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
         }
     }
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.GIANT_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return Config.GIANT_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     // isValidLightLevel
     protected boolean K_() {
         BlockPosition pos = new BlockPosition(locX, getBoundingBox().b, locZ);
-        return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= Config.GIANT_SPAWN_LIGHT_LEVEL;
+        return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= CONFIG.SPAWN_LIGHT_LEVEL;
     }
 
     // func_205022_a
@@ -91,20 +93,17 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
     }
 
     protected void mobTick() {
-        Q = Config.GIANT_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return Config.GIANT_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger

@@ -9,7 +9,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.Ridables;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.PolarBearConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
@@ -24,6 +24,8 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
+    public static final PolarBearConfig CONFIG = new PolarBearConfig();
+
     public RidablePolarBear(World world) {
         super(world);
         moveController = new ControllerWASD(this);
@@ -49,12 +51,12 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.POLAR_BEAR_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return isStanding() ? 0 : Config.POLAR_BEAR_JUMP_POWER;
+        return isStanding() ? 0 : CONFIG.JUMP_POWER;
     }
 
     public void playWarningSound() {
@@ -62,20 +64,17 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
     }
 
     protected void mobTick() {
-        Q = Config.POLAR_BEAR_STEP_HEIGHT;
+        Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     public float getSpeed() {
-        return isStanding() ? 0 : Config.POLAR_BEAR_SPEED;
+        return isStanding() ? 0 : CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -88,7 +87,7 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
     }
 
     public boolean onSpacebar() {
-        if (Config.POLAR_BEAR_STAND && !isStanding()) {
+        if (CONFIG.STAND_ON_SPACEBAR && !isStanding()) {
             EntityPlayer rider = getRider();
             if (rider != null && rider.bj == 0 && rider.bh == 0) {
                 setStanding(true);

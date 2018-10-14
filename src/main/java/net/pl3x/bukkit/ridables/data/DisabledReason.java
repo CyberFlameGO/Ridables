@@ -9,7 +9,9 @@ import java.util.List;
 
 public enum DisabledReason {
     UNSUPPORTED_SERVER_TYPE(
-            "#                                        #"
+            "#       This server is unsupported!        #",
+            "#    Only Paper servers are supported!     #",
+            "#  Visit http://papermc.io/ for more info  #"
     ),
     UNSUPPORTED_SERVER_VERSION(
             "#       This server is unsupported!        #",
@@ -28,18 +30,10 @@ public enum DisabledReason {
         this.reason = Arrays.asList(reason);
     }
 
-    public List<String> getReason() {
-        return reason;
-    }
-
-    public void printError() {
-        printError(false);
-    }
-
-    public void printError(boolean disabling) {
+    public void printError(boolean showDisablingMessage) {
         Logger.error("############################################");
         Logger.error("#                                          #");
-        if (disabling) {
+        if (showDisablingMessage) {
             Logger.error("#     Plugin is now disabling itself!      #");
             Logger.error("#                                          #");
         }

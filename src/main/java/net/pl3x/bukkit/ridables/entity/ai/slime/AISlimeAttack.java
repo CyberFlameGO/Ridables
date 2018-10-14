@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.ai.slime;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
@@ -28,7 +29,7 @@ public class AISlimeAttack extends PathfinderGoal {
         if (target instanceof EntityHuman && ((EntityHuman) target).abilities.isInvulnerable) {
             return false;
         }
-        return !Ridables.isPaper() || (slime.canWander() && Paper.CallSlimeTargetLivingEntity(slime, target));
+        return !PaperLib.isPaper() || (slime.canWander() && Paper.CallSlimeTargetLivingEntity(slime, target));
     }
 
     // shouldContinueExecuting
@@ -46,7 +47,7 @@ public class AISlimeAttack extends PathfinderGoal {
         if (--timer <= 0) {
             return false;
         }
-        return !Ridables.isPaper() || (slime.canWander() && Paper.CallSlimeTargetLivingEntity(slime, target));
+        return !PaperLib.isPaper() || (slime.canWander() && Paper.CallSlimeTargetLivingEntity(slime, target));
     }
 
     // startExecuting

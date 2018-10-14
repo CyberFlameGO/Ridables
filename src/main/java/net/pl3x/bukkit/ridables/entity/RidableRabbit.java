@@ -14,7 +14,7 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.RecipeItemStack;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Config;
+import net.pl3x.bukkit.ridables.configuration.mob.RabbitConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.AITempt;
@@ -29,6 +29,7 @@ import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import java.lang.reflect.Field;
 
 public class RidableRabbit extends EntityRabbit implements RidableEntity {
+    public static final RabbitConfig CONFIG = new RabbitConfig();
     public static final RecipeItemStack TEMPTATION_ITEMS = RecipeItemStack.a(Items.CARROT, Items.GOLDEN_CARROT, Blocks.DANDELION);
 
     private static Field carrotTicks;
@@ -69,7 +70,7 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return Config.RABBIT_RIDABLE_IN_WATER;
+        return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
@@ -80,7 +81,7 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
         if (bj < 0) {
             r(bj * 2F);
         }
-        return Config.RABBIT_JUMP_POWER;
+        return CONFIG.JUMP_POWER;
     }
 
     public boolean isCarrotEaten() {
@@ -125,15 +126,12 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
     }
 
     public float getSpeed() {
-        return Config.RABBIT_SPEED;
+        return CONFIG.SPEED;
     }
 
     // processInteract
-    public boolean a(EntityHuman entityhuman, EnumHand enumhand) {
-        if (passengers.isEmpty() && !entityhuman.isPassenger() && !entityhuman.isSneaking()) {
-            return enumhand == EnumHand.MAIN_HAND && tryRide(entityhuman, entityhuman.b(enumhand));
-        }
-        return passengers.isEmpty() && super.a(entityhuman, enumhand);
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
@@ -164,7 +162,7 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
     }
 
     private int getRandomRabbitType() {
-        if (Config.RABBIT_SPAWN_KILLER_CHANCE > 0D && Config.RABBIT_SPAWN_KILLER_CHANCE > random.nextDouble()) {
+        if (CONFIG.KILLER_CHANCE > 0D && CONFIG.KILLER_CHANCE > random.nextDouble()) {
             return 99;
         }
         BiomeBase biome = world.getBiome(new BlockPosition(this));
