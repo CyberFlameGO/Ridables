@@ -5,7 +5,6 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
 import org.bukkit.Bukkit;
@@ -86,7 +85,7 @@ public class ControllerWASD extends ControllerMove {
             }
         }
 
-        a.o((float) (e = a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ridable.getSpeed()));
+        a.o((float) (e = ridable.getSpeed()));
         a.r(forward);
 
         f = a.bj; // forward

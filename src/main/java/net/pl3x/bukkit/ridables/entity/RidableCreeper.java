@@ -11,7 +11,6 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.MobEffect;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.mob.CreeperConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
@@ -89,10 +88,6 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
             setFuseTicks(fuse);
         }
         super.tick();
-    }
-
-    public float getSpeed() {
-        return CONFIG.SPEED;
     }
 
     // processInteract

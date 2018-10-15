@@ -12,7 +12,6 @@ import net.minecraft.server.v1_13_R2.EntityZombieVillager;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.Navigation;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.mob.ZombieVillagerConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.AIHurtByTarget;
@@ -95,10 +94,6 @@ public class RidableZombieVillager extends EntityZombieVillager implements Ridab
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
-    }
-
-    public float getSpeed() {
-        return CONFIG.SPEED;
     }
 
     // processInteract

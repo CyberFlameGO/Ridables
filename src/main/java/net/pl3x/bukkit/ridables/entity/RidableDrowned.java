@@ -19,7 +19,6 @@ import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.Navigation;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.DrownedConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
@@ -147,10 +146,6 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         }
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
-    }
-
-    public float getSpeed() {
-        return CONFIG.SPEED;
     }
 
     // processInteract

@@ -111,10 +111,6 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         super.k();
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);

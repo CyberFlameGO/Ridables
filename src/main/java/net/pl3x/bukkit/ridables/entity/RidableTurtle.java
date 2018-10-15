@@ -182,8 +182,8 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
         super.mobTick();
     }
 
-    public float getSpeed() {
-        return isInWater() ? CONFIG.SPEED_WATER : CONFIG.SPEED_LAND;
+    public double getSpeed() {
+        return getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * (isInWater() ? CONFIG.SPEED_WATER : CONFIG.SPEED_LAND);
     }
 
     // processInteract

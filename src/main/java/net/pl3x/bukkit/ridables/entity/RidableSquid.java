@@ -56,10 +56,6 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
         }
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     public boolean onSpacebar() {
         if (spacebarCooldown == 0 && hasSpecialPerm(getRider().getBukkitEntity())) {
             spacebarCooldown = CONFIG.INK_COOLDOWN;

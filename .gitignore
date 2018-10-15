@@ -19,3 +19,4 @@ target/
 .floo*
 
 dependency-reduced-pom.xml
+codealike.json

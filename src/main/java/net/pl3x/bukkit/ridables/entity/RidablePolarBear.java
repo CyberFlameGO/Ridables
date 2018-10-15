@@ -68,8 +68,8 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
         super.mobTick();
     }
 
-    public float getSpeed() {
-        return isStanding() ? 0 : CONFIG.SPEED;
+    public double getSpeed() {
+        return isStanding() ? 0 : ((RidableEntity) this).getSpeed();
     }
 
     // processInteract

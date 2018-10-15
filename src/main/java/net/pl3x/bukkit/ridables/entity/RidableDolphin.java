@@ -123,10 +123,6 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         super.mobTick();
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED * (dashing ? CONFIG.DASH_BOOST : 1);
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);

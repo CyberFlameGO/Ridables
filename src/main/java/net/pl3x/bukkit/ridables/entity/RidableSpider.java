@@ -54,10 +54,6 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
         return CONFIG.JUMP_POWER;
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);

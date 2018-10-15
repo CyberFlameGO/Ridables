@@ -19,7 +19,6 @@ import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.TagsBlock;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.mob.EndermanConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackNearest;
@@ -96,10 +95,6 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
             }
         }
         super.mobTick();
-    }
-
-    public float getSpeed() {
-        return CONFIG.SPEED;
     }
 
     // processInteract

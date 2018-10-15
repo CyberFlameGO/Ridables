@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTameableAnimal;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.SoundEffects;
@@ -43,12 +44,15 @@ public interface RidableEntity {
     }
 
     /**
-     * Get the configured speed for this entity
+     * Get the effective riding speed for this entity
+     * <p>
+     * This is the base speed multiplied by the riding speed modifier
      *
-     * @return Speed
+     * @return Riding speed
      */
-    default float getSpeed() {
-        return 0;
+    default double getSpeed() {
+        return ((EntityInsentient) this).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()
+                * ((EntityInsentient) this).getAttributeInstance(RidableType.RIDE_SPEED).getValue();
     }
 
     /**

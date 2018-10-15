@@ -64,10 +64,6 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
         }
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     @Nullable
     protected MinecraftKey getDefaultLootTable() {
         return LootTables.E;

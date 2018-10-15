@@ -71,10 +71,6 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
         super.mobTick();
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         return handleClick();
     }

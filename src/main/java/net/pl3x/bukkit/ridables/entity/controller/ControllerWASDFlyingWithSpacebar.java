@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
 import net.minecraft.server.v1_13_R2.EntityPlayer;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
@@ -22,7 +21,7 @@ public class ControllerWASDFlyingWithSpacebar extends ControllerWASD {
             forward *= 0.5F;
         }
 
-        float speed = (float) a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ridable.getSpeed();
+        float speed = (float) ridable.getSpeed();
 
         if (isJumping(rider)) {
             RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);

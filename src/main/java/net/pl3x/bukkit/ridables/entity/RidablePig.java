@@ -119,10 +119,6 @@ public class RidablePig extends EntityPig implements RidableEntity {
         }
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         if (CONFIG.GET_SADDLE_BACK && hasSaddle() && passengers.isEmpty() && player.isSneaking() && player.b(hand).isEmpty()) {

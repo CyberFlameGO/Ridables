@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityBat;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.BatConfig;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
@@ -22,6 +23,13 @@ public class RidableBat extends EntityBat implements RidableEntity {
         return RidableType.BAT;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         // bat AI is in mobTick()
@@ -34,14 +42,10 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     protected void mobTick() {
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07F * CONFIG.VERTICAL : 0.04704F - CONFIG.GRAVITY;
+            motY += bi > 0 ? 0.07D * CONFIG.VERTICAL : 0.04704D - CONFIG.GRAVITY;
             return;
         }
         super.mobTick(); // <- bat AI here instead of PathfinderGoals
-    }
-
-    public float getSpeed() {
-        return CONFIG.SPEED;
     }
 
     // processInteract

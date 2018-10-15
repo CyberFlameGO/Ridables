@@ -34,10 +34,6 @@ public class RidableCow extends EntityCow implements RidableEntity {
         return RidableType.COW;
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     // initAI - override vanilla AI
     protected void n() {
         goalSelector.a(0, new AISwim(this));

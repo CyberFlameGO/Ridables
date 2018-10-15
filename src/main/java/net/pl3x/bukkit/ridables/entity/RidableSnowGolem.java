@@ -98,10 +98,6 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
         }
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         ItemStack itemstack = player.b(hand);

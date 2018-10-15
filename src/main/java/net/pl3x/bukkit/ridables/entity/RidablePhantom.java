@@ -98,8 +98,11 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         }
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED * (onGround ? 1F : 3F);
+    public double getSpeed() {
+        if (onGround) {
+            return ((RidableEntity) this).getSpeed();
+        }
+        return ((RidableEntity) this).getSpeed() * 3F;
     }
 
     // processInteract

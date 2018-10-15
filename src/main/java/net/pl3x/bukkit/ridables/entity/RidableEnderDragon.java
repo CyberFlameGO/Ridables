@@ -75,10 +75,6 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
         super.k();
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     public boolean onSpacebar() {
         // TODO flames!
         return true;

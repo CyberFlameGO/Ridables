@@ -75,7 +75,7 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         super.mobTick();
     }
 
-    public float getSpeed() {
+    public double getSpeed() {
         return 0;
     }
 

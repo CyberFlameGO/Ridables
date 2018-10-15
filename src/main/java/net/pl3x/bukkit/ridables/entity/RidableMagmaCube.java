@@ -35,10 +35,6 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
-    public float getSpeed() {
-        return CONFIG.SPEED;
-    }
-
     protected void initAttributes() {
         super.initAttributes();
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.2D);

@@ -1,9 +1,11 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import com.google.common.collect.Maps;
+import net.minecraft.server.v1_13_R2.AttributeRanged;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityTypes;
+import net.minecraft.server.v1_13_R2.IAttribute;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
@@ -78,6 +80,8 @@ public class RidableType {
     public static final RidableType ZOMBIE_HORSE = inject(Config.ZOMBIE_HORSE_ENABLED, "zombie_horse", EntityTypes.ZOMBIE_HORSE, RidableZombieHorse.class, RidableZombieHorse::new);
     public static final RidableType ZOMBIE_PIGMAN = inject(Config.ZOMBIE_PIGMAN_ENABLED, "zombie_pigman", EntityTypes.ZOMBIE_PIGMAN, RidableZombiePigman.class, RidableZombiePigman::new);
     public static final RidableType ZOMBIE_VILLAGER = inject(Config.ZOMBIE_VILLAGER_ENABLED, "zombie_villager", EntityTypes.ZOMBIE_VILLAGER, RidableZombieVillager.class, RidableZombieVillager::new);
+
+    public static final IAttribute RIDE_SPEED = (new AttributeRanged(null, "generic.rideSpeed", 1.0D, 0.0D, 1024.0D)).a("Ride Speed").a(true);
 
     /**
      * Gets a ridable entity of the specified type
