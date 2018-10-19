@@ -77,6 +77,7 @@ public class Config {
     public static float DOLPHIN_SPEED = 1.0F;
     public static boolean DOLPHIN_BOUNCE = true;
     public static boolean DOLPHIN_BUBBLES = true;
+    public static boolean DOLPHIN_PERSISTENT = true;
     public static String DOLPHIN_SPACEBAR_MODE = "shoot";
     public static int DOLPHIN_SHOOT_COOLDOWN = 10;
     public static float DOLPHIN_SHOOT_SPEED = 1.0F;
@@ -462,6 +463,7 @@ public class Config {
         DOLPHIN_SPEED = (float) config.getDouble("dolphin.speed", 1.0D);
         DOLPHIN_BOUNCE = config.getBoolean("dolphin.bounce", true);
         DOLPHIN_BUBBLES = config.getBoolean("dolphin.bubbles", true);
+        DOLPHIN_PERSISTENT = config.getBoolean("dolphin.persistent", true);
         DOLPHIN_SPACEBAR_MODE = config.getString("dolphin.spacebar", "shoot");
         DOLPHIN_SHOOT_COOLDOWN = (int) config.getDouble("dolphin.shoot.cooldown", 10);
         DOLPHIN_SHOOT_SPEED = (float) config.getDouble("dolphin.shoot.speed", 1.0D);

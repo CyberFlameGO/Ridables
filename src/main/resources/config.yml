@@ -118,6 +118,7 @@ dolphin:
   speed: 1.0         # riding speed modifier
   bounce: true       # enable small up/down bouncing motion when still
   bubbles: true      # enable bubble trail when in motion
+  persistent: true   # set dolphin persistence
   spacebar: "shoot"  # valid options are "shoot" or "dash"
   shoot:
     cooldown: 10     # ticks to wait between shooting

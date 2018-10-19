@@ -36,7 +36,9 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
 
     public RidableDolphin(World world) {
         super(world);
-        persistent = true;
+        if (Config.DOLPHIN_PERSISTENT) {
+            persistent = true;
+        }
         aiController = moveController;
         wasdController = new ControllerWASDWater(this);
         defaultLookController = lookController;
@@ -48,7 +50,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
     }
 
     protected boolean isTypeNotPersistent() {
-        return false;
+        return !Config.DOLPHIN_PERSISTENT;
     }
 
     // canBeRiddenInWater
