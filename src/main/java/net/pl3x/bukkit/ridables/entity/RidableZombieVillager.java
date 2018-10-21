@@ -70,7 +70,7 @@ public class RidableZombieVillager extends EntityZombieVillager implements Ridab
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask

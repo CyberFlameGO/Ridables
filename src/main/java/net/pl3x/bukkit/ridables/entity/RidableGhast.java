@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityGhast;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
@@ -37,6 +38,19 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
 
     public RidableType getType() {
         return RidableType.GHAST;
+    }
+
+    public void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
@@ -102,7 +116,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
             public void run() {
                 CustomFireball fireball = new CustomFireball(world, RidableGhast.this, rider,
                         direction.getX(), direction.getY(), direction.getZ(),
-                        CONFIG.SHOOT_SPEED, CONFIG.SHOOT_DAMAGE, CONFIG.SHOOT_GRIEF);
+                        CONFIG.SHOOT_FIREBALL_SPEED, CONFIG.SHOOT_FIREBALL_DAMAGE, CONFIG.SHOOT_FIREBALL_GRIEF);
                 world.addEntity(fireball);
 
                 a(SoundEffects.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);

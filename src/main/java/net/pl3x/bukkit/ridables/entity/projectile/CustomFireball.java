@@ -22,8 +22,8 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 public class CustomFireball extends EntityLargeFireball {
     private final EntityLiving ridable;
     private final EntityPlayer rider;
-    private final float speed;
-    private final float damage;
+    private final double speed;
+    private final double damage;
     private final boolean grief;
     private int f;
 
@@ -36,8 +36,8 @@ public class CustomFireball extends EntityLargeFireball {
         this.grief = false;
     }
 
-    public CustomFireball(World world, EntityLiving ridable, EntityPlayer rider, double x, double y, double z, float speed, float damage, boolean grief) {
-        super(world, rider, x, y, z);
+    public CustomFireball(World world, EntityLiving ridable, EntityPlayer rider, double x, double y, double z, double speed, double damage, boolean grief) {
+        super(world, rider == null ? ridable : rider, x, y, z);
         this.ridable = ridable;
         this.rider = rider;
         this.speed = speed;
@@ -58,7 +58,7 @@ public class CustomFireball extends EntityLargeFireball {
     }
 
     public Player getRider() {
-        return rider.getBukkitEntity();
+        return rider == null ? null : rider.getBukkitEntity();
     }
 
     public void tick() {
@@ -108,7 +108,7 @@ public class CustomFireball extends EntityLargeFireball {
     protected void a(MovingObjectPosition mop) {
         if (mop.entity != null) {
             if (damage > 0) {
-                mop.entity.damageEntity(DamageSource.fireball(this, shooter), damage);
+                mop.entity.damageEntity(DamageSource.fireball(this, shooter), (float) damage);
                 a(shooter, mop.entity);
             }
         }

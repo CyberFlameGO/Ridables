@@ -85,13 +85,13 @@ public class CustomEvokerFangs extends EntityEvokerFangs {
         if (target.isAlive() && !target.bl() && target != owner) {
             if (owner == null) {
                 CraftEventFactory.entityDamage = this;
-                target.damageEntity(DamageSource.MAGIC, RidableEvoker.CONFIG.FANGS_DAMAGE);
+                target.damageEntity(DamageSource.MAGIC, RidableEvoker.CONFIG.RIDER_FANGS_DAMAGE);
                 CraftEventFactory.entityDamage = null;
             } else {
                 if (owner.r(target)) {
                     return;
                 }
-                target.damageEntity(DamageSource.c(this, owner), RidableEvoker.CONFIG.FANGS_DAMAGE);
+                target.damageEntity(DamageSource.c(this, owner), RidableEvoker.CONFIG.RIDER_FANGS_DAMAGE);
             }
         }
     }

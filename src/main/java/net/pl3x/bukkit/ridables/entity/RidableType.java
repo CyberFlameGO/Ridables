@@ -105,12 +105,14 @@ public class RidableType {
     private static RidableType inject(boolean enabled, String name, EntityTypes entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function, Bucket waterBucket) {
         if (enabled) {
             if (RegistryHax.injectReplacementEntityTypes(name, entityTypes, clazz, function)) {
-                Logger.info("Successfully injected replacement entity: &a" + name);
+                if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
+                    Logger.info("Successfully injected replacement entity: &a" + name);
+                }
                 RidableType ridableTypes = new RidableType(name, entityTypes, clazz, waterBucket);
                 BY_BUKKIT_TYPE.put(EntityType.fromName(name), ridableTypes);
                 return ridableTypes;
             }
-        } else {
+        } else if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
             Logger.info("Skipping disabled entity: &a" + name);
         }
         return null;

@@ -12,6 +12,7 @@ import net.minecraft.server.v1_13_R2.EntitySheep;
 import net.minecraft.server.v1_13_R2.EntityVillager;
 import net.minecraft.server.v1_13_R2.EnumDirection;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
@@ -62,6 +63,19 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         return RidableType.EVOKER;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         goalSelector.a(0, new AISwim(this));
@@ -74,8 +88,8 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         goalSelector.a(9, new AIWatchClosest(this, EntityHuman.class, 3.0F, 1.0F));
         goalSelector.a(10, new AIWatchClosest(this, EntityInsentient.class, 8.0F));
         targetSelector.a(1, new AIHurtByTarget(this, true, EntityEvoker.class));
-        targetSelector.a(2, (new AIAttackNearest<>(this, EntityHuman.class, true)).b(300)); // setUnseenMemoryTicks
-        targetSelector.a(3, (new AIAttackNearest<>(this, EntityVillager.class, false)).b(300)); // setUnseenMemoryTicks
+        targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true).b(300)); // setUnseenMemoryTicks
+        targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false).b(300)); // setUnseenMemoryTicks
         targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, false));
     }
 
@@ -86,7 +100,7 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     public int getSpellTicks() {
@@ -161,7 +175,7 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
      * @return True if spell was successfully cast
      */
     public boolean castSpell(EntityPlayer rider, boolean circle) {
-        spellCooldown = CONFIG.FANGS_COOLDOWN;
+        spellCooldown = CONFIG.RIDER_FANGS_COOLDOWN;
 
         if (rider == null) {
             return false;

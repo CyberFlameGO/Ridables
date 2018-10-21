@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityHorseAbstract;
 import net.minecraft.server.v1_13_R2.EntityHorseSkeleton;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.PathfinderGoalHorseTrap;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.SkeletonHorseConfig;
@@ -30,6 +31,21 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
 
     public RidableType getType() {
         return RidableType.SKELETON_HORSE;
+    }
+
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        if (CONFIG.JUMP_POWER > 0.0D) {
+            getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
+        }
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
     }
 
     // initAI - override vanilla AI

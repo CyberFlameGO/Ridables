@@ -5,7 +5,9 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
 import org.bukkit.Bukkit;
 
@@ -21,7 +23,7 @@ public class ControllerWASD extends ControllerMove {
         this.ridable = ridable;
     }
 
-    EntityPlayer updateRider() {
+    private EntityPlayer updateRider() {
         if (a.passengers.isEmpty()) {
             return rider = null;
         }
@@ -85,7 +87,9 @@ public class ControllerWASD extends ControllerMove {
             }
         }
 
-        a.o((float) (e = ridable.getSpeed()));
+        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDE_SPEED).getValue();
+
+        a.o((float) e); // speed
         a.r(forward);
 
         f = a.bj; // forward
@@ -116,18 +120,6 @@ public class ControllerWASD extends ControllerMove {
             return jumping.getBoolean(entity);
         } catch (IllegalAccessException ignore) {
             return false;
-        }
-    }
-
-    /**
-     * Reset the jump flag for an entity
-     *
-     * @param entity Entity to reset
-     */
-    public static void resetJumping(EntityLiving entity) {
-        try {
-            jumping.set(entity, false);
-        } catch (IllegalAccessException ignore) {
         }
     }
 }

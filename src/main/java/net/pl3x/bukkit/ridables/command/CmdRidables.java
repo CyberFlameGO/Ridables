@@ -3,8 +3,10 @@ package net.pl3x.bukkit.ridables.command;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.util.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -39,16 +41,25 @@ public class CmdRidables implements TabExecutor {
         }
 
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+            Lang.send(sender, Lang.RELOADING_CONFIG);
             Config.reload();
+
+            Lang.send(sender, Lang.RELOADING_LANG);
             Lang.reload();
 
+            Lang.send(sender, Lang.RELOADING_MOB_CONFIGS);
             RidableType.BY_BUKKIT_TYPE.forEach((bukkit, ridable) -> {
                 if (ridable.getConfig() != null) {
                     ridable.getConfig().reload();
                 }
             });
 
-            Lang.send(sender, "&e[&3Ridables&e]&a Reloaded configs");
+            Lang.send(sender, Lang.RELOADING_MOB_ATTRIBUTES);
+            Bukkit.getWorlds().forEach(world -> world.getEntities().stream()
+                    .filter(entity -> entity instanceof RidableEntity)
+                    .forEach(entity -> ((RidableEntity) entity).reloadAttributes()));
+
+            Lang.send(sender, Lang.RELOAD_COMPLETE);
             return true;
         }
 

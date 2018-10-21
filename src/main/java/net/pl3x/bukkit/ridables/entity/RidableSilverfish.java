@@ -64,7 +64,7 @@ public class RidableSilverfish extends EntitySilverfish implements RidableEntity
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {

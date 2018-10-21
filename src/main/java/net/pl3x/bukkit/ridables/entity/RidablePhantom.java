@@ -98,13 +98,6 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         }
     }
 
-    public double getSpeed() {
-        if (onGround) {
-            return ((RidableEntity) this).getSpeed();
-        }
-        return ((RidableEntity) this).getSpeed() * 3F;
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);

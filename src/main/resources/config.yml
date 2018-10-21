@@ -1,8 +1,5 @@
-########################################################################
-#                                                                      #
-#   Standard Plugin Options                                            #
-#                                                                      #
-########################################################################
+# Config format version (do not change this!)
+config: 2
 
 # Language file (for translations)
 language-file: lang-en.yml
@@ -10,20 +7,21 @@ language-file: lang-en.yml
 # Debug mode. Enable this before reporting any issues, please
 debug-mode: false
 
+# Hide the "spammy" startup console output about entity injectors
+hide-startup-console-output: false
+
 # Enabled the update checker (does NOT actually download updates!)
 update-checker: true
 
-########################################################################
-#                                                                      #
-#   Global Creature Options                                            #
-#                                                                      #
-########################################################################
-
-# Use the new WASD key yaw calculations
-use-new-wasd-yaw-calculations: true
-
 # While player is riding a creature, disable all commands for them
 cancel-commands-while-riding: false
+
+# Commands allowed (or disallowed) to be used while riding a mob
+commands-list-is-whitelist: true  # Use false for blacklist
+commands-list:
+- "whisper"
+- "msg"
+- "pm"
 
 # Require saddle in hand to mount a ridable creature
 # Does not work for creatures that are naturally mountable
@@ -38,6 +36,7 @@ allow-ride-babies: false
 # Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
 flying-max-y: 256
 
+# Enable mobs here
 mobs:
   bat: false
   blaze: false

@@ -3,10 +3,14 @@ package net.pl3x.bukkit.ridables.listener;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.RidableBlaze;
 import net.pl3x.bukkit.ridables.entity.RidableCreeper;
 import net.pl3x.bukkit.ridables.entity.RidableEnderDragon;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.entity.RidableGhast;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
@@ -47,7 +51,34 @@ public class RidableListener implements Listener {
     }
 
     @EventHandler
-    public void onExplosionDamageEntity(EntityDamageByEntityEvent event) {
+    public void onFireballExplosionDamageEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager().getType() != EntityType.FIREBALL) {
+            return; // not a fireball
+        }
+
+        net.minecraft.server.v1_13_R2.Entity nmsEntity = ((CraftEntity) event.getDamager()).getHandle();
+        if (!(nmsEntity instanceof CustomFireball)) {
+            return; // not our custom fireball
+        }
+
+        CustomFireball fireball = (CustomFireball) nmsEntity;
+        if (fireball.getEntity() instanceof RidableGhast) {
+            if (fireball.getRider() == null) {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.AI_FIREBALL_EXPLOSION_DAMAGE);
+            } else {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.SHOOT_FIREBALL_EXPLOSION_DAMAGE);
+            }
+        } else if (fireball.getEntity() instanceof RidableBlaze) {
+            if (fireball.getRider() == null) {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableBlaze.CONFIG.AI_SHOOT_EXPLOSION_DAMAGE);
+            } else {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableBlaze.CONFIG.RIDING_SHOOT_EXPLOSION_DAMAGE);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
         RidableEntity ridable = RidableType.getRidable(event.getDamager());
         if (ridable == null) {
             return; // not caused by a ridable

@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityHorseAbstract;
 import net.minecraft.server.v1_13_R2.EntityHorseMule;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.MuleConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
@@ -26,6 +27,21 @@ public class RidableMule extends EntityHorseMule implements RidableEntity {
 
     public RidableType getType() {
         return RidableType.MULE;
+    }
+
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
+        if (CONFIG.MAX_HEALTH > 0.0D) {
+            getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        }
     }
 
     // initAI - override vanilla AI

@@ -75,10 +75,6 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         super.mobTick();
     }
 
-    public double getSpeed() {
-        return 0;
-    }
-
     // processInteract
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);

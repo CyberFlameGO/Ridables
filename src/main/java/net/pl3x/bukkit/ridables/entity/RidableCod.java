@@ -34,6 +34,18 @@ public class RidableCod extends EntityCod implements RidableEntity {
         return RidableType.COD;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         // from EntityFish
@@ -68,7 +80,7 @@ public class RidableCod extends EntityCod implements RidableEntity {
             }
         }
         if (cP() && this.isInWater()) {
-            a(strafe, vertical, forward, rider == null ? 0.01F : getSpeed());
+            a(strafe, vertical, forward, rider == null ? 0.01F : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue());
             move(EnumMoveType.SELF, motX, motY, motZ);
             motX *= 0.8999999761581421D;
             motY *= 0.8999999761581421D;

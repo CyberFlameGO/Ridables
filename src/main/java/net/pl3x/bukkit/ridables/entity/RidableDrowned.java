@@ -60,6 +60,20 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         return RidableType.DROWNED;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         // from EntityZombie
@@ -119,7 +133,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask

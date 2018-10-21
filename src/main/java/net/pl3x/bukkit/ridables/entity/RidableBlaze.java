@@ -5,6 +5,7 @@ import net.minecraft.server.v1_13_R2.EntityBlaze;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Lang;
@@ -39,6 +40,20 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         return RidableType.BLAZE;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         goalSelector.a(4, new AIBlazeFireballAttack(this));
@@ -53,7 +68,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     protected void mobTick() {
@@ -61,7 +76,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
             shootCooldown--;
         }
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07F * CONFIG.VERTICAL : 0.04704F - CONFIG.GRAVITY;
+            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY;
         }
         super.mobTick();
     }
@@ -99,7 +114,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        shootCooldown = CONFIG.SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.RIDING_SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
@@ -114,7 +129,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 1, 0));
 
         CustomFireball fireball = new CustomFireball(world, this, rider, direction.getX(), direction.getY(), direction.getZ(),
-                CONFIG.SHOOT_SPEED, CONFIG.SHOOT_DAMAGE, CONFIG.SHOOT_GRIEF);
+                CONFIG.RIDING_SHOOT_SPEED, CONFIG.RIDING_SHOOT_IMPACT_DAMAGE, CONFIG.RIDING_SHOOT_GRIEF);
         world.addEntity(fireball);
 
         a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F);

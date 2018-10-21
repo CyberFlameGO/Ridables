@@ -22,6 +22,21 @@ public enum DisabledReason {
             "#        All entities are disabled!        #",
             "#  Please follow the instructions on wiki  #",
             "#          http://git.io/ridables          #"
+    ),
+    PLUGIN_DETECTED_RELOAD(
+            "#                 Uh Oh!!                  #",
+            "#                                          #",
+            "#     Plugin reload has been detected      #",
+            "#   Reloading Ridables is NOT supported!   #"
+    ),
+    SERVER_SHUTTING_DOWN(
+            "#     Plugin reload has been detected      #",
+            "#   Reloading Ridables is NOT supported!   #",
+            "#                                          #",
+            "#    Server will be forced to shut down    #",
+            "#    now to prevent any possible damage!   #",
+            "#                                          #",
+            "#     You were warned not to do that..     #"
     );
 
     private List<String> reason;

@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTropicalFish;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IEntitySelector;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.TropicalFishConfig;
@@ -62,7 +63,7 @@ public class RidableTropicalFish extends EntityTropicalFish implements RidableEn
             }
         }
         if (cP() && this.isInWater()) {
-            a(strafe, vertical, forward, rider == null ? 0.01F : getSpeed());
+            a(strafe, vertical, forward, rider == null ? 0.01F : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue());
             move(EnumMoveType.SELF, motX, motY, motZ);
             motX *= 0.8999999761581421D;
             motY *= 0.8999999761581421D;

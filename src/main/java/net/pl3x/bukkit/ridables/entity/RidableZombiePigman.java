@@ -73,7 +73,7 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask

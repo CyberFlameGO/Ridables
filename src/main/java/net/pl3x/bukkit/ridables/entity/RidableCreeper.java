@@ -9,6 +9,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityOcelot;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MobEffect;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.CreeperConfig;
@@ -42,6 +43,20 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         return RidableType.CREEPER;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         goalSelector.a(1, new AISwim(this));
@@ -62,7 +77,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return isIgnited() ? 0 : CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : (isIgnited() ? 0 : CONFIG.JUMP_POWER);
     }
 
     protected void mobTick() {

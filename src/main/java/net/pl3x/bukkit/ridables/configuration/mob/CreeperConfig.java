@@ -3,10 +3,14 @@ package net.pl3x.bukkit.ridables.configuration.mob;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
 
 public class CreeperConfig extends MobConfig {
-    public float SPEED = 1.0F;
+    public double BASE_SPEED = 0.25D;
+    public double RIDE_SPEED = 1.0D;
+    public double MAX_HEALTH = 20.0D;
     public float JUMP_POWER = 0.5F;
     public float STEP_HEIGHT = 0.6F;
     public boolean RIDABLE_IN_WATER = true;
+    public double AI_ATTACK_DAMAGE = 6.0D;
+    public double AI_FOLLOW_RANGE = 48.0D;
     public float EXPLOSION_DAMAGE = 5.0F;
     public int EXPLOSION_RADIUS = 3;
     public boolean EXPLOSION_GRIEF = true;
@@ -21,20 +25,28 @@ public class CreeperConfig extends MobConfig {
 
         if (firstLoad) {
             firstLoad = false;
-            addDefault("speed", SPEED);
+            addDefault("base-speed", BASE_SPEED);
+            addDefault("ride-speed", RIDE_SPEED);
+            addDefault("max-health", MAX_HEALTH);
             addDefault("jump-power", JUMP_POWER);
             addDefault("step-height", STEP_HEIGHT);
             addDefault("ride-in-water", RIDABLE_IN_WATER);
+            addDefault("ai.attack-damage", AI_ATTACK_DAMAGE);
+            addDefault("ai.follow-range", AI_FOLLOW_RANGE);
             addDefault("explosion.damage", EXPLOSION_DAMAGE);
             addDefault("explosion.radius", EXPLOSION_RADIUS);
             addDefault("explosion.grief", EXPLOSION_GRIEF);
             save();
         }
 
-        SPEED = (float) getDouble("speed");
+        BASE_SPEED = getDouble("base-speed");
+        RIDE_SPEED = getDouble("ride-speed");
+        MAX_HEALTH = getDouble("max-health");
         JUMP_POWER = (float) getDouble("jump-power");
         STEP_HEIGHT = (float) getDouble("step-height");
         RIDABLE_IN_WATER = getBoolean("ride-in-water");
+        AI_ATTACK_DAMAGE = getDouble("ai.attack-damage");
+        AI_FOLLOW_RANGE = getDouble("ai.follow-range");
         EXPLOSION_DAMAGE = (float) getDouble("explosion.damage");
         EXPLOSION_RADIUS = (int) getDouble("explosion.radius");
         EXPLOSION_GRIEF = getBoolean("explosion.grief");

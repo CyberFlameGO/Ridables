@@ -22,6 +22,12 @@ public class Lang {
     public static String WATER_BUCKET_NAME;
     public static final List<String> WATER_BUCKET_LORE = new ArrayList<>();
 
+    public static String RELOADING_CONFIG = "&e[&3Ridables&e]&a Reloading config.yml...";
+    public static String RELOADING_LANG = "&e[&3Ridables&e]&a Reloading language file...";
+    public static String RELOADING_MOB_CONFIGS = "&e[&3Ridables&e]&a Reloading mob configs...";
+    public static String RELOADING_MOB_ATTRIBUTES = "&e[&3Ridables&e]&a Reloading mob attributes...";
+    public static String RELOAD_COMPLETE = "&e[&3Ridables&e]&a Reload complete.";
+
     /**
      * Reload the language file from disk
      */
@@ -48,6 +54,12 @@ public class Lang {
         for (String line : lore.split("\n")) {
             WATER_BUCKET_LORE.add(ChatColor.translateAlternateColorCodes('&', line));
         }
+
+        RELOADING_CONFIG = config.getString("reload.config", "&e[&3Ridables&e]&a Reloading config.yml...");
+        RELOADING_LANG = config.getString("reload.lang", "&e[&3Ridables&e]&a Reloading language file...");
+        RELOADING_MOB_CONFIGS = config.getString("reload.mob-configs", "&e[&3Ridables&e]&a Reloading mob configs...");
+        RELOADING_MOB_ATTRIBUTES = config.getString("reload.mob-attributes", "&e[&3Ridables&e]&a Reloading mob attributes...");
+        RELOAD_COMPLETE = config.getString("reload.complete", "&e[&3Ridables&e]&a Reload complete.");
     }
 
     /**

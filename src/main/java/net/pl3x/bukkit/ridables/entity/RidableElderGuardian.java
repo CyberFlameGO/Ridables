@@ -35,11 +35,12 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
         return RidableType.ELDER_GUARDIAN;
     }
 
-    public void initAttributes() {
-        super.initAttributes();
-        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.30000001192092896D);
-        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(8.0D);
-        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(80.0D);
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // canBeRiddenInWater

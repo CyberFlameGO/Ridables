@@ -5,6 +5,7 @@ import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityCow;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.RecipeItemStack;
 import net.minecraft.server.v1_13_R2.World;
@@ -34,6 +35,18 @@ public class RidableCow extends EntityCow implements RidableEntity {
         return RidableType.COW;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         goalSelector.a(0, new AISwim(this));
@@ -53,7 +66,7 @@ public class RidableCow extends EntityCow implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {

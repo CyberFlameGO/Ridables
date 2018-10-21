@@ -102,7 +102,7 @@
                 <configuration>
                     <artifactSet>
                         <includes>
-                            <include>io.papermc.lib:paperlib**</include>
+                            <include>io.papermc:paperlib**</include>
                             <include>co.aikar:minecraft-timings**</include>
                             <include>org.inventivetalent.spiget-update:bukkit**</include>
                         </includes>

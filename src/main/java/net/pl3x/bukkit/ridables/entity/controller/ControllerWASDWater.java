@@ -1,7 +1,10 @@
 package net.pl3x.bukkit.ridables.entity.controller;
 
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
 import org.bukkit.Bukkit;
 
@@ -31,7 +34,9 @@ public class ControllerWASDWater extends ControllerWASD {
             }
         }
 
-        a.o((float) (e = ridable.getSpeed()));
+        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDE_SPEED).getValue();
+
+        a.o((float) e);
         a.s(vertical * 1.5F);
         a.t(strafe);
         a.r(forward);

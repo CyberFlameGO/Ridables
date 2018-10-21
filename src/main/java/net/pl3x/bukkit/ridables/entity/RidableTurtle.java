@@ -107,7 +107,7 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     public BlockPosition getHome() {
@@ -180,10 +180,6 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
             motY += 0.005D;
         }
         super.mobTick();
-    }
-
-    public double getSpeed() {
-        return getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * (isInWater() ? CONFIG.SPEED_WATER : CONFIG.SPEED_LAND);
     }
 
     // processInteract

@@ -3,14 +3,23 @@ package net.pl3x.bukkit.ridables.configuration.mob;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
 
 public class BlazeConfig extends MobConfig {
-    public float SPEED = 1.0F;
-    public float VERTICAL = 0.5F;
-    public float GRAVITY = 0.04F;
-    public boolean RIDABLE_IN_WATER = true;
-    public int SHOOT_COOLDOWN = 20;
-    public float SHOOT_SPEED = 1.0F;
-    public float SHOOT_DAMAGE = 5.0F;
-    public boolean SHOOT_GRIEF = true;
+    public double BASE_SPEED = 0.23D;
+    public double MAX_HEALTH = 20.0D;
+    public double AI_MELEE_DAMAGE = 6.0D;
+    public double AI_FOLLOW_RANGE = 48.0D;
+    public double AI_SHOOT_SPEED = 1.0D;
+    public double AI_SHOOT_IMPACT_DAMAGE = 6.0D;
+    public double AI_SHOOT_EXPLOSION_DAMAGE = 17.0D;
+    public boolean AI_SHOOT_GRIEF = true;
+    public double RIDING_SPEED = 1.0D;
+    public double RIDING_VERTICAL = 0.5D;
+    public double RIDING_GRAVITY = 0.04D;
+    public boolean RIDING_RIDE_IN_WATER = true;
+    public int RIDING_SHOOT_COOLDOWN = 20;
+    public double RIDING_SHOOT_SPEED = 1.0D;
+    public double RIDING_SHOOT_IMPACT_DAMAGE = 5.0D;
+    public double RIDING_SHOOT_EXPLOSION_DAMAGE = 10.0D;
+    public boolean RIDING_SHOOT_GRIEF = true;
 
     public BlazeConfig() {
         super("blaze.yml");
@@ -22,24 +31,42 @@ public class BlazeConfig extends MobConfig {
 
         if (firstLoad) {
             firstLoad = false;
-            addDefault("speed", SPEED);
-            addDefault("vertical", VERTICAL);
-            addDefault("gravity", GRAVITY);
-            addDefault("ride-in-water", RIDABLE_IN_WATER);
-            addDefault("shoot.cooldown", SHOOT_COOLDOWN);
-            addDefault("shoot.speed", SHOOT_SPEED);
-            addDefault("shoot.damage", SHOOT_DAMAGE);
-            addDefault("shoot.grief", SHOOT_GRIEF);
+            addDefault("base-speed", BASE_SPEED);
+            addDefault("max-health", MAX_HEALTH);
+            addDefault("ai.melee-damage", AI_MELEE_DAMAGE);
+            addDefault("ai.follow-range", AI_FOLLOW_RANGE);
+            addDefault("ai.shoot.speed", AI_SHOOT_SPEED);
+            addDefault("ai.shoot.impact-damage", AI_SHOOT_IMPACT_DAMAGE);
+            addDefault("ai.shoot.explosion-damage", AI_SHOOT_EXPLOSION_DAMAGE);
+            addDefault("ai.shoot.grief", AI_SHOOT_GRIEF);
+            addDefault("riding.speed", RIDING_SPEED);
+            addDefault("riding.vertical", RIDING_VERTICAL);
+            addDefault("riding.gravity", RIDING_GRAVITY);
+            addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("riding.shoot.cooldown", RIDING_SHOOT_COOLDOWN);
+            addDefault("riding.shoot.speed", RIDING_SHOOT_SPEED);
+            addDefault("riding.shoot.impact-damage", RIDING_SHOOT_IMPACT_DAMAGE);
+            addDefault("riding.shoot.explosion-damage", RIDING_SHOOT_EXPLOSION_DAMAGE);
+            addDefault("riding.shoot.grief", RIDING_SHOOT_GRIEF);
             save();
         }
 
-        SPEED = (float) getDouble("speed");
-        VERTICAL = (float) getDouble("vertical");
-        GRAVITY = (float) getDouble("gravity");
-        RIDABLE_IN_WATER = getBoolean("ride-in-water");
-        SHOOT_COOLDOWN = (int) getDouble("shoot.cooldown");
-        SHOOT_SPEED = (float) getDouble("shoot.speed");
-        SHOOT_DAMAGE = (float) getDouble("shoot.damage");
-        SHOOT_GRIEF = getBoolean("shoot.grief");
+        BASE_SPEED = getDouble("base-speed");
+        MAX_HEALTH = getDouble("max-health");
+        AI_MELEE_DAMAGE = getDouble("ai.melee-damage");
+        AI_FOLLOW_RANGE = getDouble("ai.follow-range");
+        AI_SHOOT_SPEED = getDouble("ai.shoot.speed");
+        AI_SHOOT_IMPACT_DAMAGE = getDouble("ai.shoot.impact-damage");
+        AI_SHOOT_EXPLOSION_DAMAGE = getDouble("ai.shoot.explosion-damage");
+        AI_SHOOT_GRIEF = getBoolean("ai.shoot.grief");
+        RIDING_SPEED = getDouble("riding.speed");
+        RIDING_VERTICAL = getDouble("riding.vertical");
+        RIDING_GRAVITY = getDouble("riding.gravity");
+        RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
+        RIDING_SHOOT_COOLDOWN = (int) getDouble("riding.shoot.cooldown");
+        RIDING_SHOOT_SPEED = getDouble("riding.shoot.speed");
+        RIDING_SHOOT_IMPACT_DAMAGE = getDouble("riding.shoot.impact-damage");
+        RIDING_SHOOT_EXPLOSION_DAMAGE = getDouble("riding.shoot.explosion-damage");
+        RIDING_SHOOT_GRIEF = getBoolean("riding.shoot.grief");
     }
 }

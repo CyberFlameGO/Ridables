@@ -25,7 +25,12 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
@@ -37,12 +42,12 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     protected void mobTick() {
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07D * CONFIG.VERTICAL : 0.04704D - CONFIG.GRAVITY;
+            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY;
             return;
         }
         super.mobTick(); // <- bat AI here instead of PathfinderGoals

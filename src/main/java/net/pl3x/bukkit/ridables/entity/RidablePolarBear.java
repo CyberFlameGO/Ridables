@@ -56,7 +56,7 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return isStanding() ? 0 : CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : (isStanding() ? 0 : CONFIG.JUMP_POWER);
     }
 
     public void playWarningSound() {
@@ -66,10 +66,6 @@ public class RidablePolarBear extends EntityPolarBear implements RidableEntity {
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
-    }
-
-    public double getSpeed() {
-        return isStanding() ? 0 : ((RidableEntity) this).getSpeed();
     }
 
     // processInteract

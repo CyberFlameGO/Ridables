@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityEnderDragon;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
@@ -27,6 +28,18 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     public RidableType getType() {
         return RidableType.ENDER_DRAGON;
+    }
+
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
 
     // canBeRiddenInWater
@@ -51,7 +64,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
             moveController.a(); // ender dragon doesnt use the controller so call manually
 
-            a(-bh, bi, -bj, getSpeed() * 0.1F); // moveRelative
+            a(-bh, bi, -bj, getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue() * 0.1F); // moveRelative
             move(EnumMoveType.PLAYER, motX, motY, motZ);
 
             motX *= 0.9F;

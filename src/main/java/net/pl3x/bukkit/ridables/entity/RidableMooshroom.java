@@ -52,7 +52,7 @@ public class RidableMooshroom extends EntityMushroomCow implements RidableEntity
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {

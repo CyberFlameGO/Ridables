@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLlama;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.LlamaConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIAttackRanged;
@@ -48,6 +49,21 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
         return RidableType.LLAMA;
     }
 
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
+        if (CONFIG.MAX_HEALTH > 0.0D) {
+            getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        }
+    }
+
     // initAI - override vanilla AI
     protected void n() {
         goalSelector.a(0, new AISwim(this));
@@ -71,7 +87,8 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        //return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return super.cG(); // TODO
     }
 
     public boolean didSpit() {

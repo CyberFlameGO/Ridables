@@ -60,7 +60,7 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     public int getSpellTicks() {

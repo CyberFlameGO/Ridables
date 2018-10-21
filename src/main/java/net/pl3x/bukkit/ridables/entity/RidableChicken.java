@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityChicken;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityItem;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
@@ -44,8 +45,16 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         return RidableType.CHICKEN;
     }
 
-    protected boolean isTypeNotPersistent() {
-        return isChickenJockey();
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
 
     // initAI - override vanilla AI
@@ -74,6 +83,10 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         nbttagcompound.setInt("EggLayTime", timeUntilNextEgg);
     }
 
+    protected boolean isTypeNotPersistent() {
+        return isChickenJockey();
+    }
+
     // canBeRiddenInWater
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
@@ -81,7 +94,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     protected void mobTick() {

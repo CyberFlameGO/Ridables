@@ -28,6 +28,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static net.pl3x.bukkit.ridables.data.DisabledReason.SERVER_SHUTTING_DOWN;
+
 public class Ridables extends JavaPlugin {
     private static Ridables instance;
 
@@ -41,6 +43,13 @@ public class Ridables extends JavaPlugin {
     public void onLoad() {
         Config.reload();
         Lang.reload();
+
+        if (System.getProperty("RidablesAlreadyLoaded") != null && System.getProperty("RidablesAlreadyLoaded").equals("true")) {
+            disabledReason = DisabledReason.PLUGIN_DETECTED_RELOAD;
+            disabledReason.printError(false);
+            return;
+        }
+        System.setProperty("RidablesAlreadyLoaded", "true");
 
         // TODO
         // change to Paper only (eventually)
@@ -90,6 +99,11 @@ public class Ridables extends JavaPlugin {
         UpdateListener.checkForUpdate();
 
         if (disabledReason != null) {
+            if (disabledReason == DisabledReason.PLUGIN_DETECTED_RELOAD) {
+                SERVER_SHUTTING_DOWN.printError(false);
+                Bukkit.shutdown();
+                return;
+            }
             disabledReason.printError(true);
             return;
         }

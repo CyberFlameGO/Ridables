@@ -9,6 +9,7 @@ import java.io.File;
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
     public static boolean DEBUG_MODE = false;
+    public static boolean HIDE_STARTUP_CONSOLE_OUTPUT = false;
 
     public static boolean CHECK_FOR_UPDATES = true;
 
@@ -100,6 +101,7 @@ public class Config {
 
         LANGUAGE_FILE = config.getString("language-file", "lang-en.yml");
         DEBUG_MODE = config.getBoolean("debug-mode", false);
+        HIDE_STARTUP_CONSOLE_OUTPUT = config.getBoolean("hide-startup-console-output", false);
 
         CHECK_FOR_UPDATES = config.getBoolean("update-checker", true);
 
@@ -111,7 +113,7 @@ public class Config {
         FLYING_MAX_Y = (int) config.getDouble("flying-max-y", 256D);
 
         ConfigurationSection mobs = config.getConfigurationSection("mobs");
-        BAT_ENABLED = mobs.getBoolean("bat", false);
+        BAT_ENABLED = config.getBoolean("bat.enabled", false);
         BLAZE_ENABLED = mobs.getBoolean("blaze", false);
         CAVE_SPIDER_ENABLED = mobs.getBoolean("cave_spider", false);
         CHICKEN_ENABLED = mobs.getBoolean("chicken", false);

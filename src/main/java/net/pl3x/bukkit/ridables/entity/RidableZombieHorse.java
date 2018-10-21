@@ -6,8 +6,9 @@ import net.minecraft.server.v1_13_R2.EntityHorseAbstract;
 import net.minecraft.server.v1_13_R2.EntityHorseZombie;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.mob.SkeletonHorseConfig;
+import net.pl3x.bukkit.ridables.configuration.mob.ZombieHorseConfig;
 import net.pl3x.bukkit.ridables.entity.ai.AIBreed;
 import net.pl3x.bukkit.ridables.entity.ai.AIFollowParent;
 import net.pl3x.bukkit.ridables.entity.ai.AILookIdle;
@@ -18,7 +19,7 @@ import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.horse.AIHorseBucking;
 
 public class RidableZombieHorse extends EntityHorseZombie implements RidableEntity {
-    public static final SkeletonHorseConfig CONFIG = new SkeletonHorseConfig();
+    public static final ZombieHorseConfig CONFIG = new ZombieHorseConfig();
 
     public RidableZombieHorse(World world) {
         super(world);
@@ -26,6 +27,21 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
 
     public RidableType getType() {
         return RidableType.ZOMBIE_HORSE;
+    }
+
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED);
+        reloadAttributes();
+    }
+
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        if (CONFIG.JUMP_POWER > 0.0D) {
+            getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
+        }
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
     }
 
     // initAI - override vanilla AI

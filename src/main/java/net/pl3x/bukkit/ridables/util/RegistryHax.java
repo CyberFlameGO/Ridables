@@ -12,7 +12,6 @@ import net.minecraft.server.v1_13_R2.EnumCreatureType;
 import net.minecraft.server.v1_13_R2.IRegistry;
 import net.minecraft.server.v1_13_R2.MinecraftKey;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.BiomeData;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
@@ -47,7 +46,9 @@ public class RegistryHax {
         Map<Object, Type<?>> dataTypes = (Map<Object, Type<?>>) DataConverterRegistry.a().getSchema(15190).findChoiceType(DataConverterTypes.n).types();
         dataTypes.put("minecraft:" + name, dataTypes.get("minecraft:" + extend_from));
         EntityTypes.a(name, EntityTypes.a.a(clazz, function));
-        Logger.info("Successfully injected new entity: &a" + name);
+        if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
+            Logger.info("Successfully injected new entity: &a" + name);
+        }
     }
 
     public static boolean injectReplacementEntityTypes(String name, EntityTypes<?> entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function) {
@@ -72,7 +73,9 @@ public class RegistryHax {
             if (RidableGiant.CONFIG.SPAWN_BIOMES.isEmpty()) {
                 Logger.error("Giant is configured to spawn naturally in biomes, but no biomes are set!");
             } else {
-                Logger.info("Adding Giant to spawn naturally in biomes");
+                if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
+                    Logger.info("Adding Giant to spawn naturally in biomes");
+                }
                 RidableGiant.CONFIG.SPAWN_BIOMES.forEach(data -> injectSpawn(data, EntityTypes.GIANT));
             }
         }
@@ -80,7 +83,9 @@ public class RegistryHax {
             if (RidableIllusioner.CONFIG.SPAWN_BIOMES.isEmpty()) {
                 Logger.error("Illusioner is configured to spawn naturally in biomes, but no biomes are set!");
             } else {
-                Logger.info("Adding Illusioner to spawn naturally in biomes");
+                if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
+                    Logger.info("Adding Illusioner to spawn naturally in biomes");
+                }
                 RidableIllusioner.CONFIG.SPAWN_BIOMES.forEach(data -> injectSpawn(data, EntityTypes.ILLUSIONER));
             }
         }
