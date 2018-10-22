@@ -62,13 +62,13 @@ public class RidableListener implements Listener {
         }
 
         CustomFireball fireball = (CustomFireball) nmsEntity;
-        if (fireball.getEntity() instanceof RidableGhast) {
+        if (fireball.getRidable() instanceof RidableGhast) {
             if (fireball.getRider() == null) {
                 event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.AI_FIREBALL_EXPLOSION_DAMAGE);
             } else {
                 event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.SHOOT_FIREBALL_EXPLOSION_DAMAGE);
             }
-        } else if (fireball.getEntity() instanceof RidableBlaze) {
+        } else if (fireball.getRidable() instanceof RidableBlaze) {
             if (fireball.getRider() == null) {
                 event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableBlaze.CONFIG.AI_SHOOT_EXPLOSION_DAMAGE);
             } else {

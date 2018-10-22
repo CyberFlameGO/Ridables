@@ -8,6 +8,7 @@ import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.entity.RidableBlaze;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
+import net.pl3x.bukkit.ridables.event.BlazeShootFireballEvent;
 
 public class AIBlazeFireballAttack extends PathfinderGoal {
     private final RidableBlaze blaze;
@@ -81,7 +82,9 @@ public class AIBlazeFireballAttack extends PathfinderGoal {
                                 RidableBlaze.CONFIG.AI_SHOOT_IMPACT_DAMAGE,
                                 RidableBlaze.CONFIG.AI_SHOOT_GRIEF);
                         fireball.locY = blaze.locY + (double) (blaze.length / 2.0F) + 0.5D;
-                        blaze.world.addEntity(fireball);
+                        if (new BlazeShootFireballEvent(blaze, fireball).callEvent()) {
+                            blaze.world.addEntity(fireball);
+                        }
                     }
                 }
             }

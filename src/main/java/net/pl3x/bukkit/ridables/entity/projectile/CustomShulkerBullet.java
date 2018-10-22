@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 
-public class CustomShulkerBullet extends EntityShulkerBullet implements IProjectile {
+public class CustomShulkerBullet extends EntityShulkerBullet implements IProjectile, CustomProjectile {
     private final RidableShulker shulker;
     private final EntityPlayer rider;
     private int life;
@@ -37,12 +37,16 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         this.rider = rider;
     }
 
-    public Shulker getShulker() {
-        return (Shulker) shulker.getBukkitEntity();
+    public RidableShulker getRidable() {
+        return shulker;
+    }
+
+    public Shulker getMob() {
+        return shulker == null ? null : (Shulker) shulker.getBukkitEntity();
     }
 
     public Player getRider() {
-        return rider.getBukkitEntity();
+        return rider == null ? null : rider.getBukkitEntity();
     }
 
     public void tick() {

@@ -31,6 +31,7 @@ import net.pl3x.bukkit.ridables.entity.ai.dolphin.AIDolphinWaterJump;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
+import net.pl3x.bukkit.ridables.event.DolphinSpitEvent;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.util.Vector;
@@ -179,8 +180,12 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
 
         DolphinSpit spit = new DolphinSpit(world, this, rider);
         spit.shoot(target.getX() - locX, target.getY() - locY, target.getZ() - locZ, CONFIG.SHOOT_SPEED, 5.0F);
-        world.addEntity(spit);
 
+        if (!new DolphinSpitEvent(this, spit).callEvent()) {
+            return false; // cancelled
+        }
+
+        world.addEntity(spit);
         a(SoundEffects.ENTITY_DOLPHIN_ATTACK, 1.0F, 1.0F);
         return true;
     }

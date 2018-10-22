@@ -39,7 +39,7 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
@@ -61,12 +61,12 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.RIDING_JUMP_POWER;
     }
 
     // processInteract
@@ -81,14 +81,19 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // isOnLadder
     public boolean z_() {
-        return getRider() == null ? l() : CONFIG.CLIMB_WALLS && l(); // isBesideClimbableBlock
+        return getRider() == null ? l() : CONFIG.RIDING_CLIMB_WALLS && l(); // isBesideClimbableBlock
     }
 
     // travel
     public void a(float strafe, float vertical, float forward) {
         super.a(strafe, vertical, forward);
         if (positionChanged && z_() && getRider() != null) { // isOnLadder
-            motY = 0.2D * CONFIG.CLIMB_SPEED;
+            motY = 0.2D * CONFIG.RIDING_CLIMB_SPEED;
         }
+    }
+
+    public boolean onClick() {
+        // TODO shoot webs
+        return false;
     }
 }

@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class CustomEvokerFangs extends EntityEvokerFangs {
+public class CustomEvokerFangs extends EntityEvokerFangs implements CustomProjectile {
     private static Field a;
     private static Field b;
     private static Field c;
@@ -45,12 +45,16 @@ public class CustomEvokerFangs extends EntityEvokerFangs {
         this.rider = rider;
     }
 
-    public Evoker getEvoker() {
-        return (Evoker) evoker.getBukkitEntity();
+    public RidableEvoker getRidable() {
+        return evoker;
+    }
+
+    public Evoker getMob() {
+        return evoker == null ? null : (Evoker) evoker.getBukkitEntity();
     }
 
     public Player getRider() {
-        return rider.getBukkitEntity();
+        return rider == null ? null : rider.getBukkitEntity();
     }
 
     public void tick() {

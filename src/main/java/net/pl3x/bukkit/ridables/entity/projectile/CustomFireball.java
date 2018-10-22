@@ -11,21 +11,22 @@ import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Explosive;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-public class CustomFireball extends EntityLargeFireball {
-    private final EntityLiving ridable;
+public class CustomFireball extends EntityLargeFireball implements CustomProjectile {
+    private final RidableEntity ridable;
     private final EntityPlayer rider;
     private final double speed;
     private final double damage;
     private final boolean grief;
-    private int f;
+    private int ticksAlive;
 
     public CustomFireball(World world) {
         super(world);
@@ -36,15 +37,15 @@ public class CustomFireball extends EntityLargeFireball {
         this.grief = false;
     }
 
-    public CustomFireball(World world, EntityLiving ridable, EntityPlayer rider, double x, double y, double z, double speed, double damage, boolean grief) {
-        super(world, rider == null ? ridable : rider, x, y, z);
+    public CustomFireball(World world, RidableEntity ridable, EntityPlayer rider, double x, double y, double z, double speed, double damage, boolean grief) {
+        super(world, rider == null ? (EntityLiving) ridable : rider, x, y, z);
         this.ridable = ridable;
         this.rider = rider;
         this.speed = speed;
         this.damage = damage;
         this.grief = grief;
 
-        setPositionRotation(ridable.locX, ridable.locY, ridable.locZ, ridable.yaw, ridable.pitch);
+        setPositionRotation(shooter.locX, shooter.locY, shooter.locZ, shooter.yaw, shooter.pitch);
         setPosition(locX, locY, locZ);
 
         double d3 = (double) MathHelper.sqrt(x * x + y * y + z * z);
@@ -53,8 +54,12 @@ public class CustomFireball extends EntityLargeFireball {
         this.dirZ = z / d3 * 0.1D;
     }
 
-    public LivingEntity getEntity() {
-        return (LivingEntity) ridable.getBukkitEntity();
+    public RidableEntity getRidable() {
+        return ridable;
+    }
+
+    public Mob getMob() {
+        return ridable == null ? null : (Mob) ridable.getBukkitEntity();
     }
 
     public Player getRider() {
@@ -69,7 +74,7 @@ public class CustomFireball extends EntityLargeFireball {
         setFlag(6, bc());
         W();
         setOnFire(1);
-        MovingObjectPosition mop = ProjectileHelper.a(this, true, ++f >= 25, shooter);
+        MovingObjectPosition mop = ProjectileHelper.a(this, true, ++ticksAlive >= 25, shooter);
         if (mop != null && mop.entity != null) {
             if (mop.entity == ridable || mop.entity == rider) {
                 mop = null; // dont hit self

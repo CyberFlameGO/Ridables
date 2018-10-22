@@ -16,8 +16,10 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
 import net.pl3x.bukkit.ridables.entity.RidablePhantom;
+import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Player;
 
-public class PhantomFlames extends EntityLlamaSpit implements IProjectile {
+public class PhantomFlames extends EntityLlamaSpit implements IProjectile, CustomProjectile {
     private RidablePhantom phantom;
     private EntityHuman rider;
     private int life;
@@ -35,6 +37,18 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile {
                 phantom.locY + (double) phantom.getHeadHeight() - 0.5000000149011612D,
                 phantom.locZ + (double) (phantom.width + 1.0F) * 0.5D * (double) MathHelper.cos(phantom.aQ * 0.017453292F));
         setInvisible(true);
+    }
+
+    public RidablePhantom getRidable() {
+        return phantom;
+    }
+
+    public Phantom getMob() {
+        return phantom == null ? null : (Phantom) phantom.getBukkitEntity();
+    }
+
+    public Player getRider() {
+        return rider == null ? null : (Player) rider.getBukkitEntity();
     }
 
     public void tick() {

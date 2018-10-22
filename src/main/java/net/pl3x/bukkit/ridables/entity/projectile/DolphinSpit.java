@@ -16,10 +16,12 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
 import net.pl3x.bukkit.ridables.entity.RidableDolphin;
+import org.bukkit.entity.Dolphin;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class DolphinSpit extends EntityLlamaSpit implements IProjectile {
+public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomProjectile {
     private RidableDolphin dolphin;
     private EntityHuman rider;
     private NBTTagCompound nbt;
@@ -37,6 +39,18 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile {
         setPosition(dolphin.locX - (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.sin(dolphin.aQ * 0.017453292F),
                 dolphin.locY + (double) dolphin.getHeadHeight() - 0.5000000149011612D,
                 dolphin.locZ + (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.cos(dolphin.aQ * 0.017453292F));
+    }
+
+    public RidableDolphin getRidable() {
+        return dolphin;
+    }
+
+    public Dolphin getMob() {
+        return dolphin == null ? null : (Dolphin) dolphin.getBukkitEntity();
+    }
+
+    public Player getRider() {
+        return rider == null ? null : (Player) rider.getBukkitEntity();
     }
 
     public void tick() {

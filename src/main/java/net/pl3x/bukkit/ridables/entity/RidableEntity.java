@@ -250,4 +250,8 @@ public interface RidableEntity {
     default boolean onClick(EnumHand hand) {
         return false;
     }
+
+    default boolean onClick() {
+        return false;
+    }
 }

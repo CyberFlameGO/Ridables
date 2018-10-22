@@ -52,6 +52,11 @@ public class ClickListener implements Listener {
             return;
         }
 
+        if (ridable.onClick()) {
+            event.setCancelled(true);
+            return;
+        }
+
         boolean cancel = false;
         switch (event.getAction()) {
             case LEFT_CLICK_BLOCK:
@@ -103,7 +108,7 @@ public class ClickListener implements Listener {
             return;
         }
 
-        if (ridable.onClick(clicked, EnumHand.OFF_HAND)) {
+        if (ridable.onClick() || ridable.onClick(clicked, EnumHand.OFF_HAND)) {
             event.setCancelled(true);
         }
     }
@@ -138,7 +143,7 @@ public class ClickListener implements Listener {
             return;
         }
 
-        if (ridable.onClick(clicked, EnumHand.MAIN_HAND)) {
+        if (ridable.onClick() || ridable.onClick(clicked, EnumHand.MAIN_HAND)) {
             event.setCancelled(true);
         }
     }

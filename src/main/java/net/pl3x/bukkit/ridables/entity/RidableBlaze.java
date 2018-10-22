@@ -20,6 +20,7 @@ import net.pl3x.bukkit.ridables.entity.ai.blaze.AIBlazeFireballAttack;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDFlyingWithSpacebar;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
+import net.pl3x.bukkit.ridables.event.BlazeShootFireballEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
@@ -130,8 +131,12 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
         CustomFireball fireball = new CustomFireball(world, this, rider, direction.getX(), direction.getY(), direction.getZ(),
                 CONFIG.RIDING_SHOOT_SPEED, CONFIG.RIDING_SHOOT_IMPACT_DAMAGE, CONFIG.RIDING_SHOOT_GRIEF);
-        world.addEntity(fireball);
 
+        if (!new BlazeShootFireballEvent(this, fireball).callEvent()) {
+            return false; // cancelled
+        }
+
+        world.addEntity(fireball);
         a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F);
 
         return true;

@@ -23,7 +23,6 @@ import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableDrowned;
 import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.entity.Drowned;
@@ -32,7 +31,7 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
-public class CustomThrownTrident extends EntityThrownTrident {
+public class CustomThrownTrident extends EntityThrownTrident implements CustomProjectile {
     private static Field az;
     private static Field aB;
     private static Field ax;
@@ -70,12 +69,16 @@ public class CustomThrownTrident extends EntityThrownTrident {
         setShooter(rider);
     }
 
-    public Drowned getDrowned() {
-        return (Drowned) drowned.getBukkitEntity();
+    public RidableDrowned getRidable() {
+        return drowned;
+    }
+
+    public Drowned getMob() {
+        return drowned == null ? null : (Drowned) drowned.getBukkitEntity();
     }
 
     public Player getRider() {
-        return rider.getBukkitEntity();
+        return rider == null ? null : rider.getBukkitEntity();
     }
 
     public void tick() {

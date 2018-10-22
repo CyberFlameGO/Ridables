@@ -12,7 +12,6 @@ import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableWither;
 import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
@@ -22,7 +21,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-public class CustomWitherSkull extends EntityWitherSkull {
+public class CustomWitherSkull extends EntityWitherSkull implements CustomProjectile {
     private RidableWither wither;
     private EntityPlayer rider;
     private int f;
@@ -37,12 +36,16 @@ public class CustomWitherSkull extends EntityWitherSkull {
         this.rider = rider;
     }
 
-    public Wither getWither() {
-        return (Wither) wither.getBukkitEntity();
+    public RidableWither getRidable() {
+        return wither;
+    }
+
+    public Wither getMob() {
+        return wither == null ? null : (Wither) wither.getBukkitEntity();
     }
 
     public Player getRider() {
-        return rider.getBukkitEntity();
+        return rider == null ? null : rider.getBukkitEntity();
     }
 
     public void tick() {
