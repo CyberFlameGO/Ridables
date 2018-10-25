@@ -42,7 +42,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         return RidableType.CHICKEN;
     }
 
-    protected boolean isTypeNotPersistent() {
+    public boolean isTypeNotPersistent() {
         return isChickenJockey();
     }
 

@@ -190,9 +190,9 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         do {
             if (!world.q(pos) && world.q(pos.down())) { // !isTopSolid(pos) && isTopSolid(pos.down())
                 double yOffset = 0.0D;
-                if (!world.isEmpty(pos)) { // !world.isAirBlock
-                    VoxelShape shape = world.getType(pos).h(world, pos); // blockState.getCollisionShape
-                    if (!shape.b()) { // !isEmpty
+                if (!world.isEmpty(pos)) {
+                    VoxelShape shape = world.getType(pos).getCollisionShape(world, pos);
+                    if (!shape.isEmpty()) {
                         yOffset = shape.c(EnumDirection.EnumAxis.Y); // shape.getEnd
                     }
                 }

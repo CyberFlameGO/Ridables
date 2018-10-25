@@ -365,7 +365,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
                 return false;
             } else {
                 Vec3D vec3d = entityhuman.f(1.0F).a();
-                Vec3D vec3d1 = new Vec3D(enderman.locX - entityhuman.locX, enderman.getBoundingBox().b + (double) enderman.getHeadHeight() - (entityhuman.locY + (double) entityhuman.getHeadHeight()), enderman.locZ - entityhuman.locZ);
+                Vec3D vec3d1 = new Vec3D(enderman.locX - entityhuman.locX, enderman.getBoundingBox().minY + (double) enderman.getHeadHeight() - (entityhuman.locY + (double) entityhuman.getHeadHeight()), enderman.locZ - entityhuman.locZ);
                 double d0 = vec3d1.b();
                 vec3d1 = vec3d1.a();
                 double d1 = vec3d.b(vec3d1);

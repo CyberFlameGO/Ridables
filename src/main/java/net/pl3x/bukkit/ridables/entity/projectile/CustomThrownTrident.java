@@ -94,8 +94,8 @@ public class CustomThrownTrident extends EntityThrownTrident {
         BlockPosition pos = new BlockPosition(tileX, tileY, tileZ);
         IBlockData blockState = world.getType(pos);
         if (!blockState.isAir() && !flag) {
-            VoxelShape voxelshape = blockState.h(world, pos);
-            if (!voxelshape.b()) {
+            VoxelShape voxelshape = blockState.getCollisionShape(world, pos);
+            if (!voxelshape.isEmpty()) {
                 for (AxisAlignedBB aabb : voxelshape.d()) {
                     if (aabb.a(pos).b(new Vec3D(locX, locY, locZ))) {
                         inGround = true;

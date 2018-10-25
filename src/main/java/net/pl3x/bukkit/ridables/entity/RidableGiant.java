@@ -53,7 +53,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // isValidLightLevel
     protected boolean K_() {
-        BlockPosition pos = new BlockPosition(locX, getBoundingBox().b, locZ);
+        BlockPosition pos = new BlockPosition(locX, getBoundingBox().minY, locZ);
         return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= Config.GIANT_SPAWN_LIGHT_LEVEL;
     }
 
@@ -64,7 +64,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // canSpawn
     public boolean a(GeneratorAccess world) {
-        return super.a(world) && a(new BlockPosition(locX, getBoundingBox().b, locZ), world) >= 0.0F;
+        return super.a(world) && a(new BlockPosition(locX, getBoundingBox().minY, locZ), world) >= 0.0F;
     }
 
     protected void mobTick() {

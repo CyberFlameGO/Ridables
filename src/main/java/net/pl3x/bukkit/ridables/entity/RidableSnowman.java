@@ -48,7 +48,7 @@ public class RidableSnowman extends EntitySnowman implements RidableEntity {
         return RidableType.SNOWMAN;
     }
 
-    protected boolean isTypeNotPersistent() {
+    public boolean isTypeNotPersistent() {
         return false;
     }
 

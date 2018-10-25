@@ -178,7 +178,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
             if (rider != null && rider.bj == 0 && rider.bh == 0 && hasSpecialPerm(rider.getBukkitEntity())) {
-                setIgnited(true);
+                ignite(true);
                 return true;
             }
         }
@@ -203,7 +203,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     }
 
     public void disarm() {
-        setIgnited(false);
+        ignite(false);
         a(-1); // setSwellState
     }
 
@@ -212,7 +212,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
      *
      * @param ignited Ignited state to set
      */
-    public void setIgnited(boolean ignited) {
+    public void ignite(boolean ignited) {
         if (ignited) {
             dB();
         } else {
@@ -256,7 +256,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
             spawnCloud();
         } else {
             setFuseTicks(0);
-            setIgnited(false);
+            ignite(false);
         }
     }
 

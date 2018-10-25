@@ -38,7 +38,7 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
     }
 
     @Override
-    protected boolean isTypeNotPersistent() {
+    public boolean isTypeNotPersistent() {
         return false;
     }
 

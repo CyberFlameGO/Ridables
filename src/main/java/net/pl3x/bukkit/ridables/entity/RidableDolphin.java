@@ -49,7 +49,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         return RidableType.DOLPHIN;
     }
 
-    protected boolean isTypeNotPersistent() {
+    public boolean isTypeNotPersistent() {
         return !Config.DOLPHIN_PERSISTENT;
     }
 
