@@ -55,9 +55,9 @@ public class CmdRidables implements TabExecutor {
             });
 
             Lang.send(sender, Lang.RELOADING_MOB_ATTRIBUTES);
-            Bukkit.getWorlds().forEach(world -> world.getEntities().stream()
-                    .filter(entity -> entity instanceof RidableEntity)
-                    .forEach(entity -> ((RidableEntity) entity).reloadAttributes()));
+            //Bukkit.getWorlds().forEach(world -> world.getEntities().stream()
+                    //.filter(entity -> entity instanceof RidableEntity)
+                    //.forEach(entity -> ((RidableEntity) entity).reloadAttributes()));
 
             Lang.send(sender, Lang.RELOAD_COMPLETE);
             return true;

@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
-import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.AxisAlignedBB;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
@@ -24,7 +23,7 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.RidableDrowned;
-import net.pl3x.bukkit.ridables.hook.Paper;
+import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
 
@@ -96,8 +95,8 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
         BlockPosition pos = new BlockPosition(tileX, tileY, tileZ);
         IBlockData blockState = world.getType(pos);
         if (!blockState.isAir() && !flag) {
-            VoxelShape voxelshape = blockState.h(world, pos);
-            if (!voxelshape.b()) {
+            VoxelShape voxelshape = blockState.getCollisionShape(world, pos);
+            if (!voxelshape.isEmpty()) {
                 for (AxisAlignedBB aabb : voxelshape.d()) {
                     if (aabb.a(pos).b(new Vec3D(locX, locY, locZ))) {
                         inGround = true;
@@ -149,7 +148,7 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
                     mop = null;
                 }
             }
-            if (mop != null && mop.entity != null && PaperLib.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
+            if (mop != null && mop.entity != null && CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
                 mop = null;
             }
             if (mop != null && !flag) {

@@ -15,7 +15,7 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     public RidableBat(World world) {
         super(world);
-        moveController = new ControllerWASDFlyingWithSpacebar(this);
+        moveController = new ControllerWASDFlyingWithSpacebar(this, 0.2D);
         lookController = new LookController(this);
     }
 
@@ -25,7 +25,7 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
@@ -47,7 +47,7 @@ public class RidableBat extends EntityBat implements RidableEntity {
 
     protected void mobTick() {
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY;
+            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY; // moveVertical
             return;
         }
         super.mobTick(); // <- bat AI here instead of PathfinderGoals

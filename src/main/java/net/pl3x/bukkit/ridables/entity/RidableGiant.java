@@ -54,12 +54,17 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
         }
     }
 
-    protected void initAttributes() {
+    public void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        reloadAttributes();
+        setHealth(CONFIG.AI_HEALTH);
+    }
+
+    public void reloadAttributes() {
         super.initAttributes();
         if (CONFIG.AI_ENABLED) {
             getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.AI_HEALTH);
-            setHealth(CONFIG.AI_HEALTH);
-
             getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.AI_SPEED);
             getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
             getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
@@ -78,7 +83,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // isValidLightLevel
     protected boolean K_() {
-        BlockPosition pos = new BlockPosition(locX, getBoundingBox().b, locZ);
+        BlockPosition pos = new BlockPosition(locX, getBoundingBox().minY, locZ);
         return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= CONFIG.SPAWN_LIGHT_LEVEL;
     }
 
@@ -89,7 +94,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     // canSpawn
     public boolean a(GeneratorAccess world) {
-        return super.a(world) && a(new BlockPosition(locX, getBoundingBox().b, locZ), world) >= 0.0F;
+        return super.a(world) && a(new BlockPosition(locX, getBoundingBox().minY, locZ), world) >= 0.0F;
     }
 
     protected void mobTick() {

@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityBlaze;
 import net.minecraft.server.v1_13_R2.EntityHuman;
@@ -33,7 +34,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     public RidableBlaze(World world) {
         super(world);
-        moveController = new ControllerWASDFlyingWithSpacebar(this);
+        moveController = new ControllerWASDFlyingWithSpacebar(this, 0.5D);
         lookController = new LookController(this);
     }
 
@@ -43,7 +44,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
@@ -77,7 +78,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
             shootCooldown--;
         }
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY;
+            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY; // moveVertical
         }
         super.mobTick();
     }
@@ -131,13 +132,16 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
         CustomFireball fireball = new CustomFireball(world, this, rider, direction.getX(), direction.getY(), direction.getZ(),
                 CONFIG.RIDING_SHOOT_SPEED, CONFIG.RIDING_SHOOT_IMPACT_DAMAGE, CONFIG.RIDING_SHOOT_GRIEF);
+        fireball.isIncendiary = CONFIG.RIDING_SHOOT_EXPLOSION_FIRE;
 
         if (!new BlazeShootFireballEvent(this, fireball).callEvent()) {
             return false; // cancelled
         }
 
         world.addEntity(fireball);
-        a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F);
+
+        world.triggerEffect(1018, new BlockPosition(locX, locY, locZ), 0);
+        a(SoundEffects.ENTITY_BLAZE_SHOOT, 1.0F, 1.0F); // playSound
 
         return true;
     }

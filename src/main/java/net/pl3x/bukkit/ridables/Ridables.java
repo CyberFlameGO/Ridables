@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables;
 
-import io.papermc.lib.PaperLib;
-import net.pl3x.bukkit.ridables.bstats.Metrics;
+import net.minecraft.server.v1_13_R2.Biomes;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
@@ -14,10 +13,8 @@ import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
 import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
-import net.pl3x.bukkit.ridables.hook.PlugMan;
 import net.pl3x.bukkit.ridables.listener.ClickListener;
 import net.pl3x.bukkit.ridables.listener.RidableListener;
-import net.pl3x.bukkit.ridables.listener.UpdateListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
@@ -44,24 +41,31 @@ public class Ridables extends JavaPlugin {
         Config.reload();
         Lang.reload();
 
+        // Paper only
+        try {
+            Class.forName("com.destroystokyo.paper.PaperConfig");
+        } catch (ClassNotFoundException e) {
+            disabledReason = DisabledReason.UNSUPPORTED_SERVER_TYPE;
+            disabledReason.printError(false);
+            return;
+        }
+
+        // 1.13.2 only!
+        try {
+            Class.forName("net.minecraft.server.v1_13_R2.Entity"); // 1.13.1 and 1.13.2
+            Biomes.class.getDeclaredField("OCEAN"); // deobfuscated in 1.13.2
+        } catch (ClassNotFoundException | NoSuchFieldException e) {
+            disabledReason = DisabledReason.UNSUPPORTED_SERVER_VERSION;
+            disabledReason.printError(false);
+            return;
+        }
+
         if (System.getProperty("RidablesAlreadyLoaded") != null && System.getProperty("RidablesAlreadyLoaded").equals("true")) {
             disabledReason = DisabledReason.PLUGIN_DETECTED_RELOAD;
             disabledReason.printError(false);
             return;
         }
         System.setProperty("RidablesAlreadyLoaded", "true");
-
-        // TODO
-        // change to Paper only (eventually)
-
-        // 1.13.1 only!
-        try {
-            Class.forName("net.minecraft.server.v1_13_R2.Entity");
-        } catch (ClassNotFoundException e) {
-            disabledReason = DisabledReason.UNSUPPORTED_SERVER_VERSION;
-            disabledReason.printError(false);
-            return;
-        }
 
         // setup creatures by calling something in the class
         RidableType.getRidableType(EntityType.DOLPHIN);
@@ -88,15 +92,11 @@ public class Ridables extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new Metrics(this).addCustomChart(new Metrics.SimplePie("server_type", () -> PaperLib.getEnvironment().getName()));
-
-        PaperLib.suggestPaper(this);
-
         if (Bukkit.getPluginManager().isPluginEnabled("PlugMan")) {
-            PlugMan.configurePlugMan();
+            Logger.warn("PlugMan is detected to be installed!");
+            com.rylinaux.plugman.PlugMan.getInstance().getIgnoredPlugins().add("Ridables");
+            Logger.warn("Forcing PlugMan to ignore Ridables");
         }
-
-        UpdateListener.checkForUpdate();
 
         if (disabledReason != null) {
             if (disabledReason == DisabledReason.PLUGIN_DETECTED_RELOAD) {
@@ -108,7 +108,6 @@ public class Ridables extends JavaPlugin {
             return;
         }
 
-        getServer().getPluginManager().registerEvents(new UpdateListener(), this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
         getServer().getPluginManager().registerEvents(new RidableListener(), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(), this);

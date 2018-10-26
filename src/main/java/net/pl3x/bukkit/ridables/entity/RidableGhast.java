@@ -42,7 +42,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
 
     public void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 

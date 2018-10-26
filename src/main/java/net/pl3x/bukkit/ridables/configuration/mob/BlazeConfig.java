@@ -10,6 +10,7 @@ public class BlazeConfig extends MobConfig {
     public double AI_SHOOT_SPEED = 1.0D;
     public double AI_SHOOT_IMPACT_DAMAGE = 6.0D;
     public double AI_SHOOT_EXPLOSION_DAMAGE = 17.0D;
+    public boolean AI_SHOOT_EXPLOSION_FIRE = true;
     public boolean AI_SHOOT_GRIEF = true;
     public double RIDING_SPEED = 1.0D;
     public double RIDING_VERTICAL = 0.5D;
@@ -19,6 +20,7 @@ public class BlazeConfig extends MobConfig {
     public double RIDING_SHOOT_SPEED = 1.0D;
     public double RIDING_SHOOT_IMPACT_DAMAGE = 5.0D;
     public double RIDING_SHOOT_EXPLOSION_DAMAGE = 10.0D;
+    public boolean RIDING_SHOOT_EXPLOSION_FIRE = false;
     public boolean RIDING_SHOOT_GRIEF = true;
 
     public BlazeConfig() {
@@ -38,6 +40,7 @@ public class BlazeConfig extends MobConfig {
             addDefault("ai.shoot.speed", AI_SHOOT_SPEED);
             addDefault("ai.shoot.impact-damage", AI_SHOOT_IMPACT_DAMAGE);
             addDefault("ai.shoot.explosion-damage", AI_SHOOT_EXPLOSION_DAMAGE);
+            addDefault("ai.shoot.explosion-fire", AI_SHOOT_EXPLOSION_FIRE);
             addDefault("ai.shoot.grief", AI_SHOOT_GRIEF);
             addDefault("riding.speed", RIDING_SPEED);
             addDefault("riding.vertical", RIDING_VERTICAL);
@@ -47,6 +50,7 @@ public class BlazeConfig extends MobConfig {
             addDefault("riding.shoot.speed", RIDING_SHOOT_SPEED);
             addDefault("riding.shoot.impact-damage", RIDING_SHOOT_IMPACT_DAMAGE);
             addDefault("riding.shoot.explosion-damage", RIDING_SHOOT_EXPLOSION_DAMAGE);
+            addDefault("riding.shoot.explosion-fire", RIDING_SHOOT_EXPLOSION_FIRE);
             addDefault("riding.shoot.grief", RIDING_SHOOT_GRIEF);
             save();
         }
@@ -58,6 +62,7 @@ public class BlazeConfig extends MobConfig {
         AI_SHOOT_SPEED = getDouble("ai.shoot.speed");
         AI_SHOOT_IMPACT_DAMAGE = getDouble("ai.shoot.impact-damage");
         AI_SHOOT_EXPLOSION_DAMAGE = getDouble("ai.shoot.explosion-damage");
+        AI_SHOOT_EXPLOSION_FIRE = getBoolean("ai.shoot.explosion-fire");
         AI_SHOOT_GRIEF = getBoolean("ai.shoot.grief");
         RIDING_SPEED = getDouble("riding.speed");
         RIDING_VERTICAL = getDouble("riding.vertical");
@@ -67,6 +72,7 @@ public class BlazeConfig extends MobConfig {
         RIDING_SHOOT_SPEED = getDouble("riding.shoot.speed");
         RIDING_SHOOT_IMPACT_DAMAGE = getDouble("riding.shoot.impact-damage");
         RIDING_SHOOT_EXPLOSION_DAMAGE = getDouble("riding.shoot.explosion-damage");
+        RIDING_SHOOT_EXPLOSION_FIRE = getBoolean("riding.shoot.explosion-fire");
         RIDING_SHOOT_GRIEF = getBoolean("riding.shoot.grief");
     }
 }

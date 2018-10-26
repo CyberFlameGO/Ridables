@@ -58,7 +58,7 @@ public class AIBlazeFireballAttack extends PathfinderGoal {
             blaze.getControllerMove().a(target.locX, target.locY, target.locZ, 1.0D);
         } else if (distance < g() * g()) {
             double x = target.locX - blaze.locX;
-            double y = target.getBoundingBox().b + (double) (target.length / 2.0F) - (blaze.locY + (double) (blaze.length / 2.0F));
+            double y = target.getBoundingBox().minY + (double) (target.length / 2.0F) - (blaze.locY + (double) (blaze.length / 2.0F));
             double z = target.locZ - blaze.locZ;
             if (attackTime <= 0) {
                 ++attackStep;
@@ -82,6 +82,7 @@ public class AIBlazeFireballAttack extends PathfinderGoal {
                                 RidableBlaze.CONFIG.AI_SHOOT_IMPACT_DAMAGE,
                                 RidableBlaze.CONFIG.AI_SHOOT_GRIEF);
                         fireball.locY = blaze.locY + (double) (blaze.length / 2.0F) + 0.5D;
+                        fireball.isIncendiary = RidableBlaze.CONFIG.AI_SHOOT_EXPLOSION_FIRE;
                         if (new BlazeShootFireballEvent(blaze, fireball).callEvent()) {
                             blaze.world.addEntity(fireball);
                         }

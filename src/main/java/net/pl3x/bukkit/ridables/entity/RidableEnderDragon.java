@@ -32,7 +32,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 

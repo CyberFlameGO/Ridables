@@ -62,7 +62,7 @@ public class AIDrownedGoToWater extends PathfinderGoal {
     @Nullable
     private BlockPosition findWater() {
         Random rand = entity.getRandom();
-        BlockPosition pos = new BlockPosition(entity.locX, entity.getBoundingBox().b, entity.locZ);
+        BlockPosition pos = new BlockPosition(entity.locX, entity.getBoundingBox().minY, entity.locZ);
         for (int i = 0; i < 10; ++i) {
             BlockPosition randPos = pos.a(rand.nextInt(20) - 10, 2 - rand.nextInt(8), rand.nextInt(20) - 10);
             if (world.getType(randPos).getBlock() == Blocks.WATER) {

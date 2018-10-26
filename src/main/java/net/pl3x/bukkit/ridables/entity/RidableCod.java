@@ -21,7 +21,7 @@ import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishSwim;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
-public class RidableCod extends EntityCod implements RidableEntity {
+public class RidableCod extends EntityCod implements RidableEntity, RidableFishSchool {
     public static final CodConfig CONFIG = new CodConfig();
 
     public RidableCod(World world) {
@@ -36,12 +36,12 @@ public class RidableCod extends EntityCod implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
@@ -62,6 +62,10 @@ public class RidableCod extends EntityCod implements RidableEntity {
         return true;
     }
 
+    public boolean isFollowing() {
+        return dy();
+    }
+
     // onLivingUpdate
     public void k() {
         if (getRider() != null) {
@@ -72,24 +76,25 @@ public class RidableCod extends EntityCod implements RidableEntity {
 
     // travel
     public void a(float strafe, float vertical, float forward) {
+        /*double speed = 0.01D;
         EntityPlayer rider = getRider();
-        if (rider != null) {
-            if (!isInWater()) {
-                forward = rider.bj;
-                strafe = rider.bh;
-            }
+        if (rider != null && !isInWater()) {
+            System.out.println("ding");
+            forward = rider.bj;
+            strafe = rider.bh;
+            speed = getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue();
         }
-        if (cP() && this.isInWater()) {
-            a(strafe, vertical, forward, rider == null ? 0.01F : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue());
+        if (cP() && isInWater()) { // isServerWorld
+            a(strafe, vertical, forward, speed); // moveRelative
             move(EnumMoveType.SELF, motX, motY, motZ);
-            motX *= 0.8999999761581421D;
-            motY *= 0.8999999761581421D;
-            motZ *= 0.8999999761581421D;
+            motX *= 0.9D;
+            motY *= 0.9D;
+            motZ *= 0.9D;
             if (getGoalTarget() == null) {
                 motY -= 0.005D;
             }
             return;
-        }
+        }*/
         super.a(strafe, vertical, forward);
     }
 
@@ -115,13 +120,12 @@ public class RidableCod extends EntityCod implements RidableEntity {
             if (fish.a(TagsFluid.WATER)) {
                 fish.motY += 0.005D;
             }
-            if (this.h == ControllerMove.Operation.MOVE_TO && !fish.getNavigation().p()) {
+            if (h == ControllerMove.Operation.MOVE_TO && !fish.getNavigation().p()) {
                 double x = b - fish.locX;
                 double y = c - fish.locY;
                 double z = d - fish.locZ;
                 y /= (double) MathHelper.sqrt(x * x + y * y + z * z);
-                fish.yaw = a(fish.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F);
-                fish.aQ = fish.yaw;
+                fish.aQ = fish.yaw = a(fish.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F);
                 fish.o(fish.cK() + ((float) (e * fish.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()) - fish.cK()) * 0.125F);
                 fish.motY += (double) fish.cK() * y * 0.1D;
             } else {

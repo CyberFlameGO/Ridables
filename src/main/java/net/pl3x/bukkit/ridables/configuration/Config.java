@@ -113,7 +113,7 @@ public class Config {
         FLYING_MAX_Y = (int) config.getDouble("flying-max-y", 256D);
 
         ConfigurationSection mobs = config.getConfigurationSection("mobs");
-        BAT_ENABLED = config.getBoolean("bat.enabled", false);
+        BAT_ENABLED = mobs.getBoolean("bat", false);
         BLAZE_ENABLED = mobs.getBoolean("blaze", false);
         CAVE_SPIDER_ENABLED = mobs.getBoolean("cave_spider", false);
         CHICKEN_ENABLED = mobs.getBoolean("chicken", false);
@@ -122,9 +122,9 @@ public class Config {
         CREEPER_ENABLED = mobs.getBoolean("creeper", false);
         DOLPHIN_ENABLED = mobs.getBoolean("dolphin", false);
         DONKEY_ENABLED = mobs.getBoolean("donkey", false);
-        ENDER_DRAGON_ENABLED = mobs.getBoolean("ender_dragon", false);
         DROWNED_ENABLED = mobs.getBoolean("drowned", false);
         ELDER_GUARDIAN_ENABLED = mobs.getBoolean("elder_guardian", false);
+        ENDER_DRAGON_ENABLED = mobs.getBoolean("ender_dragon", false);
         ENDERMAN_ENABLED = mobs.getBoolean("enderman", false);
         ENDERMITE_ENABLED = mobs.getBoolean("endermite", false);
         EVOKER_ENABLED = mobs.getBoolean("evoker", false);

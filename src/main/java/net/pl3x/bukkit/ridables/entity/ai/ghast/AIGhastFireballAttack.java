@@ -48,7 +48,7 @@ public class AIGhastFireballAttack extends PathfinderGoal {
                 ghast.world.a(null, 1016, new BlockPosition(ghast), 0); // playEvent
                 CustomFireball fireball = new CustomFireball(ghast.world, ghast, null,
                         target.locX - (ghast.locX + vec3d.x * 4.0D),
-                        target.getBoundingBox().b + (double) (target.length / 2.0F) - (0.5D + ghast.locY + (double) (ghast.length / 2.0F)),
+                        target.getBoundingBox().minY + (double) (target.length / 2.0F) - (0.5D + ghast.locY + (double) (ghast.length / 2.0F)),
                         target.locZ - (ghast.locZ + vec3d.z * 4.0D),
                         RidableGhast.CONFIG.AI_FIREBALL_SPEED,
                         RidableGhast.CONFIG.AI_FIREBALL_DAMAGE,

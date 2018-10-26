@@ -1,11 +1,10 @@
 package net.pl3x.bukkit.ridables.entity.ai.enderman;
 
-import io.papermc.lib.PaperLib;
+import com.destroystokyo.paper.event.entity.EndermanEscapeEvent;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.PathfinderGoalNearestAttackableTarget;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableEnderman;
-import net.pl3x.bukkit.ridables.hook.Paper;
+import org.bukkit.entity.Enderman;
 
 public class AIEndermanFindPlayer extends PathfinderGoalNearestAttackableTarget<EntityHuman> {
     private final RidableEnderman enderman;
@@ -69,7 +68,7 @@ public class AIEndermanFindPlayer extends PathfinderGoalNearestAttackableTarget<
         } else {
             if (d != null) {
                 if (enderman.shouldAttack(d)) {
-                    if (d.h(enderman) < 16.0D && (!PaperLib.isPaper() || Paper.CallEndermanEscapeEvent(enderman))) {
+                    if (d.h(enderman) < 16.0D && new EndermanEscapeEvent((Enderman) enderman.getBukkitEntity(), EndermanEscapeEvent.Reason.STARE).callEvent()) {
                         enderman.dz(); // teleportRandomly
                     }
                     teleportTime = 0;

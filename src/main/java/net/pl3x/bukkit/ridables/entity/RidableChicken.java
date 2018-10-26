@@ -24,7 +24,6 @@ import net.pl3x.bukkit.ridables.entity.ai.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
-import net.pl3x.bukkit.ridables.util.Timings;
 import org.bukkit.Bukkit;
 import org.bukkit.event.entity.EntityDropItemEvent;
 
@@ -47,12 +46,12 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
@@ -83,43 +82,41 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         nbttagcompound.setInt("EggLayTime", timeUntilNextEgg);
     }
 
-    protected boolean isTypeNotPersistent() {
+    public boolean isTypeNotPersistent() {
         return isChickenJockey();
     }
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? super.cG() : CONFIG.RIDING_JUMP_POWER;
     }
 
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
     // onLivingUpdate
     public void k() {
         bI = 6000; // disable vanilla timeUntilNextEgg tick counter;
-        if (getRider() == null || CONFIG.DROP_EGGS_WHILE_RIDING) {
+        if (getRider() == null || CONFIG.RIDING_DROP_EGGS) {
             timeUntilNextEgg--;
         }
         if (!isBaby() && !isChickenJockey() && timeUntilNextEgg <= 0) {
-            Timings.INSTANCE.chickenLayEgg.startTiming();
-            a(SoundEffects.ENTITY_CHICKEN_EGG, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+            a(SoundEffects.ENTITY_CHICKEN_EGG, 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F); // playSound
             EntityItem egg = new EntityItem(world, locX, locY, locZ, new ItemStack(Items.EGG));
-            egg.n(); // set 10 tick pickup delay
+            egg.n(); // setDefaultPickupDelay
             EntityDropItemEvent event = new EntityDropItemEvent(getBukkitEntity(), (org.bukkit.entity.Item) egg.getBukkitEntity());
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 world.addEntity(egg);
             }
             calculateNewTimeUntilNextEgg();
-            Timings.INSTANCE.chickenLayEgg.stopTiming();
         }
         super.k();
     }
@@ -144,6 +141,6 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     }
 
     private void calculateNewTimeUntilNextEgg() {
-        timeUntilNextEgg = random.nextInt((CONFIG.EGG_DELAY_MAX - CONFIG.EGG_DELAY_MIN) + 1) + CONFIG.EGG_DELAY_MIN;
+        timeUntilNextEgg = random.nextInt((CONFIG.RIDING_DROP_EGGS_DELAY_MAX - CONFIG.RIDING_DROP_EGGS_DELAY_MIN) + 1) + CONFIG.RIDING_DROP_EGGS_DELAY_MIN;
     }
 }

@@ -49,6 +49,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         super(world);
         moveController = new DolphinWASDController(this);
         lookController = new DolphinLookController(this, 10);
+        initAI();
     }
 
     public RidableType getType() {
@@ -57,7 +58,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
@@ -71,6 +72,9 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
 
     // initAI - override vanilla AI
     protected void n() {
+    }
+
+    protected void initAI() {
         goalSelector.a(0, new AIDolphinBreath(this));
         goalSelector.a(0, new AIDolphinFindWater(this));
         goalSelector.a(1, new AIDolphinSwimToTreasure(this));
@@ -186,7 +190,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         }
 
         world.addEntity(spit);
-        a(SoundEffects.ENTITY_DOLPHIN_ATTACK, 1.0F, 1.0F);
+        a(SoundEffects.ENTITY_DOLPHIN_ATTACK, 1.0F, 1.0F); // playSound
         return true;
     }
 
@@ -199,7 +203,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
 
             dashing = true;
             dashCounter = 0;
-            a(SoundEffects.ENTITY_DOLPHIN_JUMP, 1.0F, 1.0F);
+            a(SoundEffects.ENTITY_DOLPHIN_JUMP, 1.0F, 1.0F); // playSound
             return true;
         }
         return false;
@@ -255,7 +259,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
                 double z = d - dolphin.locZ;
                 double distance = x * x + y * y + z * z;
 
-                if (distance < 2.5D) {
+                if (distance < 2.5E-7D) {
                     a.r(0.0F);
                 } else {
                     float f = (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F;

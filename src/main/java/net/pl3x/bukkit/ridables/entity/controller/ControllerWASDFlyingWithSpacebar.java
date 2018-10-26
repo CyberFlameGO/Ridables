@@ -7,11 +7,14 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
-import org.bukkit.Bukkit;
 
-public class ControllerWASDFlyingWithSpacebar extends ControllerWASD {
+public class ControllerWASDFlyingWithSpacebar extends ControllerWASDFlying {
     public ControllerWASDFlyingWithSpacebar(RidableEntity entity) {
         super(entity);
+    }
+
+    public ControllerWASDFlyingWithSpacebar(RidableEntity entity, double groundSpeedModifier) {
+        super(entity, groundSpeedModifier);
     }
 
     @Override
@@ -26,31 +29,38 @@ public class ControllerWASDFlyingWithSpacebar extends ControllerWASD {
 
         float speed = (float) (((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDE_SPEED).getValue());
 
-        if (isJumping(rider)) {
-            RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);
-            Bukkit.getPluginManager().callEvent(event);
-            if (!event.isCancelled() && !event.isHandled() && !ridable.onSpacebar()) {
-                a.setNoGravity(true);
-                vertical = speed;
-            } else {
-                a.setNoGravity(false);
-            }
+        RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);
+        if (isJumping(rider) && event.callEvent() && !event.isHandled() && !ridable.onSpacebar()) {
+            a.setNoGravity(true);
+            vertical = speed;
         } else {
             a.setNoGravity(false);
         }
 
         if (a.locY >= Config.FLYING_MAX_Y) {
-            vertical = 0;
+            a.motY -= 0.2D;
+            vertical = -speed;
             forward = 0;
             strafe = 0;
         }
 
-        a.o((float) (e = speed * (a.onGround ? 0.1F : 2)));
+        if (a.onGround) {
+            speed *= groundSpeedModifier;
+        }
+
+        a.o((float) (e = speed));
         a.s(vertical);
         a.t(strafe);
         a.r(forward);
 
         f = a.bj;
         g = a.bh;
+
+        if (a.motY > 0D) {
+            a.motY *= 0.8D;
+        }
+        if (a.motY > 0.2D) {
+            a.motY = 0.2D;
+        }
     }
 }

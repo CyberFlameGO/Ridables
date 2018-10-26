@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
@@ -56,7 +55,7 @@ public class RidableHusk extends EntityZombieHusk implements RidableEntity {
         goalSelector.a(7, new AIWanderAvoidWater(this, 1.0D));
         targetSelector.a(1, new AIHurtByTarget(this, true, EntityPigZombie.class));
         targetSelector.a(2, new AIAttackNearest<>(this, EntityHuman.class, true));
-        if (PaperLib.isSpigot() && world.spigotConfig.zombieAggressiveTowardsVillager) {
+        if (world.spigotConfig.zombieAggressiveTowardsVillager) {
             targetSelector.a(3, new AIAttackNearest<>(this, EntityVillager.class, false));
         }
         targetSelector.a(3, new AIAttackNearest<>(this, EntityIronGolem.class, true));

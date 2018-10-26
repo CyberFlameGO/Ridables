@@ -78,18 +78,18 @@ public class RidableListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageEntity(EntityDamageByEntityEvent event) {
+    public void onRidableDamageEntity(EntityDamageByEntityEvent event) {
         RidableEntity ridable = RidableType.getRidable(event.getDamager());
         if (ridable == null) {
             return; // not caused by a ridable
         }
 
-        if (ridable.getRider() == null) {
-            return; // no rider present
-        }
-
         if (ridable.getType() == RidableType.CREEPER) {
-            event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableCreeper.CONFIG.EXPLOSION_DAMAGE);
+            if (ridable.getRider() == null) {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableCreeper.CONFIG.AI_EXPLOSION_DAMAGE);
+            } else {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableCreeper.CONFIG.RIDING_EXPLOSION_DAMAGE);
+            }
         }
     }
 

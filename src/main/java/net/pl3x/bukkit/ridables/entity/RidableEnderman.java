@@ -1,6 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import io.papermc.lib.PaperLib;
+import com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent;
 import net.minecraft.server.v1_13_R2.Block;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Blocks;
@@ -14,7 +14,6 @@ import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.FluidCollisionOption;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IBlockData;
-import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.TagsBlock;
@@ -33,9 +32,10 @@ import net.pl3x.bukkit.ridables.entity.ai.enderman.AIEndermanPlaceBlock;
 import net.pl3x.bukkit.ridables.entity.ai.enderman.AIEndermanTakeBlock;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
-import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Player;
 
 public class RidableEnderman extends EntityEnderman implements RidableEntity {
     public static final EndermanConfig CONFIG = new EndermanConfig();
@@ -54,7 +54,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
@@ -201,23 +201,16 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     public boolean shouldAttack(EntityHuman player) {
         boolean shouldAttack = shouldAttack_real(player);
-        if (PaperLib.isPaper()) {
-            return Paper.CallEndermanAttackPlayerEvent(this, player, shouldAttack);
-        }
-        return shouldAttack;
+        EndermanAttackPlayerEvent event = new EndermanAttackPlayerEvent((Enderman) getBukkitEntity(), (Player) player.getBukkitEntity());
+        event.setCancelled(!shouldAttack);
+        return event.callEvent();
     }
 
     private boolean shouldAttack_real(EntityHuman player) {
-        ItemStack itemstack = player.inventory.armor.get(3);
-        if (itemstack.getItem() == Blocks.CARVED_PUMPKIN.getItem()) {
+        if (player.inventory.armor.get(3).getItem() == Blocks.CARVED_PUMPKIN.getItem()) {
             return false;
-        } else {
-            Vec3D vec3d = player.f(1.0F).a();
-            Vec3D vec3d1 = new Vec3D(locX - player.locX, getBoundingBox().b + (double) getHeadHeight() - (player.locY + (double) player.getHeadHeight()), locZ - player.locZ);
-            double d0 = vec3d1.b();
-            vec3d1 = vec3d1.a();
-            double d1 = vec3d.b(vec3d1);
-            return d1 > 1.0D - 0.025D / d0 && player.hasLineOfSight(this);
         }
+        Vec3D direction = new Vec3D(locX - player.locX, getBoundingBox().minY + getHeadHeight() - (player.locY + player.getHeadHeight()), locZ - player.locZ);
+        return player.f(1.0F).a().b(direction.a()) > 1.0D - 0.025D / direction.b() && player.hasLineOfSight(this); // getLook normalize dotProduct normalize length
     }
 }

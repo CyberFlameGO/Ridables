@@ -104,7 +104,7 @@ public class RidableType {
 
     private static RidableType inject(boolean enabled, String name, EntityTypes entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function, Bucket waterBucket) {
         if (enabled) {
-            if (RegistryHax.injectReplacementEntityTypes(name, entityTypes, clazz, function)) {
+            if (RegistryHax.injectReplacementEntityTypes(entityTypes, clazz, function)) {
                 if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
                     Logger.info("Successfully injected replacement entity: &a" + name);
                 }

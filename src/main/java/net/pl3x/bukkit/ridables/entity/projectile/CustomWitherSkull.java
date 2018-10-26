@@ -1,6 +1,5 @@
 package net.pl3x.bukkit.ridables.entity.projectile;
 
-import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.EntityLiving;
@@ -13,7 +12,6 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.RidableWither;
-import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -59,7 +57,7 @@ public class CustomWitherSkull extends EntityWitherSkull implements CustomProjec
         if (mop != null && mop.entity != null) {
             if (mop.entity == wither || mop.entity == rider) {
                 mop = null; // dont hit self
-            } else if (PaperLib.isPaper() && Paper.CallProjectileCollideEvent(this, mop)) {
+            } else if (CraftEventFactory.callProjectileCollideEvent(this, mop).isCancelled()) {
                 mop = null;
             }
         }

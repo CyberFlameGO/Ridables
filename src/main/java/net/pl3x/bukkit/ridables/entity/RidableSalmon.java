@@ -16,7 +16,7 @@ import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishFollowLeader;
 import net.pl3x.bukkit.ridables.entity.ai.fish.AIFishSwim;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
 
-public class RidableSalmon extends EntitySalmon implements RidableEntity {
+public class RidableSalmon extends EntitySalmon implements RidableEntity, RidableFishSchool {
     public static final SalmonConfig CONFIG = new SalmonConfig();
 
     public RidableSalmon(World world) {
@@ -43,6 +43,10 @@ public class RidableSalmon extends EntitySalmon implements RidableEntity {
     // canBeRiddenInWater
     public boolean aY() {
         return true;
+    }
+
+    public boolean isFollowing() {
+        return dy();
     }
 
     // onLivingUpdate

@@ -15,44 +15,20 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.13.1-R0.1-SNAPSHOT</version>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper</artifactId>
-            <version>1.13.1-R0.1-SNAPSHOT</version>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.13.1-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>com.rylinaux</groupId>
             <artifactId>PlugMan</artifactId>
             <version>2.1.4</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.papermc</groupId>
-            <artifactId>paperlib</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>co.aikar</groupId>
-            <artifactId>minecraft-timings</artifactId>
-            <version>1.0.4</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.inventivetalent.spiget-update</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.4.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <repositories>
@@ -61,16 +37,7 @@
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>aikar</id>
-            <url>http://repo.aikar.co/nexus/content/groups/aikar/</url>
-        </repository>
-        <repository>
-            <id>inventive-repo</id>
-            <url>https://repo.inventivetalent.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <!-- for plugman -->
-            <id>androkai-repo</id>
+            <id>androkai-repo</id><!-- for plugman -->
             <url>https://repo.androkai.net/minecraft/</url>
         </repository>
     </repositories>
@@ -94,42 +61,6 @@
                 <configuration>
                     <outputDirectory>${dir}</outputDirectory>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <artifactSet>
-                        <includes>
-                            <include>io.papermc:paperlib**</include>
-                            <include>co.aikar:minecraft-timings**</include>
-                            <include>org.inventivetalent.spiget-update:bukkit**</include>
-                        </includes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>io.papermc.lib</pattern>
-                            <shadedPattern>net.pl3x.bukkit.ridables.paperlib</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>co.aikar.timings.lib</pattern>
-                            <shadedPattern>net.pl3x.bukkit.ridables.timingslib</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.inventivetalent.update.spiget</pattern>
-                            <shadedPattern>net.pl3x.bukkit.ridables.spiget</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>

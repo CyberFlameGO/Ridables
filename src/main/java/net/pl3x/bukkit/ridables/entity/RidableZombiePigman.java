@@ -121,7 +121,7 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
         } catch (IllegalAccessException ignore) {
         }
         if (target instanceof EntityLiving) {
-            a((EntityLiving) target); //setRevengeTarget
+            setLastDamager((EntityLiving) target);
         }
     }
 }

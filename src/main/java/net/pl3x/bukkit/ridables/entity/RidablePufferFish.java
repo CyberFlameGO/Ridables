@@ -26,9 +26,9 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
 
     static {
         try {
-            puffTimer = EntityPufferFish.class.getDeclaredField("c");
+            puffTimer = EntityPufferFish.class.getDeclaredField("b");
             puffTimer.setAccessible(true);
-            deflateTimer = EntityPufferFish.class.getDeclaredField("bC");
+            deflateTimer = EntityPufferFish.class.getDeclaredField("c");
             deflateTimer.setAccessible(true);
         } catch (NoSuchFieldException ignore) {
         }

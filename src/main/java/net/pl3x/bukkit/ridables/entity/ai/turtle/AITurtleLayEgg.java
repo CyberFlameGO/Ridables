@@ -1,17 +1,17 @@
 package net.pl3x.bukkit.ridables.entity.ai.turtle;
 
-import io.papermc.lib.PaperLib;
+import com.destroystokyo.paper.event.entity.TurtleLayEggEvent;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.BlockTurtleEgg;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.IWorldReader;
+import net.minecraft.server.v1_13_R2.MCUtil;
 import net.minecraft.server.v1_13_R2.PathfinderGoalGotoTarget;
 import net.minecraft.server.v1_13_R2.SoundCategory;
 import net.minecraft.server.v1_13_R2.SoundEffects;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableTurtle;
-import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
+import org.bukkit.entity.Turtle;
 
 public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
     private final RidableTurtle turtle;
@@ -60,9 +60,8 @@ public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
             turtle.setDigging(true);
         } else if (diggingTicks > 200) {
             int count = turtle.getRandom().nextInt(4) + 1;
-            if (PaperLib.isPaper()) {
-                count = Paper.CallTurtleLayEggEvent(turtle, d.up(), count);
-            }
+            TurtleLayEggEvent layEggEvent = new TurtleLayEggEvent((Turtle) turtle.getBukkitEntity(), MCUtil.toLocation(turtle.world, d.up()), count);
+            count = layEggEvent.callEvent() ? layEggEvent.getEggCount() : 0;
             if (count > 0) {
                 if (!CraftEventFactory.callEntityChangeBlockEvent(turtle, d.up(), Blocks.TURTLE_EGG.getBlockData().set(BlockTurtleEgg.b, count)).isCancelled()) {
                     turtle.world.a(null, pos, SoundEffects.ENTITY_TURTLE_LAY_EGG, SoundCategory.BLOCKS, 0.3F, 0.9F + turtle.world.random.nextFloat() * 0.2F);

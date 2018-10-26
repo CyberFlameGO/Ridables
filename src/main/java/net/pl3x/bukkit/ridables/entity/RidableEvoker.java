@@ -65,7 +65,7 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
@@ -117,6 +117,13 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         } catch (IllegalAccessException ignore) {
         }
         return null;
+    }
+
+    public void setWololoTarget(EntitySheep sheep) {
+        try {
+            wololoTarget.set(this, sheep);
+        } catch (IllegalAccessException ignore) {
+        }
     }
 
     public int getHorizontalFaceSpeed() {
@@ -218,8 +225,8 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
             if (!world.q(pos) && world.q(pos.down())) { // !isTopSolid(pos) && isTopSolid(pos.down())
                 double yOffset = 0.0D;
                 if (!world.isEmpty(pos)) { // !world.isAirBlock
-                    VoxelShape shape = world.getType(pos).h(world, pos); // blockState.getCollisionShape
-                    if (!shape.b()) { // !isEmpty
+                    VoxelShape shape = world.getType(pos).getCollisionShape(world, pos);
+                    if (!shape.isEmpty()) {
                         yOffset = shape.c(EnumDirection.EnumAxis.Y); // shape.getEnd
                     }
                 }

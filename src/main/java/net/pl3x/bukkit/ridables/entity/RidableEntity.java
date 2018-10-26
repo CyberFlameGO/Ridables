@@ -36,7 +36,7 @@ public interface RidableEntity {
     /**
      * Reload the mob's attributes
      */
-    void reloadAttributes();
+    //void reloadAttributes();
 
     /**
      * Get the Bukkit entity

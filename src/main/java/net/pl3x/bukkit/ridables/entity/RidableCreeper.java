@@ -1,7 +1,5 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import io.papermc.lib.PaperLib;
-import net.minecraft.server.v1_13_R2.DataWatcherObject;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityAreaEffectCloud;
 import net.minecraft.server.v1_13_R2.EntityCreeper;
@@ -24,14 +22,16 @@ import net.pl3x.bukkit.ridables.entity.ai.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.creeper.AICreeperSwell;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.controller.LookController;
-import net.pl3x.bukkit.ridables.hook.Paper;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 
 public class RidableCreeper extends EntityCreeper implements RidableEntity {
     public static final CreeperConfig CONFIG = new CreeperConfig();
+
+    private int spacebarCharge = 0;
+    private int prevSpacebarCharge = 0;
+    private int powerToggleDelay = 0;
 
     public RidableCreeper(World world) {
         super(world);
@@ -45,15 +45,14 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
@@ -72,35 +71,42 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : (isIgnited() ? 0 : CONFIG.JUMP_POWER);
+        return getRider() == null ? super.cG() : (isIgnited() ? 0 : CONFIG.RIDING_JUMP_POWER);
     }
 
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        if (powerToggleDelay > 0) {
+            powerToggleDelay--;
+        }
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         if (getRider() != null) {
             if (getRider().bj != 0 || getRider().bh != 0) {
-                setIgnitedFlag(false);
+                spacebarCharge = 0;
+                setIgnited(false);
             }
+            if (spacebarCharge == prevSpacebarCharge) {
+                spacebarCharge = 0;
+            }
+            prevSpacebarCharge = spacebarCharge;
         }
         super.mobTick();
     }
 
     public void tick() {
         if (isAlive()) {
-            int fuse = getFuseTicks();
+            // we only want to know when to explode(), rest of logic is still in super.tick()
             int state = dz();
-            fuse += state;
-            if (fuse >= maxFuseTicks) {
-                fuse = maxFuseTicks;
+            fuseTicks += state;
+            if (fuseTicks >= maxFuseTicks) {
+                fuseTicks = maxFuseTicks;
                 explode();
             }
-            fuse -= state; // dont let super.tick() double count the fuse
-            setFuseTicks(fuse);
+            fuseTicks -= state; // dont let super.tick() double count the fuse
         }
         super.tick();
     }
@@ -116,10 +122,23 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     }
 
     public boolean onSpacebar() {
+        if (powerToggleDelay > 0) {
+            return true; // just toggled power, do not jump
+        }
+        spacebarCharge++;
+        if (spacebarCharge > maxFuseTicks - 1) {
+            spacebarCharge = 0;
+            if (getRider().getBukkitEntity().hasPermission("allow.powered.creeper")) {
+                powerToggleDelay = 20;
+                setPowered(!isPowered());
+                setIgnited(false);
+                return true;
+            }
+        }
         if (!isIgnited()) {
             EntityPlayer rider = getRider();
             if (rider != null && rider.bj == 0 && rider.bh == 0 && hasSpecialPerm(rider.getBukkitEntity())) {
-                setIgnitedFlag(true);
+                setIgnited(true);
                 return true;
             }
         }
@@ -130,17 +149,28 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
      * Make the creeper explode
      */
     public void explode() {
-        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), CONFIG.EXPLOSION_RADIUS * (isPowered() ? 2.0F : 1.0F), false);
-        world.getServer().getPluginManager().callEvent(event);
-        if (!event.isCancelled()) {
-            aX = true; // isDying
-            boolean flag = getRider() == null ? world.getGameRules().getBoolean("mobGriefing") : CONFIG.EXPLOSION_GRIEF;
-            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), flag);
-            die();
-            spawnCloud();
+        boolean hasRider = getRider() != null;
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(),
+                (hasRider ? CONFIG.RIDING_EXPLOSION_RADIUS : CONFIG.AI_EXPLOSION_RADIUS) * (isPowered() ? 2.0F : 1.0F),
+                hasRider ? CONFIG.RIDING_EXPLOSION_FIRE : CONFIG.AI_EXPLOSION_FIRE);
+        if (!event.callEvent()) {
+            fuseTicks = 0;
+            setIgnited(false);
+            return;
+        }
+
+        aX = true; // isDying
+        world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(),
+                hasRider ? CONFIG.RIDING_EXPLOSION_GRIEF : (CONFIG.AI_EXPLOSION_GRIEF && world.getGameRules().getBoolean("mobGriefing")));
+        die();
+        if (hasRider) {
+            if (CONFIG.RIDING_EXPLOSION_LINGERING_CLOUD) {
+                spawnCloud();
+            }
         } else {
-            setFuseTicks(0);
-            setIgnitedFlag(false);
+            if (CONFIG.AI_EXPLOSION_LINGERING_CLOUD) {
+                spawnCloud();
+            }
         }
     }
 
@@ -149,7 +179,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         if (collection.isEmpty()) {
             return;
         }
-        if (PaperLib.isPaper() && Paper.DisableCreeperLingeringEffect(world)) {
+        if (world.paperConfig.disableCreeperLingeringEffect) {
             return;
         }
         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(world, locX, locY, locZ);
@@ -160,65 +190,8 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         cloud.setDuration(cloud.getDuration() / 2);
         cloud.setRadiusPerTick(-cloud.getRadius() / (float) cloud.getDuration());
         for (MobEffect mobEffect : collection) {
-            cloud.a(new MobEffect(mobEffect));
+            cloud.a(new MobEffect(mobEffect)); // addEffect
         }
         world.addEntity(cloud);
-    }
-
-    // Use reflection for non-Paper environments :sad-face:
-
-    private static Field ignited_field;
-    private static Field fuseTicks_field;
-
-    static {
-        try {
-            ignited_field = EntityCreeper.class.getDeclaredField("c");
-            ignited_field.setAccessible(true);
-            fuseTicks_field = EntityCreeper.class.getDeclaredField("fuseTicks");
-            fuseTicks_field.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Set the ignited datawatcher flag
-     *
-     * @param ignited True to mark as ignited
-     */
-    public void setIgnitedFlag(boolean ignited) {
-        if (ignited) {
-            dB(); // setIgnited()
-        } else {
-            try {
-                getDataWatcher().set((DataWatcherObject<Boolean>) ignited_field.get(this), false);
-            } catch (IllegalAccessException ignore) {
-            }
-        }
-    }
-
-    /**
-     * Get the current fuseTicks
-     *
-     * @return Current fuseTicks
-     */
-    public int getFuseTicks() {
-        try {
-            return fuseTicks_field.getInt(this);
-        } catch (IllegalAccessException ignore) {
-        }
-        return 0;
-    }
-
-    /**
-     * Set the current fuseTicks
-     *
-     * @param fuseTicks New fuseTicks
-     */
-    public void setFuseTicks(int fuseTicks) {
-        try {
-            fuseTicks_field.set(this, fuseTicks);
-        } catch (IllegalAccessException ignore) {
-        }
     }
 }

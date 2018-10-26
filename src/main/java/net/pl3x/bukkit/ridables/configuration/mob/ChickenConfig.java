@@ -5,14 +5,15 @@ import net.pl3x.bukkit.ridables.util.Logger;
 
 public class ChickenConfig extends MobConfig {
     public double BASE_SPEED = 0.25D;
-    public double RIDE_SPEED = 1.0D;
     public double MAX_HEALTH = 4.0D;
-    public float JUMP_POWER = 0.5F;
-    public float STEP_HEIGHT = 0.6F;
-    public boolean RIDABLE_IN_WATER = true;
-    public boolean DROP_EGGS_WHILE_RIDING = false;
-    public int EGG_DELAY_MIN = 6000;
-    public int EGG_DELAY_MAX = 12000;
+    public float AI_STEP_HEIGHT = 0.6F;
+    public double RIDING_SPEED = 1.0D;
+    public float RIDING_JUMP_POWER = 0.5F;
+    public float RIDING_STEP_HEIGHT = 0.6F;
+    public boolean RIDING_RIDE_IN_WATER = true;
+    public boolean RIDING_DROP_EGGS = false;
+    public int RIDING_DROP_EGGS_DELAY_MIN = 6000;
+    public int RIDING_DROP_EGGS_DELAY_MAX = 12000;
 
     public ChickenConfig() {
         super("chicken.yml");
@@ -25,33 +26,35 @@ public class ChickenConfig extends MobConfig {
         if (firstLoad) {
             firstLoad = false;
             addDefault("base-speed", BASE_SPEED);
-            addDefault("ride-speed", RIDE_SPEED);
             addDefault("max-health", MAX_HEALTH);
-            addDefault("jump-power", JUMP_POWER);
-            addDefault("step-height", STEP_HEIGHT);
-            addDefault("ride-in-water", RIDABLE_IN_WATER);
-            addDefault("drop-eggs", DROP_EGGS_WHILE_RIDING);
-            addDefault("egg-delay.min", EGG_DELAY_MIN);
-            addDefault("egg-delay.max", EGG_DELAY_MAX);
+            addDefault("ai.step-height", AI_STEP_HEIGHT);
+            addDefault("riding.speed", RIDING_SPEED);
+            addDefault("riding.jump-power", RIDING_JUMP_POWER);
+            addDefault("riding.step-height", RIDING_STEP_HEIGHT);
+            addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("riding.drop-eggs.enable", RIDING_DROP_EGGS);
+            addDefault("riding.drop-eggs.delay.min", RIDING_DROP_EGGS_DELAY_MIN);
+            addDefault("riding.drop-eggs.delay.max", RIDING_DROP_EGGS_DELAY_MAX);
             save();
         }
 
         BASE_SPEED = getDouble("base-speed");
-        RIDE_SPEED = getDouble("ride-speed");
         MAX_HEALTH = getDouble("max-health");
-        JUMP_POWER = (float) getDouble("jump-power");
-        STEP_HEIGHT = (float) getDouble("step-height");
-        RIDABLE_IN_WATER = getBoolean("ride-in-water");
-        DROP_EGGS_WHILE_RIDING = getBoolean("drop-eggs");
-        EGG_DELAY_MIN = (int) getDouble("egg-delay.min");
-        EGG_DELAY_MAX = (int) getDouble("egg-delay.max");
+        AI_STEP_HEIGHT = (float) getDouble("ai.step-height");
+        RIDING_SPEED = getDouble("riding.speed");
+        RIDING_JUMP_POWER = (float) getDouble("riding.jump-power");
+        RIDING_STEP_HEIGHT = (float) getDouble("riding.step-height");
+        RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
+        RIDING_DROP_EGGS = getBoolean("riding.drop-eggs.enable");
+        RIDING_DROP_EGGS_DELAY_MIN = (int) getDouble("riding.drop-eggs.delay.min");
+        RIDING_DROP_EGGS_DELAY_MAX = (int) getDouble("riding.drop-eggs.delay.max");
 
-        if (EGG_DELAY_MIN > EGG_DELAY_MAX) {
+        if (RIDING_DROP_EGGS_DELAY_MIN > RIDING_DROP_EGGS_DELAY_MAX) {
             Logger.error("Chicken egg delay min and max values are backwards");
             Logger.error("Swapping values in memory");
-            EGG_DELAY_MIN = EGG_DELAY_MIN ^ EGG_DELAY_MAX;
-            EGG_DELAY_MAX = EGG_DELAY_MIN ^ EGG_DELAY_MAX;
-            EGG_DELAY_MIN = EGG_DELAY_MIN ^ EGG_DELAY_MAX;
+            RIDING_DROP_EGGS_DELAY_MIN = RIDING_DROP_EGGS_DELAY_MIN ^ RIDING_DROP_EGGS_DELAY_MAX;
+            RIDING_DROP_EGGS_DELAY_MAX = RIDING_DROP_EGGS_DELAY_MIN ^ RIDING_DROP_EGGS_DELAY_MAX;
+            RIDING_DROP_EGGS_DELAY_MIN = RIDING_DROP_EGGS_DELAY_MIN ^ RIDING_DROP_EGGS_DELAY_MAX;
         }
     }
 }

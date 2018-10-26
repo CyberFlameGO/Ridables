@@ -42,7 +42,7 @@ public class AIEvokerWololoSpell extends PathfinderGoal {
         if (list.isEmpty()) {
             return false;
         }
-        evoker.a(list.get(evoker.getRandom().nextInt(list.size())));
+        evoker.setWololoTarget(list.get(evoker.getRandom().nextInt(list.size())));
         return true;
     }
 
@@ -63,7 +63,7 @@ public class AIEvokerWololoSpell extends PathfinderGoal {
     // resetTask
     public void d() {
         super.d();
-        evoker.a((EntitySheep) null);
+        evoker.setWololoTarget(null);
     }
 
     // tick

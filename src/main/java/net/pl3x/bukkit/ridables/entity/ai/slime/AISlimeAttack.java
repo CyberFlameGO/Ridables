@@ -1,12 +1,12 @@
 package net.pl3x.bukkit.ridables.entity.ai.slime;
 
-import io.papermc.lib.PaperLib;
+import com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
-import net.pl3x.bukkit.ridables.hook.Paper;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Slime;
 
 public class AISlimeAttack extends PathfinderGoal {
     private final RidableSlime slime;
@@ -29,7 +29,7 @@ public class AISlimeAttack extends PathfinderGoal {
         if (target instanceof EntityHuman && ((EntityHuman) target).abilities.isInvulnerable) {
             return false;
         }
-        return !PaperLib.isPaper() || (slime.canWander() && Paper.CallSlimeTargetLivingEntity(slime, target));
+        return slime.canWander() && new SlimeTargetLivingEntityEvent((Slime) slime.getBukkitEntity(), (LivingEntity) target.getBukkitEntity()).callEvent();
     }
 
     // shouldContinueExecuting
@@ -47,7 +47,7 @@ public class AISlimeAttack extends PathfinderGoal {
         if (--timer <= 0) {
             return false;
         }
-        return !PaperLib.isPaper() || (slime.canWander() && Paper.CallSlimeTargetLivingEntity(slime, target));
+        return slime.canWander() && new SlimeTargetLivingEntityEvent((Slime) slime.getBukkitEntity(), (LivingEntity) target.getBukkitEntity()).callEvent();
     }
 
     // startExecuting

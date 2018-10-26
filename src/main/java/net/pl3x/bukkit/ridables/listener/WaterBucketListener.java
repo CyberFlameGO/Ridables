@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -24,16 +23,10 @@ public class WaterBucketListener implements Listener {
         PlayerInventory inv = event.getPlayer().getInventory();
 
         // get the bucket used
-        ItemStack itemStack = inv.getItemInMainHand();
-        EquipmentSlot hand = EquipmentSlot.HAND;
+        ItemStack itemStack = inv.getItem(event.getHand());
         Bucket bucket = Bucket.getBucket(itemStack);
         if (bucket == null) {
-            itemStack = inv.getItemInOffHand();
-            hand = EquipmentSlot.OFF_HAND;
-            bucket = Bucket.getBucket(itemStack);
-            if (bucket == null) {
-                return; // not a valid creature bucket
-            }
+            return; // not a valid creature bucket
         }
 
         RidableType ridable = RidableType.getRidableType(bucket.getEntityType());
@@ -48,18 +41,10 @@ public class WaterBucketListener implements Listener {
         itemStack.setAmount(Math.max(0, itemStack.getAmount() - 1));
         if (itemStack.getAmount() <= 0) {
             // replace with empty bucket
-            if (hand == EquipmentSlot.HAND) {
-                inv.setItemInMainHand(new ItemStack(Material.BUCKET));
-            } else {
-                inv.setItemInOffHand(new ItemStack(Material.BUCKET));
-            }
+            inv.setItem(event.getHand(), new ItemStack(Material.BUCKET));
         } else {
             // add subtracted amount back
-            if (hand == EquipmentSlot.HAND) {
-                inv.setItemInMainHand(itemStack);
-            } else {
-                inv.setItemInOffHand(itemStack);
-            }
+            inv.setItem(event.getHand(), itemStack);
             // add empty bucket to inventory
             ((CraftPlayer) event.getPlayer()).getHandle().inventory
                     .pickup(new net.minecraft.server.v1_13_R2.ItemStack(Items.BUCKET));

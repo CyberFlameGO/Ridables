@@ -1,10 +1,9 @@
 package net.pl3x.bukkit.ridables.entity.ai.slime;
 
-import io.papermc.lib.PaperLib;
+import com.destroystokyo.paper.event.entity.SlimeWanderEvent;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.entity.RidableSlime;
-import net.pl3x.bukkit.ridables.hook.Paper;
+import org.bukkit.entity.Slime;
 
 public class AISlimeHop extends PathfinderGoal {
     private final RidableSlime slime;
@@ -19,10 +18,7 @@ public class AISlimeHop extends PathfinderGoal {
         if (slime.getRider() != null) {
             return false;
         }
-        if (PaperLib.isPaper()) {
-            return slime.canWander() && Paper.CallSlimeWanderEvent(slime);
-        }
-        return true;
+        return slime.canWander() && new SlimeWanderEvent((Slime) slime.getBukkitEntity()).callEvent();
     }
 
     // shouldContinueExecuting

@@ -50,6 +50,7 @@ mobs:
   dragon: false
   drowned: false
   elder_guardian: false
+  ender_dragon: false
   enderman: false
   endermite: false
   evoker: false

@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.util;
 
 import com.mojang.datafixers.types.Type;
-import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.BiomeBase;
 import net.minecraft.server.v1_13_R2.DataConverterRegistry;
 import net.minecraft.server.v1_13_R2.DataConverterTypes;
@@ -17,7 +16,6 @@ import net.pl3x.bukkit.ridables.data.BiomeData;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableGiant;
 import net.pl3x.bukkit.ridables.entity.RidableIllusioner;
-import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -51,16 +49,11 @@ public class RegistryHax {
         }
     }
 
-    public static boolean injectReplacementEntityTypes(String name, EntityTypes<?> entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function) {
+    public static boolean injectReplacementEntityTypes(EntityTypes<?> entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function) {
         MinecraftKey key = IRegistry.ENTITY_TYPE.getKey(entityTypes);
         try {
             entityClass.set(entityTypes, clazz);
             entityFunction.set(entityTypes, function);
-
-            if (PaperLib.isPaper()) {
-                EntityTypes.clsToKeyMap.put(entityTypes.c(), key);
-                EntityTypes.clsToTypeMap.put(entityTypes.c(), EntityType.fromName(name));
-            }
         } catch (IllegalAccessException ignore) {
             return false;
         }

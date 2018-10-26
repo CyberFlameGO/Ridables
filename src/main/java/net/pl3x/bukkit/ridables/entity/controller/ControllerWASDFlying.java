@@ -10,8 +10,15 @@ import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
 import org.bukkit.Bukkit;
 
 public class ControllerWASDFlying extends ControllerWASD {
+    protected final double groundSpeedModifier;
+
     public ControllerWASDFlying(RidableEntity entity) {
+        this(entity, 1D);
+    }
+
+    public ControllerWASDFlying(RidableEntity entity, double groundSpeedModifier) {
         super(entity);
+        this.groundSpeedModifier = groundSpeedModifier;
     }
 
     @Override
