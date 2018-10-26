@@ -1,6 +1,6 @@
 package net.pl3x.bukkit.ridables.event;
 
-import net.pl3x.bukkit.ridables.entity.RidableBlaze;
+import net.pl3x.bukkit.ridables.entity.monster.RidableBlaze;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
 
 public class BlazeShootFireballEvent extends RidableShootEvent {

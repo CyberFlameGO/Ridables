@@ -15,7 +15,7 @@ import net.minecraft.server.v1_13_R2.MobEffects;
 import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.entity.RidableShulker;
+import net.pl3x.bukkit.ridables.entity.monster.RidableShulker;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
 import org.bukkit.event.entity.EntityPotionEffectEvent;

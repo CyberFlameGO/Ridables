@@ -5,7 +5,7 @@ import net.minecraft.server.v1_13_R2.EntityEvokerFangs;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.entity.RidableEvoker;
+import net.pl3x.bukkit.ridables.entity.monster.RidableEvoker;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Evoker;
 import org.bukkit.entity.Player;

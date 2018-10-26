@@ -15,7 +15,7 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
-import net.pl3x.bukkit.ridables.entity.RidablePhantom;
+import net.pl3x.bukkit.ridables.entity.monster.RidablePhantom;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Player;
 

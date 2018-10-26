@@ -11,7 +11,7 @@ import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.ProjectileHelper;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.entity.RidableWither;
+import net.pl3x.bukkit.ridables.entity.boss.RidableWither;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;

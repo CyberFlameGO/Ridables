@@ -1,0 +1,244 @@
+package net.pl3x.bukkit.ridables.entity.animal;
+
+import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.Blocks;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.DataWatcherObject;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityAgeable;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityTurtle;
+import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.configuration.mob.TurtleConfig;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleBreed;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleGoHome;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleGoToWater;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleLayEgg;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtlePanic;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleTempt;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleTravel;
+import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleWander;
+
+import java.lang.reflect.Field;
+
+public class RidableTurtle extends EntityTurtle implements RidableEntity {
+    public static final TurtleConfig CONFIG = new TurtleConfig();
+
+    private static Field homePosition;
+    private static Field hasEgg;
+    private static Field digging;
+    private static Field travelPosition;
+    private static Field goingHome;
+    private static Field travelling;
+    private static Field diggingTicks;
+
+    static {
+        try {
+            homePosition = EntityTurtle.class.getDeclaredField("bD");
+            homePosition.setAccessible(true);
+            hasEgg = EntityTurtle.class.getDeclaredField("bE");
+            hasEgg.setAccessible(true);
+            digging = EntityTurtle.class.getDeclaredField("bG");
+            digging.setAccessible(true);
+            travelPosition = EntityTurtle.class.getDeclaredField("bH");
+            travelPosition.setAccessible(true);
+            goingHome = EntityTurtle.class.getDeclaredField("bI");
+            goingHome.setAccessible(true);
+            travelling = EntityTurtle.class.getDeclaredField("bJ");
+            travelling.setAccessible(true);
+            diggingTicks = EntityTurtle.class.getDeclaredField("bK");
+            diggingTicks.setAccessible(true);
+        } catch (NoSuchFieldException ignore) {
+        }
+    }
+
+    private DataWatcherObject<BlockPosition> HOME_POSITION;
+    private DataWatcherObject<Boolean> HAS_EGG;
+    private DataWatcherObject<Boolean> DIGGING;
+    private DataWatcherObject<BlockPosition> TRAVEL_POSITION;
+    private DataWatcherObject<Boolean> GOING_HOME;
+    private DataWatcherObject<Boolean> TRAVELLING;
+
+    public RidableTurtle(World world) {
+        super(world);
+
+        try {
+            HOME_POSITION = (DataWatcherObject<BlockPosition>) homePosition.get(this);
+            HAS_EGG = (DataWatcherObject<Boolean>) hasEgg.get(this);
+            DIGGING = (DataWatcherObject<Boolean>) digging.get(this);
+            TRAVEL_POSITION = (DataWatcherObject<BlockPosition>) travelPosition.get(this);
+            GOING_HOME = (DataWatcherObject<Boolean>) goingHome.get(this);
+            TRAVELLING = (DataWatcherObject<Boolean>) travelling.get(this);
+        } catch (IllegalAccessException ignore) {
+        }
+
+        moveController = new TurtleWASDController(this);
+        lookController = new LookController(this);
+    }
+
+    public RidableType getType() {
+        return RidableType.TURTLE;
+    }
+
+    // initAI - override vanilla AI
+    protected void n() {
+        goalSelector.a(0, new AITurtlePanic(this, 1.2D));
+        goalSelector.a(1, new AITurtleBreed(this, 1.0D));
+        goalSelector.a(1, new AITurtleLayEgg(this, 1.0D));
+        goalSelector.a(2, new AITurtleTempt(this, 1.1D, Blocks.SEAGRASS.getItem()));
+        goalSelector.a(3, new AITurtleGoToWater(this, 1.0D));
+        goalSelector.a(4, new AITurtleGoHome(this, 1.0D));
+        goalSelector.a(7, new AITurtleTravel(this, 1.0D));
+        goalSelector.a(8, new AIWatchClosest(this, EntityHuman.class, 8.0F));
+        goalSelector.a(9, new AITurtleWander(this, 1.0D, 100));
+    }
+
+    // canBeRiddenInWater
+    public boolean aY() {
+        return true;
+    }
+
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+    }
+
+    public BlockPosition getHome() {
+        return datawatcher.get(HOME_POSITION);
+    }
+
+    public void setHome(BlockPosition pos) {
+        datawatcher.set(HOME_POSITION, pos);
+    }
+
+    public boolean hasEgg() {
+        return datawatcher.get(HAS_EGG);
+    }
+
+    public void setHasEgg(boolean hasEgg) {
+        datawatcher.set(HAS_EGG, hasEgg);
+    }
+
+    public boolean isDigging() {
+        return datawatcher.get(DIGGING);
+    }
+
+    public void setDigging(boolean digging) {
+        setDiggingTicks(digging ? 1 : 0);
+        datawatcher.set(DIGGING, digging);
+    }
+
+    public BlockPosition getTravelPos() {
+        return datawatcher.get(TRAVEL_POSITION);
+    }
+
+    public void setTravelPos(BlockPosition pos) {
+        datawatcher.set(TRAVEL_POSITION, pos);
+    }
+
+    public boolean isGoingHome() {
+        return datawatcher.get(GOING_HOME);
+    }
+
+    public void setGoingHome(boolean goingHome) {
+        datawatcher.set(GOING_HOME, goingHome);
+    }
+
+    public boolean isTravelling() {
+        return datawatcher.get(TRAVELLING);
+    }
+
+    public void setTravelling(boolean travelling) {
+        datawatcher.set(TRAVELLING, travelling);
+    }
+
+    public int getDiggingTicks() {
+        try {
+            return diggingTicks.getInt(this);
+        } catch (IllegalAccessException ignore) {
+        }
+        return 0;
+    }
+
+    public void setDiggingTicks(int ticks) {
+        try {
+            diggingTicks.setInt(this, ticks);
+        } catch (IllegalAccessException ignore) {
+        }
+    }
+
+    protected void mobTick() {
+        Q = CONFIG.STEP_HEIGHT;
+        if (isInWater() && getRider() != null) {
+            motY += 0.005D;
+        }
+        super.mobTick();
+    }
+
+    // processInteract
+    public boolean a(EntityHuman player, EnumHand hand) {
+        return super.a(player, hand) || processInteract(player, hand);
+    }
+
+    // removePassenger
+    public boolean removePassenger(Entity passenger) {
+        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    public RidableTurtle createChild(EntityAgeable entity) {
+        return new RidableTurtle(world);
+    }
+
+    static class TurtleWASDController extends ControllerWASD {
+        private final RidableTurtle turtle;
+
+        public TurtleWASDController(RidableTurtle turtle) {
+            super(turtle);
+            this.turtle = turtle;
+        }
+
+        public void tick(EntityPlayer rider) {
+            updateSpeed();
+            super.tick(rider);
+        }
+
+        public void tick() {
+            updateSpeed();
+            if (h == ControllerMove.Operation.MOVE_TO && !turtle.getNavigation().p()) { // noPath
+                double x = b - turtle.locX;
+                double y = c - turtle.locY;
+                double z = d - turtle.locZ;
+                y /= (double) MathHelper.sqrt(x * x + y * y + z * z);
+                turtle.aQ = turtle.yaw = a(turtle.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F); // limitAngle
+                float speed = (float) (e * turtle.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
+                turtle.o(turtle.cK() + (speed - turtle.cK()) * 0.125F); // setAIMoveSpeed getAIMoveSpeed
+                turtle.motY += (double) turtle.cK() * y * 0.1D; // getAIMoveSpeed
+            } else {
+                turtle.o(0.0F); // setAIMoveSpeed
+            }
+        }
+
+        private void updateSpeed() {
+            if (turtle.isInWater()) {
+                turtle.motY += 0.005D;
+                if (turtle.c(turtle.getHome()) > 256.0D) { // getDistanceSq
+                    turtle.o(Math.max(turtle.cK() / 2.0F, 0.08F)); // setAIMoveSpeed
+                }
+                if (turtle.isBaby()) {
+                    turtle.o(Math.max(turtle.cK() / 3.0F, 0.06F)); // setAIMoveSpeed
+                }
+            } else if (turtle.onGround) {
+                turtle.o(Math.max(turtle.cK() / 2.0F, 0.06F)); // setAIMoveSpeed
+            }
+        }
+    }
+}

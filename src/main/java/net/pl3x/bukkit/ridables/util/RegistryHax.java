@@ -14,8 +14,8 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.data.BiomeData;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
-import net.pl3x.bukkit.ridables.entity.RidableGiant;
-import net.pl3x.bukkit.ridables.entity.RidableIllusioner;
+import net.pl3x.bukkit.ridables.entity.monster.RidableGiant;
+import net.pl3x.bukkit.ridables.entity.monster.RidableIllusioner;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
