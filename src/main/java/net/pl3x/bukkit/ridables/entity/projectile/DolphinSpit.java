@@ -15,7 +15,7 @@ import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
-import net.pl3x.bukkit.ridables.entity.RidableDolphin;
+import net.pl3x.bukkit.ridables.entity.animal.RidableDolphin;
 import org.bukkit.entity.Dolphin;
 import org.bukkit.entity.Player;
 

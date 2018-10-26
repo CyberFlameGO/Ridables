@@ -22,13 +22,14 @@ import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.entity.RidableDrowned;
+import net.pl3x.bukkit.ridables.entity.monster.zombie.RidableDrowned;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+
+import javax.annotation.Nullable;
 
 public class CustomThrownTrident extends EntityThrownTrident implements CustomProjectile {
     private static Field az;

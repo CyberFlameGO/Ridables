@@ -1,6 +1,6 @@
 package net.pl3x.bukkit.ridables.event;
 
-import net.pl3x.bukkit.ridables.entity.RidableDolphin;
+import net.pl3x.bukkit.ridables.entity.animal.RidableDolphin;
 import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
 
 public class DolphinSpitEvent extends RidableShootEvent {
