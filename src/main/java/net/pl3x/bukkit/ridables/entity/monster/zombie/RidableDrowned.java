@@ -38,9 +38,11 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.drowned.AIDrownedGoToWater
 import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.drowned.AIDrownedSwimUp;
 import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.drowned.AIDrownedTridentAttack;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class RidableDrowned extends EntityDrowned implements RidableEntity {
@@ -63,15 +65,15 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
@@ -129,12 +131,12 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     // setBreakDoorsAITask
@@ -159,18 +161,29 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
@@ -189,7 +202,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         if (shootCooldown == 0) {
             EntityPlayer rider = getRider();
             if (rider != null) {
-                if (!CONFIG.SHOOT_REQUIRE_TRIDENT || hasTrident()) {
+                if (!CONFIG.RIDING_SHOOT_REQUIRE_TRIDENT || hasTrident()) {
                     return throwTrident(rider);
                 }
             }
@@ -198,14 +211,14 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
     }
 
     public boolean throwTrident(EntityPlayer rider) {
-        shootCooldown = CONFIG.SHOOT_COOLDOWN;
+        shootCooldown = CONFIG.RIDING_SHOOT_COOLDOWN;
 
         if (rider == null) {
             return false;
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!hasShootPerm(player)) {
+        if (!player.hasPermission("allow.shoot.drowned")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }
@@ -213,7 +226,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         Vector direction = player.getEyeLocation().getDirection().normalize().multiply(25).add(new Vector(0, 3, 0));
 
         CustomThrownTrident trident = new CustomThrownTrident(this.world, this, rider, new ItemStack(Items.TRIDENT));
-        trident.shoot(direction.getX(), direction.getY(), direction.getZ(), 1.6F * CONFIG.SHOOT_SPEED, 0);
+        trident.shoot(direction.getX(), direction.getY(), direction.getZ(), (float) (1.6D * CONFIG.RIDING_SHOOT_SPEED), 0);
         world.addEntity(trident);
 
         a(SoundEffects.ENTITY_DROWNED_SHOOT, 1.0F, 1.0F);

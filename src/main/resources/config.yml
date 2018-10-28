@@ -1,20 +1,10 @@
-# Config format version (do not change this!)
-config: 2
-
-# Language file (for translations)
+do-not-change-this: 2
 language-file: lang-en.yml
-
-# Debug mode. Enable this before reporting any issues, please
-debug-mode: false
-
-# Hide the "spammy" startup console output about entity injectors
-hide-startup-console-output: false
-
-# Enabled the update checker (does NOT actually download updates!)
-update-checker: true
-
-# While player is riding a creature, disable all commands for them
-cancel-commands-while-riding: false
+logger:
+  info: true
+  warn: true
+  error: true
+  debug: false
 
 # Commands allowed (or disallowed) to be used while riding a mob
 commands-list-is-whitelist: true  # Use false for blacklist

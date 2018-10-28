@@ -11,7 +11,7 @@ public class Logger {
      * @param str String to log
      */
     public static void debug(String str) {
-        if (Config.DEBUG_MODE) {
+        if (Config.LOGGER_DEBUG) {
             log("&3[&aDEBUG&3]&d " + str);
         }
     }
@@ -22,7 +22,9 @@ public class Logger {
      * @param str String to log
      */
     public static void info(String str) {
-        log("&e" + str);
+        if (Config.LOGGER_INFO) {
+            log("&e" + str);
+        }
     }
 
     /**
@@ -31,7 +33,9 @@ public class Logger {
      * @param str String to log
      */
     public static void warn(String str) {
-        log("&6" + str);
+        if (Config.LOGGER_WARN) {
+            log("&6" + str);
+        }
     }
 
     /**
@@ -40,7 +44,9 @@ public class Logger {
      * @param str String to log
      */
     public static void error(String str) {
-        log("&c" + str);
+        if (Config.LOGGER_ERROR) {
+            log("&c" + str);
+        }
     }
 
     private static void log(String str) {

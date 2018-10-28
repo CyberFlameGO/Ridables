@@ -85,7 +85,7 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
             }
         }
         if (cP() && this.isInWater()) {
-            a(strafe, vertical, forward, rider == null ? 0.01F : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue());
+            a(strafe, vertical, forward, rider == null ? 0.01F : getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDING_SPEED).getValue());
             move(EnumMoveType.SELF, motX, motY, motZ);
             motX *= 0.8999999761581421D;
             motY *= 0.8999999761581421D;

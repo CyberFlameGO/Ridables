@@ -12,14 +12,14 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.SlimeConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestEntity;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestPlayer;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeFaceRandom;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeHop;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeSwim;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 
 public class RidableSlime extends EntitySlime implements RidableEntity {
     public static final SlimeConfig CONFIG = new SlimeConfig();
@@ -57,6 +57,11 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : (CONFIG.RIDING_JUMP_POWER * getJumpCharge());
+    }
+
     public boolean canDamagePlayer() {
         return dt();
     }
@@ -77,12 +82,6 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
             fallDistanceCharge = 0;
         }
         return charge;
-    }
-
-    // jump
-    protected void cH() {
-        motY = 0.42D * getJumpCharge();
-        impulse = true;
     }
 
     // fall

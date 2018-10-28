@@ -10,6 +10,8 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.CaveSpiderConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AILeapAtTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AILookIdle;
@@ -18,8 +20,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.spider.AISpiderAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.spider.AISpiderTarget;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity {
     public static final CaveSpiderConfig CONFIG = new CaveSpiderConfig();
@@ -36,12 +38,12 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
@@ -68,17 +70,25 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.RIDING_JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     // isOnLadder

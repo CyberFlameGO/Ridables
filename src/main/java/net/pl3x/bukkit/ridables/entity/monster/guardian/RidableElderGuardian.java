@@ -2,8 +2,11 @@ package net.pl3x.bukkit.ridables.entity.monster.guardian;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTypes;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.LootTables;
 import net.minecraft.server.v1_13_R2.MinecraftKey;
@@ -16,6 +19,8 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.ElderGuardianConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 
 import javax.annotation.Nullable;
@@ -38,7 +43,7 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
@@ -90,5 +95,23 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
 
     protected SoundEffect dA() {
         return SoundEffects.ENTITY_ELDER_GUARDIAN_FLOP;
+    }
+
+    // processInteract
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removePassenger(Entity passenger) {
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 }

@@ -2,6 +2,7 @@ package net.pl3x.bukkit.ridables.entity.projectile;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.DamageSource;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityLargeFireball;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -57,7 +58,7 @@ public class CustomFireball extends EntityLargeFireball implements CustomProject
     }
 
     public Mob getMob() {
-        return ridable == null ? null : (Mob) ridable.getBukkitEntity();
+        return ridable == null ? null : ((EntityInsentient) ridable).getBukkitMob();
     }
 
     public Player getRider() {

@@ -13,6 +13,8 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.BlazeConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlyingWithSpacebar;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIHurtByTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AILookIdle;
@@ -20,13 +22,13 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIMoveTowardsRestriction;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.blaze.AIBlazeFireballAttack;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlyingWithSpacebar;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
 import net.pl3x.bukkit.ridables.event.BlazeShootFireballEvent;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class RidableBlaze extends EntityBlaze implements RidableEntity {
@@ -46,12 +48,14 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_MAX_Y); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
@@ -86,13 +90,21 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
@@ -125,7 +137,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         }
 
         CraftPlayer player = rider.getBukkitEntity();
-        if (!hasShootPerm(player)) {
+        if (!player.hasPermission("allow.shoot.blaze")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }

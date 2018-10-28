@@ -8,17 +8,11 @@ import java.io.File;
 
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
-    public static boolean DEBUG_MODE = false;
-    public static boolean HIDE_STARTUP_CONSOLE_OUTPUT = false;
 
-    public static boolean CHECK_FOR_UPDATES = true;
-
-    public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
-    public static boolean REQUIRE_SADDLE = false;
-    public static boolean CONSUME_SADDLE = false;
-    public static boolean ALLOW_RIDE_BABIES = false;
-
-    public static int FLYING_MAX_Y = 256;
+    public static boolean LOGGER_INFO = true;
+    public static boolean LOGGER_WARN = true;
+    public static boolean LOGGER_ERROR = true;
+    public static boolean LOGGER_DEBUG = false;
 
     public static boolean BAT_ENABLED = false;
     public static boolean BLAZE_ENABLED = false;
@@ -100,10 +94,11 @@ public class Config {
         FileConfiguration config = plugin.getConfig();
 
         LANGUAGE_FILE = config.getString("language-file", "lang-en.yml");
-        DEBUG_MODE = config.getBoolean("debug-mode", false);
-        HIDE_STARTUP_CONSOLE_OUTPUT = config.getBoolean("hide-startup-console-output", false);
 
-        CHECK_FOR_UPDATES = config.getBoolean("update-checker", true);
+        LOGGER_INFO = config.getBoolean("logger.info", true);
+        LOGGER_WARN = config.getBoolean("logger.warn", true);
+        LOGGER_ERROR = config.getBoolean("logger.error", true);
+        LOGGER_DEBUG = config.getBoolean("logger.debug", false);
 
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);

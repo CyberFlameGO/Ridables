@@ -22,6 +22,8 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.EndermanConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIHurtByTarget;
@@ -32,8 +34,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.enderman.AIEndermanFindPlayer;
 import net.pl3x.bukkit.ridables.entity.ai.goal.enderman.AIEndermanPlaceBlock;
 import net.pl3x.bukkit.ridables.entity.ai.goal.enderman.AIEndermanTakeBlock;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Enderman;
@@ -56,12 +57,12 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
@@ -84,12 +85,12 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER && !CONFIG.EJECT_WHEN_WET;
+        return CONFIG.RIDING_RIDE_IN_WATER && !CONFIG.RIDING_EJECT_WHEN_WET;
     }
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     // randomlyTeleport
@@ -102,26 +103,41 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     }
 
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        boolean hasRider = getRider() != null;
+        Q = hasRider ? CONFIG.RIDING_STEP_HEIGHT : CONFIG.AI_STEP_HEIGHT;
         if (ap()) { // isWet
-            if (CONFIG.EJECT_WHEN_WET && getRider() != null) {
+            if (CONFIG.RIDING_EJECT_WHEN_WET && getRider() != null) {
                 ejectPassengers();
             }
-            if (CONFIG.DAMAGE_WHEN_WET) {
-                damageEntity(DamageSource.DROWN, 1.0F);
+            if (hasRider) {
+                if (CONFIG.RIDING_DAMAGE_WHEN_WET > 0F) {
+                    damageEntity(DamageSource.DROWN, CONFIG.RIDING_DAMAGE_WHEN_WET);
+                }
+            } else {
+                if (CONFIG.AI_DAMAGE_WHEN_WET > 0F) {
+                    damageEntity(DamageSource.DROWN, CONFIG.AI_DAMAGE_WHEN_WET);
+                }
             }
         }
         super.mobTick();
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     public boolean onClick(org.bukkit.block.Block block, BlockFace blockFace, EnumHand hand) {
@@ -130,7 +146,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
         }
 
         EntityPlayer rider = getRider();
-        if (rider == null || !hasSpecialPerm(rider.getBukkitEntity())) {
+        if (rider == null || !rider.getBukkitEntity().hasPermission("allow.special.enderman")) {
             return false;
         }
 
@@ -195,7 +211,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
     }
 
     public boolean damageEntity(DamageSource damagesource, float f) {
-        skipTP = !CONFIG.TELEPORT_WHEN_DAMAGED;
+        skipTP = getRider() == null ? !CONFIG.AI_TELEPORT_WHEN_DAMAGED : !CONFIG.RIDING_TELEPORT_WHEN_DAMAGED;
         boolean result = super.damageEntity(damagesource, f);
         skipTP = false;
         return result;

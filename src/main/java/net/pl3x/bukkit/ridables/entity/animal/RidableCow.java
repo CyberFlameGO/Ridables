@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.animal;
 
 import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityCow;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -22,6 +21,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AITempt;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableCow extends EntityCow implements RidableEntity {
     public static final CowConfig CONFIG = new CowConfig();
@@ -39,12 +40,12 @@ public class RidableCow extends EntityCow implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
@@ -68,7 +69,7 @@ public class RidableCow extends EntityCow implements RidableEntity {
 
     // getJumpUpwardsMotion
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.RIDING_JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     protected void mobTick() {
@@ -77,21 +78,23 @@ public class RidableCow extends EntityCow implements RidableEntity {
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    public RidableCow createChild(EntityAgeable entity) {
-        return b(entity);
-    }
-
-    // createChild (bukkit's weird duplicate method)
-    public RidableCow b(EntityAgeable entity) {
-        return new RidableCow(world);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 }

@@ -34,7 +34,7 @@ public class ControllerWASDWater extends ControllerWASD {
             }
         }
 
-        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDE_SPEED).getValue();
+        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDING_SPEED).getValue();
 
         a.o((float) e);
         a.s(vertical * 1.5F);

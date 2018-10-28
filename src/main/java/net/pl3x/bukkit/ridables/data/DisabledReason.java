@@ -45,6 +45,10 @@ public enum DisabledReason {
         this.reason = Arrays.asList(reason);
     }
 
+    public void printError() {
+        printError(false);
+    }
+
     public void printError(boolean showDisablingMessage) {
         Logger.error("############################################");
         Logger.error("#                                          #");

@@ -4,7 +4,6 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
-import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityVillager;
 import net.minecraft.server.v1_13_R2.EntityVindicator;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -12,6 +11,8 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.VindicatorConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackMelee;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIHurtByTarget;
@@ -19,25 +20,9 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWander;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.vindicator.AIVindicatorJohnnyAttack;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
-
-import java.lang.reflect.Field;
-import java.util.function.Predicate;
 
 public class RidableVindicator extends EntityVindicator implements RidableEntity {
     public static final VindicatorConfig CONFIG = new VindicatorConfig();
-    public static final Predicate<Entity> JOHNNY_SELECTOR = (target) -> target instanceof EntityLiving && ((EntityLiving) target).df(); // attackable
-
-    private static Field johnny;
-
-    static {
-        try {
-            johnny = EntityVindicator.class.getDeclaredField("b");
-            johnny.setAccessible(true);
-        } catch (NoSuchFieldException ignore) {
-        }
-    }
 
     public RidableVindicator(World world) {
         super(world);
@@ -71,14 +56,6 @@ public class RidableVindicator extends EntityVindicator implements RidableEntity
     // getJumpUpwardsMotion
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
-    }
-
-    public boolean isJohnnyMode() {
-        try {
-            return johnny.getBoolean(this);
-        } catch (IllegalAccessException ignore) {
-        }
-        return false;
     }
 
     protected void mobTick() {

@@ -53,12 +53,12 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDING_SPEED);
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDE_SPEED);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
         if (CONFIG.MAX_HEALTH > 0.0D) {

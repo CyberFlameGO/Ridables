@@ -138,7 +138,8 @@ public class RidableType {
     public static final RidableType ZOMBIE_PIGMAN = inject(Config.ZOMBIE_PIGMAN_ENABLED, "zombie_pigman", EntityTypes.ZOMBIE_PIGMAN, RidableZombiePigman.class, RidableZombiePigman::new);
     public static final RidableType ZOMBIE_VILLAGER = inject(Config.ZOMBIE_VILLAGER_ENABLED, "zombie_villager", EntityTypes.ZOMBIE_VILLAGER, RidableZombieVillager.class, RidableZombieVillager::new);
 
-    public static final IAttribute RIDE_SPEED = (new AttributeRanged(null, "generic.rideSpeed", 1.0D, 0.0D, 1024.0D)).a("Ride Speed").a(true);
+    public static final IAttribute RIDING_SPEED = (new AttributeRanged(null, "generic.rideSpeed", 1.0D, 0.0D, 1024.0D)).a("Ride Speed").a(true);
+    public static final IAttribute RIDING_MAX_Y = (new AttributeRanged(null, "generic.rideMaxY", 256.0D, 0.0D, 1024.0D)).a("Ride Max Y").a(true);
 
     /**
      * Gets a ridable entity of the specified type
@@ -162,15 +163,14 @@ public class RidableType {
     private static RidableType inject(boolean enabled, String name, EntityTypes entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function, Bucket waterBucket) {
         if (enabled) {
             if (RegistryHax.injectReplacementEntityTypes(entityTypes, clazz, function)) {
-                if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
-                    Logger.info("Successfully injected replacement entity: &a" + name);
-                }
+                Logger.info("Successfully injected replacement entity: &a" + name);
                 RidableType ridableTypes = new RidableType(name, entityTypes, clazz, waterBucket);
                 BY_BUKKIT_TYPE.put(EntityType.fromName(name), ridableTypes);
                 return ridableTypes;
             }
-        } else if (!Config.HIDE_STARTUP_CONSOLE_OUTPUT) {
-            Logger.info("Skipping disabled entity: &a" + name);
+            Logger.error("Failed to inject replacement entity: &e" + name);
+        } else {
+            Logger.warn("Skipping disabled entity: &a" + name);
         }
         return null;
     }

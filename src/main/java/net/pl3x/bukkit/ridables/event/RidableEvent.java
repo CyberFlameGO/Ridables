@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.event;
 
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import org.bukkit.event.Cancellable;
@@ -14,9 +15,9 @@ public abstract class RidableEvent extends EntityEvent implements Cancellable {
     private boolean cancelled;
     private final RidableEntity ridable;
 
-    public RidableEvent(RidableEntity entity) {
-        super(entity.getBukkitEntity());
-        this.ridable = entity;
+    public RidableEvent(RidableEntity ridable) {
+        super(((EntityInsentient) ridable).getBukkitMob());
+        this.ridable = ridable;
     }
 
     /**

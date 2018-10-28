@@ -87,7 +87,7 @@ public class ControllerWASD extends ControllerMove {
             }
         }
 
-        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDE_SPEED).getValue();
+        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDING_SPEED).getValue();
 
         a.o((float) e); // speed
         a.r(forward);

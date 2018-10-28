@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.animal.horse;
 
 import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHorseAbstract;
 import net.minecraft.server.v1_13_R2.EntityHorseDonkey;
 import net.minecraft.server.v1_13_R2.EntityHuman;
@@ -19,6 +18,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.horse.AIHorseBucking;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableDonkey extends EntityHorseDonkey implements RidableEntity {
     public static final DonkeyConfig CONFIG = new DonkeyConfig();
@@ -33,14 +34,14 @@ public class RidableDonkey extends EntityHorseDonkey implements RidableEntity {
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
+        getAttributeInstance(attributeJumpStrength).setValue(CONFIG.RIDING_JUMP_POWER);
         if (CONFIG.MAX_HEALTH > 0.0D) {
             getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         }
@@ -66,7 +67,12 @@ public class RidableDonkey extends EntityHorseDonkey implements RidableEntity {
 
     // canBeRiddenInWater
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
+    }
+
+    // getJumpUpwardsMotion
+    protected float cG() {
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     public boolean isTamed() {
@@ -74,21 +80,28 @@ public class RidableDonkey extends EntityHorseDonkey implements RidableEntity {
     }
 
     public void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, false, false);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    public RidableDonkey createChild(EntityAgeable entity) {
-        return new RidableDonkey(world);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 }

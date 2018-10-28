@@ -20,6 +20,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIPanic;
 import net.pl3x.bukkit.ridables.entity.ai.goal.fish.AIFishFollowLeader;
 import net.pl3x.bukkit.ridables.entity.ai.goal.fish.AIFishSwim;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableCod extends EntityCod implements RidableEntity, RidableFishSchool {
     public static final CodConfig CONFIG = new CodConfig();
@@ -36,12 +38,12 @@ public class RidableCod extends EntityCod implements RidableEntity, RidableFishS
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
@@ -74,38 +76,22 @@ public class RidableCod extends EntityCod implements RidableEntity, RidableFishS
         super.k();
     }
 
-    // travel
-    public void a(float strafe, float vertical, float forward) {
-        /*double speed = 0.01D;
-        EntityPlayer rider = getRider();
-        if (rider != null && !isInWater()) {
-            System.out.println("ding");
-            forward = rider.bj;
-            strafe = rider.bh;
-            speed = getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue();
-        }
-        if (cP() && isInWater()) { // isServerWorld
-            a(strafe, vertical, forward, speed); // moveRelative
-            move(EnumMoveType.SELF, motX, motY, motZ);
-            motX *= 0.9D;
-            motY *= 0.9D;
-            motZ *= 0.9D;
-            if (getGoalTarget() == null) {
-                motY -= 0.005D;
-            }
-            return;
-        }*/
-        super.a(strafe, vertical, forward);
-    }
-
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     public static class FishWASDController extends ControllerWASDWater {

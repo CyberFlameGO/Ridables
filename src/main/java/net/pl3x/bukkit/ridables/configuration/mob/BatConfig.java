@@ -9,6 +9,9 @@ public class BatConfig extends MobConfig {
     public double RIDING_VERTICAL = 1.0F;
     public double RIDING_GRAVITY = 0.04F;
     public boolean RIDING_RIDE_IN_WATER = true;
+    public int RIDING_FLYING_MAX_Y = 256;
+    public boolean RIDING_SADDLE_REQUIRE = false;
+    public boolean RIDING_SADDLE_CONSUME = false;
 
     public BatConfig() {
         super("bat.yml");
@@ -26,6 +29,9 @@ public class BatConfig extends MobConfig {
             addDefault("riding.vertical", RIDING_VERTICAL);
             addDefault("riding.gravity", RIDING_GRAVITY);
             addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("riding.flying-max-y", RIDING_FLYING_MAX_Y);
+            addDefault("riding.saddle.require", RIDING_SADDLE_REQUIRE);
+            addDefault("riding.saddle.consume", RIDING_SADDLE_CONSUME);
             save();
         }
 
@@ -35,5 +41,8 @@ public class BatConfig extends MobConfig {
         RIDING_VERTICAL = getDouble("riding.vertical");
         RIDING_GRAVITY = getDouble("riding.gravity");
         RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
+        RIDING_FLYING_MAX_Y = (int) getDouble("riding.flying-max-y");
+        RIDING_SADDLE_REQUIRE = getBoolean("riding.saddle.require");
+        RIDING_SADDLE_CONSUME = getBoolean("riding.saddle.consume");
     }
 }

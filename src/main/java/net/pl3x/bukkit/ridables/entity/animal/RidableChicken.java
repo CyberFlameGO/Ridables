@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.animal;
 
 import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityChicken;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityItem;
@@ -26,7 +25,9 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AITempt;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDropItemEvent;
 
 public class RidableChicken extends EntityChicken implements RidableEntity {
@@ -42,23 +43,27 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         calculateNewTimeUntilNextEgg();
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.CHICKEN;
     }
 
+    @Override
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIPanic(this, 1.4D));
@@ -71,6 +76,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     }
 
     // readNBT
+    @Override
     public void a(NBTTagCompound nbttagcompound) {
         super.a(nbttagcompound);
         if (nbttagcompound.hasKey("EggLayTime")) {
@@ -79,31 +85,37 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     }
 
     // writeNBT
+    @Override
     public void b(NBTTagCompound nbttagcompound) {
         super.b(nbttagcompound);
         nbttagcompound.setInt("EggLayTime", timeUntilNextEgg);
     }
 
+    @Override
     public boolean isTypeNotPersistent() {
         return isChickenJockey();
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.RIDING_JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
+    @Override
     protected void mobTick() {
         Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
     // onLivingUpdate
+    @Override
     public void k() {
         bI = 6000; // disable vanilla timeUntilNextEgg tick counter;
         if (getRider() == null || CONFIG.RIDING_DROP_EGGS) {
@@ -124,22 +136,24 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    public RidableChicken createChild(EntityAgeable entity) {
-        return b(entity);
-    }
-
-    // createChild (bukkit's weird duplicate method)
-    public RidableChicken b(EntityAgeable entity) {
-        return new RidableChicken(world);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     private void calculateNewTimeUntilNextEgg() {

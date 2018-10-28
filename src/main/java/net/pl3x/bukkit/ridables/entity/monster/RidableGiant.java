@@ -58,7 +58,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
 
     public void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
         setHealth(CONFIG.AI_HEALTH);
     }

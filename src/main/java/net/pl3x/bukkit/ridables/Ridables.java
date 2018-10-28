@@ -46,7 +46,7 @@ public class Ridables extends JavaPlugin {
             Class.forName("com.destroystokyo.paper.PaperConfig");
         } catch (ClassNotFoundException e) {
             disabledReason = DisabledReason.UNSUPPORTED_SERVER_TYPE;
-            disabledReason.printError(false);
+            disabledReason.printError();
             return;
         }
 
@@ -56,13 +56,13 @@ public class Ridables extends JavaPlugin {
             Biomes.class.getDeclaredField("OCEAN"); // deobfuscated in 1.13.2
         } catch (ClassNotFoundException | NoSuchFieldException e) {
             disabledReason = DisabledReason.UNSUPPORTED_SERVER_VERSION;
-            disabledReason.printError(false);
+            disabledReason.printError();
             return;
         }
 
         if (System.getProperty("RidablesAlreadyLoaded") != null && System.getProperty("RidablesAlreadyLoaded").equals("true")) {
             disabledReason = DisabledReason.PLUGIN_DETECTED_RELOAD;
-            disabledReason.printError(false);
+            disabledReason.printError();
             return;
         }
         System.setProperty("RidablesAlreadyLoaded", "true");
@@ -73,7 +73,7 @@ public class Ridables extends JavaPlugin {
         // check if any entities are enabled
         if (RidableType.BY_BUKKIT_TYPE.isEmpty()) {
             disabledReason = DisabledReason.ALL_ENTITIES_DISABLED;
-            disabledReason.printError(false);
+            disabledReason.printError();
             return;
         }
 
@@ -100,7 +100,7 @@ public class Ridables extends JavaPlugin {
 
         if (disabledReason != null) {
             if (disabledReason == DisabledReason.PLUGIN_DETECTED_RELOAD) {
-                SERVER_SHUTTING_DOWN.printError(false);
+                SERVER_SHUTTING_DOWN.printError();
                 Bukkit.shutdown();
                 return;
             }

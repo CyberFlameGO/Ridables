@@ -33,12 +33,12 @@ public class RidableZombieHorse extends EntityHorseZombie implements RidableEnti
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED);
+        getAttributeMap().b(RidableType.RIDING_SPEED);
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDE_SPEED);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         if (CONFIG.JUMP_POWER > 0.0D) {
             getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);

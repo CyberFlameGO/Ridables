@@ -17,6 +17,8 @@ public class Lang {
     public static String RIDE_NO_PERMISSION;
     public static String SHOOT_NO_PERMISSION;
 
+    public static String RIDE_REQUIRES_SADDLE;
+
     public static String DISABLED_COMMANDS_WHILE_RIDING;
 
     public static String WATER_BUCKET_NAME;
@@ -45,6 +47,8 @@ public class Lang {
         COLLECT_NO_PERMISSION = config.getString("collect-no-permission", "&cYou do not have permission to collect dolphins!");
         RIDE_NO_PERMISSION = config.getString("ride-no-permission", "&cYou do not have permission to ride!");
         SHOOT_NO_PERMISSION = config.getString("shoot-no-permission", "&cYou do not have permission to shoot!");
+
+        RIDE_REQUIRES_SADDLE = config.getString("ride-requires-saddle", "&cRiding this mob requires a saddle!");
 
         DISABLED_COMMANDS_WHILE_RIDING = config.getString("disabled-commands-while-riding", "&cCommands are disabled while riding!");
 

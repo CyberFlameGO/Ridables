@@ -16,6 +16,8 @@ import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableEnderDragon extends EntityEnderDragon implements RidableEntity {
     public static final EnderDragonConfig CONFIG = new EnderDragonConfig();
@@ -34,12 +36,14 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeMap().b(RidableType.RIDE_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_MAX_Y); // registerAttribute
         reloadAttributes();
     }
 
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDE_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
     }
@@ -66,7 +70,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
             moveController.a(); // ender dragon doesnt use the controller so call manually
 
-            a(-bh, bi, -bj, getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDE_SPEED).getValue() * 0.1F); // moveRelative
+            a(-bh, bi, -bj, getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * getAttributeInstance(RidableType.RIDING_SPEED).getValue() * 0.1F); // moveRelative
             move(EnumMoveType.PLAYER, motX, motY, motZ);
 
             motX *= 0.9F;
@@ -96,13 +100,21 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     // onLivingUpdate (modified from super class)

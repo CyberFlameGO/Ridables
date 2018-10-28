@@ -8,13 +8,13 @@ public class AIVindicatorJohnnyAttack extends PathfinderGoalNearestAttackableTar
     private final RidableVindicator vindicator;
 
     public AIVindicatorJohnnyAttack(RidableVindicator vindicator) {
-        super(vindicator, EntityLiving.class, 0, true, true, RidableVindicator.JOHNNY_SELECTOR);
+        super(vindicator, EntityLiving.class, 0, true, true, (target) -> target != null && target.df()); // attackable
         this.vindicator = vindicator;
     }
 
     // shouldExecute
     public boolean a() {
-        return vindicator.getRider() == null && vindicator.isJohnnyMode() && super.a();
+        return vindicator.getRider() == null && vindicator.isJohnny() && super.a();
     }
 
     // shouldContinueExecuting
