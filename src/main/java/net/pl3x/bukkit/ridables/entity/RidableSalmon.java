@@ -63,9 +63,12 @@ public class RidableSalmon extends EntitySalmon implements RidableEntity {
             if (getGoalTarget() == null) {
                 motY -= 0.005D;
             }
-            return;
+        } else {
+            super.a(strafe, vertical, forward);
         }
-        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
     }
 
     public void setRotation(float newYaw, float newPitch) {

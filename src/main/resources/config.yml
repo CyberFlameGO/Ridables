@@ -35,6 +35,14 @@ consume-saddle: false
 # Can players ride baby versions of creatures
 allow-ride-babies: false
 
+# Enables an emulated entity move event by calling PlayerMoveEvent
+# when a rider makes a mob move. This is needed for some protection plugin
+# features, such as WorldGuard's entry and exit flags.
+# This _does_ create a slight increase in resource usage. It's not much,
+# but I decided to have this configurable and disabled by default.
+# Enable it if you find yourself in a need for it.
+enable-entity-move-event: false
+
 # Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
 flying-max-y: 256
 

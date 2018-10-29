@@ -57,6 +57,9 @@ public class RidableElderGuardian extends EntityGuardianElder implements Ridable
             strafe = rider.bh;
         }
         super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
     }
 
     public void setRotation(float newYaw, float newPitch) {

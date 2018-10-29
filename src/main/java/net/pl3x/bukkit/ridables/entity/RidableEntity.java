@@ -13,11 +13,15 @@ import net.pl3x.bukkit.ridables.data.HandItem;
 import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.util.ItemUtil;
 import net.pl3x.bukkit.ridables.util.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.UUID;
 
@@ -145,6 +149,24 @@ public interface RidableEntity {
             Logger.debug("Perm Check: " + player.getName() + " does NOT have permission to use special: " + getType().getName());
         }
         return hasPerm;
+    }
+
+    default void checkMove() {
+        if (!Config.ENABLE_ENTITY_MOVE_EVENT) {
+            return; // feature disabled
+        }
+        EntityInsentient entity = (EntityInsentient) this;
+        if (entity.locX == entity.lastX && entity.locY == entity.lastY && entity.locZ == entity.lastZ) {
+            return; // did not move
+        }
+        World world = entity.getBukkitEntity().getWorld();
+        Location to = new Location(world, entity.locX, entity.locY, entity.locZ);
+        Location from = new Location(world, entity.lastX, entity.lastY, entity.lastZ);
+        PlayerMoveEvent event = new PlayerMoveEvent(getRider().getBukkitEntity(), from, to);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled() || !to.equals(event.getTo())) {
+            entity.ejectPassengers();
+        }
     }
 
     /**

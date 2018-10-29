@@ -65,6 +65,33 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        if (getRider() != null) {
+            a(strafe, vertical, forward, 0.02F * getSpeed());
+            move(EnumMoveType.PLAYER, motX, motY, motZ);
+
+            motX *= 0.91F;
+            motY *= 0.91F;
+            motZ *= 0.91F;
+
+            aI = aJ;
+            double d0 = locX - lastX;
+            double d1 = locZ - lastZ;
+            float f = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
+            if (f > 1.0F) {
+                f = 1.0F;
+            }
+            aJ += (f - aJ) * 0.4F;
+            aK += aJ;
+        } else {
+            super.a(strafe, vertical, forward);
+        }
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     public void setRotation(float newYaw, float newPitch) {
         setYawPitch(lastYaw = yaw = newYaw, pitch = -newPitch * 0.75F);
         aS = aQ = yaw;
@@ -167,30 +194,5 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
                 a(soundeffecttype.g(), soundeffecttype.a() * 0.5F, soundeffecttype.b() * 0.75F);
             }
         }
-    }
-
-    // travel
-    public void a(float strafe, float vertical, float forward) {
-        if (getRider() == null) {
-            super.a(strafe, vertical, forward);
-            return;
-        }
-
-        a(strafe, vertical, forward, 0.02F * getSpeed());
-        move(EnumMoveType.PLAYER, motX, motY, motZ);
-
-        motX *= 0.91F;
-        motY *= 0.91F;
-        motZ *= 0.91F;
-
-        aI = aJ;
-        double d0 = locX - lastX;
-        double d1 = locZ - lastZ;
-        float f = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
-        if (f > 1.0F) {
-            f = 1.0F;
-        }
-        aJ += (f - aJ) * 0.4F;
-        aK += aJ;
     }
 }

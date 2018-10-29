@@ -92,6 +92,14 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     public void tick() {
         if (isAlive()) {
             int fuseTicks = getFuseTicks();

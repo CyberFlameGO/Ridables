@@ -50,6 +50,14 @@ public class RidableVex extends EntityVex implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     // getJumpUpwardsMotion
     protected float cG() {
         return super.cG() * getJumpPower() * 2.2F;

@@ -48,6 +48,17 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (positionChanged && z_() && getRider() != null) {
+            motY = 0.2D * Config.CAVE_SPIDER_CLIMB_SPEED;
+        }
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     // getJumpUpwardsMotion
     protected float cG() {
         return super.cG() * getJumpPower() * 2.2F;
@@ -108,13 +119,5 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
             return l(); // isBesideClimbableBlock
         }
         return Config.CAVE_SPIDER_CLIMB_WALLS && l();
-    }
-
-    // travel
-    public void a(float strafe, float vertical, float forward) {
-        super.a(strafe, vertical, forward);
-        if (positionChanged && z_() && getRider() != null) {
-            motY = 0.2D * Config.CAVE_SPIDER_CLIMB_SPEED;
-        }
     }
 }

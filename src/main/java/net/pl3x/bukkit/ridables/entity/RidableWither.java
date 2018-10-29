@@ -123,6 +123,9 @@ public class RidableWither extends EntityWither implements RidableEntity {
             friction = 0.1F;
         }
         super.a(strafe / speed, vertical * speed, forward / speed, friction);
+        if (getRider() != null) {
+            checkMove();
+        }
     }
 
     public void setRotation(float newYaw, float newPitch) {

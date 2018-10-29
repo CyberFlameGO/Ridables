@@ -60,6 +60,14 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     public void setRotation(float newYaw, float newPitch) {
         setYawPitch(lastYaw = yaw = newYaw, pitch = newPitch * 0.5F);
         aS = aQ = yaw;

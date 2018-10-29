@@ -114,6 +114,9 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
             strafe = rider.bh;
         }
         super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
     }
 
     public void setRotation(float newYaw, float newPitch) {

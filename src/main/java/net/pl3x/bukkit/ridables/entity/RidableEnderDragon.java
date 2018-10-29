@@ -34,6 +34,14 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
         return false;
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     // onLivingUpdate
     @Override
     public void k() {

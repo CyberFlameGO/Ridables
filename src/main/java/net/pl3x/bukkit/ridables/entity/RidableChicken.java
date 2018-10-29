@@ -62,6 +62,14 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     // onLivingUpdate
     public void k() {
         bI = 6000; // disable vanilla timeUntilNextEgg tick counter;

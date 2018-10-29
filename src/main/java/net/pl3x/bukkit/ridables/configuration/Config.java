@@ -20,6 +20,7 @@ public class Config {
     public static boolean REQUIRE_SADDLE = false;
     public static boolean CONSUME_SADDLE = false;
     public static boolean ALLOW_RIDE_BABIES = false;
+    public static boolean ENABLE_ENTITY_MOVE_EVENT = false;
 
     public static int FLYING_MAX_Y = 256;
 
@@ -399,6 +400,7 @@ public class Config {
         REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
         CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
         ALLOW_RIDE_BABIES = config.getBoolean("allow-ride-babies", false);
+        ENABLE_ENTITY_MOVE_EVENT = config.getBoolean("enable-entity-move-event", false);
 
         FLYING_MAX_Y = (int) config.getDouble("flying-max-y", 256D);
 

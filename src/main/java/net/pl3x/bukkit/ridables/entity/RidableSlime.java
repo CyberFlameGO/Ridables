@@ -61,6 +61,14 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     public void k() {
         super.k();
         if (spacebarCharge == prevSpacebarCharge) {

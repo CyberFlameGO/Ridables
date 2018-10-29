@@ -32,6 +32,14 @@ public class RidableSkeletonHorse extends EntityHorseSkeleton implements Ridable
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     public void setRotation(float newYaw, float newPitch) {
     }
 

@@ -75,8 +75,9 @@ public class RidablePig extends EntityPig implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
     public void a(float strafe, float vertical, float forward) {
-        if (isVehicle() && dh()) {
+        if (isVehicle() && dh()) { // canBeSteered
             if (Q < 1.0F) {
                 Q = 1.0F; // always set to at least 1.0 when riding normally (with saddle and carrot on a stick)
             }
@@ -103,6 +104,9 @@ public class RidablePig extends EntityPig implements RidableEntity {
             //Q = 0.5F; // disable vanilla's step-height change
             aU = 0.02F; // jumpMovementFactor
             super_a(strafe, vertical, forward);
+        }
+        if (getRider() != null) {
+            checkMove();
         }
     }
 

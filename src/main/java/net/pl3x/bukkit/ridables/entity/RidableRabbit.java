@@ -51,6 +51,14 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (getRider() != null) {
+            checkMove();
+        }
+    }
+
     private void handleJumping() {
         if (onGround) {
             ControllerJumpRabbit jumpHelper = (ControllerJumpRabbit) h;
