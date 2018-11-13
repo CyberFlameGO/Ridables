@@ -38,11 +38,19 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.SLIME;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AISlimeSwim(this));
         goalSelector.a(2, new AISlimeAttack(this));
@@ -53,11 +61,13 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? CONFIG.AI_JUMP_POWER : (CONFIG.RIDING_JUMP_POWER * getJumpCharge());
     }
@@ -66,6 +76,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         return dt();
     }
 
+    @Override
     protected void mobTick() {
         if (spacebarCharge == prevSpacebarCharge) {
             spacebarCharge = 0;
@@ -85,6 +96,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     }
 
     // fall
+    @Override
     public void c(float distance, float damageMultiplier) {
         if (getRider() != null && fallDistanceCharge > 0) {
             distance = distance - fallDistanceCharge;
@@ -93,15 +105,18 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onSpacebar() {
         if (hasSpecialPerm(getRider().getBukkitEntity())) {
             spacebarCharge++;
@@ -134,6 +149,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
             h = ControllerMove.Operation.MOVE_TO;
         }
 
+        @Override
         public void tick() {
             slime.aQ = slime.aS = slime.yaw = a(slime.yaw, yRot, 90.0F);
             if (h != ControllerMove.Operation.MOVE_TO) {

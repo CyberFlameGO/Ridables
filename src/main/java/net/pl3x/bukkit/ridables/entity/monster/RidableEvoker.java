@@ -3,7 +3,6 @@ package net.pl3x.bukkit.ridables.entity.monster;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityEvoker;
-import net.minecraft.server.v1_13_R2.EntityEvokerFangs;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
@@ -20,6 +19,8 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.EvokerConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIHurtByTarget;
@@ -30,12 +31,12 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.evoker.AIEvokerCastingSpell;
 import net.pl3x.bukkit.ridables.entity.ai.goal.evoker.AIEvokerFangsSpell;
 import net.pl3x.bukkit.ridables.entity.ai.goal.evoker.AIEvokerSummonSpell;
 import net.pl3x.bukkit.ridables.entity.ai.goal.evoker.AIEvokerWololoSpell;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomEvokerFangs;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
@@ -61,24 +62,34 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.EVOKER;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIEvokerCastingSpell(this));
@@ -96,13 +107,15 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     public int getSpellTicks() {
@@ -136,32 +149,51 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         return K();
     }
 
+    @Override
     protected void mobTick() {
         if (spellCooldown > 0) {
             spellCooldown--;
         }
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         return handleClick(hand);
     }
 
+    @Override
     public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
         return handleClick(hand);
     }
 
+    @Override
     public boolean onClick(EnumHand hand) {
         return handleClick(hand);
     }
@@ -184,14 +216,14 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
      * @return True if spell was successfully cast
      */
     public boolean castSpell(EntityPlayer rider, boolean circle) {
-        spellCooldown = CONFIG.RIDER_FANGS_COOLDOWN;
+        spellCooldown = CONFIG.RIDING_FANGS_COOLDOWN;
 
         if (rider == null) {
             return false;
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!hasSpecialPerm(player)) {
+        if (!player.hasPermission("allow.special.evoker")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }
@@ -207,21 +239,21 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         if (circle) {
             for (int i = 0; i < 5; ++i) {
                 float rotationYaw = distance + (float) i * (float) Math.PI * 0.4F;
-                spawnFangs(rider, locX + (double) MathHelper.cos(rotationYaw) * 1.5D, locZ + (double) MathHelper.sin(rotationYaw) * 1.5D, minY, maxY, rotationYaw, 0);
+                spawnFang(rider, locX + (double) MathHelper.cos(rotationYaw) * 1.5D, locZ + (double) MathHelper.sin(rotationYaw) * 1.5D, minY, maxY, rotationYaw, 0);
             }
             for (int i = 0; i < 8; ++i) {
                 float rotationYaw = distance + (float) i * (float) Math.PI * 2.0F / 8.0F + ((float) Math.PI * 2F / 5F);
-                spawnFangs(rider, locX + (double) MathHelper.cos(rotationYaw) * 2.5D, locZ + (double) MathHelper.sin(rotationYaw) * 2.5D, minY, maxY, rotationYaw, 3);
+                spawnFang(rider, locX + (double) MathHelper.cos(rotationYaw) * 2.5D, locZ + (double) MathHelper.sin(rotationYaw) * 2.5D, minY, maxY, rotationYaw, 3);
             }
         } else {
             for (int i = 0; i < 16; ++i) {
                 double d2 = 1.25D * (double) (i + 1);
-                spawnFangs(rider, locX + (double) MathHelper.cos(distance) * d2, locZ + (double) MathHelper.sin(distance) * d2, minY, maxY, distance, i);
+                spawnFang(rider, locX + (double) MathHelper.cos(distance) * d2, locZ + (double) MathHelper.sin(distance) * d2, minY, maxY, distance, i);
             }
         }
     }
 
-    private void spawnFangs(EntityPlayer rider, double x, double z, double minY, double maxY, float rotationYaw, int warmupDelayTicks) {
+    private void spawnFang(EntityPlayer rider, double x, double z, double minY, double maxY, float rotationYaw, int warmupDelayTicks) {
         BlockPosition pos = new BlockPosition(x, maxY, z);
         do {
             if (!world.q(pos) && world.q(pos.down())) { // !isTopSolid(pos) && isTopSolid(pos.down())
@@ -232,12 +264,7 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
                         yOffset = shape.c(EnumDirection.EnumAxis.Y); // shape.getEnd
                     }
                 }
-                EntityEvokerFangs fangs;
-                if (rider == null) {
-                    fangs = new EntityEvokerFangs(world, x, (double) pos.getY() + yOffset, z, rotationYaw, warmupDelayTicks, this);
-                } else {
-                    fangs = new CustomEvokerFangs(world, x, (double) pos.getY() + yOffset, z, rotationYaw, warmupDelayTicks, this, rider);
-                }
+                CustomEvokerFangs fangs = new CustomEvokerFangs(world, x, (double) pos.getY() + yOffset, z, rotationYaw, warmupDelayTicks, this, rider);
                 world.addEntity(fangs);
                 break;
             }

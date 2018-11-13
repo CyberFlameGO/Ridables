@@ -19,6 +19,7 @@ public class AITurtleTravel extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (turtle.getRider() != null) {
             return false;
@@ -33,6 +34,7 @@ public class AITurtleTravel extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (turtle.getRider() != null) {
             return false;
@@ -49,10 +51,11 @@ public class AITurtleTravel extends PathfinderGoal {
         if (turtle.hasEgg()) {
             return false;
         }
-        return turtle.c(turtle.getTravelPos()) >= 36.0D;
+        return turtle.getNavigation().p(); // noPath
     }
 
     // startExecuting
+    @Override
     public void c() {
         int y = turtle.getRandom().nextInt(9) - 4;
         if (y + turtle.locY > turtle.world.getSeaLevel() - 1) {
@@ -64,14 +67,16 @@ public class AITurtleTravel extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         turtle.setTravelling(false);
         super.d();
     }
 
     // tick
+    @Override
     public void e() {
-        if (/*turtle.dA() ||*/ turtle.getNavigation().p()) { // Paper - Fix GH-1501 // noPath
+        if (turtle.getNavigation().p()) { // noPath
             BlockPosition pos = turtle.getTravelPos();
             Vec3D vec3d = RandomPositionGenerator.a(turtle, 16, 3, new Vec3D(pos.getX(), pos.getY(), pos.getZ()), Math.PI / 10D);
             if (vec3d == null) {

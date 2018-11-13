@@ -59,16 +59,25 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         breakDoorAI = new AIZombieBreakDoor(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.DROWNED;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
@@ -78,6 +87,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         // from EntityZombie
         goalSelector.a(4, new AIZombieAttackTurtleEgg(Blocks.TURTLE_EGG, this, 1.0D, 3));
@@ -130,16 +140,19 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     // setBreakDoorsAITask
+    @Override
     public void t(boolean enabled) {
         if (dz()) { // canBreakDoors
             if (dH() != enabled) {
@@ -157,12 +170,20 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         }
     }
 
+    @Override
     protected void mobTick() {
         if (shootCooldown > 0) {
             shootCooldown--;
         }
         Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
@@ -186,14 +207,17 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
                 || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         return handleClick();
     }
 
+    @Override
     public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
         return handleClick();
     }
 
+    @Override
     public boolean onClick(EnumHand hand) {
         return handleClick();
     }
@@ -252,6 +276,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
             this.drowned = drowned;
         }
 
+        @Override
         public void tick() {
             EntityLiving target = drowned.getGoalTarget();
             if (drowned.isSwimmingUp(true) && drowned.isInWater()) {

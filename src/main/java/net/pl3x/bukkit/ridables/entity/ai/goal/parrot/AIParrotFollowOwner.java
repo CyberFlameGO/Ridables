@@ -12,11 +12,13 @@ public class AIParrotFollowOwner extends PathfinderGoalFollowOwnerParrot {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return parrot.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return parrot.getRider() == null && super.b();
     }

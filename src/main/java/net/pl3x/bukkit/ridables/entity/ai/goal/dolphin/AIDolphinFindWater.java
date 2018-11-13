@@ -13,11 +13,13 @@ public class AIDolphinFindWater extends PathfinderGoalWater {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }

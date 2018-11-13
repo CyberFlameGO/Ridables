@@ -15,12 +15,12 @@ import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.PhantomConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlying;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomOrbitPoint;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomPickAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomSweepAttack;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlying;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -44,11 +44,19 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         phase = AttackPhase.CIRCLE;
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.PHANTOM;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AIPhantomPickAttack(this));
         goalSelector.a(2, new AIPhantomSweepAttack(this));
@@ -57,6 +65,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     // readNBT
+    @Override
     public void a(NBTTagCompound nbt) {
         super.a(nbt);
         if (nbt.hasKey("AX")) {
@@ -65,6 +74,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     // writeNBT
+    @Override
     public void b(NBTTagCompound nbt) {
         super.b(nbt);
         nbt.setInt("AX", orbitPosition.getX());
@@ -72,16 +82,19 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         nbt.setInt("AZ", orbitPosition.getZ());
     }
 
+    @Override
     public GroupDataEntity prepare(DifficultyDamageScaler scaler, @Nullable GroupDataEntity group, @Nullable NBTTagCompound nbt) {
         orbitPosition = (new BlockPosition(this)).up(5);
         return super.prepare(scaler, group, nbt);
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
+    @Override
     protected void mobTick() {
         if (getRider() != null && getRider().bj == 0) {
             motY -= CONFIG.GRAVITY;
@@ -90,25 +103,29 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     // onLivingUpdate
+    @Override
     public void k() {
         super.k();
         if (!CONFIG.BURN_IN_SUNLIGHT) {
             extinguish(); // dont burn in sunlight
         }
-        if (dq()) {
+        if (isInDaylight()) {
             setGoalTarget(null, null, false);
         }
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onSpacebar() {
         EntityPlayer rider = getRider();
         if (rider != null && hasShootPerm(rider.getBukkitEntity())) {
@@ -129,7 +146,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     public boolean canAttack() {
-        return !CONFIG.ATTACK_IN_DAYLIGHT && dq();
+        return CONFIG.ATTACK_IN_DAYLIGHT || !isInDaylight();
     }
 
     class PhantomLookController extends LookController {
@@ -152,6 +169,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
             this.phantom = phantom;
         }
 
+        @Override
         public void tick() {
             if (phantom.positionChanged) {
                 phantom.yaw += 180.0F;

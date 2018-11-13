@@ -26,6 +26,7 @@ public class LookController extends ControllerLook {
     }
 
     // tick
+    @Override
     public void a() {
         if (ridable.getRider() != null) {
             tick(ridable.getRider());

@@ -17,11 +17,13 @@ public class AIFishSwim extends PathfinderGoalRandomSwim {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && (!isSchoolFish || !((RidableFishSchool) ridable).isFollowing()) && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ridable.getRider() == null && super.b();
     }

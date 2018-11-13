@@ -20,6 +20,7 @@ public class AIGuardianAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (guardian.getRider() != null) {
             return false;
@@ -29,11 +30,13 @@ public class AIGuardianAttack extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a() && (isElder || guardian.h(guardian.getGoalTarget()) > 9.0D);
     }
 
     // startExecuting
+    @Override
     public void c() {
         timer = -10;
         guardian.getNavigation().q(); // clearPath
@@ -42,6 +45,7 @@ public class AIGuardianAttack extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         guardian.setTargetedEntity(0);
         guardian.setGoalTarget(null);
@@ -49,6 +53,7 @@ public class AIGuardianAttack extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         EntityLiving target = guardian.getGoalTarget();
         guardian.getNavigation().q(); // clearPath

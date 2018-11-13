@@ -1,12 +1,15 @@
 package net.pl3x.bukkit.ridables.entity.animal;
 
+import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityCreeper;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IMonster;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.IronGolemConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
@@ -24,8 +27,10 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.iron_golem.AIIronGolemDefendVillage;
 import net.pl3x.bukkit.ridables.entity.ai.goal.iron_golem.AIIronGolemOfferFlower;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 
 public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
     public static final IronGolemConfig CONFIG = new IronGolemConfig();
@@ -40,7 +45,24 @@ public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
         return RidableType.IRON_GOLEM;
     }
 
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+        getAttributeInstance(GenericAttributes.c).setValue(CONFIG.AI_KNOCKBACK_RESISTANCE);
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AIAttackMelee(this, 1.0D, true));
         goalSelector.a(2, new AIMoveTowardsTarget(this, 0.9D, 32.0F));
@@ -57,53 +79,92 @@ public class RidableIronGolem extends EntityIronGolem implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
+    @Override
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    // attackEntityAsMob
+    @Override
+    public boolean B(Entity entity) {
+        //bC = 10; // attackTimer (not used by server?)
+        world.broadcastEntityEffect(this, (byte) 4);
+        boolean damaged = entity.damageEntity(DamageSource.mobAttack(this), (float) (CONFIG.AI_MELEE_DAMAGE < 0 ? 7 + random.nextInt(15) : CONFIG.AI_MELEE_DAMAGE));
+        if (damaged) {
+            entity.motY += 0.4D;
+            a(this, entity); // applyEnchantments
+        }
+        a(SoundEffects.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F); // playSound
+        return damaged;
+    }
+
+    @Override
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         handleClick(hand);
         return false;
     }
 
+    @Override
     public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
         handleClick(hand);
         return false;
     }
 
+    @Override
     public boolean onClick(EnumHand hand) {
         handleClick(hand);
         return false;
     }
 
     private void handleClick(EnumHand hand) {
+        // handle right click (toggle rose)
         if (hand == EnumHand.OFF_HAND) {
-            a(dz() == 0); // toggle rose on right click
-        } else {
-            if (dz() > 0) {
-                a(false); // remove rose
-            }
-            world.broadcastEntityEffect(this, (byte) 4);
+            a(dz() == 0); // setHoldingRose getHoldRoseTick
+            return;
         }
+
+        // handle left click (swing arms)
+        if (dz() > 0) { // getHoldRoseTick
+            // remove rose if one is in hand
+            a(false); // setHoldingRose
+        }
+        world.broadcastEntityEffect(this, (byte) 4); // swing arms
     }
 }

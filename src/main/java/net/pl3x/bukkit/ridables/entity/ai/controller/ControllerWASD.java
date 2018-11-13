@@ -32,11 +32,13 @@ public class ControllerWASD extends ControllerMove {
     }
 
     // isUpdating
+    @Override
     public boolean b() {
         return rider != null || super.b();
     }
 
     // tick
+    @Override
     public void a() {
         if (updateRider() != null && !override) {
             tick(rider);

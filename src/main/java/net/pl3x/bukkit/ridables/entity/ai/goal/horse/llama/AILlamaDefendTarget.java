@@ -13,6 +13,7 @@ public class AILlamaDefendTarget extends PathfinderGoalNearestAttackableTarget<E
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (llama.getRider() == null && super.a() && d != null && !d.isTamed()) { // targetEntity
             return true;
@@ -22,11 +23,13 @@ public class AILlamaDefendTarget extends PathfinderGoalNearestAttackableTarget<E
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return llama.getRider() == null && super.b();
     }
 
     // getTargetDistance
+    @Override
     protected double i() {
         return super.i() * 0.25D;
     }

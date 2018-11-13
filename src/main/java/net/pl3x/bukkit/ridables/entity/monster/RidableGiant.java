@@ -34,11 +34,19 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.GIANT;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         if (CONFIG.AI_ENABLED) {
             goalSelector.a(0, new AISwim(this));
@@ -56,6 +64,7 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
         }
     }
 
+    @Override
     public void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
@@ -63,53 +72,62 @@ public class RidableGiant extends EntityGiantZombie implements RidableEntity {
         setHealth(CONFIG.AI_HEALTH);
     }
 
+    @Override
     public void reloadAttributes() {
         super.initAttributes();
         if (CONFIG.AI_ENABLED) {
             getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.AI_HEALTH);
             getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.AI_SPEED);
             getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
-            getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
+            getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
         }
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return CONFIG.JUMP_POWER;
     }
 
     // isValidLightLevel
+    @Override
     protected boolean K_() {
         BlockPosition pos = new BlockPosition(locX, getBoundingBox().minY, locZ);
         return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= CONFIG.SPAWN_LIGHT_LEVEL;
     }
 
     // func_205022_a
+    @Override
     public float a(BlockPosition pos, IWorldReader world) {
         return 1.0F;
     }
 
     // canSpawn
-    public boolean a(GeneratorAccess world) {
+    @Override
+    public boolean a(GeneratorAccess world, boolean var2) {
         return super.a(world) && a(new BlockPosition(locX, getBoundingBox().minY, locZ), world) >= 0.0F;
     }
 
+    @Override
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }

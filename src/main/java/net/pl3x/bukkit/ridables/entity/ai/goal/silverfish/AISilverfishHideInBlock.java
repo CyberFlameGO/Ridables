@@ -19,6 +19,7 @@ public class AISilverfishHideInBlock extends PathfinderGoalRandomStroll {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (silverfish.getRider() != null) {
             return false;
@@ -41,11 +42,13 @@ public class AISilverfishHideInBlock extends PathfinderGoalRandomStroll {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return !doMerge && silverfish.getRider() == null && super.b();
     }
 
     // startExecuting
+    @Override
     public void c() {
         if (!doMerge) {
             super.c();

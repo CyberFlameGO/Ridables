@@ -12,6 +12,7 @@ public class AITurtleWander extends PathfinderGoalRandomStroll {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (turtle.getRider() != null) {
             return false;
@@ -29,6 +30,7 @@ public class AITurtleWander extends PathfinderGoalRandomStroll {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return turtle.getRider() == null && super.b();
     }

@@ -12,11 +12,13 @@ public class AIDrownedAttack extends PathfinderGoalZombieAttack {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return drowned.getRider() == null && super.a() && drowned.f(drowned.getGoalTarget()); // should attack
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return drowned.getRider() == null && super.b() && drowned.f(drowned.getGoalTarget()); // should attack
     }

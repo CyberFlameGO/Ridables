@@ -54,16 +54,25 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.GUARDIAN;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     public void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
@@ -73,6 +82,7 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         AIMoveTowardsRestriction moveTowardsRestriction = new AIMoveTowardsRestriction(this, 1.0D);
         goalRandomStroll = new AIWander(this, 1.0D, 80);
@@ -94,6 +104,7 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return true;
     }
@@ -120,11 +131,19 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
         }
     }
 
+    @Override
     protected void mobTick() {
         if (getRider() != null && getAirTicks() > 150) {
             motY += 0.005F;
         }
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
@@ -153,6 +172,7 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
             this.guardian = guardian;
         }
 
+        @Override
         public void tick() {
             if (h == Operation.MOVE_TO && !guardian.getNavigation().p()) {
                 double x = b - guardian.locX;

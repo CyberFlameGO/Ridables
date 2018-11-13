@@ -31,11 +31,19 @@ public class RidableVex extends EntityVex implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.VEX;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(4, new AIVexChargeAttack(this));
@@ -48,26 +56,31 @@ public class RidableVex extends EntityVex implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
+    @Override
     public void k() {
         noclip = CONFIG.NO_CLIP;
         super.k();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
     // fall
+    @Override
     public void c(float f, float f1) {
         // no fall damage
     }
@@ -80,11 +93,13 @@ public class RidableVex extends EntityVex implements RidableEntity {
             this.vex = vex;
         }
 
+        @Override
         public void tick(EntityPlayer rider) {
             super.tick(rider);
             vex.noclip = CONFIG.NO_CLIP;
         }
 
+        @Override
         public void tick() {
             if (this.h == ControllerMove.Operation.MOVE_TO) {
                 double x = b - vex.locX;

@@ -16,14 +16,16 @@ import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.GhastConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlying;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestPlayer;
 import net.pl3x.bukkit.ridables.entity.ai.goal.ghast.AIGhastFireballAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.ghast.AIGhastLookAround;
 import net.pl3x.bukkit.ridables.entity.ai.goal.ghast.AIGhastRandomFly;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlying;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -38,24 +40,34 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.GHAST;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     public void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(5, new AIGhastRandomFly(this));
         goalSelector.a(7, new AIGhastLookAround(this));
@@ -64,10 +76,12 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
+    @Override
     protected void mobTick() {
         if (spacebarCooldown > 0) {
             spacebarCooldown--;
@@ -75,16 +89,32 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onSpacebar() {
         if (spacebarCooldown == 0) {
             EntityPlayer rider = getRider();
@@ -96,14 +126,14 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     }
 
     public boolean shoot(EntityPlayer rider) {
-        spacebarCooldown = CONFIG.SHOOT_COOLDOWN;
+        spacebarCooldown = CONFIG.RIDING_FIREBALL_COOLDOWN;
 
         if (rider == null) {
             return false;
         }
 
         CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
-        if (!hasShootPerm(player)) {
+        if (!player.hasPermission("allow.shoot.ghast")) {
             Lang.send(player, Lang.SHOOT_NO_PERMISSION);
             return false;
         }
@@ -118,7 +148,8 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
             public void run() {
                 CustomFireball fireball = new CustomFireball(world, RidableGhast.this, rider,
                         direction.getX(), direction.getY(), direction.getZ(),
-                        CONFIG.SHOOT_FIREBALL_SPEED, CONFIG.SHOOT_FIREBALL_DAMAGE, CONFIG.SHOOT_FIREBALL_GRIEF);
+                        CONFIG.RIDING_FIREBALL_SPEED, CONFIG.RIDING_FIREBALL_DAMAGE, CONFIG.RIDING_FIREBALL_EXPLOSION_GRIEF);
+                fireball.isIncendiary = CONFIG.RIDING_FIREBALL_EXPLOSION_FIRE;
                 world.addEntity(fireball);
 
                 a(SoundEffects.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
@@ -137,6 +168,7 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
             this.ghast = ghast;
         }
 
+        @Override
         public void tick() {
             if (h == ControllerMove.Operation.MOVE_TO) {
                 double x = b - ghast.locX;

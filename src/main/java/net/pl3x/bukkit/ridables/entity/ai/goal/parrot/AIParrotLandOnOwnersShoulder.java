@@ -13,11 +13,13 @@ public class AIParrotLandOnOwnersShoulder extends PathfinderGoalPerch {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }

@@ -13,6 +13,7 @@ public class AIGhastRandomFly extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (ghast.getRider() != null) {
             return false;
@@ -29,11 +30,13 @@ public class AIGhastRandomFly extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return false;
     }
 
     // startExecuting
+    @Override
     public void c() {
         ghast.getControllerMove().a(
                 ghast.locX + (double) ((ghast.getRandom().nextFloat() * 2.0F - 1.0F) * 16.0F),

@@ -40,11 +40,19 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.WITCH;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(2, new AIAttackRanged(this, 1.0D, 60, 10.0F));
@@ -56,15 +64,18 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
+    @Override
     protected void mobTick() {
         if (shootCooldown > 0) {
             shootCooldown--;
@@ -73,14 +84,17 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
         super.mobTick();
     }
 
+    @Override
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         return handleClick();
     }
 
+    @Override
     public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
         return handleClick();
     }
 
+    @Override
     public boolean onClick(EnumHand hand) {
         return handleClick();
     }
@@ -121,11 +135,13 @@ public class RidableWitch extends EntityWitch implements RidableEntity {
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }

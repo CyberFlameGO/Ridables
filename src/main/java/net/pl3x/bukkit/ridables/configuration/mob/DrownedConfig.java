@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.configuration.mob;
 
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
 
 public class DrownedConfig extends MobConfig {
@@ -15,11 +16,12 @@ public class DrownedConfig extends MobConfig {
     public float RIDING_STEP_HEIGHT = 0.6F;
     public boolean RIDING_RIDE_IN_WATER = true;
     public boolean RIDING_BABIES = false;
+    public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;
     public int RIDING_SHOOT_COOLDOWN = 20;
     public double RIDING_SHOOT_SPEED = 1.0D;
-    public double RIDING_SHOOT_DAMAGE = 8.0D;
+    public float RIDING_SHOOT_DAMAGE = 8.0F;
     public boolean RIDING_SHOOT_CHANNELING = true;
     public boolean RIDING_SHOOT_REQUIRE_TRIDENT = false;
 
@@ -28,6 +30,7 @@ public class DrownedConfig extends MobConfig {
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 
@@ -45,8 +48,6 @@ public class DrownedConfig extends MobConfig {
             addDefault("riding.step-height", RIDING_STEP_HEIGHT);
             addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
             addDefault("riding.ride-babies", RIDING_BABIES);
-            addDefault("riding.saddle.require", RIDING_SADDLE_REQUIRE);
-            addDefault("riding.saddle.consume", RIDING_SADDLE_CONSUME);
             addDefault("riding.shoot.cooldown", RIDING_SHOOT_COOLDOWN);
             addDefault("riding.shoot.speed", RIDING_SHOOT_SPEED);
             addDefault("riding.shoot.damage", RIDING_SHOOT_DAMAGE);
@@ -58,7 +59,7 @@ public class DrownedConfig extends MobConfig {
         BASE_SPEED = getDouble("base-speed");
         MAX_HEALTH = getDouble("max-health");
         AI_MELEE_DAMAGE = getDouble("ai.melee-damage");
-        AI_MELEE_DAMAGE = getDouble("ai.trident-damage");
+        AI_TRIDENT_DAMAGE = (float) getDouble("ai.trident-damage");
         AI_FOLLOW_RANGE = getDouble("ai.follow-range");
         AI_JUMP_POWER = (float) getDouble("ai.jump-power");
         AI_STEP_HEIGHT = (float) getDouble("ai.step-height");
@@ -67,11 +68,12 @@ public class DrownedConfig extends MobConfig {
         RIDING_STEP_HEIGHT = (float) getDouble("riding.step-height");
         RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
         RIDING_BABIES = getBoolean("riding.ride-babies");
-        RIDING_SADDLE_REQUIRE = getBoolean("riding.saddle.require");
-        RIDING_SADDLE_CONSUME = getBoolean("riding.saddle.consume");
+        RIDING_ENABLE_MOVE_EVENT = isSet("riding.enable-move-event") ? getBoolean("riding.enable-move-event") : Config.RIDING_ENABLE_MOVE_EVENT;
+        RIDING_SADDLE_REQUIRE = isSet("riding.saddle.require") ? getBoolean("riding.saddle.require") : Config.RIDING_SADDLE_REQUIRE;
+        RIDING_SADDLE_CONSUME = isSet("riding.saddle.consume") ? getBoolean("riding.saddle.consume") : Config.RIDING_SADDLE_CONSUME;
         RIDING_SHOOT_COOLDOWN = (int) getDouble("riding.shoot.cooldown");
         RIDING_SHOOT_SPEED = getDouble("riding.shoot.speed");
-        RIDING_SHOOT_DAMAGE = getDouble("riding.shoot.damage");
+        RIDING_SHOOT_DAMAGE = (float) getDouble("riding.shoot.damage");
         RIDING_SHOOT_CHANNELING = getBoolean("riding.shoot.channeling");
         RIDING_SHOOT_REQUIRE_TRIDENT = getBoolean("riding.shoot.require-trident");
     }

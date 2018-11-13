@@ -13,6 +13,7 @@ public class AIVexMoveRandom extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (vex.getRider() != null) {
             return false;
@@ -24,11 +25,13 @@ public class AIVexMoveRandom extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return false;
     }
 
     // tick
+    @Override
     public void e() {
         BlockPosition origin = vex.dz(); // getBoundOrigin
         if (origin == null) {

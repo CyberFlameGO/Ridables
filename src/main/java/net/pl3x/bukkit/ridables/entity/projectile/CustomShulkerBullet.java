@@ -37,18 +37,22 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         this.rider = rider;
     }
 
+    @Override
     public RidableShulker getRidable() {
         return shulker;
     }
 
+    @Override
     public Shulker getMob() {
         return shulker == null ? null : (Shulker) shulker.getBukkitEntity();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         detectCollisions();
 
@@ -117,6 +121,7 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         return entity;
     }
 
+    @Override
     public void shoot(double d0, double d1, double d2, float f, float f1) {
         float f2 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
         motX = d0 = (d0 / (double) f2) * f;

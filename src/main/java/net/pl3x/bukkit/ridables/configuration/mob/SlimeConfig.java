@@ -11,6 +11,7 @@ public class SlimeConfig extends MobConfig {
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 

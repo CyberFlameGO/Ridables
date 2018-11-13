@@ -28,6 +28,7 @@ public class AIDrownedGoToWater extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (ridable.getRider() != null) {
             return false;
@@ -50,11 +51,13 @@ public class AIDrownedGoToWater extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ridable.getRider() == null && !entity.getNavigation().p();
     }
 
     // startExecuting
+    @Override
     public void c() {
         entity.getNavigation().a(x, y, z, speed);
     }

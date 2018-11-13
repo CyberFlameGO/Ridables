@@ -42,10 +42,24 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.BLAZE;
     }
 
+    // isNoDespawnRequired
+    @Override
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
@@ -53,6 +67,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
@@ -63,6 +78,7 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(4, new AIBlazeFireballAttack(this));
         goalSelector.a(5, new AIMoveTowardsRestriction(this, 1.0D));
@@ -75,10 +91,12 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
 
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
+    @Override
     protected void mobTick() {
         if (shootCooldown > 0) {
             shootCooldown--;
@@ -87,6 +105,13 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
             motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY; // moveVertical
         }
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
@@ -107,14 +132,17 @@ public class RidableBlaze extends EntityBlaze implements RidableEntity {
                 || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         return handleClick();
     }
 
+    @Override
     public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
         return handleClick();
     }
 
+    @Override
     public boolean onClick(EnumHand hand) {
         return handleClick();
     }

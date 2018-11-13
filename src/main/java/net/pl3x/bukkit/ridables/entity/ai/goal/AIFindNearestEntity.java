@@ -44,6 +44,7 @@ public class AIFindNearestEntity extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (ridable.getRider() != null) {
             return false;
@@ -59,6 +60,7 @@ public class AIFindNearestEntity extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (ridable.getRider() != null) {
             return false;
@@ -72,12 +74,14 @@ public class AIFindNearestEntity extends PathfinderGoal {
     }
 
     // startExecuting
+    @Override
     public void c() {
         entity.setGoalTarget(target, EntityTargetEvent.TargetReason.CLOSEST_ENTITY, true);
         super.c();
     }
 
     // resetTask
+    @Override
     public void d() {
         entity.setGoalTarget(null);
         super.c();

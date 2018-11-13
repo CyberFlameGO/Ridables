@@ -13,11 +13,13 @@ public class AIRabbitAvoidTarget<T extends Entity> extends PathfinderGoalAvoidTa
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return rabbit.getRider() == null && rabbit.getRabbitType() != 99 && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return rabbit.getRider() == null && super.b();
     }

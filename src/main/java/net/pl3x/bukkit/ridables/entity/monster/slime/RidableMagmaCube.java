@@ -28,71 +28,91 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
         fireProof = true;
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.MAGMA_CUBE;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.2D);
     }
 
     // canSpawn
-    public boolean a(GeneratorAccess world) {
+    @Override
+    public boolean a(GeneratorAccess world, boolean var2) {
         return world.getDifficulty() != EnumDifficulty.PEACEFUL;
     }
 
     // isNotColliding
+    @Override
     public boolean a(IWorldReader world) {
         return world.a_(this, getBoundingBox()) && world.getCubes(this, getBoundingBox()) && !world.containsLiquid(getBoundingBox());
     }
 
+    @Override
     public void setSize(int size, boolean flag) {
         super.setSize(size, flag);
         getAttributeInstance(GenericAttributes.h).setValue((double) (size * 3));
     }
 
     // getBrightness
+    @Override
     public float az() {
         return 1.0F;
     }
 
     // flame particles
+    @Override
     protected ParticleParam l() {
         return Particles.y;
     }
 
     // getLootTable
+    @Override
     protected MinecraftKey getDefaultLootTable() {
         return dy() ? LootTables.a : LootTables.ap;
     }
 
+    @Override
     public boolean isBurning() {
         return false;
     }
 
     // getJumpDelay
+    @Override
     protected int dr() {
         return super.dr() * 4;
     }
 
     // alterSquishAmount
+    @Override
     protected void ds() {
         a *= 0.9F;
     }
 
     // jump
+    @Override
     protected void cH() {
         motY = (double) (0.42F + (float) getSize() * 0.1F) * getJumpCharge();
         impulse = true;
     }
 
     // handleFluidJump
+    @Override
     protected void c(Tag<FluidType> tag) {
         if (tag == TagsFluid.LAVA) {
             motY = (double) (0.22F + (float) getSize() * 0.05F) * getJumpCharge();
@@ -103,36 +123,43 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
     }
 
     // fall
+    @Override
     public void c(float f, float f1) {
         // does not take fall damage
     }
 
     // canDamagePlayer
+    @Override
     protected boolean dt() {
         return cP();
     }
 
     // getAttackStrength
+    @Override
     protected int du() {
         return super.du() + 2;
     }
 
     // getHurtSound
+    @Override
     protected SoundEffect d(DamageSource damagesource) {
         return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_HURT_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_HURT;
     }
 
     // getDeathSound
+    @Override
     protected SoundEffect cs() {
         return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_DEATH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_DEATH;
     }
 
     // getSquishSound
+    @Override
     protected SoundEffect dv() {
         return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_SQUISH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_SQUISH;
     }
 
     // getJumpSound
+    @Override
     protected SoundEffect dw() {
         return SoundEffects.ENTITY_MAGMA_CUBE_JUMP;
     }

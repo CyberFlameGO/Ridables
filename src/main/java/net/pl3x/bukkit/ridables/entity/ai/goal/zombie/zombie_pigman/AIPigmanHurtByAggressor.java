@@ -15,6 +15,7 @@ public class AIPigmanHurtByAggressor extends PathfinderGoalHurtByTarget {
     }
 
     // setEntityAttackTarget
+    @Override
     protected void a(EntityCreature entitycreature, EntityLiving entityliving) {
         super.a(entitycreature, entityliving);
         if (entitycreature instanceof EntityPigZombie) {
@@ -23,11 +24,13 @@ public class AIPigmanHurtByAggressor extends PathfinderGoalHurtByTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return pigman.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return pigman.getRider() == null && super.b();
     }

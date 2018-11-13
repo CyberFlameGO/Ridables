@@ -13,28 +13,33 @@ public class AIEvokerCastingSpell extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return evoker.getRider() == null && evoker.getSpellTicks() > 0;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         super.c();
         evoker.getNavigation().q(); // clearPath
     }
 
     // resetTask
+    @Override
     public void d() {
         super.d();
         evoker.setSpell(EntityIllagerWizard.Spell.NONE);
     }
 
     // tick
+    @Override
     public void e() {
         if (evoker.getGoalTarget() != null) {
             evoker.getControllerLook().a(evoker.getGoalTarget(), (float) evoker.getHorizontalFaceSpeed(), (float) evoker.getVerticalFaceSpeed());

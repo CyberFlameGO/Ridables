@@ -20,6 +20,7 @@ public class AIIllusionerBlindnessSpell extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (illusioner.getRider() != null) {
             return false;
@@ -40,11 +41,13 @@ public class AIIllusionerBlindnessSpell extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return illusioner.getGoalTarget() != null && spellWarmup > 0;
     }
 
     // startExecuting
+    @Override
     public void c() {
         spellWarmup = 20;
         illusioner.setSpellTicks(20);
@@ -55,6 +58,7 @@ public class AIIllusionerBlindnessSpell extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         --spellWarmup;
         if (spellWarmup == 0) {

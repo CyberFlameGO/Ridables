@@ -17,11 +17,13 @@ public class AIWander extends PathfinderGoalRandomStroll {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ridable.getRider() == null && super.b();
     }

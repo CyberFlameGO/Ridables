@@ -29,23 +29,27 @@ public class CustomWitherSkull extends EntityWitherSkull implements CustomProjec
     }
 
     public CustomWitherSkull(World world, RidableWither wither, EntityPlayer rider, double x, double y, double z) {
-        super(world, rider, x, y, z);
+        super(world, rider == null ? wither : rider, x, y, z);
         this.wither = wither;
         this.rider = rider;
     }
 
+    @Override
     public RidableWither getRidable() {
         return wither;
     }
 
+    @Override
     public Wither getMob() {
         return wither == null ? null : (Wither) wither.getBukkitEntity();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         if (shooter != null && shooter.dead || !world.isLoaded(new BlockPosition(this))) {
             die();
@@ -68,9 +72,10 @@ public class CustomWitherSkull extends EntityWitherSkull implements CustomProjec
             }
         }
 
-        locX += motX * RidableWither.CONFIG.SHOOT_SPEED;
-        locY += motY * RidableWither.CONFIG.SHOOT_SPEED;
-        locZ += motZ * RidableWither.CONFIG.SHOOT_SPEED;
+        float speedMod = rider == null ? RidableWither.CONFIG.AI_SHOOT_SPEED : RidableWither.CONFIG.RIDING_SHOOT_SPEED;
+        locX += motX * speedMod;
+        locY += motY * speedMod;
+        locZ += motZ * speedMod;
         ProjectileHelper.a(this, 0.2F);
         float f = k();
         if (isInWater()) {
@@ -89,30 +94,46 @@ public class CustomWitherSkull extends EntityWitherSkull implements CustomProjec
         setPosition(locX, locY, locZ);
     }
 
+    @Override
     protected void a(MovingObjectPosition mop) {
-        if (mop.entity != null && RidableWither.CONFIG.SHOOT_DAMAGE > 0) {
+        float damage;
+        float heal;
+        int effectDuration;
+        boolean grief;
+        if (rider == null) {
+            damage = RidableWither.CONFIG.AI_SHOOT_DAMAGE;
+            heal = RidableWither.CONFIG.AI_SHOOT_HEAL_AMOUNT;
+            effectDuration = RidableWither.CONFIG.AI_SHOOT_EFFECT_DURATION;
+            grief = RidableWither.CONFIG.AI_SHOOT_GRIEF;
+        } else {
+            damage = RidableWither.CONFIG.RIDING_SHOOT_DAMAGE;
+            heal = RidableWither.CONFIG.RIDING_SHOOT_HEAL_AMOUNT;
+            effectDuration = RidableWither.CONFIG.RIDING_SHOOT_EFFECT_DURATION;
+            grief = RidableWither.CONFIG.RIDING_SHOOT_GRIEF;
+        }
+        if (mop.entity != null && damage > 0) {
             boolean didDamage;
             if (shooter != null) {
-                didDamage = mop.entity.damageEntity(DamageSource.projectile(this, shooter), RidableWither.CONFIG.SHOOT_DAMAGE);
+                didDamage = mop.entity.damageEntity(DamageSource.projectile(this, shooter), damage);
                 if (didDamage) {
                     if (mop.entity.isAlive()) {
                         a(shooter, mop.entity);
                     }
-                    shooter.heal(RidableWither.CONFIG.SHOOT_HEAL_AMOUNT, EntityRegainHealthEvent.RegainReason.WITHER);
+                    shooter.heal(heal, EntityRegainHealthEvent.RegainReason.WITHER);
                 }
             } else {
-                didDamage = mop.entity.damageEntity(DamageSource.MAGIC, RidableWither.CONFIG.SHOOT_DAMAGE);
+                didDamage = mop.entity.damageEntity(DamageSource.MAGIC, damage);
             }
             if (didDamage && mop.entity instanceof EntityLiving) {
-                if (RidableWither.CONFIG.SHOOT_EFFECT_DURATION > 0) {
-                    ((EntityLiving) mop.entity).addEffect(new MobEffect(MobEffects.WITHER, 20 * RidableWither.CONFIG.SHOOT_EFFECT_DURATION, 1), EntityPotionEffectEvent.Cause.ATTACK);
+                if (effectDuration > 0) {
+                    ((EntityLiving) mop.entity).addEffect(new MobEffect(MobEffects.WITHER, 20 * effectDuration, 1), EntityPotionEffectEvent.Cause.ATTACK);
                 }
             }
         }
         ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(), 1.0F, false);
         world.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
-            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), RidableWither.CONFIG.SHOOT_GRIEF);
+            world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(), grief);
         }
         die();
     }

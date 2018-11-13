@@ -13,11 +13,13 @@ public class AIVindicatorJohnnyAttack extends PathfinderGoalNearestAttackableTar
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return vindicator.getRider() == null && vindicator.isJohnny() && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return vindicator.getRider() == null && super.b();
     }

@@ -15,6 +15,7 @@ public class AIVexChargeAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (vex.getRider() != null) {
             return false;
@@ -32,6 +33,7 @@ public class AIVexChargeAttack extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (vex.getRider() != null) {
             return false;
@@ -49,6 +51,7 @@ public class AIVexChargeAttack extends PathfinderGoal {
     }
 
     // startExecuting
+    @Override
     public void c() {
         Vec3D eye = vex.getGoalTarget().i(1.0F); // getEyePosition
         vex.getControllerMove().a(eye.x, eye.y, eye.z, 1.0D); // setMoveTo
@@ -57,11 +60,13 @@ public class AIVexChargeAttack extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         vex.a(false); // setCharging
     }
 
     // tick
+    @Override
     public void e() {
         EntityLiving target = vex.getGoalTarget();
         if (vex.getBoundingBox().c(target.getBoundingBox())) { // intersects

@@ -58,32 +58,38 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         super(world);
         moveController = new DolphinWASDController(this);
         lookController = new DolphinLookController(this, 10);
-        initAI();
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.DOLPHIN;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_ATTACK_DAMAGE);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
-    }
-
-    protected void initAI() {
         goalSelector.a(0, new AIDolphinBreath(this));
         goalSelector.a(0, new AIDolphinFindWater(this));
         goalSelector.a(1, new AIDolphinSwimToTreasure(this));
@@ -100,11 +106,13 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return true;
     }
 
     // canBeRidden
+    @Override
     protected boolean n(Entity entity) {
         return k <= 0; // rideCooldown
     }
@@ -113,6 +121,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
         return dA();
     }
 
+    @Override
     protected void mobTick() {
         if (++bounceCounter > 10) {
             bounceCounter = 0;
@@ -149,6 +158,13 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
             }
         }
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
@@ -196,6 +212,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
                 || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onSpacebar() {
         if (spacebarCooldown == 0 && CONFIG.RIDING_SPACEBAR_MODE != null) {
             EntityPlayer rider = getRider();
@@ -261,6 +278,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
             this.h = var2;
         }
 
+        @Override
         public void tick() {
             if (d) { // isLooking
                 d = false; // isLooking
@@ -292,6 +310,7 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
             this.dolphin = dolphin;
         }
 
+        @Override
         public void tick() {
             if (dolphin.isInWater()) {
                 dolphin.motY += 0.005D;

@@ -12,6 +12,7 @@ public class AIShulkerPeek extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (shulker.getRider() != null) {
             return false;
@@ -23,6 +24,7 @@ public class AIShulkerPeek extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (shulker.getRider() != null) {
             return false;
@@ -34,12 +36,14 @@ public class AIShulkerPeek extends PathfinderGoal {
     }
 
     // startExecuting
+    @Override
     public void c() {
         peekTime = 20 * (1 + shulker.getRandom().nextInt(3));
         shulker.a(30); // updateArmorModifier
     }
 
     // resetTask
+    @Override
     public void d() {
         if (shulker.getGoalTarget() == null) {
             shulker.a(0); // updateArmorModifier
@@ -47,6 +51,7 @@ public class AIShulkerPeek extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         --peekTime;
     }

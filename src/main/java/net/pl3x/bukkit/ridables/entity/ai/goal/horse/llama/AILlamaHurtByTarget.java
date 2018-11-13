@@ -12,11 +12,13 @@ public class AILlamaHurtByTarget extends PathfinderGoalHurtByTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return llama.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (llama.getRider() != null) {
             return false;

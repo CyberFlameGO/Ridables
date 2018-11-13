@@ -12,6 +12,7 @@ public class AIPolarBearPanic extends PathfinderGoalPanic {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (bear.getRider() != null) {
             return false;
@@ -23,6 +24,7 @@ public class AIPolarBearPanic extends PathfinderGoalPanic {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return bear.getRider() == null && super.b();
     }

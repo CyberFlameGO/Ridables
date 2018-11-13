@@ -12,11 +12,13 @@ public class AIWitherDoNothing extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return wither.getRider() != null || wither.dz() > 0; // getInvulnerableTime
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }

@@ -16,11 +16,13 @@ public class AIShootBow<T extends EntityMonster & IRangedEntity> extends Pathfin
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && entity.getGoalTarget() != null && g(); // isBowInMainHand
     }
 
-    // shouldContinueExecuting
+    // shouldContinueExecutin
+    @Override
     public boolean b() {
         return ridable.getRider() == null && (entity.getGoalTarget() != null || !entity.getNavigation().p()) && g(); // noPath isBowInMainHand
     }

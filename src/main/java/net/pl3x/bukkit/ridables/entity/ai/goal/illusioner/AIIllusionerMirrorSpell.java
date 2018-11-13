@@ -17,6 +17,7 @@ public class AIIllusionerMirrorSpell extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (illusioner.getGoalTarget() == null) {
             return false;
@@ -31,11 +32,13 @@ public class AIIllusionerMirrorSpell extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return illusioner.getRider() == null && illusioner.getGoalTarget() != null && spellWarmup > 0;
     }
 
     // startExecuting
+    @Override
     public void c() {
         spellWarmup = 20;
         illusioner.setSpellTicks(20);
@@ -45,6 +48,7 @@ public class AIIllusionerMirrorSpell extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         --spellWarmup;
         if (spellWarmup == 0) {

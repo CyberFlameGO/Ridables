@@ -14,16 +14,19 @@ public class AIGhastLookAround extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ghast.getRider() == null;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         EntityLiving target = ghast.getGoalTarget();
         if (target == null) {

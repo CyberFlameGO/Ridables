@@ -12,11 +12,13 @@ public class AIIronGolemOfferFlower extends PathfinderGoalOfferFlower {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return golem.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return golem.getRider() == null && super.b();
     }

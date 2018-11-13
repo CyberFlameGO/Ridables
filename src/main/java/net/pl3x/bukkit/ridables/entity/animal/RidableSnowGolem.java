@@ -7,9 +7,9 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityItem;
-import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntitySnowman;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.IBlockData;
 import net.minecraft.server.v1_13_R2.IMonster;
 import net.minecraft.server.v1_13_R2.ItemStack;
@@ -27,6 +27,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackRanged;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -45,11 +46,28 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.SNOWMAN;
     }
 
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AIAttackRanged(this, 1.25D, 20, 10.0F));
         goalSelector.a(2, new AIWanderAvoidWater(this, 1.0D, 0.00001F));
@@ -59,81 +77,114 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
+    @Override
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
     // onLivingUpdate
+    @Override
     public void k() {
         super.k();
+        boolean hasRider = getRider() != null;
+        if (ap()) { // isWet
+            if (hasRider && CONFIG.RIDING_DAMAGE_WHEN_WET > 0.0F) {
+                damageEntity(DamageSource.DROWN, CONFIG.RIDING_DAMAGE_WHEN_WET);
+            } else if (!hasRider && CONFIG.AI_DAMAGE_WHEN_WET > 0.0F) {
+                damageEntity(DamageSource.DROWN, CONFIG.AI_DAMAGE_WHEN_WET);
+            }
+        }
         int x = MathHelper.floor(locX);
         int y = MathHelper.floor(locY);
         int z = MathHelper.floor(locZ);
-        if (ap() && CONFIG.DAMAGE_WHEN_WET) { // isWet
-            damageEntity(DamageSource.DROWN, 1.0F);
+        if (world.getBiome(new BlockPosition(x, 0, z)).c(new BlockPosition(x, y, z)) > 1.0F) { // biome.getTemperature(pos)
+            if (hasRider && CONFIG.RIDING_DAMAGE_WHEN_HOT > 0.0F) {
+                damageEntity(CraftEventFactory.MELTING, CONFIG.RIDING_DAMAGE_WHEN_HOT);
+            } else if (!hasRider && CONFIG.AI_DAMAGE_WHEN_HOT > 0.0F) {
+                damageEntity(CraftEventFactory.MELTING, CONFIG.AI_DAMAGE_WHEN_HOT);
+            }
         }
-        if (world.getBiome(new BlockPosition(x, 0, z)).c(new BlockPosition(x, y, z)) > 1.0F && CONFIG.DAMAGE_WHEN_HOT) { // biome.getTemperature(pos)
-            damageEntity(CraftEventFactory.MELTING, 1.0F);
-        }
-        if (!(world.getGameRules().getBoolean("mobGriefing") && CONFIG.LEAVE_SNOW_TRAIL)) {
-            return; // not allowed to grief world (placing snow layers where walking)
+        if (!world.getGameRules().getBoolean("mobGriefing")) {
+            return; // not allowed to grief world (gamerule trumps all)
+        } else if (hasRider && !CONFIG.RIDING_SNOW_TRAIL_ENABLED) {
+            return; // not allowed to leave trail while riding
+        } else if (!hasRider && !CONFIG.AI_SNOW_TRAIL_ENABLED) {
+            return; // not allowed to leave trail from ai (not riding)
         }
         IBlockData block = Blocks.SNOW.getBlockData();
         for (int l = 0; l < 4; ++l) {
-            x = MathHelper.floor(locX + (double) ((float) (l % 2 * 2 - 1) * 0.25F));
-            y = MathHelper.floor(locY);
-            z = MathHelper.floor(locZ + (double) ((float) (l / 2 % 2 * 2 - 1) * 0.25F));
-            BlockPosition pos = new BlockPosition(x, y, z);
-            if (world.getType(pos).isAir() && world.getBiome(pos).c(pos) < 0.8F && block.canPlace(world, pos)) {
-                CraftEventFactory.handleBlockFormEvent(world, pos, block, this);
+            BlockPosition pos = new BlockPosition(
+                    MathHelper.floor(locX + (double) ((float) (l % 2 * 2 - 1) * 0.25F)),
+                    MathHelper.floor(locY),
+                    MathHelper.floor(locZ + (double) ((float) (l / 2 % 2 * 2 - 1) * 0.25F)));
+            if (world.getType(pos).isAir() && block.canPlace(world, pos)) {
+                float temp = world.getBiome(pos).c(pos); // biome.getTemperature(pos)
+                if (hasRider && temp < CONFIG.RIDING_SNOW_TRAIL_MAX_TEMP) {
+                    CraftEventFactory.handleBlockFormEvent(world, pos, block, this);
+                } else if (!hasRider && temp < CONFIG.AI_SNOW_TRAIL_MAX_TEMP) {
+                    CraftEventFactory.handleBlockFormEvent(world, pos, block, this);
+                }
             }
         }
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        ItemStack itemstack = player.b(hand);
-        if (!hasPumpkin() && PUMPKIN.isTagged(CraftItemStack.asCraftMirror(itemstack))) {
-            setHasPumpkin(true);
-            if (!player.abilities.canInstantlyBuild) {
-                itemstack.subtract(1);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (passengers.isEmpty()) {
+            ItemStack itemstack = entityhuman.b(hand);
+            if (hasPumpkin()) {
+                if (itemstack.getItem() == Items.SHEARS) {
+                    if (!new PlayerShearEntityEvent((Player) entityhuman.getBukkitEntity(), getBukkitEntity()).callEvent()) {
+                        return false; // plugin cancelled
+                    }
+                    setHasPumpkin(false);
+                    itemstack.damage(1, entityhuman);
+                    if (CONFIG.AI_SHEARS_DROPS_PUMPKIN) {
+                        EntityItem pumpkin = new EntityItem(world, locX, locY, locZ, new ItemStack(Blocks.PUMPKIN.getItem()));
+                        pumpkin.pickupDelay = 10;
+                        world.addEntity(pumpkin, CreatureSpawnEvent.SpawnReason.CUSTOM);
+                    }
+                    return true; // handled
+                }
+            } else {
+                if (CONFIG.AI_ADD_PUMPKIN_TO_HEAD && PUMPKIN.isTagged(CraftItemStack.asCraftMirror(itemstack))) {
+                    setHasPumpkin(true);
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        itemstack.subtract(1);
+                    }
+                    return true; // handled
+                }
             }
-            return true; // handled
-        } else if (hasPumpkin() && itemstack.getItem() == Items.SHEARS) {
-            PlayerShearEntityEvent event = new PlayerShearEntityEvent((Player) player.getBukkitEntity(), getBukkitEntity());
-            world.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return false;
+            if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && !entityhuman.isPassenger()) {
+                return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
             }
-            setHasPumpkin(false);
-            itemstack.damage(1, player);
-            EntityItem pumpkin = new EntityItem(world, locX, locY, locZ, new ItemStack(Blocks.PUMPKIN.getItem()));
-            pumpkin.pickupDelay = 10;
-            world.addEntity(pumpkin, CreatureSpawnEvent.SpawnReason.CUSTOM);
-            return true; // handled
         }
-        return super.a(player, hand) || processInteract(player, hand);
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    // attackEntityWithRangedAttack
-    public void a(EntityLiving target, float distanceFactor) {
-        if (getRider() == null) {
-            super.a(target, distanceFactor);
-        }
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 }

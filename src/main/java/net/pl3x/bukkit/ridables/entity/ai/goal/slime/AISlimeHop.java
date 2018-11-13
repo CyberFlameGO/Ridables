@@ -14,6 +14,7 @@ public class AISlimeHop extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (slime.getRider() != null) {
             return false;
@@ -22,11 +23,13 @@ public class AISlimeHop extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         ((RidableSlime.SlimeWASDController) slime.getControllerMove()).setSpeed(1.0D);
     }

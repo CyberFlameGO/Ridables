@@ -12,11 +12,13 @@ public class AIOcelotAttack extends PathfinderGoalOcelotAttack {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ocelot.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ocelot.getRider() == null && super.b();
     }

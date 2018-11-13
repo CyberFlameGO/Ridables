@@ -13,28 +13,33 @@ public class AIIllusionerCastingSpell extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return illusioner.getRider() == null && illusioner.getSpellTicks() > 0;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         super.c();
         illusioner.getNavigation().q(); // clearPath
     }
 
     // resetTask
+    @Override
     public void d() {
         super.d();
         illusioner.setSpell(EntityIllagerWizard.Spell.NONE);
     }
 
     // tick
+    @Override
     public void e() {
         if (illusioner.getGoalTarget() != null) {
             illusioner.getControllerLook().a(illusioner.getGoalTarget(), (float) illusioner.L(), (float) illusioner.K());

@@ -6,13 +6,18 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.event.RidableMountEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public interface RidableEntity {
     /**
@@ -42,8 +47,11 @@ public interface RidableEntity {
         Player player = (Player) entityhuman.getBukkitEntity();
         ItemStack itemstack = entityhuman.b(EnumHand.MAIN_HAND);
         if (requireSaddle && (itemstack == null || itemstack.getItem() != Items.SADDLE)) {
-            Lang.send(player, Lang.RIDE_REQUIRES_SADDLE);
-            return false; // not handled - saddle is required
+            itemstack = entityhuman.b(EnumHand.OFF_HAND);
+            if (itemstack == null || itemstack.getItem() != Items.SADDLE) {
+                Lang.send(player, Lang.RIDE_REQUIRES_SADDLE);
+                return false; // not handled - saddle is required
+            }
         }
         if (!player.hasPermission("allow.ride." + getType().getName())) {
             Lang.send(player, Lang.RIDE_NO_PERMISSION);
@@ -61,6 +69,27 @@ public interface RidableEntity {
         entityhuman.startRiding(entity);
         entityhuman.o(false); // setJumping - fixes jump on mount
         return true; // handled
+    }
+
+    default void checkMove() {
+        if (getRider() == null) {
+            return; // no rider
+        }
+        if (!Config.RIDING_ENABLE_MOVE_EVENT) {
+            return; // feature disabled
+        }
+        EntityInsentient entity = (EntityInsentient) this;
+        if (entity.locX == entity.lastX && entity.locY == entity.lastY && entity.locZ == entity.lastZ) {
+            return; // did not move
+        }
+        World world = entity.getBukkitEntity().getWorld();
+        Location to = new Location(world, entity.locX, entity.locY, entity.locZ);
+        Location from = new Location(world, entity.lastX, entity.lastY, entity.lastZ);
+        PlayerMoveEvent event = new PlayerMoveEvent(getRider().getBukkitEntity(), from, to);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled() || !to.equals(event.getTo())) {
+            entity.ejectPassengers();
+        }
     }
 
     /**

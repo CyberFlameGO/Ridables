@@ -39,18 +39,22 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         setInvisible(true);
     }
 
+    @Override
     public RidablePhantom getRidable() {
         return phantom;
     }
 
+    @Override
     public Phantom getMob() {
         return phantom == null ? null : (Phantom) phantom.getBukkitEntity();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : (Player) rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         detectCollisions();
 
@@ -143,6 +147,7 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         return entity;
     }
 
+    @Override
     public void shoot(double d0, double d1, double d2, float f, float f1) {
         float f2 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
         motX = d0 = (d0 / (double) f2) * f;
@@ -153,14 +158,17 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
     }
 
     // entityInit
+    @Override
     protected void x_() {
     }
 
     // readEntityFromNBT
+    @Override
     protected void a(NBTTagCompound nbt) {
     }
 
     // writeEntityToNBT
+    @Override
     protected void b(NBTTagCompound nbttagcompound) {
     }
 }

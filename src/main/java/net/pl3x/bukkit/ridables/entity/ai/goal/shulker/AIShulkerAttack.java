@@ -17,6 +17,7 @@ public class AIShulkerAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (shulker.getRider() != null) {
             return false;
@@ -29,22 +30,26 @@ public class AIShulkerAttack extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         attackTime = 20;
         shulker.a(100); // updateArmorModifier
     }
 
     // resetTask
+    @Override
     public void d() {
         shulker.a(0); // updateArmorModifier
     }
 
     // tick
+    @Override
     public void e() {
         if (shulker.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
             return;

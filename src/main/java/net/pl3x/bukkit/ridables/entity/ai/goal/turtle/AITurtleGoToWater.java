@@ -16,6 +16,7 @@ public class AITurtleGoToWater extends PathfinderGoalGotoTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (turtle.getRider() != null) {
             return false;
@@ -36,6 +37,7 @@ public class AITurtleGoToWater extends PathfinderGoalGotoTarget {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (turtle.getRider() != null) {
             return false;
@@ -50,16 +52,19 @@ public class AITurtleGoToWater extends PathfinderGoalGotoTarget {
     }
 
     // getTargetYOffset
+    @Override
     public int j() {
         return 1;
     }
 
     // shouldMove
+    @Override
     public boolean i() {
         return c % 160 == 0; // timeoutCounter
     }
 
     // shouldMoveTo
+    @Override
     protected boolean a(IWorldReader world, BlockPosition pos) {
         return world.getType(pos).getBlock() == Blocks.WATER;
     }

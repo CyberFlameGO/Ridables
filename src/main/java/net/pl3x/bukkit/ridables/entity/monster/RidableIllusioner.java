@@ -35,11 +35,19 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.ILLUSIONER;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIIllusionerCastingSpell(this));
@@ -56,11 +64,13 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
@@ -74,32 +84,38 @@ public class RidableIllusioner extends EntityIllagerIllusioner implements Ridabl
     }
 
     // isValidLightLevel
+    @Override
     protected boolean K_() {
         BlockPosition pos = new BlockPosition(locX, getBoundingBox().minY, locZ);
         return (world.Y() ? world.getLightLevel(pos, 10) : world.getLightLevel(pos)) <= CONFIG.SPAWN_LIGHT_LEVEL;
     }
 
     // func_205022_a
+    @Override
     public float a(BlockPosition pos, IWorldReader world) {
         return 1.0F;
     }
 
     // canSpawn
-    public boolean a(GeneratorAccess world) {
+    @Override
+    public boolean a(GeneratorAccess world, boolean var2) {
         return super.a(world) && a(new BlockPosition(locX, getBoundingBox().minY, locZ), world) >= 0.0F;
     }
 
+    @Override
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }

@@ -21,6 +21,7 @@ public class AIRabbitEatCarrots extends PathfinderGoalGotoTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (rabbit.getRider() != null) {
             return false;
@@ -37,11 +38,13 @@ public class AIRabbitEatCarrots extends PathfinderGoalGotoTarget {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return canRaid && rabbit.getRider() == null && super.b();
     }
 
     // tick
+    @Override
     public void e() {
         super.e();
         rabbit.getControllerLook().a((double) d.getX() + 0.5D, (double) (d.getY() + 1), (double) d.getZ() + 0.5D, 10.0F, (float) rabbit.K()); // setLookPosition destinationBlock getVerticalFaceSpeed
@@ -74,6 +77,7 @@ public class AIRabbitEatCarrots extends PathfinderGoalGotoTarget {
     }
 
     // shouldMoveTo
+    @Override
     protected boolean a(IWorldReader world, BlockPosition pos) {
         if (wantsToRaid && !canRaid) {
             Block block = world.getType(pos).getBlock();

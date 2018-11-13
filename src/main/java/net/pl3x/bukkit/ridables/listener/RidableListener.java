@@ -3,12 +3,13 @@ package net.pl3x.bukkit.ridables.listener;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.boss.RidableEnderDragon;
+import net.pl3x.bukkit.ridables.entity.boss.RidableWither;
 import net.pl3x.bukkit.ridables.entity.monster.RidableBlaze;
 import net.pl3x.bukkit.ridables.entity.monster.RidableCreeper;
-import net.pl3x.bukkit.ridables.entity.boss.RidableEnderDragon;
-import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.monster.RidableGhast;
-import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
@@ -66,7 +67,7 @@ public class RidableListener implements Listener {
             if (fireball.getRider() == null) {
                 event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.AI_FIREBALL_EXPLOSION_DAMAGE);
             } else {
-                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.SHOOT_FIREBALL_EXPLOSION_DAMAGE);
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableGhast.CONFIG.RIDING_FIREBALL_EXPLOSION_DAMAGE);
             }
         } else if (fireball.getRidable() instanceof RidableBlaze) {
             if (fireball.getRider() == null) {
@@ -89,6 +90,10 @@ public class RidableListener implements Listener {
                 event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableCreeper.CONFIG.AI_EXPLOSION_DAMAGE);
             } else {
                 event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableCreeper.CONFIG.RIDING_EXPLOSION_DAMAGE);
+            }
+        } else if (ridable.getType() == RidableType.WITHER) {
+            if (((RidableWither) ridable).getInvulTime() > 0) {
+                event.setDamage(EntityDamageEvent.DamageModifier.BASE, RidableWither.CONFIG.AI_SPAWN_EXPLOSION_DAMAGE);
             }
         }
     }

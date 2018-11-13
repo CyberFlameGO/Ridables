@@ -5,7 +5,6 @@ import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.DataWatcherObject;
 import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTurtle;
@@ -27,6 +26,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtlePanic;
 import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleTempt;
 import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleTravel;
 import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleWander;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 
@@ -85,11 +86,28 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.TURTLE;
     }
 
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AITurtlePanic(this, 1.2D));
         goalSelector.a(1, new AITurtleBreed(this, 1.0D));
@@ -103,60 +121,74 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return true;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
+    @Override
     public BlockPosition getHome() {
         return datawatcher.get(HOME_POSITION);
     }
 
+    @Override
     public void setHome(BlockPosition pos) {
         datawatcher.set(HOME_POSITION, pos);
     }
 
+    @Override
     public boolean hasEgg() {
         return datawatcher.get(HAS_EGG);
     }
 
+    @Override
     public void setHasEgg(boolean hasEgg) {
         datawatcher.set(HAS_EGG, hasEgg);
     }
 
+    @Override
     public boolean isDigging() {
         return datawatcher.get(DIGGING);
     }
 
+    @Override
     public void setDigging(boolean digging) {
         setDiggingTicks(digging ? 1 : 0);
         datawatcher.set(DIGGING, digging);
     }
 
+    @Override
     public BlockPosition getTravelPos() {
         return datawatcher.get(TRAVEL_POSITION);
     }
 
+    @Override
     public void setTravelPos(BlockPosition pos) {
         datawatcher.set(TRAVEL_POSITION, pos);
     }
 
+    @Override
     public boolean isGoingHome() {
         return datawatcher.get(GOING_HOME);
     }
 
+    @Override
     public void setGoingHome(boolean goingHome) {
         datawatcher.set(GOING_HOME, goingHome);
     }
 
+    @Override
     public boolean isTravelling() {
         return datawatcher.get(TRAVELLING);
     }
 
+    @Override
     public void setTravelling(boolean travelling) {
         datawatcher.set(TRAVELLING, travelling);
     }
@@ -176,26 +208,41 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
         }
     }
 
+    @Override
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         if (isInWater() && getRider() != null) {
             motY += 0.005D;
         }
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    public RidableTurtle createChild(EntityAgeable entity) {
-        return new RidableTurtle(world);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     static class TurtleWASDController extends ControllerWASD {
@@ -206,11 +253,13 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
             this.turtle = turtle;
         }
 
+        @Override
         public void tick(EntityPlayer rider) {
             updateSpeed();
             super.tick(rider);
         }
 
+        @Override
         public void tick() {
             updateSpeed();
             if (h == ControllerMove.Operation.MOVE_TO && !turtle.getNavigation().p()) { // noPath

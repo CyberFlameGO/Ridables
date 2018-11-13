@@ -13,11 +13,13 @@ public class AIOwnerHurtByTarget extends PathfinderGoalOwnerHurtByTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return entity.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return entity.getRider() == null && super.b();
     }

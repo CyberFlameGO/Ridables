@@ -19,7 +19,7 @@ public class GiantConfig extends MobConfig {
     public float AI_SPEED = 0.5F;
     public float AI_FOLLOW_RANGE = 32.0F;
     public boolean AI_HOSTILE = true;
-    public float AI_ATTACK_DAMAGE = 5.0F;
+    public float AI_MELEE_DAMAGE = 5.0F;
 
     public boolean SPAWN_NATURALLY = false;
     public int SPAWN_LIGHT_LEVEL = 8;
@@ -48,6 +48,7 @@ public class GiantConfig extends MobConfig {
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 
@@ -64,7 +65,7 @@ public class GiantConfig extends MobConfig {
             addDefault("ai.speed", AI_SPEED);
             addDefault("ai.follow", AI_FOLLOW_RANGE);
             addDefault("ai.hostile", AI_HOSTILE);
-            addDefault("ai.attack", AI_ATTACK_DAMAGE);
+            addDefault("ai.attack", AI_MELEE_DAMAGE);
 
             addDefault("spawn.natural", SPAWN_NATURALLY);
             addDefault("spawn.max-light", SPAWN_LIGHT_LEVEL);
@@ -88,7 +89,7 @@ public class GiantConfig extends MobConfig {
         AI_SPEED = (float) getDouble("ai.speed", 0.3D);
         AI_FOLLOW_RANGE = (float) getDouble("ai.follow", 32.0D);
         AI_HOSTILE = getBoolean("ai.hostile", true);
-        AI_ATTACK_DAMAGE = (float) getDouble("ai.attack", 5.0D);
+        AI_MELEE_DAMAGE = (float) getDouble("ai.attack", 5.0D);
 
         SPAWN_NATURALLY = getBoolean("spawn.natural", false);
         SPAWN_LIGHT_LEVEL = (int) getDouble("spawn.max-light", 8);

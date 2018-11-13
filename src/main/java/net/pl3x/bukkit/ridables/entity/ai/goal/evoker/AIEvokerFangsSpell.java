@@ -17,6 +17,7 @@ public class AIEvokerFangsSpell extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (evoker.getRider() != null) {
             return false;
@@ -31,11 +32,13 @@ public class AIEvokerFangsSpell extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return evoker.getRider() == null && evoker.getGoalTarget() != null && spellWarmup > 0;
     }
 
     // startExecuting
+    @Override
     public void c() {
         spellWarmup = 20;
         evoker.setSpellTicks(40);
@@ -48,6 +51,7 @@ public class AIEvokerFangsSpell extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         --spellWarmup;
         if (spellWarmup == 0) {

@@ -19,6 +19,7 @@ public class AIPhantomAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (phantom.getRider() != null) {
             return false;
@@ -47,6 +48,7 @@ public class AIPhantomAttack extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return phantom.canAttack() && PathfinderGoalTarget.a(phantom, phantom.getGoalTarget(), false, false);
     }

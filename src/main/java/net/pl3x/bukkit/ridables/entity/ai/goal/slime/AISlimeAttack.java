@@ -18,6 +18,7 @@ public class AISlimeAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (slime.getRider() != null) {
             return false;
@@ -33,6 +34,7 @@ public class AISlimeAttack extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (slime.getRider() != null) {
             return false;
@@ -51,18 +53,21 @@ public class AISlimeAttack extends PathfinderGoal {
     }
 
     // startExecuting
+    @Override
     public void c() {
         timer = 300;
         super.c();
     }
 
     // resetTask
+    @Override
     public void d() {
         timer = 0;
         slime.setGoalTarget(null);
     }
 
     // tick
+    @Override
     public void e() {
         slime.a(slime.getGoalTarget(), 10.0F, 10.0F);
         ((RidableSlime.SlimeWASDController) slime.getControllerMove()).setDirection(slime.yaw, slime.canDamagePlayer());

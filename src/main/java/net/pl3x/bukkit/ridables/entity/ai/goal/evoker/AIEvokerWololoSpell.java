@@ -22,6 +22,7 @@ public class AIEvokerWololoSpell extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (evoker.getRider() != null) {
             return false;
@@ -47,11 +48,13 @@ public class AIEvokerWololoSpell extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return evoker.getRider() == null && evoker.getWololoTarget() != null && spellWarmup > 0;
     }
 
     // startExecuting
+    @Override
     public void c() {
         spellWarmup = 40;
         evoker.setSpellTicks(60);
@@ -61,12 +64,14 @@ public class AIEvokerWololoSpell extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         super.d();
         evoker.setWololoTarget(null);
     }
 
     // tick
+    @Override
     public void e() {
         --spellWarmup;
         if (spellWarmup == 0) {

@@ -16,16 +16,19 @@ public class AIPhantomPickAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return phantom.getRider() == null && PathfinderGoalTarget.a(phantom, phantom.getGoalTarget(), false, false);
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         ticks = 10;
         phantom.phase = RidablePhantom.AttackPhase.CIRCLE;
@@ -33,11 +36,13 @@ public class AIPhantomPickAttack extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         phantom.orbitPosition = phantom.world.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING, phantom.orbitPosition).up(10 + phantom.getRandom().nextInt(20));
     }
 
     // tick
+    @Override
     public void e() {
         if (phantom.phase == RidablePhantom.AttackPhase.CIRCLE) {
             --ticks;

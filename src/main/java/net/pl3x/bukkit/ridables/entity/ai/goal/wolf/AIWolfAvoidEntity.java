@@ -14,6 +14,7 @@ public class AIWolfAvoidEntity<T extends Entity> extends PathfinderGoalAvoidTarg
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (wolf.getRider() != null) {
             return false;
@@ -31,17 +32,20 @@ public class AIWolfAvoidEntity<T extends Entity> extends PathfinderGoalAvoidTarg
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return wolf.getRider() == null && super.b();
     }
 
     // startExecuting
+    @Override
     public void c() {
         wolf.setGoalTarget(null);
         super.c();
     }
 
     // tick
+    @Override
     public void e() {
         wolf.setGoalTarget(null);
         super.e();

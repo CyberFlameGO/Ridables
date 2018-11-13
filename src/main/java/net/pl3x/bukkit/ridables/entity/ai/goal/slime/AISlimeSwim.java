@@ -15,6 +15,7 @@ public class AISlimeSwim extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (slime.isInWater() || slime.ax()) {
             return slime.canWander() && new SlimeSwimEvent((Slime) slime.getBukkitEntity()).callEvent();
@@ -23,11 +24,13 @@ public class AISlimeSwim extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         if (slime.getRandom().nextFloat() < 0.8F) {
             slime.getControllerJump().a();

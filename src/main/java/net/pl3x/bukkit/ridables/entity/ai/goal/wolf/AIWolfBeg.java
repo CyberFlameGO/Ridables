@@ -12,11 +12,13 @@ public class AIWolfBeg extends PathfinderGoalBeg {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return wolf.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return wolf.getRider() == null && super.b();
     }

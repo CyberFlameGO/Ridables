@@ -12,11 +12,13 @@ public class AIVillagerTradeWithPlayer extends PathfinderGoalTradeWithPlayer {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return villager.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return villager.getRider() == null && super.b();
     }

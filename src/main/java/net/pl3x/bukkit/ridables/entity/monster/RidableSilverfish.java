@@ -38,11 +38,19 @@ public class RidableSilverfish extends EntitySilverfish implements RidableEntity
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.SILVERFISH;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         AISilverfishWakeOthers wakeOthers = new AISilverfishWakeOthers(this);
 
@@ -60,26 +68,31 @@ public class RidableSilverfish extends EntitySilverfish implements RidableEntity
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
+    @Override
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }

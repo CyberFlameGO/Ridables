@@ -13,6 +13,7 @@ public class AITurtlePanic extends PathfinderGoalPanic {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (turtle.getRider() != null) {
             return false;
@@ -31,6 +32,7 @@ public class AITurtlePanic extends PathfinderGoalPanic {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return turtle.getRider() == null && super.b();
     }

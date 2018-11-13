@@ -13,11 +13,13 @@ public class AIPigmanTargetAggressor extends PathfinderGoalNearestAttackableTarg
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return pigman.getRider() == null && pigman.dF() && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return pigman.getRider() == null && super.b();
     }

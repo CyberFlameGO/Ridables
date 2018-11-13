@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity.monster.zombie;
 
 import net.minecraft.server.v1_13_R2.Blocks;
+import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
@@ -49,11 +50,19 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
         breakDoorAI = new AIZombieBreakDoor(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.ZOMBIE_PIGMAN;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         // from EntityZombie
         goalSelector.a(4, new AIZombieAttackTurtleEgg(Blocks.TURTLE_EGG, this, 1.0D, 3));
@@ -69,16 +78,19 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask
+    @Override
     public void t(boolean enabled) {
         if (dz()) { // canBreakDoors
             if (dH() != enabled) {
@@ -96,19 +108,35 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
         }
     }
 
+    @Override
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+    }
+
+    @Override
+    public boolean damageEntity(DamageSource damagesource, float damage) {
+        if (isInvulnerable(damagesource)) {
+            return false;
+        }
+        Entity target = damagesource.getEntity();
+        boolean result = super.damageEntity(damagesource, damage);
+        if (result && target instanceof EntityHuman && !((EntityHuman) target).u() && getRider() == null) { // isCreative
+            becomeAngryAt(target);
+        }
+        return result;
     }
 
     public void becomeAngryAt(Entity target) {

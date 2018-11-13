@@ -16,26 +16,31 @@ public class AIGhastFireballAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ghast.getRider() == null && ghast.getGoalTarget() != null;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         attackTimer = 0;
     }
 
     // resetTask
+    @Override
     public void d() {
         ghast.a(false); // setAttacking
     }
 
     // tick
+    @Override
     public void e() {
         EntityLiving target = ghast.getGoalTarget();
         if (target.h(ghast) < 4096.0D && ghast.hasLineOfSight(target)) { // getDistanceSq
@@ -52,7 +57,8 @@ public class AIGhastFireballAttack extends PathfinderGoal {
                         target.locZ - (ghast.locZ + vec3d.z * 4.0D),
                         RidableGhast.CONFIG.AI_FIREBALL_SPEED,
                         RidableGhast.CONFIG.AI_FIREBALL_DAMAGE,
-                        RidableGhast.CONFIG.AI_FIREBALL_GRIEF);
+                        RidableGhast.CONFIG.AI_FIREBALL_EXPLOSION_GRIEF);
+                fireball.isIncendiary = RidableGhast.CONFIG.AI_FIREBALL_EXPLOSION_FIRE;
                 fireball.bukkitYield = fireball.yield = ghast.getPower();
                 fireball.locX = ghast.locX + vec3d.x * 4.0D;
                 fireball.locY = ghast.locY + (double) (ghast.length / 2.0F) + 0.5D;

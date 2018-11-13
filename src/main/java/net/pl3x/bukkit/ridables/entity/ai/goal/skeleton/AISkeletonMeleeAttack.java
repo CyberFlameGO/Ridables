@@ -16,22 +16,26 @@ public class AISkeletonMeleeAttack extends PathfinderGoalMeleeAttack {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ridable.getRider() == null && super.b();
     }
 
     // startExecuting
+    @Override
     public void c() {
         super.c();
         skeleton.s(true); // setSwingingArms
     }
 
     // resetTask
+    @Override
     public void d() {
         super.d();
         skeleton.s(false); // setSwingingArms

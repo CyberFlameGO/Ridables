@@ -16,16 +16,19 @@ public class AIPhantomOrbitPoint extends AIPhantomMove {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return phantom.getGoalTarget() == null || phantom.phase == RidablePhantom.AttackPhase.CIRCLE;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         d = 5.0F + phantom.getRandom().nextFloat() * 10.0F;
         e = -4.0F + phantom.getRandom().nextFloat() * 9.0F;
@@ -34,6 +37,7 @@ public class AIPhantomOrbitPoint extends AIPhantomMove {
     }
 
     // tick
+    @Override
     public void e() {
         if (phantom.getRandom().nextInt(350) == 0) {
             e = -4.0F + phantom.getRandom().nextFloat() * 9.0F;

@@ -1,42 +1,87 @@
 package net.pl3x.bukkit.ridables.configuration.mob;
 
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
 
 public class SnowGolemConfig extends MobConfig {
-    public float SPEED = 1.0F;
-    public float JUMP_POWER = 0.5F;
-    public float STEP_HEIGHT = 0.6F;
-    public boolean RIDABLE_IN_WATER = true;
-    public boolean DAMAGE_WHEN_HOT = true;
-    public boolean DAMAGE_WHEN_WET = true;
-    public boolean LEAVE_SNOW_TRAIL = true;
+    public double BASE_SPEED = 0.2D;
+    public double MAX_HEALTH = 4.0D;
+    public float AI_JUMP_POWER = 0.42F;
+    public float AI_STEP_HEIGHT = 0.6F;
+    public double AI_FOLLOW_RANGE = 16.0D;
+    public boolean AI_SHEARS_DROPS_PUMPKIN = true;
+    public boolean AI_ADD_PUMPKIN_TO_HEAD = true;
+    public float AI_DAMAGE_WHEN_WET = 1.0F;
+    public float AI_DAMAGE_WHEN_HOT = 1.0F;
+    public boolean AI_SNOW_TRAIL_ENABLED = true;
+    public float AI_SNOW_TRAIL_MAX_TEMP = 0.8F;
+    public double RIDING_SPEED = 1.0D;
+    public float RIDING_JUMP_POWER = 0.5F;
+    public float RIDING_STEP_HEIGHT = 0.6F;
+    public boolean RIDING_RIDE_IN_WATER = true;
+    public float RIDING_DAMAGE_WHEN_WET = 1.0F;
+    public float RIDING_DAMAGE_WHEN_HOT = 1.0F;
+    public boolean RIDING_SNOW_TRAIL_ENABLED = true;
+    public float RIDING_SNOW_TRAIL_MAX_TEMP = 0.8F;
+    public boolean RIDING_ENABLE_MOVE_EVENT = false;
+    public boolean RIDING_SADDLE_REQUIRE = false;
+    public boolean RIDING_SADDLE_CONSUME = false;
+
 
     public SnowGolemConfig() {
         super("snow_golem.yml");
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 
         if (firstLoad) {
             firstLoad = false;
-            addDefault("speed", SPEED);
-            addDefault("jump-power", JUMP_POWER);
-            addDefault("step-height", STEP_HEIGHT);
-            addDefault("ride-in-water", RIDABLE_IN_WATER);
-            addDefault("damage-when-hot", DAMAGE_WHEN_HOT);
-            addDefault("damage-when-wet", DAMAGE_WHEN_WET);
-            addDefault("leave-snow-trail", LEAVE_SNOW_TRAIL);
+            addDefault("base-speed", BASE_SPEED);
+            addDefault("max-health", MAX_HEALTH);
+            addDefault("ai.jump-power", AI_JUMP_POWER);
+            addDefault("ai.step-height", AI_STEP_HEIGHT);
+            addDefault("ai.follow-range", AI_FOLLOW_RANGE);
+            addDefault("ai.shears-drop-pumpkin", AI_SHEARS_DROPS_PUMPKIN);
+            addDefault("ai.add-pumpkin-to-head", AI_ADD_PUMPKIN_TO_HEAD);
+            addDefault("ai.damage.when-wet", AI_DAMAGE_WHEN_WET);
+            addDefault("ai.damage.when-hot", AI_DAMAGE_WHEN_HOT);
+            addDefault("ai.snow-trail.enabled", AI_SNOW_TRAIL_ENABLED);
+            addDefault("ai.snow-trail.max-temp", AI_SNOW_TRAIL_MAX_TEMP);
+            addDefault("riding.speed", RIDING_SPEED);
+            addDefault("riding.jump-power", RIDING_JUMP_POWER);
+            addDefault("riding.step-height", RIDING_STEP_HEIGHT);
+            addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("riding.damage.when-wet", RIDING_DAMAGE_WHEN_WET);
+            addDefault("riding.damage.when-hot", RIDING_DAMAGE_WHEN_HOT);
+            addDefault("riding.snow-trail.enabled", RIDING_SNOW_TRAIL_ENABLED);
+            addDefault("riding.snow-trail.max-temp", RIDING_SNOW_TRAIL_MAX_TEMP);
             save();
         }
 
-        SPEED = (float) getDouble("speed");
-        JUMP_POWER = (float) getDouble("jump-power");
-        STEP_HEIGHT = (float) getDouble("step-height");
-        RIDABLE_IN_WATER = getBoolean("ride-in-water");
-        DAMAGE_WHEN_HOT = getBoolean("damage-when-hot");
-        DAMAGE_WHEN_WET = getBoolean("damage-when-wet");
-        LEAVE_SNOW_TRAIL = getBoolean("leave-snow-trail");
+        BASE_SPEED = getDouble("base-speed");
+        MAX_HEALTH = getDouble("max-health");
+        AI_JUMP_POWER = (float) getDouble("ai.jump-power");
+        AI_STEP_HEIGHT = (float) getDouble("ai.step-height");
+        AI_FOLLOW_RANGE = getDouble("ai.follow-range");
+        AI_SHEARS_DROPS_PUMPKIN = getBoolean("ai.shears-drop-pumpkin");
+        AI_ADD_PUMPKIN_TO_HEAD = getBoolean("ai.add-pumpkin-to-head");
+        AI_DAMAGE_WHEN_WET = (float) getDouble("ai.damage.when-wet");
+        AI_DAMAGE_WHEN_HOT = (float) getDouble("ai.damage.when-hot");
+        AI_SNOW_TRAIL_ENABLED = getBoolean("ai.snow-trail.enabled");
+        AI_SNOW_TRAIL_MAX_TEMP = (float) getDouble("ai.snow-trail.max-temp");
+        RIDING_SPEED = getDouble("riding.speed");
+        RIDING_JUMP_POWER = (float) getDouble("riding.jump-power");
+        RIDING_STEP_HEIGHT = (float) getDouble("riding.step-height");
+        RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
+        RIDING_DAMAGE_WHEN_WET = (float) getDouble("riding.damage.when-wet");
+        RIDING_DAMAGE_WHEN_HOT = (float) getDouble("riding.damage.when-hot");
+        RIDING_SNOW_TRAIL_ENABLED = getBoolean("riding.snow-trail.enabled");
+        RIDING_SNOW_TRAIL_MAX_TEMP = (float) getDouble("riding.snow-trail.max-temp");
+        RIDING_ENABLE_MOVE_EVENT = isSet("riding.enable-move-event") ? getBoolean("riding.enable-move-event") : Config.RIDING_ENABLE_MOVE_EVENT;
+        RIDING_SADDLE_REQUIRE = isSet("riding.saddle.require") ? getBoolean("riding.saddle.require") : Config.RIDING_SADDLE_REQUIRE;
+        RIDING_SADDLE_CONSUME = isSet("riding.saddle.consume") ? getBoolean("riding.saddle.consume") : Config.RIDING_SADDLE_CONSUME;
     }
 }

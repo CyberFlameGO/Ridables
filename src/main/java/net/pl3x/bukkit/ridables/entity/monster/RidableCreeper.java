@@ -43,16 +43,25 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.CREEPER;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
@@ -61,6 +70,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AISwim(this));
         goalSelector.a(2, new AICreeperSwell(this));
@@ -74,15 +84,18 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? CONFIG.AI_JUMP_POWER : (isIgnited() ? 0 : CONFIG.RIDING_JUMP_POWER);
     }
 
+    @Override
     protected void mobTick() {
         if (powerToggleDelay > 0) {
             powerToggleDelay--;
@@ -103,6 +116,14 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
+    @Override
     public void tick() {
         if (isAlive()) {
             // we only want to know when to explode(), rest of logic is still in super.tick()
@@ -135,6 +156,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
                 || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onSpacebar() {
         if (powerToggleDelay > 0) {
             return true; // just toggled power, do not jump
@@ -162,6 +184,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
     /**
      * Make the creeper explode
      */
+    @Override
     public void explode() {
         boolean hasRider = getRider() != null;
         ExplosionPrimeEvent event = new ExplosionPrimeEvent(getBukkitEntity(),

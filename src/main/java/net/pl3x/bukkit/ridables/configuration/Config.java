@@ -14,6 +14,12 @@ public class Config {
     public static boolean LOGGER_ERROR = true;
     public static boolean LOGGER_DEBUG = false;
 
+    public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
+
+    public static boolean RIDING_ENABLE_MOVE_EVENT = false;
+    public static boolean RIDING_SADDLE_REQUIRE = false;
+    public static boolean RIDING_SADDLE_CONSUME = false;
+
     public static boolean BAT_ENABLED = false;
     public static boolean BLAZE_ENABLED = false;
     public static boolean CAVE_SPIDER_ENABLED = false;
@@ -101,11 +107,6 @@ public class Config {
         LOGGER_DEBUG = config.getBoolean("logger.debug", false);
 
         CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
-        REQUIRE_SADDLE = config.getBoolean("saddle-to-mount", false);
-        CONSUME_SADDLE = config.getBoolean("consume-saddle", false);
-        ALLOW_RIDE_BABIES = config.getBoolean("allow-ride-babies", false);
-
-        FLYING_MAX_Y = (int) config.getDouble("flying-max-y", 256D);
 
         ConfigurationSection mobs = config.getConfigurationSection("mobs");
         BAT_ENABLED = mobs.getBoolean("bat", false);

@@ -30,10 +30,18 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.ENDER_DRAGON;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
@@ -41,21 +49,32 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return false;
     }
 
     // canBeRidden
+    @Override
     protected boolean n(Entity entity) {
         return k <= 0; // rideCooldown
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // onLivingUpdate
@@ -94,6 +113,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
         super.k();
     }
 
+    @Override
     public boolean onSpacebar() {
         // TODO flames!
         return true;

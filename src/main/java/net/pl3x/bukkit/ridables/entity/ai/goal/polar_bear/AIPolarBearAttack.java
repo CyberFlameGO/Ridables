@@ -13,16 +13,19 @@ public class AIPolarBearAttack extends PathfinderGoalMeleeAttack {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return bear.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return bear.getRider() == null && super.b();
     }
 
     // checkAndPerformAttack
+    @Override
     protected void a(EntityLiving target, double distance) {
         double reach = a(target); // getAttackReachSq
         if (distance <= reach && b <= 0) { // attackTick
@@ -45,12 +48,14 @@ public class AIPolarBearAttack extends PathfinderGoalMeleeAttack {
     }
 
     // resetTask
+    @Override
     public void d() {
         bear.s(false); // setStanding
         super.d();
     }
 
     // getAttackReachSq
+    @Override
     protected double a(EntityLiving target) {
         return (double) (4.0F + target.width);
     }

@@ -40,11 +40,13 @@ public class RidableVillager extends EntityVillager implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.VILLAGER;
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIAvoidTarget<>(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
@@ -66,35 +68,42 @@ public class RidableVillager extends EntityVillager implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
+    @Override
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
+    @Override
     public RidableVillager createChild(EntityAgeable entity) {
         return b(entity);
     }
 
     // createChild (bukkit's weird duplicate method)
+    @Override
     public RidableVillager b(EntityAgeable entity) {
         return new RidableVillager(world);
     }

@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity.ai.goal.turtle;
 
 import com.destroystokyo.paper.event.entity.TurtleLayEggEvent;
+import com.destroystokyo.paper.event.entity.TurtleStartDiggingEvent;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.BlockTurtleEgg;
 import net.minecraft.server.v1_13_R2.Blocks;
@@ -22,6 +23,7 @@ public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (turtle.getRider() != null) {
             return false;
@@ -36,6 +38,7 @@ public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (turtle.getRider() != null) {
             return false;
@@ -49,28 +52,27 @@ public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
         return super.b();
     }
 
+    // tick
+    @Override
     public void e() {
         super.e();
-        BlockPosition pos = new BlockPosition(turtle);
-        if (turtle.isInWater() || k()) {
+        if (turtle.isInWater() || !k()) { // isAboveDestination
             return;
         }
         int diggingTicks = turtle.getDiggingTicks();
         if (diggingTicks < 1) {
-            turtle.setDigging(true);
+            turtle.setDigging(new TurtleStartDiggingEvent((Turtle) turtle.getBukkitEntity(), MCUtil.toLocation(turtle.world, d)).callEvent()); // destinationBlock
         } else if (diggingTicks > 200) {
-            int count = turtle.getRandom().nextInt(4) + 1;
-            TurtleLayEggEvent layEggEvent = new TurtleLayEggEvent((Turtle) turtle.getBukkitEntity(), MCUtil.toLocation(turtle.world, d.up()), count);
-            count = layEggEvent.callEvent() ? layEggEvent.getEggCount() : 0;
-            if (count > 0) {
-                if (!CraftEventFactory.callEntityChangeBlockEvent(turtle, d.up(), Blocks.TURTLE_EGG.getBlockData().set(BlockTurtleEgg.b, count)).isCancelled()) {
-                    turtle.world.a(null, pos, SoundEffects.ENTITY_TURTLE_LAY_EGG, SoundCategory.BLOCKS, 0.3F, 0.9F + turtle.world.random.nextFloat() * 0.2F);
-                    turtle.world.setTypeAndData(d.up(), Blocks.TURTLE_EGG.getBlockData().set(BlockTurtleEgg.b, count), 3);
-                }
+            int eggCount = turtle.getRandom().nextInt(4) + 1;
+            TurtleLayEggEvent layEggEvent = new TurtleLayEggEvent((Turtle) turtle.getBukkitEntity(), MCUtil.toLocation(turtle.world, d.up()), eggCount); // destinationBlock
+            eggCount = layEggEvent.callEvent() ? layEggEvent.getEggCount() : 0;
+            if (eggCount > 0 && !CraftEventFactory.callEntityChangeBlockEvent(turtle, d.up(), Blocks.TURTLE_EGG.getBlockData().set(BlockTurtleEgg.b, eggCount)).isCancelled()) { // destinationBlock
+                turtle.world.a(null, new BlockPosition(turtle), SoundEffects.ENTITY_TURTLE_LAY_EGG, SoundCategory.BLOCKS, 0.3F, 0.9F + turtle.world.random.nextFloat() * 0.2F); // playSound
+                turtle.world.setTypeAndData(d.up(), Blocks.TURTLE_EGG.getBlockData().set(BlockTurtleEgg.b, eggCount), 3); // destinationBlock
             }
             turtle.setHasEgg(false);
             turtle.setDigging(false);
-            turtle.d(600);
+            turtle.d(600); // setInLoveTicks
         }
         if (turtle.isDigging()) {
             turtle.setDiggingTicks(++diggingTicks);
@@ -78,10 +80,8 @@ public class AITurtleLayEgg extends PathfinderGoalGotoTarget {
     }
 
     // shouldMoveTo
+    @Override
     protected boolean a(IWorldReader world, BlockPosition pos) {
-        if (!world.isEmpty(pos.up())) {
-            return false;
-        }
-        return world.getType(pos).getBlock() == Blocks.SAND;
+        return world.isEmpty(pos.up()) && world.getType(pos).getBlock() == Blocks.SAND;
     }
 }

@@ -19,26 +19,31 @@ public class AIZombieAttackTurtleEgg extends PathfinderGoalRemoveBlock {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ridable.getRider() == null && super.b();
     }
 
     // playBreakingSound
+    @Override
     public void a(GeneratorAccess generatoraccess, BlockPosition blockposition) {
         generatoraccess.a(null, blockposition, SoundEffects.ENTITY_ZOMBIE_DESTROY_EGG, SoundCategory.HOSTILE, 0.5F, 0.9F + getEntity().getRandom().nextFloat() * 0.2F);
     }
 
     // playBrokenSound
+    @Override
     public void a(World world, BlockPosition blockposition) {
         world.a(null, blockposition, SoundEffects.ENTITY_TURTLE_EGG_BREAK, SoundCategory.BLOCKS, 0.7F, 0.9F + world.random.nextFloat() * 0.2F);
     }
 
     // getTargetDistanceSq
+    @Override
     public double g() {
         return 1.3D;
     }

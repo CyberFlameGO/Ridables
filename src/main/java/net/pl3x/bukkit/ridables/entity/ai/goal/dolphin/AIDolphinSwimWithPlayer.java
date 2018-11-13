@@ -18,6 +18,7 @@ public class AIDolphinSwimWithPlayer extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (dolphin.getRider() != null) {
             return false;
@@ -27,22 +28,26 @@ public class AIDolphinSwimWithPlayer extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return dolphin.getRider() == null && targetPlayer != null && targetPlayer.isSwimming() && dolphin.h(targetPlayer) < 256.0D;
     }
 
     // startExecuting
+    @Override
     public void c() {
         targetPlayer.addEffect(new MobEffect(MobEffects.DOLPHINS_GRACE, 100), org.bukkit.event.entity.EntityPotionEffectEvent.Cause.DOLPHIN);
     }
 
     // resetTask
+    @Override
     public void d() {
         targetPlayer = null;
         dolphin.getNavigation().q(); // clearPath
     }
 
     // tick
+    @Override
     public void e() {
         dolphin.getControllerLook().a(targetPlayer, (float) (dolphin.L() + 20), (float) dolphin.K()); // setLookPositionWithEntity
         if (dolphin.h(targetPlayer) < 6.25D) {

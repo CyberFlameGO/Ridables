@@ -18,6 +18,7 @@ public class AISquidFlee extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (squid.getRider() != null) {
             return false;
@@ -33,16 +34,19 @@ public class AISquidFlee extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         fleeTime = 0;
     }
 
     // tick
+    @Override
     public void e() {
         ++fleeTime;
         EntityLiving target = squid.getLastDamager();

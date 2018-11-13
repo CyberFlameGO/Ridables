@@ -13,6 +13,7 @@ public class AIVexCopyOwnerTarget extends PathfinderGoalTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (vex.getRider() != null) {
             return false;
@@ -27,11 +28,13 @@ public class AIVexCopyOwnerTarget extends PathfinderGoalTarget {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return vex.getRider() == null && super.b();
     }
 
     // startExecuting
+    @Override
     public void c() {
         vex.setGoalTarget(vex.getOwner().getGoalTarget(), EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET, true);
         super.c();

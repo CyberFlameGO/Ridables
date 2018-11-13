@@ -13,6 +13,7 @@ public class AISit extends PathfinderGoalSit {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }

@@ -53,18 +53,22 @@ public class CustomFireball extends EntityLargeFireball implements CustomProject
         this.dirZ = z / d3 * 0.1D;
     }
 
+    @Override
     public RidableEntity getRidable() {
         return ridable;
     }
 
+    @Override
     public Mob getMob() {
         return ridable == null ? null : ((EntityInsentient) ridable).getBukkitMob();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         if (shooter != null && shooter.dead || !world.isLoaded(new BlockPosition(this))) {
             die();
@@ -109,6 +113,7 @@ public class CustomFireball extends EntityLargeFireball implements CustomProject
     }
 
     // onImpact
+    @Override
     protected void a(MovingObjectPosition mop) {
         if (mop.entity != null) {
             if (damage > 0) {

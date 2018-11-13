@@ -12,11 +12,13 @@ public class AILlamaFollowCaravan extends PathfinderGoalLlamaFollow {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return llama.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return llama.getRider() == null && super.b();
     }

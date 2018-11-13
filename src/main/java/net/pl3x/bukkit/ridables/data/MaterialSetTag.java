@@ -124,6 +124,7 @@ public class MaterialSetTag implements Tag<Material> {
         return not(mat -> mat.name().startsWith(with));
     }
 
+    @Override
     public Set<Material> getValues() {
         return this.materials;
     }
@@ -144,6 +145,7 @@ public class MaterialSetTag implements Tag<Material> {
         return isTagged(item.getType());
     }
 
+    @Override
     public boolean isTagged(Material material) {
         return this.materials.contains(material);
     }

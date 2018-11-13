@@ -39,11 +39,13 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         lookController = new ControllerLook(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.SHULKER;
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(1, new AIWatchClosest(this, EntityHuman.class, 8.0F));
         goalSelector.a(4, new AIShulkerAttack(this));
@@ -55,15 +57,18 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return false;
     }
 
     // tryTeleportToNewPosition
+    @Override
     protected boolean l() {
         return getRider() != null || super.l();
     }
 
+    @Override
     protected void mobTick() {
         if (spacebarCooldown > 0) {
             spacebarCooldown--;
@@ -78,15 +83,18 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }
 
+    @Override
     public boolean onSpacebar() {
         if (spacebarCooldown == 0) {
             spacebarCooldown = 20;
@@ -96,16 +104,19 @@ public class RidableShulker extends EntityShulker implements RidableEntity {
         return false;
     }
 
+    @Override
     public boolean onClick(org.bukkit.entity.Entity entity, EnumHand hand) {
         handleClick();
         return true;
     }
 
+    @Override
     public boolean onClick(Block block, BlockFace blockFace, EnumHand hand) {
         handleClick();
         return true;
     }
 
+    @Override
     public boolean onClick(EnumHand hand) {
         handleClick();
         return true;

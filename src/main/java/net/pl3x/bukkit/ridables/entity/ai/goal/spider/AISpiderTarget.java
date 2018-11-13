@@ -14,11 +14,13 @@ public class AISpiderTarget<T extends EntityLiving> extends PathfinderGoalNeares
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return spider.getRider() == null && e.az() < 0.5F && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return spider.getRider() == null && super.b();
     }

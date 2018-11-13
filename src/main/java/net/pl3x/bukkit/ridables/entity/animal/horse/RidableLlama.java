@@ -1,13 +1,13 @@
 package net.pl3x.bukkit.ridables.entity.animal.horse;
 
 import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLlama;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.LlamaConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
@@ -25,6 +25,9 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.horse.AIHorseBucking;
 import net.pl3x.bukkit.ridables.entity.ai.goal.horse.llama.AILlamaDefendTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.horse.llama.AILlamaFollowCaravan;
 import net.pl3x.bukkit.ridables.entity.ai.goal.horse.llama.AILlamaHurtByTarget;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.event.RidableMountEvent;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 
@@ -47,26 +50,29 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.LLAMA;
     }
 
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED);
         reloadAttributes();
     }
 
+    @Override
     public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDE_SPEED);
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH > 0.0D ? CONFIG.MAX_HEALTH : ec()); // getModifiedMaxHealth
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(attributeJumpStrength).setValue(CONFIG.JUMP_POWER);
-        if (CONFIG.MAX_HEALTH > 0.0D) {
-            getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
-        }
+        getAttributeInstance(attributeJumpStrength).setValue(CONFIG.AI_JUMP_POWER);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSelector.a(0, new AISwim(this));
         goalSelector.a(1, new AIHorseBucking(this, 1.2D));
@@ -83,14 +89,20 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
+    }
+
+    @Override
+    public boolean isTamed() {
+        return p(2) || (CONFIG.RIDING_BABIES && isBaby()); // getHorseWatchableBoolean
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
-        //return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
-        return super.cG(); // TODO
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     public boolean didSpit() {
@@ -108,50 +120,66 @@ public class RidableLlama extends EntityLlama implements RidableEntity {
         }
     }
 
+    @Override
     public boolean isLeashed() {
-        return (CONFIG.CARAVAN && getRider() != null) || super.isLeashed();
+        return (CONFIG.RIDING_STARTS_CARAVAN && getRider() != null) || super.isLeashed();
     }
 
+    @Override
     public Entity getLeashHolder() {
         EntityPlayer rider = getRider();
         return rider != null ? rider : super.getLeashHolder();
     }
 
     // hasCaravan
+    @Override
     public boolean em() {
-        return (CONFIG.CARAVAN && getRider() != null) || super.em();
+        return (CONFIG.RIDING_STARTS_CARAVAN && getRider() != null) || super.em();
     }
 
+    @Override
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove(); // TODO check if this is needed
+    }
+
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
-    }
-
-    // removePassenger
-    public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    public RidableLlama createChild(EntityAgeable entity) {
-        return b(entity);
-    }
-
-    // createChild (bukkit's weird duplicate method)
-    public RidableLlama b(EntityAgeable entity) {
-        RidableLlama baby = new RidableLlama(world);
-        a(entity, baby); // setOffspringAttributes
-        EntityLlama otherParent = (EntityLlama) entity;
-        int strength = random.nextInt(Math.max(getStrength(), otherParent.getStrength())) + 1;
-        if (random.nextFloat() < 0.03F) {
-            ++strength;
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
         }
-        baby.setStrength(strength);
-        baby.setVariant(random.nextBoolean() ? getVariant() : otherParent.getVariant());
-        return baby;
+        if (isBaby() && CONFIG.RIDING_BABIES && hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            g(entityhuman); // mountTo
+            return true;
+        }
+        return false;
+    }
+
+    // mountTo
+    @Override
+    public void g(EntityHuman entityhuman) {
+        Player player = (Player) entityhuman.getBukkitEntity();
+        if (!player.hasPermission("allow.ride.llama")) {
+            Lang.send(player, Lang.RIDE_NO_PERMISSION);
+            return;
+        }
+        if (new RidableMountEvent(this, player).callEvent()) {
+            super.g(entityhuman);
+            entityhuman.o(false); // setJumping - fixes jump on mount
+        }
+    }
+
+    @Override
+    public boolean removePassenger(Entity passenger) {
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 }

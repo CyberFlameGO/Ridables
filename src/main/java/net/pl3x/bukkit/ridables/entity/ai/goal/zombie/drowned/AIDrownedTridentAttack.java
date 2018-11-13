@@ -13,22 +13,26 @@ public class AIDrownedTridentAttack extends PathfinderGoalArrowAttack {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return drowned.getRider() == null && super.a() && drowned.getItemInMainHand().getItem() == Items.TRIDENT;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return drowned.getRider() == null && super.b();
     }
 
     // startExecuting
+    @Override
     public void c() {
         super.c();
         drowned.s(true); // setArmsRaised
     }
 
     // resetTask
+    @Override
     public void d() {
         super.d();
         drowned.s(false); // setArmsRaised

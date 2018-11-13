@@ -17,6 +17,7 @@ public class AIDolphinBreath extends PathfinderGoalBreath {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (ridable.getRider() != null) {
             return controller.override = super.a();
@@ -25,6 +26,7 @@ public class AIDolphinBreath extends PathfinderGoalBreath {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }

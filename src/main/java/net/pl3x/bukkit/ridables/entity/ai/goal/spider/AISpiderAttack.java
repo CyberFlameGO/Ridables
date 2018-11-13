@@ -14,11 +14,13 @@ public class AISpiderAttack extends PathfinderGoalMeleeAttack {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return spider.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (spider.getRider() != null) {
             return false;
@@ -31,6 +33,7 @@ public class AISpiderAttack extends PathfinderGoalMeleeAttack {
     }
 
     // getAttackReach
+    @Override
     protected double a(EntityLiving target) {
         return (double) (4.0F + target.width);
     }

@@ -13,6 +13,7 @@ public class ZombieVillagerConfig extends MobConfig {
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 

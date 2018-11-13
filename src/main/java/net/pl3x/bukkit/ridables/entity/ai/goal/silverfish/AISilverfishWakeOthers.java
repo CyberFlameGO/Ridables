@@ -24,16 +24,19 @@ public class AISilverfishWakeOthers extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return silverfish.getRider() == null && lookForFriends > 0;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         --lookForFriends;
         if (lookForFriends > 0) {

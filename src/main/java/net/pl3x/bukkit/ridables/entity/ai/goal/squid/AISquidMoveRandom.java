@@ -12,16 +12,19 @@ public class AISquidMoveRandom extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return squid.getRider() == null;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         if (squid.cj() > 100) { // getIdleTime
             squid.c(0.0F, 0.0F, 0.0F); // setMovementVector

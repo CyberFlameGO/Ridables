@@ -13,6 +13,7 @@ public class ShulkerConfig extends MobConfig {
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 

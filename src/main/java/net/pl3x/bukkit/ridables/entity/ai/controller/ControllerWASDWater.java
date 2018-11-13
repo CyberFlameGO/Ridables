@@ -13,6 +13,7 @@ public class ControllerWASDWater extends ControllerWASD {
         super(entity);
     }
 
+    @Override
     public void tick(EntityPlayer rider) {
         float forward = rider.bj;
         float strafe = rider.bh;

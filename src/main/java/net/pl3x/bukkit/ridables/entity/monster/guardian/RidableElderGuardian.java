@@ -38,10 +38,18 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
         }
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.ELDER_GUARDIAN;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
@@ -51,10 +59,12 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return true;
     }
 
+    @Override
     protected void mobTick() {
         super.mobTick();
         if ((ticksLived + getId()) % 1200 == 0) {
@@ -73,26 +83,32 @@ public class RidableElderGuardian extends RidableGuardian implements RidableEnti
     }
 
     @Nullable
+    @Override
     protected MinecraftKey getDefaultLootTable() {
         return LootTables.E;
     }
 
+    @Override
     public int l() {
         return 60;
     }
 
+    @Override
     protected SoundEffect D() {
         return this.aq() ? SoundEffects.ENTITY_ELDER_GUARDIAN_AMBIENT : SoundEffects.ENTITY_ELDER_GUARDIAN_AMBIENT_LAND;
     }
 
+    @Override
     protected SoundEffect d(DamageSource damagesource) {
         return this.aq() ? SoundEffects.ENTITY_ELDER_GUARDIAN_HURT : SoundEffects.ENTITY_ELDER_GUARDIAN_HURT_LAND;
     }
 
+    @Override
     protected SoundEffect cs() {
         return this.aq() ? SoundEffects.ENTITY_ELDER_GUARDIAN_DEATH : SoundEffects.ENTITY_ELDER_GUARDIAN_DEATH_LAND;
     }
 
+    @Override
     protected SoundEffect dA() {
         return SoundEffects.ENTITY_ELDER_GUARDIAN_FLOP;
     }

@@ -14,6 +14,7 @@ public class AIPolarBearAttackPlayer extends PathfinderGoalNearestAttackableTarg
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (bear.getRider() != null) {
             return false;
@@ -33,11 +34,13 @@ public class AIPolarBearAttackPlayer extends PathfinderGoalNearestAttackableTarg
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return bear.getRider() == null && super.b();
     }
 
     // getTargetDistance
+    @Override
     protected double i() {
         return super.i() * 0.5D;
     }

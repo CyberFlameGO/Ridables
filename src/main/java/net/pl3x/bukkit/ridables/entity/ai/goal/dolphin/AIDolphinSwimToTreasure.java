@@ -19,16 +19,19 @@ public class AIDolphinSwimToTreasure extends PathfinderGoal {
     }
 
     // isInterruptible
+    @Override
     public boolean f() {
         return dolphin.getRider() != null;
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return dolphin.getRider() == null && dolphin.dy() && dolphin.getAirTicks() >= 100;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (dolphin.getRider() != null) {
             return false;
@@ -38,6 +41,7 @@ public class AIDolphinSwimToTreasure extends PathfinderGoal {
     }
 
     // startExecuting
+    @Override
     public void c() {
         foundTreasure = false;
         dolphin.getNavigation().q();
@@ -59,6 +63,7 @@ public class AIDolphinSwimToTreasure extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         BlockPosition pos = dolphin.l(); // getTreasurePos
         if (dolphin.c(new BlockPosition((double) pos.getX(), dolphin.locY, (double) pos.getZ())) <= 16.0D || foundTreasure) {
@@ -67,6 +72,7 @@ public class AIDolphinSwimToTreasure extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         BlockPosition pos = dolphin.l(); // getTreasurePos
         if (dolphin.nearTargetPos() || dolphin.getNavigation().p()) {

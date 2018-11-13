@@ -21,6 +21,7 @@ public class AIBlazeFireballAttack extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (blaze.getRider() != null) {
             return false;
@@ -30,21 +31,25 @@ public class AIBlazeFireballAttack extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         attackStep = 0;
     }
 
     // resetTask
+    @Override
     public void d() {
         blaze.a(false); // setOnFire
     }
 
     // tick
+    @Override
     public void e() {
         --attackTime;
         EntityLiving target = blaze.getGoalTarget();

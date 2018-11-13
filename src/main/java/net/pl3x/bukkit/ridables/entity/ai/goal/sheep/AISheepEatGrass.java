@@ -12,11 +12,13 @@ public class AISheepEatGrass extends PathfinderGoalEatTile {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return sheep.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return sheep.getRider() == null && super.b();
     }

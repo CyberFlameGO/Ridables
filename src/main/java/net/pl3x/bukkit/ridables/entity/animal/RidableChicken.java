@@ -48,6 +48,12 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         return RidableType.CHICKEN;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return isChickenJockey() && !isVehicle() && !hasCustomName() && !isLeashed();
+    }
+
     @Override
     protected void initAttributes() {
         super.initAttributes();
@@ -60,6 +66,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
@@ -91,11 +98,6 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
         nbttagcompound.setInt("EggLayTime", timeUntilNextEgg);
     }
 
-    @Override
-    public boolean isTypeNotPersistent() {
-        return isChickenJockey();
-    }
-
     // canBeRiddenInWater
     @Override
     public boolean aY() {
@@ -112,6 +114,13 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
     protected void mobTick() {
         Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // onLivingUpdate

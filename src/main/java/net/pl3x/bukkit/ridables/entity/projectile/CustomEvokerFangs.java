@@ -40,23 +40,27 @@ public class CustomEvokerFangs extends EntityEvokerFangs implements CustomProjec
     }
 
     public CustomEvokerFangs(World world, double x, double y, double z, float rotationYaw, int warmupDelayTicks, RidableEvoker evoker, EntityPlayer rider) {
-        super(world, x, y, z, rotationYaw, warmupDelayTicks, rider);
+        super(world, x, y, z, rotationYaw, warmupDelayTicks, rider == null ? evoker : rider);
         this.evoker = evoker;
         this.rider = rider;
     }
 
+    @Override
     public RidableEvoker getRidable() {
         return evoker;
     }
 
+    @Override
     public Evoker getMob() {
         return evoker == null ? null : (Evoker) evoker.getBukkitEntity();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         setFlag(6, this.bc());
         W();
@@ -89,13 +93,13 @@ public class CustomEvokerFangs extends EntityEvokerFangs implements CustomProjec
         if (target.isAlive() && !target.bl() && target != owner) {
             if (owner == null) {
                 CraftEventFactory.entityDamage = this;
-                target.damageEntity(DamageSource.MAGIC, RidableEvoker.CONFIG.RIDER_FANGS_DAMAGE);
+                target.damageEntity(DamageSource.MAGIC, rider == null ? RidableEvoker.CONFIG.AI_FANGS_DAMAGE : RidableEvoker.CONFIG.RIDING_FANGS_DAMAGE);
                 CraftEventFactory.entityDamage = null;
             } else {
                 if (owner.r(target)) {
                     return;
                 }
-                target.damageEntity(DamageSource.c(this, owner), RidableEvoker.CONFIG.RIDER_FANGS_DAMAGE);
+                target.damageEntity(DamageSource.c(this, owner), rider == null ? RidableEvoker.CONFIG.AI_FANGS_DAMAGE : RidableEvoker.CONFIG.RIDING_FANGS_DAMAGE);
             }
         }
     }

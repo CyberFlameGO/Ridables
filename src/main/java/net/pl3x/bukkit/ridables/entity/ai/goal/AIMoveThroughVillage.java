@@ -37,6 +37,7 @@ public class AIMoveThroughVillage extends PathfinderGoalMoveThroughVillage {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (ridable.getRider() != null) {
             return false;
@@ -74,6 +75,7 @@ public class AIMoveThroughVillage extends PathfinderGoalMoveThroughVillage {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (ridable.getRider() != null) {
             return false;
@@ -86,11 +88,13 @@ public class AIMoveThroughVillage extends PathfinderGoalMoveThroughVillage {
     }
 
     // startExecuting
+    @Override
     public void c() {
         entity.getNavigation().a(path, speed); // setPath
     }
 
     // resetTask
+    @Override
     public void d() {
         if (entity.getNavigation().p() || entity.c(doorInfo.d()) < 16.0D) { // noPath getDistanceSq getDoorBlockPos
             doorList.add(doorInfo);
@@ -98,6 +102,7 @@ public class AIMoveThroughVillage extends PathfinderGoalMoveThroughVillage {
     }
 
     // tick
+    @Override
     public void e() {
     }
 

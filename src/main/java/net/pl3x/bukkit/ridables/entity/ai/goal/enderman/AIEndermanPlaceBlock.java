@@ -12,6 +12,7 @@ public class AIEndermanPlaceBlock extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (enderman.getRider() != null) {
             return false;
@@ -26,11 +27,13 @@ public class AIEndermanPlaceBlock extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         enderman.tryPlaceBlock(
                 MathHelper.floor(enderman.locX - 1.0D + enderman.getRandom().nextDouble() * 2.0D),

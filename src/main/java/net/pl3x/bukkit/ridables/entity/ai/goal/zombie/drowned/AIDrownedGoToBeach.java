@@ -14,22 +14,26 @@ public class AIDrownedGoToBeach extends PathfinderGoalGotoTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return drowned.getRider() == null && super.a() && !drowned.world.L() && drowned.isInWater() && drowned.locY >= (double) (drowned.world.getSeaLevel() - 3);
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return drowned.getRider() == null && super.b();
     }
 
     // shouldMoveTo
+    @Override
     protected boolean a(IWorldReader world, BlockPosition pos) {
         BlockPosition posUp = pos.up();
         return world.isEmpty(posUp) && world.isEmpty(posUp.up()) && world.getType(pos).q();
     }
 
     // startExecuting
+    @Override
     public void c() {
         drowned.setSwimmingUp(false);
         drowned.setGroundNavigation();
@@ -37,6 +41,7 @@ public class AIDrownedGoToBeach extends PathfinderGoalGotoTarget {
     }
 
     // resetTask
+    @Override
     public void d() {
         super.d();
     }

@@ -17,6 +17,7 @@ public class AISlimeFaceRandom extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (slime.getRider() != null) {
             return false;
@@ -28,11 +29,13 @@ public class AISlimeFaceRandom extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // tick
+    @Override
     public void e() {
         if (--timer <= 0) {
             timer = 40 + slime.getRandom().nextInt(60);

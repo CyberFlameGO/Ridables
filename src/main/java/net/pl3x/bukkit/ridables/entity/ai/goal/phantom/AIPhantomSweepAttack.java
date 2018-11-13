@@ -12,11 +12,13 @@ public class AIPhantomSweepAttack extends AIPhantomMove {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return phantom.getRider() == null && phantom.canAttack() && phantom.getGoalTarget() != null && phantom.phase == RidablePhantom.AttackPhase.SWOOP;
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         if (phantom.getRider() != null) {
             return false;
@@ -38,16 +40,19 @@ public class AIPhantomSweepAttack extends AIPhantomMove {
     }
 
     // startExecuting
+    @Override
     public void c() {
     }
 
     // resetTask
+    @Override
     public void d() {
         phantom.setGoalTarget(null);
         phantom.phase = RidablePhantom.AttackPhase.CIRCLE;
     }
 
     // tick
+    @Override
     public void e() {
         EntityLiving entityliving = phantom.getGoalTarget();
         phantom.orbitOffset = new Vec3D(entityliving.locX, entityliving.locY + (double) entityliving.length * 0.5D, entityliving.locZ);

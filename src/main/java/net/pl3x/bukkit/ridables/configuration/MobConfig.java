@@ -32,6 +32,7 @@ public abstract class MobConfig extends YamlConfiguration {
         }
     }
 
+    @Override
     public void addDefault(String key, Object value) {
         if (!isSet(key)) {
             Logger.debug("Adding new default to " + file.getName() + ": " + key + ": " + value.toString());

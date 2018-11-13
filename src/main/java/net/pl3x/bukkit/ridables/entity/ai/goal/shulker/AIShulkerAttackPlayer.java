@@ -17,6 +17,7 @@ public class AIShulkerAttackPlayer extends PathfinderGoalNearestAttackableTarget
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (shulker.getRider() != null) {
             return false;
@@ -28,11 +29,13 @@ public class AIShulkerAttackPlayer extends PathfinderGoalNearestAttackableTarget
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return shulker.getRider() == null && super.b();
     }
 
     // getTargetableArea
+    @Override
     protected AxisAlignedBB a(double distance) {
         EnumDirection direction = ((EntityShulker) e).dy(); // taskOwner getAttachmentFacing
         if (direction.k() == EnumDirection.EnumAxis.X) { // getAxis

@@ -24,6 +24,7 @@ public class AITurtleTempt extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (timer > 0) {
             --timer;
@@ -40,11 +41,13 @@ public class AITurtleTempt extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // resetTask
+    @Override
     public void d() {
         target = null;
         turtle.getNavigation().q(); // clearPath
@@ -52,6 +55,7 @@ public class AITurtleTempt extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         turtle.getControllerLook().a(target, turtle.L() + 20, turtle.K()); // setLookPositionWithEntity getHorizontalFaceSpeed getVerticalFaceSpeed
         if (turtle.h(target) < 6.25D) { // getDistanceSq

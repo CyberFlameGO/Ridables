@@ -13,11 +13,13 @@ public class AIHurtByTarget extends PathfinderGoalHurtByTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return ridable.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return ridable.getRider() == null && super.b();
     }

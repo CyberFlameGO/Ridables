@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.animal;
 
 import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityAgeable;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityParrot;
 import net.minecraft.server.v1_13_R2.EnumHand;
@@ -21,6 +20,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotFollowEntity;
 import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotFollowOwner;
 import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotLandOnOwnersShoulder;
 import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotWanderAvoidWater;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableParrot extends EntityParrot implements RidableEntity {
     public static final ParrotConfig CONFIG = new ParrotConfig();
@@ -31,11 +32,30 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
         lookController = new LookController(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.PARROT;
     }
 
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_MAX_Y); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         goalSit = new AISit(this);
 
@@ -50,39 +70,56 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
+    @Override
     protected void mobTick() {
         if (getRider() != null) {
-            motY += bi > 0 ? 0.07F * CONFIG.VERTICAL : 0.04704F - CONFIG.GRAVITY;
+            motY += bi > 0 ? 0.07D * CONFIG.RIDING_VERTICAL : 0.04704D - CONFIG.RIDING_GRAVITY; // moveVertical
         }
         super.mobTick();
     }
 
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
     // processInteract
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    public RidableParrot createChild(EntityAgeable entity) {
-        return null;
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     public class ParrotWASDController extends ControllerWASDFlyingWithSpacebar {
         private final RidableParrot parrot;
 
         public ParrotWASDController(RidableParrot parrot) {
-            super(parrot);
+            super(parrot, 0.5D);
             this.parrot = parrot;
         }
 
+        @Override
         public void tick() {
             if (h == Operation.MOVE_TO) {
                 h = Operation.WAIT;
@@ -96,7 +133,11 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
                     return;
                 }
                 parrot.yaw = a(parrot.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 10.0F); // limitAngle
-                parrot.o((float) (e * parrot.getAttributeInstance(parrot.onGround ? GenericAttributes.MOVEMENT_SPEED : GenericAttributes.e).getValue()));
+                double speed = parrot.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
+                if (parrot.onGround) {
+                    speed *= groundSpeedModifier;
+                }
+                parrot.o((float) (e * speed)); // setAIMoveSpeed
                 parrot.pitch = a(parrot.pitch, (float) (-(MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * (double) (180F / (float) Math.PI))), 10.0F); // limitAngle
                 parrot.s(y > 0.0D ? parrot.cK() : -parrot.cK()); // setMoveVertical getAIMoveSpeed
             } else {

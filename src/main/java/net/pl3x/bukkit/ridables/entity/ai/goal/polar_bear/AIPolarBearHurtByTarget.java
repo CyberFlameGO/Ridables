@@ -15,16 +15,19 @@ public class AIPolarBearHurtByTarget extends PathfinderGoalHurtByTarget {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         return bear.getRider() == null && super.a();
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return bear.getRider() == null && super.b();
     }
 
     // startExecuting
+    @Override
     public void c() {
         super.c();
         if (bear.isBaby()) {
@@ -34,6 +37,7 @@ public class AIPolarBearHurtByTarget extends PathfinderGoalHurtByTarget {
     }
 
     // setEntityAttackTarget
+    @Override
     protected void a(EntityCreature entity, EntityLiving target) {
         if (entity instanceof EntityPolarBear && !entity.isBaby()) {
             super.a(entity, target);

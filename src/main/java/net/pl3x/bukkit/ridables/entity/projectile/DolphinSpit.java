@@ -41,18 +41,22 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
                 dolphin.locZ + (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.cos(dolphin.aQ * 0.017453292F));
     }
 
+    @Override
     public RidableDolphin getRidable() {
         return dolphin;
     }
 
+    @Override
     public Dolphin getMob() {
         return dolphin == null ? null : (Dolphin) dolphin.getBukkitEntity();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : (Player) rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         if (nbt != null) {
             restoreOwnerFromSave();
@@ -148,6 +152,7 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
         return entity;
     }
 
+    @Override
     public void shoot(double d0, double d1, double d2, float f, float f1) {
         float f2 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
         motX = d0 = (d0 / (double) f2) * f;
@@ -158,10 +163,12 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
     }
 
     // entityInit
+    @Override
     protected void x_() {
     }
 
     // readEntityFromNBT
+    @Override
     protected void a(NBTTagCompound nbt) {
         if (nbt.hasKeyOfType("Owner", 10)) {
             this.nbt = nbt.getCompound("Owner");
@@ -170,6 +177,7 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
     }
 
     // writeEntityToNBT
+    @Override
     protected void b(NBTTagCompound nbttagcompound) {
         if (dolphin != null) {
             NBTTagCompound nbt = new NBTTagCompound();

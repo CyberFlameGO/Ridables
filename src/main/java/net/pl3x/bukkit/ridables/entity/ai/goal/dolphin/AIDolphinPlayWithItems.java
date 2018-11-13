@@ -20,6 +20,7 @@ public class AIDolphinPlayWithItems extends PathfinderGoal {
     }
 
     // shouldExecute
+    @Override
     public boolean a() {
         if (delay > dolphin.ticksLived) {
             return false;
@@ -32,11 +33,13 @@ public class AIDolphinPlayWithItems extends PathfinderGoal {
     }
 
     // shouldContinueExecuting
+    @Override
     public boolean b() {
         return a();
     }
 
     // startExecuting
+    @Override
     public void c() {
         List items = dolphin.world.a(EntityItem.class, dolphin.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntityDolphin.a);
         if (!items.isEmpty()) {
@@ -47,6 +50,7 @@ public class AIDolphinPlayWithItems extends PathfinderGoal {
     }
 
     // resetTask
+    @Override
     public void d() {
         ItemStack stack = dolphin.getEquipment(EnumItemSlot.MAINHAND);
         if (!stack.isEmpty()) {
@@ -57,6 +61,7 @@ public class AIDolphinPlayWithItems extends PathfinderGoal {
     }
 
     // tick
+    @Override
     public void e() {
         List items = dolphin.world.a(EntityItem.class, dolphin.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntityDolphin.a);
         ItemStack itemstack = dolphin.getEquipment(EnumItemSlot.MAINHAND);

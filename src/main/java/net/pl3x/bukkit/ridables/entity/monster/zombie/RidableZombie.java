@@ -58,11 +58,19 @@ public class RidableZombie extends EntityZombie implements RidableEntity {
         breakDoorAI = new AIZombieBreakDoor(this);
     }
 
+    @Override
     public RidableType getType() {
         return RidableType.ZOMBIE;
     }
 
+    // canDespawn
+    @Override
+    public boolean isTypeNotPersistent() {
+        return !hasCustomName() && !isLeashed();
+    }
+
     // initAI - override vanilla AI
+    @Override
     protected void n() {
         // from EntityZombie
         goalSelector.a(4, new AIZombieAttackTurtleEgg(Blocks.TURTLE_EGG, this, 1.0D, 3));
@@ -84,16 +92,19 @@ public class RidableZombie extends EntityZombie implements RidableEntity {
     }
 
     // canBeRiddenInWater
+    @Override
     public boolean aY() {
         return CONFIG.RIDABLE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
+    @Override
     protected float cG() {
         return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
     }
 
     // setBreakDoorsAITask
+    @Override
     public void t(boolean enabled) {
         if (dz()) { // canBreakDoors
             if (dH() != enabled) {
@@ -111,17 +122,20 @@ public class RidableZombie extends EntityZombie implements RidableEntity {
         }
     }
 
+    @Override
     protected void mobTick() {
         Q = CONFIG.STEP_HEIGHT;
         super.mobTick();
     }
 
     // processInteract
+    @Override
     public boolean a(EntityHuman player, EnumHand hand) {
         return super.a(player, hand) || processInteract(player, hand);
     }
 
     // removePassenger
+    @Override
     public boolean removePassenger(Entity passenger) {
         return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
     }

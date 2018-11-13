@@ -27,9 +27,8 @@ import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 
 public class CustomThrownTrident extends EntityThrownTrident implements CustomProjectile {
     private static Field az;
@@ -62,25 +61,29 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
     }
 
     public CustomThrownTrident(World world, RidableDrowned drowned, EntityPlayer rider, ItemStack itemStack) {
-        super(world, drowned, itemStack);
+        super(world, rider == null ? drowned : rider, itemStack);
         this.drowned = drowned;
         this.rider = rider;
         this.fromPlayer = PickupStatus.DISALLOWED;
         setShooter(rider);
     }
 
+    @Override
     public RidableDrowned getRidable() {
         return drowned;
     }
 
+    @Override
     public Drowned getMob() {
         return drowned == null ? null : (Drowned) drowned.getBukkitEntity();
     }
 
+    @Override
     public Player getRider() {
         return rider == null ? null : rider.getBukkitEntity();
     }
 
+    @Override
     public void tick() {
         if (c > 4) { // timeInGround
             setDamageBeenDealt();
@@ -203,18 +206,21 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
         }
     }
 
-    @Nullable
     // findEntityOnPath
+    @Nullable
+    @Override
     protected Entity a(Vec3D var1, Vec3D var2) {
         return hasDamageBeenDealt() ? null : super.a(var1, var2);
     }
 
     // onHitEntity
+    @Override
     protected void b(MovingObjectPosition mop) {
+        ItemStack tridentStack = getItemStack();
         Entity hitEntity = mop.entity;
-        float damage = RidableDrowned.CONFIG.SHOOT_DAMAGE;
+        float damage = rider == null ? RidableDrowned.CONFIG.AI_TRIDENT_DAMAGE : RidableDrowned.CONFIG.RIDING_SHOOT_DAMAGE;
         if (hitEntity instanceof EntityLiving) {
-            damage += EnchantmentManager.a(getItemStack(), ((EntityLiving) hitEntity).getMonsterType());
+            damage += EnchantmentManager.a(tridentStack, ((EntityLiving) hitEntity).getMonsterType());
         }
         Entity shooter = getShooter();
         DamageSource source = DamageSource.a(this, (shooter == null ? this : shooter));
@@ -231,20 +237,23 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
         motY *= -0.1D;
         motZ *= -0.01D;
         float soundVolume = 1.0F;
-        if (world.Y() && RidableDrowned.CONFIG.SHOOT_CHANNELING) {
-            BlockPosition pos = hitEntity.getChunkCoordinates();
-            if (world.e(pos)) {
-                EntityLightning lightning = new EntityLightning(world, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, false);
-                lightning.d(shooter instanceof EntityPlayer ? (EntityPlayer) shooter : null);
-                world.strikeLightning(lightning);
-                soundEffect = SoundEffects.ITEM_TRIDENT_THUNDER;
-                soundVolume = 5.0F;
+        if (world.Y()) {
+            if ((rider != null && RidableDrowned.CONFIG.RIDING_SHOOT_CHANNELING) || EnchantmentManager.h(tridentStack)) {
+                BlockPosition pos = hitEntity.getChunkCoordinates();
+                if (world.e(pos)) {
+                    EntityLightning lightning = new EntityLightning(world, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, false);
+                    lightning.d(shooter instanceof EntityPlayer ? (EntityPlayer) shooter : null);
+                    world.strikeLightning(lightning);
+                    soundEffect = SoundEffects.ITEM_TRIDENT_THUNDER;
+                    soundVolume = 5.0F;
+                }
             }
         }
         a(soundEffect, soundVolume, 1.0F);
     }
 
     // onCollideWithPlayer
+    @Override
     public void d(EntityHuman player) {
         // do not pick up
     }

@@ -41,6 +41,7 @@ public class IllusionerConfig extends MobConfig {
         reload();
     }
 
+    @Override
     public void reload() {
         super.reload();
 
