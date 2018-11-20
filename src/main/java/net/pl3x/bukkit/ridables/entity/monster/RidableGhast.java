@@ -55,12 +55,14 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     public void initAttributes() {
         super.initAttributes();
         getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_MAX_Y); // registerAttribute
         reloadAttributes();
     }
 
     @Override
     public void reloadAttributes() {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);

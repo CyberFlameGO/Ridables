@@ -13,13 +13,15 @@ public class WitherConfig extends MobConfig {
     public boolean AI_SPAWN_EXPLOSION_FIRE = false;
     public float AI_REGEN_EVERY_SECOND = 1.0F;
     public double AI_FOLLOW_RANGE = 40.0D;
+    public double AI_KNOCKBACK_RESISTANCE = 0.0D;
     public double AI_ARMOR = 4.0D;
+    public double AI_ARMOR_TOUGHNESS = 0.0D;
     public float AI_SHOOT_SPEED = 1.0F;
     public float AI_SHOOT_DAMAGE = 1.0F;
     public float AI_SHOOT_HEAL_AMOUNT = 1.0F;
     public int AI_SHOOT_EFFECT_DURATION = 10;
     public boolean AI_SHOOT_GRIEF = true;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.6D;
     public int RIDING_FLYING_MAX_Y = 256;
     public int RIDING_SHOOT_COOLDOWN = 20;
     public float RIDING_SHOOT_SPEED = 1.0F;
@@ -51,7 +53,9 @@ public class WitherConfig extends MobConfig {
             addDefault("ai.spawn.explosion.fire", AI_SPAWN_EXPLOSION_FIRE);
             addDefault("ai.regen-every-second", AI_REGEN_EVERY_SECOND);
             addDefault("ai.follow-range", AI_FOLLOW_RANGE);
+            addDefault("ai.knockback-resistance", AI_KNOCKBACK_RESISTANCE);
             addDefault("ai.armor", AI_ARMOR);
+            addDefault("ai.armor-toughness", AI_ARMOR_TOUGHNESS);
             addDefault("ai.shoot.speed", AI_SHOOT_SPEED);
             addDefault("ai.shoot.damage", AI_SHOOT_DAMAGE);
             addDefault("ai.shoot.heal-amount", AI_SHOOT_HEAL_AMOUNT);
@@ -77,7 +81,9 @@ public class WitherConfig extends MobConfig {
         AI_SPAWN_EXPLOSION_FIRE = getBoolean("ai.spawn.explosion.fire");
         AI_REGEN_EVERY_SECOND = (float) getDouble("ai.regen-every-second");
         AI_FOLLOW_RANGE = getDouble("ai.follow-range");
+        AI_KNOCKBACK_RESISTANCE = getDouble("ai.knockback-resistance");
         AI_ARMOR = getDouble("ai.armor");
+        AI_ARMOR_TOUGHNESS = getDouble("ai.armor-toughness");
         AI_SHOOT_SPEED = (float) getDouble("ai.shoot.speed");
         AI_SHOOT_DAMAGE = (float) getDouble("ai.shoot.damage");
         AI_SHOOT_HEAL_AMOUNT = (float) getDouble("ai.shoot.heal-amount");

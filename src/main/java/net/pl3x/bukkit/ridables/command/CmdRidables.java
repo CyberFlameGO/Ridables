@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.command;
 
+import net.minecraft.server.v1_13_R2.Entity;
 import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,9 +57,12 @@ public class CmdRidables implements TabExecutor {
             });
 
             Lang.send(sender, Lang.RELOADING_MOB_ATTRIBUTES);
-            Bukkit.getWorlds().forEach(world -> world.getEntities().stream()
-                    .filter(entity -> entity instanceof RidableEntity)
-                    .forEach(entity -> ((RidableEntity) entity).reloadAttributes()));
+            Bukkit.getWorlds().forEach(world -> world.getEntities().forEach(entity -> {
+                Entity nmsEntity = ((CraftEntity) entity).getHandle();
+                if (nmsEntity instanceof RidableEntity) {
+                    ((RidableEntity) nmsEntity).reloadAttributes();
+                }
+            }));
 
             Lang.send(sender, Lang.RELOAD_COMPLETE);
             return true;

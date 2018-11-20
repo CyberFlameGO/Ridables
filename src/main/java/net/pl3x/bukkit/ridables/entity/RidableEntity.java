@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity;
 
+import net.minecraft.server.v1_13_R2.ControllerMove;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -40,7 +41,8 @@ public interface RidableEntity {
      * @return Current rider, otherwise null
      */
     default EntityPlayer getRider() {
-        return ((ControllerWASD) ((EntityInsentient) this).getControllerMove()).rider;
+        ControllerMove controller = ((EntityInsentient) this).getControllerMove();
+        return controller instanceof ControllerWASD ? ((ControllerWASD) controller).rider : null;
     }
 
     default boolean tryRide(EntityHuman entityhuman, boolean requireSaddle, boolean consumeSaddle) {
@@ -63,10 +65,7 @@ public interface RidableEntity {
         if (requireSaddle && consumeSaddle) {
             itemstack.subtract(1);
         }
-        EntityInsentient entity = (EntityInsentient) this;
-        entityhuman.yaw = entity.yaw;
-        entityhuman.pitch = entity.pitch;
-        entityhuman.startRiding(entity);
+        entityhuman.startRiding((EntityInsentient) this);
         entityhuman.o(false); // setJumping - fixes jump on mount
         return true; // handled
     }

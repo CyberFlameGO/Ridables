@@ -9,7 +9,7 @@ public class MuleConfig extends MobConfig {
     public float AI_JUMP_POWER = 0.5F;
     public float AI_STEP_HEIGHT = 1.0F;
     public int AI_FOLLOW_RANGE = 16;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.175D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 1.0F;
     public boolean RIDING_RIDE_IN_WATER = true;

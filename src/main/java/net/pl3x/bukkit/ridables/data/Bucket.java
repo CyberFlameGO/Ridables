@@ -30,6 +30,16 @@ public class Bucket {
     public static final Bucket DOLPHIN = createBucket(EntityType.DOLPHIN);
 
     /**
+     * The elder guardian bucket
+     */
+    public static final Bucket ELDER_GUARDIAN = createBucket(EntityType.ELDER_GUARDIAN);
+
+    /**
+     * The guardian bucket
+     */
+    public static final Bucket GUARDIAN = createBucket(EntityType.GUARDIAN);
+
+    /**
      * The squid bucket
      */
     public static final Bucket SQUID = createBucket(EntityType.SQUID);

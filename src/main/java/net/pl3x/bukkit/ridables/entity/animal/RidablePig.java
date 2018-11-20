@@ -145,16 +145,21 @@ public class RidablePig extends EntityPig implements RidableEntity {
     // processInteract
     @Override
     public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (CONFIG.GET_SADDLE_BACK && entityhuman.isSneaking() && hasSaddle() && passengers.isEmpty()) {
+            ItemStack item = entityhuman.b(hand);
+            if (item.isEmpty() || item.getItem() == Items.SADDLE) {
+                setSaddle(false);
+                if (!entityhuman.abilities.canInstantlyBuild || item.getItem() != Items.SADDLE) {
+                    ItemStack saddle = new ItemStack(Items.SADDLE);
+                    if (!entityhuman.inventory.pickup(saddle)) {
+                        entityhuman.drop(saddle, false);
+                    }
+                }
+                return true; // handled
+            }
+        }
         if (super.a(entityhuman, hand)) {
             return true; // handled by vanilla action
-        }
-        if (CONFIG.GET_SADDLE_BACK && hasSaddle() && passengers.isEmpty() && entityhuman.isSneaking() && entityhuman.b(hand).isEmpty()) {
-            setSaddle(false);
-            ItemStack saddle = new ItemStack(Items.SADDLE);
-            if (!entityhuman.inventory.pickup(saddle)) {
-                entityhuman.drop(saddle, false);
-            }
-            return true; // handled
         }
         if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
             if (!CONFIG.RIDING_BABIES && isBaby()) {

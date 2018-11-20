@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPhantom;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.GroupDataEntity;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
@@ -22,8 +23,11 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomOrbitPoint;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomPickAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomSweepAttack;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
@@ -55,6 +59,24 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         return !hasCustomName() && !isLeashed();
     }
 
+    @Override
+    public void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        getAttributeMap().b(RidableType.RIDING_MAX_Y); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
     @Override
     protected void n() {
@@ -62,6 +84,89 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         goalSelector.a(2, new AIPhantomSweepAttack(this));
         goalSelector.a(3, new AIPhantomOrbitPoint(this));
         targetSelector.a(1, new AIPhantomAttack(this));
+    }
+
+    // canBeRiddenInWater
+    @Override
+    public boolean aY() {
+        return CONFIG.RIDING_RIDE_IN_WATER;
+    }
+
+    // onLivingUpdate
+    @Override
+    public void k() {
+        super.k();
+        boolean hasRider = getRider() != null;
+        if ((hasRider && !CONFIG.RIDING_BURN_IN_SUNLIGHT) || (!hasRider && !CONFIG.AI_BURN_IN_SUNLIGHT)) {
+            extinguish(); // dont burn in sunlight
+        }
+        if (!CONFIG.AI_ATTACK_IN_SUNLIGHT && isInDaylight()) {
+            setGoalTarget(null, null, false);
+        }
+    }
+
+    @Override
+    protected void mobTick() {
+        if (getRider() != null && getRider().bj == 0) {
+            motY -= CONFIG.RIDING_GRAVITY;
+        }
+        super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
+    // processInteract
+    @Override
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removePassenger(Entity passenger) {
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        EntityPlayer rider = getRider();
+        if (rider != null && rider.getBukkitEntity().hasPermission("allow.shoot.phantom")) {
+            shoot(getRider());
+        }
+        return false;
+    }
+
+    public boolean shoot(EntityPlayer rider) {
+        Location loc = ((LivingEntity) getBukkitEntity()).getEyeLocation();
+        loc.setPitch(-loc.getPitch());
+        Vector target = loc.getDirection().normalize().multiply(100).add(loc.toVector());
+
+        PhantomFlames flames = new PhantomFlames(world, this, rider);
+        flames.shoot(target.getX() - locX, target.getY() - locY, target.getZ() - locZ, 1.0F, 5.0F);
+        world.addEntity(flames);
+        return true;
+    }
+
+    public boolean canAttack() {
+        return CONFIG.AI_ATTACK_IN_SUNLIGHT || !isInDaylight();
+    }
+
+    // updatePhantomSize
+    public void l() {
+        int size = getSize();
+        setSize(0.9F + 0.2F * (float) size, 0.5F + 0.1F * (float) size);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue((double) (CONFIG.AI_MELEE_DAMAGE + size));
     }
 
     // readNBT
@@ -86,67 +191,6 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     public GroupDataEntity prepare(DifficultyDamageScaler scaler, @Nullable GroupDataEntity group, @Nullable NBTTagCompound nbt) {
         orbitPosition = (new BlockPosition(this)).up(5);
         return super.prepare(scaler, group, nbt);
-    }
-
-    // canBeRiddenInWater
-    @Override
-    public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
-    }
-
-    @Override
-    protected void mobTick() {
-        if (getRider() != null && getRider().bj == 0) {
-            motY -= CONFIG.GRAVITY;
-        }
-        super.mobTick();
-    }
-
-    // onLivingUpdate
-    @Override
-    public void k() {
-        super.k();
-        if (!CONFIG.BURN_IN_SUNLIGHT) {
-            extinguish(); // dont burn in sunlight
-        }
-        if (isInDaylight()) {
-            setGoalTarget(null, null, false);
-        }
-    }
-
-    // processInteract
-    @Override
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
-    }
-
-    @Override
-    public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
-    }
-
-    @Override
-    public boolean onSpacebar() {
-        EntityPlayer rider = getRider();
-        if (rider != null && hasShootPerm(rider.getBukkitEntity())) {
-            shoot(getRider());
-        }
-        return false;
-    }
-
-    public boolean shoot(EntityPlayer rider) {
-        Location loc = ((LivingEntity) getBukkitEntity()).getEyeLocation();
-        loc.setPitch(-loc.getPitch());
-        Vector target = loc.getDirection().normalize().multiply(100).add(loc.toVector());
-
-        PhantomFlames flames = new PhantomFlames(world, this, rider);
-        flames.shoot(target.getX() - locX, target.getY() - locY, target.getZ() - locZ, 1.0F, 5.0F);
-        world.addEntity(flames);
-        return true;
-    }
-
-    public boolean canAttack() {
-        return CONFIG.ATTACK_IN_DAYLIGHT || !isInDaylight();
     }
 
     class PhantomLookController extends LookController {
@@ -179,33 +223,33 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
             float f = (float) (phantom.orbitOffset.x - phantom.locX);
             float f1 = (float) (phantom.orbitOffset.y - phantom.locY);
             float f2 = (float) (phantom.orbitOffset.z - phantom.locZ);
-            double d0 = (double) MathHelper.c(f * f + f2 * f2);
-            double d1 = 1.0D - (double) MathHelper.e(f1 * 0.7F) / d0;
+            double d0 = (double) MathHelper.c(f * f + f2 * f2); // sqrt
+            double d1 = 1.0D - (double) MathHelper.e(f1 * 0.7F) / d0; // abs
 
             f = (float) ((double) f * d1);
             f2 = (float) ((double) f2 * d1);
-            d0 = (double) MathHelper.c(f * f + f2 * f2);
-            double d2 = (double) MathHelper.c(f * f + f2 * f2 + f1 * f1);
+            d0 = (double) MathHelper.c(f * f + f2 * f2); // sqrt
+            double d2 = (double) MathHelper.c(f * f + f2 * f2 + f1 * f1); // sqrt
             float f3 = phantom.yaw;
-            float f4 = (float) MathHelper.c((double) f2, (double) f);
-            float f5 = MathHelper.g(phantom.yaw + 90.0F);
-            float f6 = MathHelper.g(f4 * 57.295776F);
+            float f4 = (float) MathHelper.c((double) f2, (double) f); // atan2
+            float f5 = MathHelper.g(phantom.yaw + 90.0F); // wrapDegrees
+            float f6 = MathHelper.g(f4 * Const.RAD2DEG_FLOAT); // wrapDegrees
 
-            phantom.yaw = MathHelper.c(f5, f6, 4.0F) - 90.0F;
+            phantom.yaw = MathHelper.c(f5, f6, 4.0F) - 90.0F; // approachDegrees
             phantom.aQ = phantom.yaw;
-            if (MathHelper.d(f3, phantom.yaw) < 3.0F) {
-                speed = MathHelper.b(speed, 1.8F, 0.005F * (1.8F / speed));
+            if (MathHelper.d(f3, phantom.yaw) < 3.0F) { // degreesDifferenceAbs
+                speed = MathHelper.b(speed, 1.8F, 0.005F * (1.8F / speed)); // approach
             } else {
-                speed = MathHelper.b(speed, 0.2F, 0.025F);
+                speed = MathHelper.b(speed, 0.2F, 0.025F); // approach
             }
 
-            float f7 = (float) (-(MathHelper.c((double) (-f1), d0) * 57.2957763671875D));
-
+            float f7 = (float) (-(MathHelper.c((double) (-f1), d0) * Const.RAD2DEG)); // atan2
             phantom.pitch = f7;
             float f8 = phantom.yaw + 90.0F;
-            double d3 = (double) (speed * MathHelper.cos(f8 * 0.017453292F)) * Math.abs((double) f / d2);
-            double d4 = (double) (speed * MathHelper.sin(f8 * 0.017453292F)) * Math.abs((double) f2 / d2);
-            double d5 = (double) (speed * MathHelper.sin(f7 * 0.017453292F)) * Math.abs((double) f1 / d2);
+
+            double d3 = (double) (speed * MathHelper.cos(f8 * Const.DEG2RAD_FLOAT)) * Math.abs((double) f / d2);
+            double d4 = (double) (speed * MathHelper.sin(f8 * Const.DEG2RAD_FLOAT)) * Math.abs((double) f2 / d2);
+            double d5 = (double) (speed * MathHelper.sin(f7 * Const.DEG2RAD_FLOAT)) * Math.abs((double) f1 / d2);
 
             phantom.motX += (d3 - phantom.motX) * 0.2D;
             phantom.motY += (d5 - phantom.motY) * 0.2D;

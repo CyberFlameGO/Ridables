@@ -12,8 +12,9 @@ public class GhastConfig extends MobConfig {
     public boolean AI_FIREBALL_EXPLOSION_FIRE = false;
     public boolean AI_FIREBALL_EXPLOSION_GRIEF = true;
     public double AI_FOLLOW_RANGE = 100.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.7D;
     public boolean RIDING_RIDE_IN_WATER = true;
+    public int RIDING_FLYING_MAX_Y = 128;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;
@@ -45,6 +46,7 @@ public class GhastConfig extends MobConfig {
             addDefault("ai.follow-range", AI_FOLLOW_RANGE);
             addDefault("riding.speed", RIDING_SPEED);
             addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("riding.flying-max-y", RIDING_FLYING_MAX_Y);
             addDefault("riding.fireball.cooldown", RIDING_FIREBALL_COOLDOWN);
             addDefault("riding.fireball.speed", RIDING_FIREBALL_SPEED);
             addDefault("riding.fireball.damage", RIDING_FIREBALL_DAMAGE);
@@ -64,6 +66,7 @@ public class GhastConfig extends MobConfig {
         AI_FOLLOW_RANGE = getDouble("ai.follow-range");
         RIDING_SPEED = getDouble("ride-speed");
         RIDING_RIDE_IN_WATER = getBoolean("ride-in-water");
+        RIDING_FLYING_MAX_Y = (int) getDouble("riding.flying-max-y");
         RIDING_ENABLE_MOVE_EVENT = isSet("riding.enable-move-event") ? getBoolean("riding.enable-move-event") : Config.RIDING_ENABLE_MOVE_EVENT;
         RIDING_SADDLE_REQUIRE = isSet("riding.saddle.require") ? getBoolean("riding.saddle.require") : Config.RIDING_SADDLE_REQUIRE;
         RIDING_SADDLE_CONSUME = isSet("riding.saddle.consume") ? getBoolean("riding.saddle.consume") : Config.RIDING_SADDLE_CONSUME;

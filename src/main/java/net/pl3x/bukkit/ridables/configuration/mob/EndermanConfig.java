@@ -12,7 +12,7 @@ public class EndermanConfig extends MobConfig {
     public float AI_STEP_HEIGHT = 1.0F;
     public float AI_DAMAGE_WHEN_WET = 1.0F;
     public boolean AI_TELEPORT_WHEN_DAMAGED = true;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.3D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 1.0F;
     public boolean RIDING_RIDE_IN_WATER = true;

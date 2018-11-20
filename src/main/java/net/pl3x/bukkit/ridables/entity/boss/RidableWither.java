@@ -33,6 +33,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.wither.AIWitherDoNothing;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomWitherSkull;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -77,9 +78,12 @@ public class RidableWither extends EntityWither implements RidableEntity {
         getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
         getAttributeInstance(RidableType.RIDING_MAX_Y).setValue(CONFIG.RIDING_FLYING_MAX_Y);
         getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.c).setValue(CONFIG.AI_KNOCKBACK_RESISTANCE); // KNOCKBACK_RESISTANCE
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
         getAttributeInstance(GenericAttributes.h).setValue(CONFIG.AI_ARMOR); // ARMOR
+        getAttributeInstance(GenericAttributes.i).setValue(CONFIG.AI_ARMOR_TOUGHNESS); // ARMOR_TOUGHNESS
+        //getAttributeInstance(GenericAttributes.ATTACK_DAMAGE); // Wither does not do melee damage ??? TODO verify
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // canDespawn
@@ -367,7 +371,7 @@ public class RidableWither extends EntityWither implements RidableEntity {
     }
 
     public double getHeadX(int head) {
-        return head <= 0 ? locX : locX + (double) MathHelper.cos((aQ + (float) (180 * (head - 1))) * ((float) Math.PI / 180F)) * 1.3D;
+        return head <= 0 ? locX : locX + (double) MathHelper.cos((aQ + (float) (180 * (head - 1))) * Const.DEG2RAD_FLOAT) * 1.3D;
     }
 
     public double getHeadY(int head) {
@@ -375,7 +379,7 @@ public class RidableWither extends EntityWither implements RidableEntity {
     }
 
     public double getHeadZ(int head) {
-        return head <= 0 ? locZ : locZ + (double) MathHelper.sin((aQ + (float) (180 * (head - 1))) * ((float) Math.PI / 180F)) * 1.3D;
+        return head <= 0 ? locZ : locZ + (double) MathHelper.sin((aQ + (float) (180 * (head - 1))) * Const.DEG2RAD_FLOAT) * 1.3D;
     }
 
     private static Field bossInfo;

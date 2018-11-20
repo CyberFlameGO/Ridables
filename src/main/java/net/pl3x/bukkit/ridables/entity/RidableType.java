@@ -90,14 +90,14 @@ public class RidableType {
     public static final RidableType DOLPHIN = inject(Config.DOLPHIN_ENABLED, "dolphin", EntityTypes.DOLPHIN, RidableDolphin.class, RidableDolphin::new, Bucket.DOLPHIN);
     public static final RidableType DONKEY = inject(Config.DONKEY_ENABLED, "donkey", EntityTypes.DONKEY, RidableDonkey.class, RidableDonkey::new);
     public static final RidableType DROWNED = inject(Config.DROWNED_ENABLED, "drowned", EntityTypes.DROWNED, RidableDrowned.class, RidableDrowned::new);
-    public static final RidableType ELDER_GUARDIAN = inject(Config.ELDER_GUARDIAN_ENABLED, "elder_guardian", EntityTypes.ELDER_GUARDIAN, RidableElderGuardian.class, RidableElderGuardian::new);
+    public static final RidableType ELDER_GUARDIAN = inject(Config.ELDER_GUARDIAN_ENABLED, "elder_guardian", EntityTypes.ELDER_GUARDIAN, RidableElderGuardian.class, RidableElderGuardian::new, Bucket.ELDER_GUARDIAN);
     public static final RidableType ENDER_DRAGON = inject(Config.ENDER_DRAGON_ENABLED, "ender_dragon", EntityTypes.ENDER_DRAGON, RidableEnderDragon.class, RidableEnderDragon::new);
     public static final RidableType ENDERMAN = inject(Config.ENDERMAN_ENABLED, "enderman", EntityTypes.ENDERMAN, RidableEnderman.class, RidableEnderman::new);
     public static final RidableType ENDERMITE = inject(Config.ENDERMITE_ENABLED, "endermite", EntityTypes.ENDERMITE, RidableEndermite.class, RidableEndermite::new);
     public static final RidableType EVOKER = inject(Config.EVOKER_ENABLED, "evoker", EntityTypes.EVOKER, RidableEvoker.class, RidableEvoker::new);
     public static final RidableType GHAST = inject(Config.GHAST_ENABLED, "ghast", EntityTypes.GHAST, RidableGhast.class, RidableGhast::new);
     public static final RidableType GIANT = inject(Config.GIANT_ENABLED, "giant", EntityTypes.GIANT, RidableGiant.class, RidableGiant::new);
-    public static final RidableType GUARDIAN = inject(Config.GUARDIAN_ENABLED, "guardian", EntityTypes.GUARDIAN, RidableGuardian.class, RidableGuardian::new);
+    public static final RidableType GUARDIAN = inject(Config.GUARDIAN_ENABLED, "guardian", EntityTypes.GUARDIAN, RidableGuardian.class, RidableGuardian::new, Bucket.GUARDIAN);
     public static final RidableType HORSE = inject(Config.HORSE_ENABLED, "horse", EntityTypes.HORSE, RidableHorse.class, RidableHorse::new);
     public static final RidableType HUSK = inject(Config.HUSK_ENABLED, "husk", EntityTypes.HUSK, RidableHusk.class, RidableHusk::new);
     public static final RidableType ILLUSIONER = inject(Config.ILLUSIONER_ENABLED, "illusioner", EntityTypes.ILLUSIONER, RidableIllusioner.class, RidableIllusioner::new);
@@ -178,21 +178,13 @@ public class RidableType {
     private final EntityTypes<?> entityTypes;
     private final Bucket waterBucket;
     private final String name;
-    private final MobConfig config;
+    private final Class<? extends RidableEntity> clazz;
 
     private RidableType(String name, EntityTypes<?> entityTypes, Class<? extends RidableEntity> clazz, Bucket waterBucket) {
         this.entityTypes = entityTypes;
         this.waterBucket = waterBucket;
         this.name = name;
-
-        MobConfig config;
-        try {
-            config = (MobConfig) clazz.getDeclaredField("CONFIG").get(null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            config = null;
-        }
-        this.config = config;
+        this.clazz = clazz;
     }
 
     /**
@@ -205,7 +197,12 @@ public class RidableType {
     }
 
     public MobConfig getConfig() {
-        return config;
+        try {
+            return (MobConfig) clazz.getDeclaredField("CONFIG").get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

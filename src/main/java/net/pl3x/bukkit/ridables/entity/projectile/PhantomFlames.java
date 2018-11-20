@@ -16,6 +16,7 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
 import net.pl3x.bukkit.ridables.entity.monster.RidablePhantom;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Player;
 
@@ -33,9 +34,9 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         this(world);
         this.phantom = phantom;
         this.rider = rider;
-        setPosition(phantom.locX - (double) (phantom.width + 1.0F) * 0.5D * (double) MathHelper.sin(phantom.aQ * 0.017453292F),
-                phantom.locY + (double) phantom.getHeadHeight() - 0.5000000149011612D,
-                phantom.locZ + (double) (phantom.width + 1.0F) * 0.5D * (double) MathHelper.cos(phantom.aQ * 0.017453292F));
+        setPosition(phantom.locX - (double) (phantom.width + 1.0F) * 0.5D * (double) MathHelper.sin(phantom.aQ * Const.DEG2RAD_FLOAT),
+                phantom.locY + (double) phantom.getHeadHeight() - (double) 0.5F,
+                phantom.locZ + (double) (phantom.width + 1.0F) * 0.5D * (double) MathHelper.cos(phantom.aQ * Const.DEG2RAD_FLOAT));
         setInvisible(true);
     }
 
@@ -80,8 +81,8 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         locX += motX;
         locY += motY;
         locZ += motZ;
-        yaw = (float) (MathHelper.c(motX, motZ) * 57.2957763671875D);
-        pitch = (float) (MathHelper.c(motY, (double) MathHelper.sqrt(motX * motX + motZ * motZ)) * 57.2957763671875D);
+        yaw = (float) (MathHelper.c(motX, motZ) * Const.RAD2DEG);
+        pitch = (float) (MathHelper.c(motY, (double) MathHelper.sqrt(motX * motX + motZ * motZ)) * Const.RAD2DEG);
         while (pitch - lastPitch < -180.0F)
             lastPitch -= 360.0F;
         while (pitch - lastPitch >= 180.0F)
@@ -93,12 +94,12 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         pitch = lastPitch + (pitch - lastPitch) * 0.2F;
         yaw = lastYaw + (yaw - lastYaw) * 0.2F;
         if (!world.a(getBoundingBox(), Material.WATER)) {
-            motX *= 0.9900000095367432D;
-            motY *= 0.9900000095367432D;
-            motZ *= 0.9900000095367432D;
+            motX *= (double) 0.99F;
+            motY *= (double) 0.99F;
+            motZ *= (double) 0.99F;
         }
         if (!isNoGravity()) {
-            motY -= 0.02999999865889549D;
+            motY -= (double) 0.03F;
         }
         setPosition(locX, locY, locZ);
     }
@@ -120,8 +121,8 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
         if (hitEntity != null && rider != null) {
-            if (RidablePhantom.CONFIG.SHOOT_DAMAGE > 0) {
-                hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidablePhantom.CONFIG.SHOOT_DAMAGE);
+            if (RidablePhantom.CONFIG.RIDING_SHOOT_DAMAGE > 0) {
+                hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidablePhantom.CONFIG.RIDING_SHOOT_DAMAGE);
                 hitEntity.setOnFire(100);
             }
             die();
@@ -153,8 +154,8 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         motX = d0 = (d0 / (double) f2) * f;
         motY = d1 = (d1 / (double) f2) * f;
         motZ = d2 = (d2 / (double) f2) * f;
-        lastYaw = yaw = (float) (MathHelper.c(d0, d2) * 57.2957763671875D);
-        lastPitch = pitch = (float) (MathHelper.c(d1, (double) MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D);
+        lastYaw = yaw = (float) (MathHelper.c(d0, d2) * Const.RAD2DEG);
+        lastPitch = pitch = (float) (MathHelper.c(d1, (double) MathHelper.sqrt(d0 * d0 + d2 * d2)) * Const.RAD2DEG);
     }
 
     // entityInit

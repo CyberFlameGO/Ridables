@@ -8,10 +8,12 @@ public class DrownedConfig extends MobConfig {
     public double MAX_HEALTH = 20.0D;
     public double AI_MELEE_DAMAGE = 3.0D;
     public float AI_TRIDENT_DAMAGE = 8.0F;
-    public double AI_FOLLOW_RANGE = 16.0D;
-    public float AI_JUMP_POWER = 0.5F;
+    public double AI_ARMOR = 2.0D;
+    public double AI_SPAWN_REINFORCEMENTS_CHANCE = 0.1D;
+    public double AI_FOLLOW_RANGE = 35.0D;
+    public float AI_JUMP_POWER = 0.42F;
     public float AI_STEP_HEIGHT = 0.6F;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.23D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 0.6F;
     public boolean RIDING_RIDE_IN_WATER = true;
@@ -40,6 +42,8 @@ public class DrownedConfig extends MobConfig {
             addDefault("max-health", MAX_HEALTH);
             addDefault("ai.melee-damage", AI_MELEE_DAMAGE);
             addDefault("ai.trident-damage", AI_TRIDENT_DAMAGE);
+            addDefault("ai.armor", AI_ARMOR);
+            addDefault("ai.spawn-reinforcements-chance", AI_SPAWN_REINFORCEMENTS_CHANCE);
             addDefault("ai.follow-range", AI_FOLLOW_RANGE);
             addDefault("ai.jump-power", AI_JUMP_POWER);
             addDefault("ai.step-height", AI_STEP_HEIGHT);
@@ -60,6 +64,8 @@ public class DrownedConfig extends MobConfig {
         MAX_HEALTH = getDouble("max-health");
         AI_MELEE_DAMAGE = getDouble("ai.melee-damage");
         AI_TRIDENT_DAMAGE = (float) getDouble("ai.trident-damage");
+        AI_ARMOR = getDouble("ai.armor");
+        AI_SPAWN_REINFORCEMENTS_CHANCE = getDouble("ai.spawn-reinforcements-chance");
         AI_FOLLOW_RANGE = getDouble("ai.follow-range");
         AI_JUMP_POWER = (float) getDouble("ai.jump-power");
         AI_STEP_HEIGHT = (float) getDouble("ai.step-height");

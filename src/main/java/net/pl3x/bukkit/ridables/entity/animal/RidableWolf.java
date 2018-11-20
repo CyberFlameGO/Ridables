@@ -131,6 +131,9 @@ public class RidableWolf extends EntityWolf implements RidableEntity {
             if (!CONFIG.RIDING_BABIES && isBaby()) {
                 return false; // do not ride babies
             }
+            if (CONFIG.RIDING_ONLY_OWNER_CAN_RIDE && isTamed() && getOwner() != entityhuman) {
+                return false; // only owner can ride
+            }
             return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
         }
         return false;

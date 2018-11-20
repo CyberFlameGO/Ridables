@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntityPigZombie;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.Navigation;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.ZombiePigmanConfig;
@@ -23,7 +24,9 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.AIZombieAttackTurtleEgg;
 import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.AIZombieBreakDoor;
 import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.zombie_pigman.AIPigmanHurtByAggressor;
 import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.zombie_pigman.AIPigmanTargetAggressor;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PigZombieAngerEvent;
 
 import java.lang.reflect.Field;
@@ -61,6 +64,24 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
         return !hasCustomName() && !isLeashed();
     }
 
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+        getAttributeInstance(GenericAttributes.h).setValue(CONFIG.AI_ARMOR); // ARMOR
+        getAttributeInstance(c).setValue(0.0D); // SPAWN_REINFORCEMENTS_CHANCE
+    }
+
     // initAI - override vanilla AI
     @Override
     protected void n() {
@@ -80,13 +101,13 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
     // canBeRiddenInWater
     @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
     }
 
     // setBreakDoorsAITask
@@ -110,20 +131,36 @@ public class RidableZombiePigman extends EntityPigZombie implements RidableEntit
 
     @Override
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
     @Override
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            if (!CONFIG.RIDING_BABIES && isBaby()) {
+                return false; // do not ride babies
+            }
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
     @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     @Override

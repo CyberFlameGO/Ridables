@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.pl3x.bukkit.ridables.entity.monster.RidablePhantom;
+import net.pl3x.bukkit.ridables.util.Const;
 
 public class AIPhantomOrbitPoint extends AIPhantomMove {
     private float c;
@@ -77,7 +78,7 @@ public class AIPhantomOrbitPoint extends AIPhantomMove {
             phantom.orbitPosition = new BlockPosition(phantom);
         }
 
-        c += f * 15.0F * 0.017453292F;
+        c += f * 15.0F * Const.DEG2RAD;
         phantom.orbitOffset = (new Vec3D(phantom.orbitPosition)).add((double) (d * MathHelper.cos(c)), (double) (-4.0F + e), (double) (d * MathHelper.sin(c)));
     }
 }

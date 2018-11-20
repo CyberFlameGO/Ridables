@@ -1,31 +1,39 @@
 package net.pl3x.bukkit.ridables.entity.monster.slime;
 
-import net.minecraft.server.v1_13_R2.DamageSource;
-import net.minecraft.server.v1_13_R2.EntityTypes;
-import net.minecraft.server.v1_13_R2.EnumDifficulty;
-import net.minecraft.server.v1_13_R2.FluidType;
-import net.minecraft.server.v1_13_R2.GeneratorAccess;
+import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityIronGolem;
+import net.minecraft.server.v1_13_R2.EntityMagmaCube;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
-import net.minecraft.server.v1_13_R2.IWorldReader;
-import net.minecraft.server.v1_13_R2.LootTables;
-import net.minecraft.server.v1_13_R2.MinecraftKey;
-import net.minecraft.server.v1_13_R2.ParticleParam;
-import net.minecraft.server.v1_13_R2.Particles;
-import net.minecraft.server.v1_13_R2.SoundEffect;
-import net.minecraft.server.v1_13_R2.SoundEffects;
-import net.minecraft.server.v1_13_R2.Tag;
-import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.MagmaCubeConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestEntity;
+import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestPlayer;
+import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeAttack;
+import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeFaceRandom;
+import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeHop;
+import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeSwim;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
+import org.bukkit.entity.Player;
 
-public class RidableMagmaCube extends RidableSlime implements RidableEntity {
+public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
     public static final MagmaCubeConfig CONFIG = new MagmaCubeConfig();
 
+    private int spacebarCharge = 0;
+    private int prevSpacebarCharge = 0;
+    private float fallDistanceCharge = 0;
+
     public RidableMagmaCube(World world) {
-        super(EntityTypes.MAGMA_CUBE, world);
-        fireProof = true;
+        super(world);
+        moveController = new MagmaCubeWASDController(this);
+        lookController = new LookController(this);
     }
 
     @Override
@@ -39,128 +47,194 @@ public class RidableMagmaCube extends RidableSlime implements RidableEntity {
         return !hasCustomName() && !isLeashed();
     }
 
-    // canBeRiddenInWater
-    @Override
-    public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
-    }
-
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.2D);
-    }
-
-    // canSpawn
-    @Override
-    public boolean a(GeneratorAccess world, boolean var2) {
-        return world.getDifficulty() != EnumDifficulty.PEACEFUL;
-    }
-
-    // isNotColliding
-    @Override
-    public boolean a(IWorldReader world) {
-        return world.a_(this, getBoundingBox()) && world.getCubes(this, getBoundingBox()) && !world.containsLiquid(getBoundingBox());
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
     }
 
     @Override
-    public void setSize(int size, boolean flag) {
-        super.setSize(size, flag);
-        getAttributeInstance(GenericAttributes.h).setValue((double) (size * 3));
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
-    // getBrightness
+    // initAI - override vanilla AI
     @Override
-    public float az() {
-        return 1.0F;
+    protected void n() {
+        goalSelector.a(1, new AIMagmaCubeSwim(this));
+        goalSelector.a(2, new AIMagmaCubeAttack(this));
+        goalSelector.a(3, new AIMagmaCubeFaceRandom(this));
+        goalSelector.a(5, new AIMagmaCubeHop(this));
+        targetSelector.a(1, new AIFindNearestPlayer(this));
+        targetSelector.a(3, new AIFindNearestEntity(this, EntityIronGolem.class));
     }
 
-    // flame particles
+    // canBeRiddenInWater
     @Override
-    protected ParticleParam l() {
-        return Particles.y;
+    public boolean aY() {
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
-    // getLootTable
+    // getJumpUpwardsMotion
     @Override
-    protected MinecraftKey getDefaultLootTable() {
-        return dy() ? LootTables.a : LootTables.ap;
+    protected float cG() {
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : (CONFIG.RIDING_JUMP_POWER * getJumpCharge());
+    }
+
+    public boolean canDamagePlayer() {
+        return dt();
     }
 
     @Override
-    public boolean isBurning() {
-        return false;
-    }
-
-    // getJumpDelay
-    @Override
-    protected int dr() {
-        return super.dr() * 4;
-    }
-
-    // alterSquishAmount
-    @Override
-    protected void ds() {
-        a *= 0.9F;
-    }
-
-    // jump
-    @Override
-    protected void cH() {
-        motY = (double) (0.42F + (float) getSize() * 0.1F) * getJumpCharge();
-        impulse = true;
-    }
-
-    // handleFluidJump
-    @Override
-    protected void c(Tag<FluidType> tag) {
-        if (tag == TagsFluid.LAVA) {
-            motY = (double) (0.22F + (float) getSize() * 0.05F) * getJumpCharge();
-            impulse = true;
-        } else {
-            super.c(tag);
+    protected void mobTick() {
+        if (spacebarCharge == prevSpacebarCharge) {
+            spacebarCharge = 0;
         }
+        prevSpacebarCharge = spacebarCharge;
+        super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
+    }
+
+    public float getJumpCharge() {
+        float charge = 1F;
+        if (getRider() != null && spacebarCharge > 0) {
+            charge += 1F * (fallDistanceCharge = (spacebarCharge / 72F));
+        } else {
+            fallDistanceCharge = 0;
+        }
+        return charge;
     }
 
     // fall
     @Override
-    public void c(float f, float f1) {
-        // does not take fall damage
+    public void c(float distance, float damageMultiplier) {
+        if (getRider() != null && fallDistanceCharge > 0) {
+            distance = distance - fallDistanceCharge;
+        }
+        super.c(distance, damageMultiplier);
     }
 
-    // canDamagePlayer
+    // processInteract
     @Override
-    protected boolean dt() {
-        return cP();
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removePassenger(Entity passenger) {
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    }
+
+    @Override
+    public boolean onSpacebar() {
+        if (getRider().getBukkitEntity().hasPermission("allow.special.magma_cube")) {
+            spacebarCharge++;
+            if (spacebarCharge > 50) {
+                spacebarCharge -= 2;
+            }
+        }
+        return false;
     }
 
     // getAttackStrength
     @Override
     protected int du() {
-        return super.du() + 2;
+        // 1-  = small
+        // 2-3 = medium
+        // 4+  = large
+        int size = getSize();
+        if (size < 2) {
+            return CONFIG.AI_MELEE_DAMAGE_SMALL;
+        } else if (size < 4) {
+            return CONFIG.AI_MELEE_DAMAGE_MEDIUM;
+        } else {
+            return CONFIG.AI_MELEE_DAMAGE_LARGE;
+        }
     }
 
-    // getHurtSound
     @Override
-    protected SoundEffect d(DamageSource damagesource) {
-        return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_HURT_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_HURT;
+    public void setSize(int i, boolean resetHealth) {
+        super.setSize(i, resetHealth);
+        int size = getSize();
+        double maxHealth;
+        if (size < 2) {
+            maxHealth = CONFIG.MAX_HEALTH_SMALL;
+        } else if (size < 4) {
+            maxHealth = CONFIG.MAX_HEALTH_MEDIUM;
+        } else {
+            maxHealth = CONFIG.MAX_HEALTH_LARGE;
+        }
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+        if (resetHealth) {
+            setHealth(getMaxHealth());
+        }
     }
 
-    // getDeathSound
-    @Override
-    protected SoundEffect cs() {
-        return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_DEATH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_DEATH;
-    }
+    public static class MagmaCubeWASDController extends ControllerWASD {
+        private final RidableMagmaCube magmaCube;
+        private float yRot;
+        private int jumpDelay;
+        private boolean isAggressive;
 
-    // getSquishSound
-    @Override
-    protected SoundEffect dv() {
-        return dz() ? SoundEffects.ENTITY_MAGMA_CUBE_SQUISH_SMALL : SoundEffects.ENTITY_MAGMA_CUBE_SQUISH;
-    }
+        public MagmaCubeWASDController(RidableMagmaCube magmaCube) {
+            super(magmaCube);
+            this.magmaCube = magmaCube;
+            yRot = magmaCube.yaw * Const.RAD2DEG_FLOAT;
+        }
 
-    // getJumpSound
-    @Override
-    protected SoundEffect dw() {
-        return SoundEffects.ENTITY_MAGMA_CUBE_JUMP;
+        public void setDirection(float yRot, boolean isAggressive) {
+            this.yRot = yRot;
+            this.isAggressive = isAggressive;
+        }
+
+        public void setSpeed(double speed) {
+            e = speed;
+            h = ControllerMove.Operation.MOVE_TO;
+        }
+
+        @Override
+        public void tick() {
+            magmaCube.aQ = magmaCube.aS = magmaCube.yaw = a(magmaCube.yaw, yRot, 90.0F);
+            if (h != ControllerMove.Operation.MOVE_TO) {
+                magmaCube.r(0.0F); // forward
+                return;
+            }
+            h = ControllerMove.Operation.WAIT;
+            if (magmaCube.onGround) {
+                magmaCube.o((float) (e * a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()));
+                if (jumpDelay-- <= 0) {
+                    jumpDelay = magmaCube.dr(); // getJumpDelay
+                    if (isAggressive) {
+                        jumpDelay /= 3;
+                    }
+                    magmaCube.getControllerJump().a(); // setJumping
+                    if (magmaCube.dz()) { // makeSoundOnJump
+                        magmaCube.a(magmaCube.dw(), magmaCube.cD(), ((magmaCube.getRandom().nextFloat() - magmaCube.getRandom().nextFloat()) * 0.2F + 1.0F) * 0.8F); // playSound
+                    }
+                } else {
+                    magmaCube.bh = 0.0F; // moveStrafing
+                    magmaCube.bj = 0.0F; // moveForward
+                    magmaCube.o(0.0F); // setSpeed
+                }
+                return;
+            }
+            magmaCube.o((float) (e * a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()));
+        }
     }
 }

@@ -116,7 +116,10 @@ public class RidableCaveSpider extends EntityCaveSpider implements RidableEntity
     // isOnLadder
     @Override
     public boolean z_() {
-        return getRider() == null ? l() : CONFIG.RIDING_CLIMB_WALLS && l(); // isBesideClimbableBlock
+        if (getRider() == null) {
+            return l(); // isBesideClimbableBlock
+        }
+        return CONFIG.RIDING_CLIMB_WALLS && l();
     }
 
     @Override

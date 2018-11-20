@@ -23,6 +23,7 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.VoxelShape;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.monster.zombie.RidableDrowned;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Drowned;
 import org.bukkit.entity.Player;
@@ -93,8 +94,8 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
         boolean flag = q();
         if (lastPitch == 0.0F && lastYaw == 0.0F) {
             float f = MathHelper.sqrt(motX * motX + motZ * motZ);
-            lastYaw = yaw = (float) (MathHelper.c(motX, motZ) * 57.2957763671875D);
-            lastPitch = pitch = (float) (MathHelper.c(motY, (double) f) * 57.2957763671875D);
+            lastYaw = yaw = (float) (MathHelper.c(motX, motZ) * Const.RAD2DEG);
+            lastPitch = pitch = (float) (MathHelper.c(motY, (double) f) * Const.RAD2DEG);
         }
         BlockPosition pos = new BlockPosition(tileX, tileY, tileZ);
         IBlockData blockState = world.getType(pos);
@@ -169,11 +170,11 @@ public class CustomThrownTrident extends EntityThrownTrident implements CustomPr
             locZ += motZ;
             float f1 = MathHelper.sqrt(motX * motX + motZ * motZ);
             if (flag) {
-                yaw = (float) (MathHelper.c(-motX, -motZ) * 57.2957763671875D);
+                yaw = (float) (MathHelper.c(-motX, -motZ) * Const.RAD2DEG);
             } else {
-                yaw = (float) (MathHelper.c(motX, motZ) * 57.2957763671875D);
+                yaw = (float) (MathHelper.c(motX, motZ) * Const.RAD2DEG);
             }
-            pitch = (float) (MathHelper.c(motY, (double) f1) * 57.2957763671875D);
+            pitch = (float) (MathHelper.c(motY, (double) f1) * Const.RAD2DEG);
             while (pitch - lastPitch < -180.0F) {
                 lastPitch -= 360.0F;
             }

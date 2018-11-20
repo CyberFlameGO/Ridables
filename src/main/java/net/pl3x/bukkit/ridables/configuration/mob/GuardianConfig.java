@@ -8,7 +8,7 @@ public class GuardianConfig extends MobConfig {
     public double MAX_HEALTH = 30.0D;
     public double AI_ATTACK_DAMAGE = 6.0D;
     public double AI_FOLLOW_RANGE = 16.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.4D;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;

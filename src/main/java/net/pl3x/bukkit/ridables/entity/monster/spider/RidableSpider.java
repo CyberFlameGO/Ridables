@@ -5,6 +5,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EntitySpider;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.SpiderConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
@@ -19,6 +20,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.spider.AISpiderAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.spider.AISpiderTarget;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableSpider extends EntitySpider implements RidableEntity {
     public static final SpiderConfig CONFIG = new SpiderConfig();
@@ -40,6 +43,22 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
         return !hasCustomName() && !isLeashed();
     }
 
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    }
+
     // initAI - override vanilla AI
     @Override
     protected void n() {
@@ -57,25 +76,41 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
     // canBeRiddenInWater
     @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        if (positionChanged && z_() && getRider() != null) {
+            motY = 0.2D * CONFIG.RIDING_CLIMB_SPEED;
+        }
+        checkMove();
     }
 
     // processInteract
     @Override
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
     @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     // isOnLadder
@@ -84,15 +119,12 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
         if (getRider() == null) {
             return l(); // isBesideClimbableBlock
         }
-        return CONFIG.CLIMB_WALLS && l();
+        return CONFIG.RIDING_CLIMB_WALLS && l();
     }
 
-    // travel
     @Override
-    public void a(float strafe, float vertical, float forward) {
-        super.a(strafe, vertical, forward);
-        if (positionChanged && z_() && getRider() != null) {
-            motY = 0.2D * CONFIG.CLIMB_SPEED;
-        }
+    public boolean onClick() {
+        // TODO shoot webs
+        return false;
     }
 }

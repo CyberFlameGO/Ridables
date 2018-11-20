@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.configuration.mob;
 
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
 import net.pl3x.bukkit.ridables.data.BiomeData;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,20 +10,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GiantConfig extends MobConfig {
-    public float SPEED = 1.0F;
-    public float JUMP_POWER = 1.0F;
-    public float STEP_HEIGHT = 3.0F;
-    public boolean RIDABLE_IN_WATER = true;
-
+    public double BASE_SPEED = 0.2D;
+    public double MAX_HEALTH = 100.0D;
     public boolean AI_ENABLED = true;
-    public float AI_HEALTH = 100.0F;
-    public float AI_SPEED = 0.5F;
-    public float AI_FOLLOW_RANGE = 32.0F;
+    public float AI_JUMP_POWER = 1.0F;
+    public float AI_STEP_HEIGHT = 3.0F;
+    public double AI_MELEE_DAMAGE = 50.0D;
+    public double AI_FOLLOW_RANGE = 32.0D;
     public boolean AI_HOSTILE = true;
-    public float AI_MELEE_DAMAGE = 5.0F;
-
+    public double RIDING_SPEED = 0.2D;
+    public float RIDING_JUMP_POWER = 1.0F;
+    public float RIDING_STEP_HEIGHT = 3.0F;
+    public boolean RIDING_RIDE_IN_WATER = true;
+    public boolean RIDING_ENABLE_MOVE_EVENT = false;
+    public boolean RIDING_SADDLE_REQUIRE = false;
+    public boolean RIDING_SADDLE_CONSUME = false;
     public boolean SPAWN_NATURALLY = false;
-    public int SPAWN_LIGHT_LEVEL = 8;
 
     public Set<BiomeData> SPAWN_BIOMES = Stream.of(
             new BiomeData("plains", 5, 1, 1),
@@ -55,20 +58,19 @@ public class GiantConfig extends MobConfig {
         if (firstLoad) {
             firstLoad = false;
 
-            addDefault("speed", SPEED);
-            addDefault("jump-power", JUMP_POWER);
-            addDefault("step-height", STEP_HEIGHT);
-            addDefault("ride-in-water", RIDABLE_IN_WATER);
-
+            addDefault("base-speed", BASE_SPEED);
+            addDefault("max-health", MAX_HEALTH);
             addDefault("ai.enabled", AI_ENABLED);
-            addDefault("ai.health", AI_HEALTH);
-            addDefault("ai.speed", AI_SPEED);
-            addDefault("ai.follow", AI_FOLLOW_RANGE);
+            addDefault("ai.jump-power", AI_JUMP_POWER);
+            addDefault("ai.step-height", AI_STEP_HEIGHT);
+            addDefault("ai.melee-damage", AI_MELEE_DAMAGE);
+            addDefault("ai.follow-range", AI_FOLLOW_RANGE);
             addDefault("ai.hostile", AI_HOSTILE);
-            addDefault("ai.attack", AI_MELEE_DAMAGE);
-
-            addDefault("spawn.natural", SPAWN_NATURALLY);
-            addDefault("spawn.max-light", SPAWN_LIGHT_LEVEL);
+            addDefault("riding.speed", RIDING_SPEED);
+            addDefault("riding.jump-power", RIDING_JUMP_POWER);
+            addDefault("riding.step-height", RIDING_STEP_HEIGHT);
+            addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("spawn.naturally", SPAWN_NATURALLY);
 
             SPAWN_BIOMES.forEach(data -> {
                 addDefault("spawn.biomes." + data.getBiome() + ".weight", data.getWeight());
@@ -79,28 +81,30 @@ public class GiantConfig extends MobConfig {
             save();
         }
 
-        SPEED = (float) getDouble("speed");
-        JUMP_POWER = (float) getDouble("jump-power", 0.5D);
-        STEP_HEIGHT = (float) getDouble("step-height", 0.6D);
-        RIDABLE_IN_WATER = getBoolean("ride-in-water", true);
-
-        AI_ENABLED = getBoolean("ai.enabled", true);
-        AI_HEALTH = (float) getDouble("ai.health", 100D);
-        AI_SPEED = (float) getDouble("ai.speed", 0.3D);
-        AI_FOLLOW_RANGE = (float) getDouble("ai.follow", 32.0D);
+        BASE_SPEED = getDouble("base-speed");
+        MAX_HEALTH = getDouble("max-health");
+        AI_ENABLED = getBoolean("ai.enabled");
+        AI_JUMP_POWER = (float) getDouble("ai.jump-power");
+        AI_STEP_HEIGHT = (float) getDouble("ai.step-height");
+        AI_MELEE_DAMAGE = getDouble("ai.melee-damage");
+        AI_FOLLOW_RANGE = getDouble("ai.follow-range");
         AI_HOSTILE = getBoolean("ai.hostile", true);
-        AI_MELEE_DAMAGE = (float) getDouble("ai.attack", 5.0D);
-
-        SPAWN_NATURALLY = getBoolean("spawn.natural", false);
-        SPAWN_LIGHT_LEVEL = (int) getDouble("spawn.max-light", 8);
+        RIDING_SPEED = getDouble("riding.speed");
+        RIDING_JUMP_POWER = (float) getDouble("riding.jump-power");
+        RIDING_STEP_HEIGHT = (float) getDouble("riding.step-height");
+        RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
+        RIDING_ENABLE_MOVE_EVENT = isSet("riding.enable-move-event") ? getBoolean("riding.enable-move-event") : Config.RIDING_ENABLE_MOVE_EVENT;
+        RIDING_SADDLE_REQUIRE = isSet("riding.saddle.require") ? getBoolean("riding.saddle.require") : Config.RIDING_SADDLE_REQUIRE;
+        RIDING_SADDLE_CONSUME = isSet("riding.saddle.consume") ? getBoolean("riding.saddle.consume") : Config.RIDING_SADDLE_CONSUME;
+        SPAWN_NATURALLY = getBoolean("spawn.naturally", false);
 
         SPAWN_BIOMES.clear();
-        ConfigurationSection section = getConfigurationSection("spawn.biomes");
-        section.getKeys(false).forEach(biomeName ->
-                SPAWN_BIOMES.add(new BiomeData(biomeName,
-                        section.getInt(biomeName + ".weight"),
-                        section.getInt(biomeName + ".group-min"),
-                        section.getInt(biomeName + ".group-max")))
+        ConfigurationSection biomes = getConfigurationSection("spawn.biomes");
+        biomes.getKeys(false).forEach(biome ->
+                SPAWN_BIOMES.add(new BiomeData(biome,
+                        biomes.getInt(biome + ".weight"),
+                        biomes.getInt(biome + ".group-min"),
+                        biomes.getInt(biome + ".group-max")))
         );
     }
 }

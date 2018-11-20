@@ -8,7 +8,7 @@ public class ElderGuardianConfig extends MobConfig {
     public double MAX_HEALTH = 80.0D;
     public double AI_ATTACK_DAMAGE = 8.0D;
     public double AI_FOLLOW_RANGE = 16.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.3D;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;

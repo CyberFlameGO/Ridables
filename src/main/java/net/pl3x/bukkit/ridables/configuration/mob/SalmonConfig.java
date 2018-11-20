@@ -12,7 +12,7 @@ public class SalmonConfig extends MobConfig {
     public double AI_AVOID_PLAYER_SPEED_FAR = 1.6D;
     public double AI_AVOID_PLAYER_SPEED_NEAR = 1.4D;
     public boolean AI_FOLLOW_SCHOOL = true;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.7D;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;

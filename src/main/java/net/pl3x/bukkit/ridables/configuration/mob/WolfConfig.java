@@ -12,11 +12,12 @@ public class WolfConfig extends MobConfig {
     public double AI_FOLLOW_RANGE = 16.0D;
     public double AI_MELEE_DAMAGE_TAMED = 4.0D;
     public double AI_MELEE_DAMAGE_UNTAMED = 4.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.3D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 0.6F;
     public boolean RIDING_RIDE_IN_WATER = true;
     public boolean RIDING_BABIES = false;
+    public boolean RIDING_ONLY_OWNER_CAN_RIDE = true;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;
@@ -45,6 +46,7 @@ public class WolfConfig extends MobConfig {
             addDefault("riding.step-height", RIDING_STEP_HEIGHT);
             addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
             addDefault("riding.ride-babies", RIDING_BABIES);
+            addDefault("riding.only-owner-can-ride", RIDING_ONLY_OWNER_CAN_RIDE);
             save();
         }
 
@@ -61,6 +63,7 @@ public class WolfConfig extends MobConfig {
         RIDING_STEP_HEIGHT = (float) getDouble("riding.step-height");
         RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
         RIDING_BABIES = getBoolean("riding.ride-babies");
+        RIDING_ONLY_OWNER_CAN_RIDE = getBoolean("riding.only-owner-can-ride");
         RIDING_ENABLE_MOVE_EVENT = isSet("riding.enable-move-event") ? getBoolean("riding.enable-move-event") : Config.RIDING_ENABLE_MOVE_EVENT;
         RIDING_SADDLE_REQUIRE = isSet("riding.saddle.require") ? getBoolean("riding.saddle.require") : Config.RIDING_SADDLE_REQUIRE;
         RIDING_SADDLE_CONSUME = isSet("riding.saddle.consume") ? getBoolean("riding.saddle.consume") : Config.RIDING_SADDLE_CONSUME;

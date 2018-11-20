@@ -16,13 +16,6 @@ public class AISilverfishWakeOthers extends PathfinderGoal {
         this.silverfish = silverfish;
     }
 
-    // notifyHurt
-    public void g() {
-        if (lookForFriends == 0) {
-            lookForFriends = 20;
-        }
-    }
-
     // shouldExecute
     @Override
     public boolean a() {
@@ -63,6 +56,12 @@ public class AISilverfishWakeOthers extends PathfinderGoal {
                     }
                 }
             }
+        }
+    }
+
+    public void notifyHurt() {
+        if (lookForFriends == 0) {
+            lookForFriends = 20;
         }
     }
 }

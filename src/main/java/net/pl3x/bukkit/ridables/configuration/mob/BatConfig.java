@@ -7,7 +7,7 @@ public class BatConfig extends MobConfig {
     public double BASE_SPEED = 0.7D;
     public double MAX_HEALTH = 6.0D;
     public double AI_FOLLOW_RANGE = 16.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.7D;
     public double RIDING_VERTICAL = 1.0F;
     public double RIDING_GRAVITY = 0.04F;
     public boolean RIDING_RIDE_IN_WATER = true;

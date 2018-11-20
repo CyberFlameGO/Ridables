@@ -8,7 +8,7 @@ public class DolphinConfig extends MobConfig {
     public double MAX_HEALTH = 10.0D;
     public double AI_MELEE_DAMAGE = 3.0D;
     public double AI_FOLLOW_RANGE = 16.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.7D;
     public boolean RIDING_BOUNCE = true;
     public boolean RIDING_BUBBLES = true;
     public String RIDING_SPACEBAR_MODE = "shoot";

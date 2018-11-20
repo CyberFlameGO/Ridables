@@ -1,21 +1,28 @@
 package net.pl3x.bukkit.ridables.entity.monster.skeleton;
 
 import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityArrow;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
+import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EntitySkeletonAbstract;
 import net.minecraft.server.v1_13_R2.EntitySkeletonStray;
 import net.minecraft.server.v1_13_R2.EntityTurtle;
 import net.minecraft.server.v1_13_R2.EntityWolf;
 import net.minecraft.server.v1_13_R2.EnumDifficulty;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.Items;
+import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.PathfinderGoalBowShoot;
 import net.minecraft.server.v1_13_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.mob.StrayConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackNearest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIAvoidTarget;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIFleeSun;
@@ -26,14 +33,16 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIShootBow;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.skeleton.AISkeletonMeleeAttack;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import org.bukkit.entity.Player;
 
 public class RidableStray extends EntitySkeletonStray implements RidableEntity {
     public static final StrayConfig CONFIG = new StrayConfig();
 
-    private final PathfinderGoalBowShoot<EntitySkeletonAbstract> aiArrowAttack = new AIShootBow<>(this, 1.0D, 20, 15.0F);
-    private final PathfinderGoalMeleeAttack aiMeleeAttack = new AISkeletonMeleeAttack(this, 1.2D, false);
+    private PathfinderGoalBowShoot<EntitySkeletonAbstract> aiArrowAttack;
+    private PathfinderGoalMeleeAttack aiMeleeAttack;
+
+    private boolean burnInDayLight = true;
 
     public RidableStray(World world) {
         super(world);
@@ -50,6 +59,22 @@ public class RidableStray extends EntitySkeletonStray implements RidableEntity {
     @Override
     public boolean isTypeNotPersistent() {
         return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(CONFIG.MAX_HEALTH);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
@@ -71,37 +96,84 @@ public class RidableStray extends EntitySkeletonStray implements RidableEntity {
     // canBeRiddenInWater
     @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     @Override
     protected float cG() {
-        return getRider() == null ? super.cG() : CONFIG.JUMP_POWER;
+        return getRider() == null ? CONFIG.AI_JUMP_POWER : CONFIG.RIDING_JUMP_POWER;
+    }
+
+    // livingTick
+    @Override
+    public void k() {
+        burnInDayLight = getRider() == null ? CONFIG.AI_BURN_IN_DAYLIGHT : CONFIG.RIDING_BURN_IN_DAYLIGHT;
+        super.k();
+        burnInDayLight = true;
     }
 
     @Override
     protected void mobTick() {
-        Q = CONFIG.STEP_HEIGHT;
+        Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     // processInteract
     @Override
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
     @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    }
+
+    // isInDayLight
+    @Override
+    public boolean dq() {
+        return burnInDayLight && super.dq();
+    }
+
+    // attackEntityWithRangedAttack
+    @Override
+    public void a(EntityLiving target, float distanceFactor) {
+        EntityArrow arrow = a(distanceFactor); // getArrow
+        double x = target.locX - locX;
+        double y = target.getBoundingBox().minY + (double) (target.length / 3.0F) - arrow.locY;
+        double z = target.locZ - locZ;
+        double distance = (double) MathHelper.sqrt(x * x + z * z);
+        arrow.setDamage(CONFIG.AI_RANGED_DAMAGE);
+        arrow.shoot(x, y + distance * (double) 0.2F, z, 1.6F, (float) (14 - world.getDifficulty().a() * 4)); // getId
+        a(SoundEffects.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 0.8F)); // playSound
+        world.addEntity(arrow);
     }
 
     // setCombatTask
     @Override
     public void dz() {
         if (world != null) {
+            if (aiArrowAttack == null) {
+                aiArrowAttack = new AIShootBow<>(this, 1.0D, 20, 15.0F);
+            }
+            if (aiMeleeAttack == null) {
+                aiMeleeAttack = new AISkeletonMeleeAttack(this, 1.2D, false);
+            }
             goalSelector.a(aiMeleeAttack); // removeTask
             goalSelector.a(aiArrowAttack); // removeTask
             if (getItemInMainHand().getItem() == Items.BOW) {

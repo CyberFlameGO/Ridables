@@ -15,7 +15,7 @@ public class SnowGolemConfig extends MobConfig {
     public float AI_DAMAGE_WHEN_HOT = 1.0F;
     public boolean AI_SNOW_TRAIL_ENABLED = true;
     public float AI_SNOW_TRAIL_MAX_TEMP = 0.8F;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.2D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 0.6F;
     public boolean RIDING_RIDE_IN_WATER = true;

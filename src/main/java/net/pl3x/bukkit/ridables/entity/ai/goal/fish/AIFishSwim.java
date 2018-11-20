@@ -13,7 +13,6 @@ public class AIFishSwim extends PathfinderGoalRandomSwim {
         super((EntityFish) ridable, 1.0D, 40);
         this.ridable = ridable;
         this.isSchoolFish = ridable instanceof RidableFishSchool;
-        System.out.println(isSchoolFish);
     }
 
     // shouldExecute

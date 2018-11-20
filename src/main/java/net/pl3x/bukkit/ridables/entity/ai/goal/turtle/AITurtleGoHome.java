@@ -79,7 +79,7 @@ public class AITurtleGoHome extends PathfinderGoal {
             ++timer;
         }
         if (turtle.getNavigation().p()) {
-            Vec3D vec3d = RandomPositionGenerator.a(turtle, 16, 3, new Vec3D(pos.getX(), pos.getY(), pos.getZ()), Math.PI / 10);
+            Vec3D vec3d = RandomPositionGenerator.a(turtle, 16, 3, new Vec3D(pos.getX(), pos.getY(), pos.getZ()), Math.PI / 10D);
             if (vec3d == null) {
                 vec3d = RandomPositionGenerator.a(turtle, 8, 7, new Vec3D(pos.getX(), pos.getY(), pos.getZ())); // findRandomTargetBlockTowards
             }

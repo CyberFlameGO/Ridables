@@ -5,17 +5,14 @@ import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.EnumDifficulty;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
-import net.pl3x.bukkit.ridables.entity.monster.guardian.RidableElderGuardian;
 import net.pl3x.bukkit.ridables.entity.monster.guardian.RidableGuardian;
 
 public class AIGuardianAttack extends PathfinderGoal {
     private final RidableGuardian guardian;
     private int timer;
-    private final boolean isElder;
 
     public AIGuardianAttack(RidableGuardian guardian) {
         this.guardian = guardian;
-        this.isElder = guardian instanceof RidableElderGuardian;
         a(3); // setMutexBits
     }
 
@@ -32,7 +29,7 @@ public class AIGuardianAttack extends PathfinderGoal {
     // shouldContinueExecuting
     @Override
     public boolean b() {
-        return a() && (isElder || guardian.h(guardian.getGoalTarget()) > 9.0D);
+        return a() && guardian.h(guardian.getGoalTarget()) > 9.0D;
     }
 
     // startExecuting
@@ -69,9 +66,6 @@ public class AIGuardianAttack extends PathfinderGoal {
         } else if (timer >= guardian.l()) { // getAttackDuration
             float damage = 1.0F;
             if (guardian.world.getDifficulty() == EnumDifficulty.HARD) {
-                damage += 2.0F;
-            }
-            if (isElder) {
                 damage += 2.0F;
             }
             target.damageEntity(DamageSource.c(guardian, guardian), damage);

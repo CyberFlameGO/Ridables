@@ -16,6 +16,7 @@ import net.minecraft.server.v1_13_R2.MovingObjectPosition;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.monster.RidableShulker;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
@@ -32,7 +33,7 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
     }
 
     public CustomShulkerBullet(World world, RidableShulker shulker, EntityPlayer rider, Entity target, EnumDirection.EnumAxis dir) {
-        super(world, shulker, target, dir);
+        super(world, rider == null ? shulker : rider, target, dir);
         this.shulker = shulker;
         this.rider = rider;
     }
@@ -91,10 +92,11 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         }
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
-        if (hitEntity != null && rider != null) {
-            if (RidableShulker.CONFIG.SHOOT_DAMAGE > 0) {
-                if (hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidableShulker.CONFIG.SHOOT_DAMAGE)) {
-                    a(rider, hitEntity);
+        if (hitEntity != null) {
+            float damage = rider == null ? RidableShulker.CONFIG.AI_SHOOT_DAMAGE : RidableShulker.CONFIG.RIDING_SHOOT_DAMAGE;
+            if (damage > 0) {
+                if (hitEntity.damageEntity(DamageSource.a(this, getShooter()).c(), damage)) {
+                    a(getShooter(), hitEntity);
                     hitEntity.addEffect(new MobEffect(MobEffects.LEVITATION, 200), EntityPotionEffectEvent.Cause.ATTACK);
                 }
             }
@@ -127,7 +129,7 @@ public class CustomShulkerBullet extends EntityShulkerBullet implements IProject
         motX = d0 = (d0 / (double) f2) * f;
         motY = d1 = (d1 / (double) f2) * f;
         motZ = d2 = (d2 / (double) f2) * f;
-        lastYaw = yaw = (float) (MathHelper.c(d0, d2) * 57.2957763671875D);
-        lastPitch = pitch = (float) (MathHelper.c(d1, (double) MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D);
+        lastYaw = yaw = (float) (MathHelper.c(d0, d2) * Const.RAD2DEG);
+        lastPitch = pitch = (float) (MathHelper.c(d1, (double) MathHelper.sqrt(d0 * d0 + d2 * d2)) * Const.RAD2DEG);
     }
 }

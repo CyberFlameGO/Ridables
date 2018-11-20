@@ -13,7 +13,7 @@ public class RabbitConfig extends MobConfig {
     public double AI_KILLER_CHANCE = 0.0D;
     public double AI_KILLER_ARMOR = 8.0D;
     public float AI_KILLER_DAMAGE = 8.0F;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.3D;
     public float RIDING_JUMP_POWER = 0.5F;
     public boolean RIDING_RIDE_IN_WATER = true;
     public boolean RIDING_RIDE_KILLER_BUNNY = true;

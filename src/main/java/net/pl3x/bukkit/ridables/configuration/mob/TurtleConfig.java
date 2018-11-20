@@ -9,7 +9,7 @@ public class TurtleConfig extends MobConfig {
     public float AI_JUMP_POWER = 0.42F;
     public float AI_STEP_HEIGHT = 0.6F;
     public double AI_FOLLOW_RANGE = 16.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.25D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 0.6F;
     public boolean RIDING_RIDE_IN_WATER = true;

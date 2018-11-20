@@ -1,14 +1,24 @@
 package net.pl3x.bukkit.ridables.configuration.mob;
 
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
 
 public class PhantomConfig extends MobConfig {
-    public float SPEED = 1.0F;
-    public float GRAVITY = 0.04F;
-    public boolean RIDABLE_IN_WATER = true;
-    public boolean BURN_IN_SUNLIGHT = true;
-    public boolean ATTACK_IN_DAYLIGHT = true;
-    public float SHOOT_DAMAGE = 1.0F;
+    public double BASE_SPEED = 0.7D;
+    public double MAX_HEALTH = 20.0D;
+    public double AI_MELEE_DAMAGE = 6.0D;
+    public double AI_FOLLOW_RANGE = 16.0D;
+    public boolean AI_BURN_IN_SUNLIGHT = true;
+    public boolean AI_ATTACK_IN_SUNLIGHT = true;
+    public double RIDING_SPEED = 0.7D;
+    public float RIDING_GRAVITY = 0.04F;
+    public boolean RIDING_RIDE_IN_WATER = true;
+    public boolean RIDING_BURN_IN_SUNLIGHT = true;
+    public int RIDING_FLYING_MAX_Y = 256;
+    public float RIDING_SHOOT_DAMAGE = 1.0F;
+    public boolean RIDING_ENABLE_MOVE_EVENT = false;
+    public boolean RIDING_SADDLE_REQUIRE = false;
+    public boolean RIDING_SADDLE_CONSUME = false;
 
     public PhantomConfig() {
         super("phantom.yml");
@@ -21,20 +31,35 @@ public class PhantomConfig extends MobConfig {
 
         if (firstLoad) {
             firstLoad = false;
-            addDefault("speed", SPEED);
-            addDefault("gravity", GRAVITY);
-            addDefault("ride-in-water", RIDABLE_IN_WATER);
-            addDefault("burn-in-sunlight", BURN_IN_SUNLIGHT);
-            addDefault("attack-in-daylight", ATTACK_IN_DAYLIGHT);
-            addDefault("shoot-damage", SHOOT_DAMAGE);
+            addDefault("base-speed", BASE_SPEED);
+            addDefault("max-health", MAX_HEALTH);
+            addDefault("ai.melee-damage", AI_MELEE_DAMAGE);
+            addDefault("ai.follow-range", AI_FOLLOW_RANGE);
+            addDefault("ai.burn-in-sunlight", AI_BURN_IN_SUNLIGHT);
+            addDefault("ai.attack-in-sunlight", AI_ATTACK_IN_SUNLIGHT);
+            addDefault("riding.speed", RIDING_SPEED);
+            addDefault("riding.gravity", RIDING_GRAVITY);
+            addDefault("riding.ride-in-water", RIDING_RIDE_IN_WATER);
+            addDefault("riding.burn-in-sunlight", RIDING_BURN_IN_SUNLIGHT);
+            addDefault("riding.flying-max-y", RIDING_FLYING_MAX_Y);
+            addDefault("riding.shoot.damage", RIDING_SHOOT_DAMAGE);
             save();
         }
 
-        SPEED = (float) getDouble("speed");
-        GRAVITY = (float) getDouble("gravity");
-        RIDABLE_IN_WATER = getBoolean("ride-in-water");
-        BURN_IN_SUNLIGHT = getBoolean("burn-in-sunlight");
-        ATTACK_IN_DAYLIGHT = getBoolean("attack-in-daylight");
-        SHOOT_DAMAGE = (float) getDouble("shoot-damage");
+        BASE_SPEED = getDouble("base-speed");
+        MAX_HEALTH = getDouble("max-health");
+        AI_MELEE_DAMAGE = getDouble("ai.melee-damage");
+        AI_FOLLOW_RANGE = getDouble("ai.follow-range");
+        AI_BURN_IN_SUNLIGHT = getBoolean("ai.burn-in-sunlight");
+        AI_ATTACK_IN_SUNLIGHT = getBoolean("ai.attack-in-sunlight");
+        RIDING_SPEED = getDouble("riding.speed");
+        RIDING_GRAVITY = (float) getDouble("riding.gravity");
+        RIDING_RIDE_IN_WATER = getBoolean("riding.ride-in-water");
+        RIDING_BURN_IN_SUNLIGHT = getBoolean("riding.burn-in-sunlight");
+        RIDING_FLYING_MAX_Y = (int) getDouble("riding.flying-max-y");
+        RIDING_SHOOT_DAMAGE = (float) getDouble("riding.shoot.damage");
+        RIDING_ENABLE_MOVE_EVENT = isSet("riding.enable-move-event") ? getBoolean("riding.enable-move-event") : Config.RIDING_ENABLE_MOVE_EVENT;
+        RIDING_SADDLE_REQUIRE = isSet("riding.saddle.require") ? getBoolean("riding.saddle.require") : Config.RIDING_SADDLE_REQUIRE;
+        RIDING_SADDLE_CONSUME = isSet("riding.saddle.consume") ? getBoolean("riding.saddle.consume") : Config.RIDING_SADDLE_CONSUME;
     }
 }

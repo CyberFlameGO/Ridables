@@ -39,6 +39,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.dolphin.AIDolphinWaterJump;
 import net.pl3x.bukkit.ridables.entity.projectile.DolphinSpit;
 import net.pl3x.bukkit.ridables.event.DolphinSpitEvent;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -285,8 +286,8 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
                 double x = e - a.locX;
                 double y = f - (a.locY + (double) a.getHeadHeight());
                 double z = g - a.locZ;
-                a.pitch = a(a.pitch, (float) (-(MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * (double) (180F / (float) Math.PI))) + 10.0F, c);
-                a.aS = a(a.aS, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F + 20.0F, b); // rotationYawHead
+                a.pitch = a(a.pitch, (float) (-(MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * Const.RAD2DEG)) + 10.0F, c);
+                a.aS = a(a.aS, (float) (MathHelper.c(z, x) * Const.RAD2DEG) - 90.0F + 20.0F, b); // rotationYawHead
             } else {
                 if (a.getNavigation().p()) { // noPath
                     a.pitch = a(a.pitch, 0.0F, 5.0F);
@@ -325,18 +326,18 @@ public class RidableDolphin extends EntityDolphin implements RidableEntity {
                 if (distance < 2.5E-7D) {
                     a.r(0.0F);
                 } else {
-                    float f = (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F;
+                    float f = (float) (MathHelper.c(z, x) * Const.RAD2DEG) - 90.0F;
 
                     dolphin.aS = dolphin.aQ = dolphin.yaw = a(dolphin.yaw, f, 10.0F);
                     float speed = (float) (e * dolphin.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
 
                     if (dolphin.isInWater()) {
                         dolphin.o(speed * 0.02F);
-                        float f2 = -((float) (MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * (double) (180F / (float) Math.PI)));
+                        float f2 = -((float) (MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * Const.RAD2DEG));
                         f2 = MathHelper.a(MathHelper.g(f2), -85.0F, 85.0F);
                         dolphin.pitch = a(dolphin.pitch, f2, 5.0F);
-                        dolphin.bj = MathHelper.cos(dolphin.pitch * ((float) Math.PI / 180F)) * speed;
-                        dolphin.bi = -MathHelper.sin(dolphin.pitch * ((float) Math.PI / 180F)) * speed;
+                        dolphin.bj = MathHelper.cos(dolphin.pitch * Const.DEG2RAD_FLOAT) * speed;
+                        dolphin.bi = -MathHelper.sin(dolphin.pitch * Const.DEG2RAD_FLOAT) * speed;
                     } else {
                         dolphin.o(speed * 0.1F);
                     }

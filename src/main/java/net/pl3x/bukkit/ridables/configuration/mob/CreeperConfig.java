@@ -14,7 +14,7 @@ public class CreeperConfig extends MobConfig {
     public boolean AI_EXPLOSION_GRIEF = true;
     public boolean AI_EXPLOSION_FIRE = false;
     public boolean AI_EXPLOSION_LINGERING_CLOUD = true;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.25D;
     public float RIDING_JUMP_POWER = 0.5F;
     public float RIDING_STEP_HEIGHT = 0.6F;
     public boolean RIDING_RIDE_IN_WATER = true;

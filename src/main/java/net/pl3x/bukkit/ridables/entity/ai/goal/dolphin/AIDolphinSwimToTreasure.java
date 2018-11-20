@@ -8,6 +8,7 @@ import net.minecraft.server.v1_13_R2.TagsFluid;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.animal.RidableDolphin;
+import net.pl3x.bukkit.ridables.util.Const;
 
 public class AIDolphinSwimToTreasure extends PathfinderGoal {
     private final RidableDolphin dolphin;
@@ -76,7 +77,7 @@ public class AIDolphinSwimToTreasure extends PathfinderGoal {
     public void e() {
         BlockPosition pos = dolphin.l(); // getTreasurePos
         if (dolphin.nearTargetPos() || dolphin.getNavigation().p()) {
-            Vec3D vec3d = RandomPositionGenerator.a(dolphin, 16, 1, new Vec3D((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), (double) ((float) Math.PI / 8F));
+            Vec3D vec3d = RandomPositionGenerator.a(dolphin, 16, 1, new Vec3D((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), (double) (Const.PI_FLOAT / 8F));
             if (vec3d == null) {
                 vec3d = RandomPositionGenerator.a(dolphin, 8, 4, new Vec3D((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()));
             }

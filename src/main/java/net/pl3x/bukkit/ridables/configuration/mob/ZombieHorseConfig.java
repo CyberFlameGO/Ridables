@@ -10,7 +10,7 @@ public class ZombieHorseConfig extends MobConfig {
     public float AI_JUMP_POWER = -1.0F; // 0.4-1.0
     public float AI_STEP_HEIGHT = 1.0F;
     public int AI_FOLLOW_RANGE = 16;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.2D;
     public float RIDING_JUMP_POWER = -1.0F; // 0.4-1.0
     public float RIDING_STEP_HEIGHT = 1.0F;
     public boolean RIDING_RIDE_IN_WATER = true;

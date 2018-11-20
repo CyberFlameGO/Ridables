@@ -18,7 +18,7 @@ public class PufferfishConfig extends MobConfig {
     public float AI_DAMAGE_FULL_PUFF = 3;
     public int AI_POISON_DURATION_FULL_PUFF = 120;
     public int AI_POISON_AMPLIFIER_FULL_PUFF = 0;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.7D;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
     public boolean RIDING_SADDLE_CONSUME = false;

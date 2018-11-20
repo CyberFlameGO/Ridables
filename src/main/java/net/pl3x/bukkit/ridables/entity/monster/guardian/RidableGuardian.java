@@ -1,17 +1,23 @@
 package net.pl3x.bukkit.ridables.entity.monster.guardian;
 
 import net.minecraft.server.v1_13_R2.ControllerLook;
+import net.minecraft.server.v1_13_R2.CriterionTriggers;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityGuardian;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySquid;
-import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.ItemStack;
+import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.GuardianConfig;
+import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDWater;
@@ -23,6 +29,8 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWander;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.guardian.AIGuardianAttack;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,11 +53,7 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
     }
 
     public RidableGuardian(World world) {
-        this(EntityTypes.GUARDIAN, world);
-    }
-
-    public RidableGuardian(EntityTypes<?> entityTypes, World world) {
-        super(entityTypes, world);
+        super(world);
         moveController = new GuardianWASDController(this);
         lookController = new LookController(this);
     }
@@ -152,10 +156,37 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
         if (super.a(entityhuman, hand)) {
             return true; // handled by vanilla action
         }
+        if (collectInWaterBucket(entityhuman, hand)) {
+            return true; // handled
+        }
         if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
             return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
         }
         return false;
+    }
+
+    private boolean collectInWaterBucket(EntityHuman entityhuman, EnumHand hand) {
+        ItemStack itemstack = entityhuman.b(hand);
+        if (itemstack.getItem() != Items.WATER_BUCKET) {
+            return false;
+        }
+        Player player = (Player) entityhuman.getBukkitEntity();
+        if (!player.hasPermission("allow.collect.guardian")) {
+            Lang.send(player, Lang.COLLECT_NO_PERMISSION);
+            return true; // handled
+        }
+        ItemStack bucket = CraftItemStack.asNMSCopy(Bucket.GUARDIAN.getItemStack());
+        a(SoundEffects.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F); // playSound
+        itemstack.subtract(1);
+        // TODO set custom name
+        CriterionTriggers.j.a((EntityPlayer) entityhuman, bucket); // filled_bucket achievement
+        if (itemstack.isEmpty()) {
+            entityhuman.a(hand, bucket);
+        } else if (!entityhuman.inventory.pickup(bucket)) {
+            entityhuman.drop(bucket, false);
+        }
+        die();
+        return true; // handled
     }
 
     @Override
@@ -180,11 +211,11 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
                 double z = d - guardian.locZ;
                 double distance = (double) MathHelper.sqrt(x * x + y * y + z * z);
                 y /= distance;
-                guardian.aQ = guardian.yaw = a(guardian.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F);
+                guardian.aQ = guardian.yaw = a(guardian.yaw, (float) (MathHelper.c(z, x) * Const.RAD2DEG) - 90.0F, 90.0F);
                 guardian.o(guardian.cK() + ((float) (e * guardian.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()) - guardian.cK()) * 0.125F);
                 double d0 = Math.sin((double) (guardian.ticksLived + guardian.getId()) * 0.5D) * 0.05D;
-                double d1 = Math.cos((double) (guardian.yaw * ((float) Math.PI / 180F)));
-                double d2 = Math.sin((double) (guardian.yaw * ((float) Math.PI / 180F)));
+                double d1 = Math.cos((double) (guardian.yaw * Const.DEG2RAD_FLOAT));
+                double d2 = Math.sin((double) (guardian.yaw * Const.DEG2RAD_FLOAT));
                 guardian.motX += d0 * d1;
                 guardian.motZ += d0 * d2;
                 guardian.motY += Math.sin((double) (guardian.ticksLived + guardian.getId()) * 0.75D) * 0.05D * (d2 + d1) * 0.25D;

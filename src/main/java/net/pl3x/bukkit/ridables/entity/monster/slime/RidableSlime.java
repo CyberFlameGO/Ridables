@@ -5,7 +5,6 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EntitySlime;
-import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.World;
@@ -20,6 +19,9 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeFaceRandom;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeHop;
 import net.pl3x.bukkit.ridables.entity.ai.goal.slime.AISlimeSwim;
+import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
+import org.bukkit.entity.Player;
 
 public class RidableSlime extends EntitySlime implements RidableEntity {
     public static final SlimeConfig CONFIG = new SlimeConfig();
@@ -29,11 +31,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     private float fallDistanceCharge = 0;
 
     public RidableSlime(World world) {
-        this(EntityTypes.SLIME, world);
-    }
-
-    public RidableSlime(EntityTypes entityTypes, World world) {
-        super(entityTypes, world);
+        super(world);
         moveController = new SlimeWASDController(this);
         lookController = new LookController(this);
     }
@@ -47,6 +45,20 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     @Override
     public boolean isTypeNotPersistent() {
         return !hasCustomName() && !isLeashed();
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
+        reloadAttributes();
+    }
+
+    @Override
+    public void reloadAttributes() {
+        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
+        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
+        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
     }
 
     // initAI - override vanilla AI
@@ -63,7 +75,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
     // canBeRiddenInWater
     @Override
     public boolean aY() {
-        return CONFIG.RIDABLE_IN_WATER;
+        return CONFIG.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
@@ -83,6 +95,13 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         }
         prevSpacebarCharge = spacebarCharge;
         super.mobTick();
+    }
+
+    // travel
+    @Override
+    public void a(float strafe, float vertical, float forward) {
+        super.a(strafe, vertical, forward);
+        checkMove();
     }
 
     public float getJumpCharge() {
@@ -106,25 +125,65 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
 
     // processInteract
     @Override
-    public boolean a(EntityHuman player, EnumHand hand) {
-        return super.a(player, hand) || processInteract(player, hand);
+    public boolean a(EntityHuman entityhuman, EnumHand hand) {
+        if (super.a(entityhuman, hand)) {
+            return true; // handled by vanilla action
+        }
+        if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
+            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+        }
+        return false;
     }
 
-    // removePassenger
     @Override
     public boolean removePassenger(Entity passenger) {
-        return dismountPassenger(passenger.getBukkitEntity()) && super.removePassenger(passenger);
+        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
+                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
     }
 
     @Override
     public boolean onSpacebar() {
-        if (hasSpecialPerm(getRider().getBukkitEntity())) {
+        if (getRider().getBukkitEntity().hasPermission("allow.special.slime")) {
             spacebarCharge++;
             if (spacebarCharge > 50) {
                 spacebarCharge -= 2;
             }
         }
         return false;
+    }
+
+    // getAttackStrength
+    @Override
+    protected int du() {
+        // 1-  = small
+        // 2-3 = medium
+        // 4+  = large
+        int size = getSize();
+        if (size < 2) {
+            return CONFIG.AI_MELEE_DAMAGE_SMALL;
+        } else if (size < 4) {
+            return CONFIG.AI_MELEE_DAMAGE_MEDIUM;
+        } else {
+            return CONFIG.AI_MELEE_DAMAGE_LARGE;
+        }
+    }
+
+    @Override
+    public void setSize(int i, boolean resetHealth) {
+        super.setSize(i, resetHealth);
+        int size = getSize();
+        double maxHealth;
+        if (size < 2) {
+            maxHealth = CONFIG.MAX_HEALTH_SMALL;
+        } else if (size < 4) {
+            maxHealth = CONFIG.MAX_HEALTH_MEDIUM;
+        } else {
+            maxHealth = CONFIG.MAX_HEALTH_LARGE;
+        }
+        getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+        if (resetHealth) {
+            setHealth(getMaxHealth());
+        }
     }
 
     public static class SlimeWASDController extends ControllerWASD {
@@ -136,7 +195,7 @@ public class RidableSlime extends EntitySlime implements RidableEntity {
         public SlimeWASDController(RidableSlime slime) {
             super(slime);
             this.slime = slime;
-            yRot = 180.0F * slime.yaw / (float) Math.PI;
+            yRot = slime.yaw * Const.RAD2DEG_FLOAT;
         }
 
         public void setDirection(float yRot, boolean isAggressive) {

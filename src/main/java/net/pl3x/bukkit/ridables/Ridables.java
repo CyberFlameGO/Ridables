@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables;
 
+import io.papermc.lib.PaperLib;
 import net.minecraft.server.v1_13_R2.Biomes;
 import net.pl3x.bukkit.ridables.command.CmdRidables;
 import net.pl3x.bukkit.ridables.configuration.Config;
@@ -18,6 +19,7 @@ import net.pl3x.bukkit.ridables.listener.RidableListener;
 import net.pl3x.bukkit.ridables.listener.WaterBucketListener;
 import net.pl3x.bukkit.ridables.util.Logger;
 import net.pl3x.bukkit.ridables.util.RegistryHax;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -42,13 +44,13 @@ public class Ridables extends JavaPlugin {
         Lang.reload();
 
         // Paper only
-        try {
+        /*try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
         } catch (ClassNotFoundException e) {
             disabledReason = DisabledReason.UNSUPPORTED_SERVER_TYPE;
             disabledReason.printError();
             return;
-        }
+        }*/
 
         // 1.13.2 only!
         try {
@@ -92,6 +94,10 @@ public class Ridables extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Metrics(this).addCustomChart(new Metrics.SimplePie("server_type", () -> PaperLib.getEnvironment().getName()));
+
+        PaperLib.suggestPaper(this);
+
         if (Bukkit.getPluginManager().isPluginEnabled("PlugMan")) {
             Logger.warn("PlugMan is detected to be installed!");
             com.rylinaux.plugman.PlugMan.getInstance().getIgnoredPlugins().add("Ridables");

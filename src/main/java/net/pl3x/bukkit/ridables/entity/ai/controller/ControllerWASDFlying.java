@@ -2,7 +2,6 @@ package net.pl3x.bukkit.ridables.entity.ai.controller;
 
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
@@ -41,7 +40,7 @@ public class ControllerWASDFlying extends ControllerWASD {
             strafe = 0;
         }
 
-        e = ((EntityInsentient) ridable).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDING_SPEED).getValue();
+        e = ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDING_SPEED).getValue();
 
         a.setNoGravity(forward > 0);
         a.o((float) e); // speed

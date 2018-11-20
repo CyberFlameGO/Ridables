@@ -21,6 +21,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotFollowOwner;
 import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotLandOnOwnersShoulder;
 import net.pl3x.bukkit.ridables.entity.ai.goal.parrot.AIParrotWanderAvoidWater;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.entity.Player;
 
 public class RidableParrot extends EntityParrot implements RidableEntity {
@@ -100,6 +101,9 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
             if (!CONFIG.RIDING_BABIES && isBaby()) {
                 return false; // do not ride babies
             }
+            if (CONFIG.RIDING_ONLY_OWNER_CAN_RIDE && isTamed() && getOwner() != entityhuman) {
+                return false; // only owner can ride
+            }
             return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
         }
         return false;
@@ -132,13 +136,13 @@ public class RidableParrot extends EntityParrot implements RidableEntity {
                     parrot.r(0.0F); // setMoveForward
                     return;
                 }
-                parrot.yaw = a(parrot.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 10.0F); // limitAngle
+                parrot.yaw = a(parrot.yaw, (float) (MathHelper.c(z, x) * Const.RAD2DEG) - 90.0F, 10.0F); // limitAngle
                 double speed = parrot.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
                 if (parrot.onGround) {
                     speed *= groundSpeedModifier;
                 }
                 parrot.o((float) (e * speed)); // setAIMoveSpeed
-                parrot.pitch = a(parrot.pitch, (float) (-(MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * (double) (180F / (float) Math.PI))), 10.0F); // limitAngle
+                parrot.pitch = a(parrot.pitch, (float) (-(MathHelper.c(y, (double) MathHelper.sqrt(x * x + z * z)) * Const.RAD2DEG)), 10.0F); // limitAngle
                 parrot.s(y > 0.0D ? parrot.cK() : -parrot.cK()); // setMoveVertical getAIMoveSpeed
             } else {
                 parrot.setNoGravity(false);

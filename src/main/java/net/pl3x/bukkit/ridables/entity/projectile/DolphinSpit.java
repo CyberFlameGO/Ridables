@@ -16,6 +16,7 @@ import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
 import net.pl3x.bukkit.ridables.entity.animal.RidableDolphin;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.entity.Dolphin;
 import org.bukkit.entity.Player;
 
@@ -36,9 +37,9 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
         this(world);
         this.dolphin = dolphin;
         this.rider = rider;
-        setPosition(dolphin.locX - (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.sin(dolphin.aQ * 0.017453292F),
-                dolphin.locY + (double) dolphin.getHeadHeight() - 0.5000000149011612D,
-                dolphin.locZ + (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.cos(dolphin.aQ * 0.017453292F));
+        setPosition(dolphin.locX - (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.sin(dolphin.aQ * Const.DEG2RAD_FLOAT),
+                dolphin.locY + (double) dolphin.getHeadHeight() - (double) 0.5F,
+                dolphin.locZ + (double) (dolphin.width + 1.0F) * 0.5D * (double) MathHelper.cos(dolphin.aQ * Const.DEG2RAD_FLOAT));
     }
 
     @Override
@@ -86,8 +87,8 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
         locX += motX;
         locY += motY;
         locZ += motZ;
-        yaw = (float) (MathHelper.c(motX, motZ) * 57.2957763671875D);
-        pitch = (float) (MathHelper.c(motY, (double) MathHelper.sqrt(motX * motX + motZ * motZ)) * 57.2957763671875D);
+        yaw = (float) (MathHelper.c(motX, motZ) * Const.RAD2DEG);
+        pitch = (float) (MathHelper.c(motY, (double) MathHelper.sqrt(motX * motX + motZ * motZ)) * Const.RAD2DEG);
         while (pitch - lastPitch < -180.0F)
             lastPitch -= 360.0F;
         while (pitch - lastPitch >= 180.0F)
@@ -99,12 +100,12 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
         pitch = lastPitch + (pitch - lastPitch) * 0.2F;
         yaw = lastYaw + (yaw - lastYaw) * 0.2F;
         if (!world.a(getBoundingBox(), Material.WATER)) {
-            motX *= 0.9900000095367432D;
-            motY *= 0.9900000095367432D;
-            motZ *= 0.9900000095367432D;
+            motX *= (double) 0.99F;
+            motY *= (double) 0.99F;
+            motZ *= (double) 0.99F;
         }
         if (!isNoGravity()) {
-            motY -= 0.02999999865889549D;
+            motY -= (double) 0.03F;
         }
         setPosition(locX, locY, locZ);
     }
@@ -126,8 +127,8 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
 
         EntityLiving hitEntity = getHitEntity(minVec, maxVec);
         if (hitEntity != null && rider != null) {
-            if (RidableDolphin.CONFIG.SHOOT_DAMAGE > 0) {
-                hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidableDolphin.CONFIG.SHOOT_DAMAGE);
+            if (RidableDolphin.CONFIG.RIDING_SHOOT_DAMAGE > 0) {
+                hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidableDolphin.CONFIG.RIDING_SHOOT_DAMAGE);
             }
             die();
         }
@@ -158,8 +159,8 @@ public class DolphinSpit extends EntityLlamaSpit implements IProjectile, CustomP
         motX = d0 = (d0 / (double) f2) * f;
         motY = d1 = (d1 / (double) f2) * f;
         motZ = d2 = (d2 / (double) f2) * f;
-        lastYaw = yaw = (float) (MathHelper.c(d0, d2) * 57.2957763671875D);
-        lastPitch = pitch = (float) (MathHelper.c(d1, (double) MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D);
+        lastYaw = yaw = (float) (MathHelper.c(d0, d2) * Const.RAD2DEG);
+        lastPitch = pitch = (float) (MathHelper.c(d1, (double) MathHelper.sqrt(d0 * d0 + d2 * d2)) * Const.RAD2DEG);
     }
 
     // entityInit

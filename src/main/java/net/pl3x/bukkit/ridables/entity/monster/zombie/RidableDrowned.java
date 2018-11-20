@@ -39,6 +39,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.drowned.AIDrownedSwimUp;
 import net.pl3x.bukkit.ridables.entity.ai.goal.zombie.drowned.AIDrownedTridentAttack;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomThrownTrident;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
@@ -84,6 +85,8 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
         getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(CONFIG.AI_MELEE_DAMAGE);
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+        getAttributeInstance(GenericAttributes.h).setValue(CONFIG.AI_ARMOR); // ARMOR
+        getAttributeInstance(c).setValue(random.nextDouble() * CONFIG.AI_SPAWN_REINFORCEMENTS_CHANCE); // SPAWN_REINFORCEMENTS_CHANCE
     }
 
     // initAI - override vanilla AI
@@ -291,7 +294,7 @@ public class RidableDrowned extends EntityDrowned implements RidableEntity {
                 double y = c - drowned.locY;
                 double z = d - drowned.locZ;
                 y /= (double) MathHelper.sqrt(x * x + y * y + z * z);
-                drowned.yaw = a(drowned.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F);
+                drowned.yaw = a(drowned.yaw, (float) (MathHelper.c(z, x) * Const.RAD2DEG) - 90.0F, 90.0F);
                 drowned.aQ = drowned.yaw;
                 float speed = (float) (e * drowned.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
                 drowned.o(drowned.cK() + (speed - drowned.cK()) * 0.125F);

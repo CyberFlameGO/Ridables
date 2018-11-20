@@ -33,6 +33,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.evoker.AIEvokerSummonSpell;
 import net.pl3x.bukkit.ridables.entity.ai.goal.evoker.AIEvokerWololoSpell;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomEvokerFangs;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
@@ -238,11 +239,11 @@ public class RidableEvoker extends EntityEvoker implements RidableEntity {
         float distance = (float) MathHelper.c((locZ + z) - locZ, (locX + x) - locX);
         if (circle) {
             for (int i = 0; i < 5; ++i) {
-                float rotationYaw = distance + (float) i * (float) Math.PI * 0.4F;
+                float rotationYaw = distance + (float) i * Const.PI_FLOAT * 0.4F;
                 spawnFang(rider, locX + (double) MathHelper.cos(rotationYaw) * 1.5D, locZ + (double) MathHelper.sin(rotationYaw) * 1.5D, minY, maxY, rotationYaw, 0);
             }
             for (int i = 0; i < 8; ++i) {
-                float rotationYaw = distance + (float) i * (float) Math.PI * 2.0F / 8.0F + ((float) Math.PI * 2F / 5F);
+                float rotationYaw = distance + (float) i * Const.PI_FLOAT * 2.0F / 8.0F + ((float) Math.PI * 2F / 5F);
                 spawnFang(rider, locX + (double) MathHelper.cos(rotationYaw) * 2.5D, locZ + (double) MathHelper.sin(rotationYaw) * 2.5D, minY, maxY, rotationYaw, 3);
             }
         } else {

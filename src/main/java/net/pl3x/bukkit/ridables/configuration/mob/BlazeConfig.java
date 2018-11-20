@@ -13,7 +13,7 @@ public class BlazeConfig extends MobConfig {
     public double AI_SHOOT_EXPLOSION_DAMAGE = 17.0D;
     public boolean AI_SHOOT_EXPLOSION_FIRE = true;
     public boolean AI_SHOOT_GRIEF = true;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.23D;
     public double RIDING_VERTICAL = 0.5D;
     public double RIDING_GRAVITY = 0.04D;
     public boolean RIDING_RIDE_IN_WATER = true;

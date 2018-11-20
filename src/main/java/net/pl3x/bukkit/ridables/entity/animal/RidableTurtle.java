@@ -3,16 +3,23 @@ package net.pl3x.bukkit.ridables.entity.animal;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.CriterionTriggers;
 import net.minecraft.server.v1_13_R2.DataWatcherObject;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityTurtle;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
+import net.minecraft.server.v1_13_R2.ItemStack;
+import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.TurtleConfig;
+import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
@@ -27,6 +34,10 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleTempt;
 import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleTravel;
 import net.pl3x.bukkit.ridables.entity.ai.goal.turtle.AITurtleWander;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.event.RidableSpacebarEvent;
+import net.pl3x.bukkit.ridables.util.Const;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -230,6 +241,9 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
         if (super.a(entityhuman, hand)) {
             return true; // handled by vanilla action
         }
+        if (collectInWaterBucket(entityhuman, hand)) {
+            return true; // handled
+        }
         if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
             if (!CONFIG.RIDING_BABIES && isBaby()) {
                 return false; // do not ride babies
@@ -237,6 +251,30 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
             return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
         }
         return false;
+    }
+
+    private boolean collectInWaterBucket(EntityHuman entityhuman, EnumHand hand) {
+        ItemStack itemstack = entityhuman.b(hand);
+        if (itemstack.getItem() != Items.WATER_BUCKET) {
+            return false;
+        }
+        Player player = (Player) entityhuman.getBukkitEntity();
+        if (!player.hasPermission("allow.collect.turtle")) {
+            Lang.send(player, Lang.COLLECT_NO_PERMISSION);
+            return true; // handled
+        }
+        ItemStack bucket = CraftItemStack.asNMSCopy(Bucket.TURTLE.getItemStack());
+        a(SoundEffects.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F); // playSound
+        itemstack.subtract(1);
+        // TODO set custom name
+        CriterionTriggers.j.a((EntityPlayer) entityhuman, bucket); // filled_bucket achievement
+        if (itemstack.isEmpty()) {
+            entityhuman.a(hand, bucket);
+        } else if (!entityhuman.inventory.pickup(bucket)) {
+            entityhuman.drop(bucket, false);
+        }
+        die();
+        return true; // handled
     }
 
     @Override
@@ -255,8 +293,79 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
 
         @Override
         public void tick(EntityPlayer rider) {
-            updateSpeed();
-            super.tick(rider);
+            //updateSpeed();
+            if (turtle.isInWater()) {
+                float forward = rider.bj;
+                float strafe = rider.bh;
+                float vertical = -(rider.pitch / 90);
+
+                if (forward < 0.0F) {
+                    forward *= 0.25F;
+                    vertical = -vertical * 0.1F;
+                    strafe *= 0.25F;
+                } else if (forward == 0) {
+                    vertical = 0F;
+                }
+
+                if (isJumping(rider)) {
+                    RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (!event.isCancelled() && !event.isHandled()) {
+                        ridable.onSpacebar();
+                    }
+                }
+
+                float speed = (float) (e = ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDING_SPEED).getValue());
+
+                a.o(speed * 0.1F);
+                a.s(vertical * 1.5F * speed);
+                a.t(strafe * speed);
+                a.r(forward * speed);
+
+                f = a.bj;
+                g = a.bh;
+            } else {
+                float forward = rider.bj * 0.5F;
+                float strafe = rider.bh * 0.25F;
+                if (forward <= 0.0F) {
+                    forward *= 0.5F;
+                }
+
+                float yaw = rider.yaw;
+                if (strafe != 0) {
+                    if (forward == 0) {
+                        yaw += strafe > 0 ? -90 : 90;
+                        forward = Math.abs(strafe * 2);
+                    } else {
+                        yaw += strafe > 0 ? -30 : 30;
+                        strafe /= 2;
+                        if (forward < 0) {
+                            yaw += strafe > 0 ? -110 : 110;
+                            forward *= -1;
+                        }
+                    }
+                } else if (forward < 0) {
+                    yaw -= 180;
+                    forward *= -1;
+                }
+                ((LookController) a.getControllerLook()).setOffsets(yaw - rider.yaw, 0);
+
+                if (isJumping(rider)) {
+                    RidableSpacebarEvent event = new RidableSpacebarEvent(ridable);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (!event.isCancelled() && !event.isHandled() && !ridable.onSpacebar() && a.onGround) {
+                        a.getControllerJump().a();
+                    }
+                }
+
+                e = ((EntityInsentient) ridable).getAttributeInstance(RidableType.RIDING_SPEED).getValue() * 0.1F;
+
+                a.o((float) e); // speed
+                a.r(forward);
+
+                f = a.bj; // forward
+                g = a.bh; // strafe
+            }
         }
 
         @Override
@@ -267,7 +376,7 @@ public class RidableTurtle extends EntityTurtle implements RidableEntity {
                 double y = c - turtle.locY;
                 double z = d - turtle.locZ;
                 y /= (double) MathHelper.sqrt(x * x + y * y + z * z);
-                turtle.aQ = turtle.yaw = a(turtle.yaw, (float) (MathHelper.c(z, x) * (double) (180F / (float) Math.PI)) - 90.0F, 90.0F); // limitAngle
+                turtle.aQ = turtle.yaw = a(turtle.yaw, (float) (MathHelper.c(z, x) * Const.RAD2DEG) - 90.0F, 90.0F); // limitAngle
                 float speed = (float) (e * turtle.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue());
                 turtle.o(turtle.cK() + (speed - turtle.cK()) * 0.125F); // setAIMoveSpeed getAIMoveSpeed
                 turtle.motY += (double) turtle.cK() * y * 0.1D; // getAIMoveSpeed

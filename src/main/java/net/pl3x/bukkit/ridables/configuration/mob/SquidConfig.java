@@ -7,7 +7,7 @@ public class SquidConfig extends MobConfig {
     public double BASE_SPEED = 0.7D;
     public double MAX_HEALTH = 10.0D;
     public double AI_FOLLOW_RANGE = 16.0D;
-    public double RIDING_SPEED = 1.0D;
+    public double RIDING_SPEED = 0.7D;
     public int RIDING_INK_COOLDOWN = 100;
     public boolean RIDING_ENABLE_MOVE_EVENT = false;
     public boolean RIDING_SADDLE_REQUIRE = false;
