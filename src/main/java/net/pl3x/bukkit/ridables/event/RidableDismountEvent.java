@@ -10,10 +10,16 @@ import org.bukkit.entity.Player;
  */
 public class RidableDismountEvent extends RidableEvent {
     private final Player player;
+    private final boolean isCancellable;
 
     public RidableDismountEvent(RidableEntity entity, Player player) {
+        this(entity, player, true);
+    }
+
+    public RidableDismountEvent(RidableEntity entity, Player player, boolean notCancellable) {
         super(entity);
         this.player = player;
+        this.isCancellable = !notCancellable;
     }
 
     /**
@@ -23,5 +29,17 @@ public class RidableDismountEvent extends RidableEvent {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        if (cancel && !isCancellable) {
+            return;
+        }
+        super.setCancelled(cancel);
+    }
+
+    public boolean isCancellable() {
+        return isCancellable;
     }
 }

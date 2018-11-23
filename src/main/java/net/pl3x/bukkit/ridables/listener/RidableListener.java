@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.listener;
 
 import net.minecraft.server.v1_13_R2.EnumHand;
-import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
@@ -100,7 +99,7 @@ public class RidableListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (!Config.CANCEL_COMMANDS_WHILE_RIDING) {
+        if (true/*!Config.CANCEL_COMMANDS_WHILE_RIDING*/) { // TODO finish this
             return; // disabled feature
         }
 

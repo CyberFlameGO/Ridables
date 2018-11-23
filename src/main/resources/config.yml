@@ -13,18 +13,12 @@ commands-list:
 - "msg"
 - "pm"
 
-# Require saddle in hand to mount a ridable creature
-# Does not work for creatures that are naturally mountable
-saddle-to-mount: false
-
-# Consume the saddle item when mounting (requires saddle-to-mount: true)
-consume-saddle: false
-
-# Can players ride baby versions of creatures
-allow-ride-babies: false
-
-# Limit flying creatures to a max Y (prevents players from crashing servers from riding too high)
-flying-max-y: 256
+# Delete this section if you want to fine-tune these options per entity
+riding:
+  enable-move-event: false
+  saddle:
+    require: false
+    consume: false
 
 # Enable mobs here
 mobs:

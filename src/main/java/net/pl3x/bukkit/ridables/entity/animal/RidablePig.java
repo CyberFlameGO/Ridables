@@ -28,8 +28,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AISwim;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AITempt;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
-import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
-import org.bukkit.entity.Player;
+import net.pl3x.bukkit.ridables.util.Const;
 
 import java.lang.reflect.Field;
 
@@ -125,7 +124,7 @@ public class RidablePig extends EntityPig implements RidableEntity {
             if (bT()) { // canPassengerSteer
                 float speed = (float) getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue() * 0.225F;
                 if (boosting) {
-                    speed += speed * 1.15F * MathHelper.sin((float) boostTime / (float) totalBoostTime * 3.1415927F);
+                    speed += speed * 1.15F * MathHelper.sin((float) boostTime / (float) totalBoostTime * Const.PI_FLOAT);
                 }
                 o(speed);
                 super_a(0.0F, 0.0F, 1.0F);
@@ -171,9 +170,8 @@ public class RidablePig extends EntityPig implements RidableEntity {
     }
 
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        return super.removePassenger(passenger, notCancellable);
     }
 
     private boolean isBoosting() {

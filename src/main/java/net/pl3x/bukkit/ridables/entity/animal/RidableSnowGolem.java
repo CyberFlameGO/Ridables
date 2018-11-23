@@ -7,6 +7,8 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityItem;
+import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySnowman;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
@@ -15,7 +17,9 @@ import net.minecraft.server.v1_13_R2.IMonster;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.SnowGolemConfig;
 import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
@@ -27,18 +31,23 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIAttackRanged;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AILookIdle;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWanderAvoidWater;
 import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
+import net.pl3x.bukkit.ridables.entity.projectile.CustomSnowball;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.util.Vector;
 
 public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     public static final SnowGolemConfig CONFIG = new SnowGolemConfig();
     public static final MaterialSetTag PUMPKIN = new MaterialSetTag()
             .add(Material.CARVED_PUMPKIN, Material.JACK_O_LANTERN, Material.PUMPKIN);
+
+    private int shootCooldown;
 
     public RidableSnowGolem(World world) {
         super(world);
@@ -91,6 +100,9 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     @Override
     protected void mobTick() {
         Q = getRider() == null ? CONFIG.AI_STEP_HEIGHT : CONFIG.RIDING_STEP_HEIGHT;
+        if (shootCooldown > 0) {
+            shootCooldown--;
+        }
         super.mobTick();
     }
 
@@ -183,8 +195,57 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     }
 
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        return super.removePassenger(passenger, notCancellable);
+    }
+
+    @Override
+    public boolean onClick() {
+        if (shootCooldown == 0) {
+            return shoot(getRider());
+        }
+        return false;
+    }
+
+    public boolean shoot(EntityPlayer rider) {
+        shootCooldown = CONFIG.RIDING_SHOOT_COOLDOWN;
+
+        if (rider == null) {
+            return false;
+        }
+
+        CraftPlayer player = (CraftPlayer) ((Entity) rider).getBukkitEntity();
+        if (!player.hasPermission("allow.shoot.snow_golem")) {
+            Lang.send(player, Lang.SHOOT_NO_PERMISSION);
+            return false;
+        }
+
+        Vector direction = player.getEyeLocation().getDirection()
+                .normalize().multiply(25).add(new Vector(0, 2.5, 0)).normalize().multiply(25);
+
+        a(SoundEffects.ENTITY_SNOW_GOLEM_SHOOT, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 0.8F));
+
+        CustomSnowball snowball = new CustomSnowball(world, this, rider, locX, locY + (double) getHeadHeight(), locZ);
+        snowball.shoot(direction.getX(), direction.getY(), direction.getZ(), CONFIG.RIDING_SHOOT_SPEED, CONFIG.RIDING_SHOOT_INACCURACY);
+        world.addEntity(snowball);
+
+        return true;
+    }
+
+    // attackEntityWithRangedAttack
+    @Override
+    public void a(EntityLiving target, float distanceFactor) {
+        CustomSnowball snowball = new CustomSnowball(world, this);
+        double x = target.locX - locX;
+        double y = target.locY + (double) target.getHeadHeight() - (double) 1.1F - snowball.locY;
+        double z = target.locZ - locZ;
+        snowball.shoot(x, y + (double) (MathHelper.sqrt(x * x + z * z) * 0.2F), z, CONFIG.AI_SHOOT_SPEED, CONFIG.AI_SHOOT_INACCURACY);
+        a(SoundEffects.ENTITY_SNOW_GOLEM_SHOOT, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 0.8F)); // playSound
+        world.addEntity(snowball);
     }
 }

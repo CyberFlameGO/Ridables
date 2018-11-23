@@ -129,33 +129,13 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
         return false;
     }
 
-    private boolean collectInWaterBucket(EntityHuman entityhuman, EnumHand hand) {
-        ItemStack itemstack = entityhuman.b(hand);
-        if (itemstack.getItem() != Items.WATER_BUCKET) {
-            return false;
-        }
-        Player player = (Player) entityhuman.getBukkitEntity();
-        if (!player.hasPermission("allow.collect.squid")) {
-            Lang.send(player, Lang.COLLECT_NO_PERMISSION);
-            return true; // handled
-        }
-        ItemStack bucket = CraftItemStack.asNMSCopy(Bucket.SQUID.getItemStack());
-        a(SoundEffects.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F); // playSound
-        itemstack.subtract(1);
-        // TODO set custom name
-        CriterionTriggers.j.a((EntityPlayer) entityhuman, bucket); // filled_bucket achievement
-        if (itemstack.isEmpty()) {
-            entityhuman.a(hand, bucket);
-        } else if (!entityhuman.inventory.pickup(bucket)) {
-            entityhuman.drop(bucket, false);
-        }
-        die();
-        return true; // handled
-    }
-
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        return super.removePassenger(passenger, notCancellable);
     }
 }

@@ -4,7 +4,6 @@ import com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent;
 import net.minecraft.server.v1_13_R2.MobEffects;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.entity.monster.slime.RidableMagmaCube;
-import net.pl3x.bukkit.ridables.entity.monster.slime.RidableSlime;
 import org.bukkit.entity.Slime;
 
 public class AIMagmaCubeFaceRandom extends PathfinderGoal {
@@ -49,6 +48,6 @@ public class AIMagmaCubeFaceRandom extends PathfinderGoal {
             }
             chosenYaw = event.getNewYaw();
         }
-        ((RidableSlime.SlimeWASDController) magmaCube.getControllerMove()).setDirection(chosenYaw, false);
+        ((RidableMagmaCube.MagmaCubeWASDController) magmaCube.getControllerMove()).setDirection(chosenYaw, false);
     }
 }

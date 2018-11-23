@@ -18,7 +18,7 @@ public class AIPhantomPickAttack extends PathfinderGoal {
     // shouldExecute
     @Override
     public boolean a() {
-        return phantom.getRider() == null && PathfinderGoalTarget.a(phantom, phantom.getGoalTarget(), false, false);
+        return phantom.getRider() == null && phantom.canAttack() && PathfinderGoalTarget.a(phantom, phantom.getGoalTarget(), false, false);
     }
 
     // shouldContinueExecuting

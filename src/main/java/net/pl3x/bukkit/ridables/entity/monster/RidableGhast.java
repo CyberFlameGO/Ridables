@@ -111,18 +111,19 @@ public class RidableGhast extends EntityGhast implements RidableEntity {
     }
 
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        return super.removePassenger(passenger, notCancellable);
     }
 
     @Override
     public boolean onSpacebar() {
         if (spacebarCooldown == 0) {
-            EntityPlayer rider = getRider();
-            if (rider != null) {
-                return shoot(rider);
-            }
+            return shoot(getRider());
         }
         return false;
     }

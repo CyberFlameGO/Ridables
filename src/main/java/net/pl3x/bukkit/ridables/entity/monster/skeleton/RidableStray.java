@@ -5,6 +5,7 @@ import net.minecraft.server.v1_13_R2.EntityArrow;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityIronGolem;
 import net.minecraft.server.v1_13_R2.EntityLiving;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySkeletonAbstract;
 import net.minecraft.server.v1_13_R2.EntitySkeletonStray;
 import net.minecraft.server.v1_13_R2.EntityTurtle;
@@ -139,9 +140,13 @@ public class RidableStray extends EntitySkeletonStray implements RidableEntity {
     }
 
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        return super.removePassenger(passenger, notCancellable);
     }
 
     // isInDayLight

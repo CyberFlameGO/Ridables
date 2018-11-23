@@ -221,6 +221,12 @@ permissions:
       allow.shoot.shulker:
         description: Allow to make withers shoot shulker bullets
         default: op
+      allow.shoot.snow_golem:
+        description: Allow to make snow golems shoot snowballs
+        default: op
+      allow.shoot.spider:
+        description: Allow to make spiders shoot cob webs
+        default: op
       allow.shoot.witch:
         description: Allow to make witches throw potions of harming
         default: op

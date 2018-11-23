@@ -5,6 +5,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
@@ -14,7 +16,8 @@ public class Config {
     public static boolean LOGGER_ERROR = true;
     public static boolean LOGGER_DEBUG = false;
 
-    public static boolean CANCEL_COMMANDS_WHILE_RIDING = false;
+    public static boolean COMMANDS_LIST_IS_WHITELIST = true;
+    public static List<String> COMMANDS_LIST = new ArrayList<>();
 
     public static boolean RIDING_ENABLE_MOVE_EVENT = false;
     public static boolean RIDING_SADDLE_REQUIRE = false;
@@ -106,7 +109,12 @@ public class Config {
         LOGGER_ERROR = config.getBoolean("logger.error", true);
         LOGGER_DEBUG = config.getBoolean("logger.debug", false);
 
-        CANCEL_COMMANDS_WHILE_RIDING = config.getBoolean("cancel-commands-while-riding", false);
+        COMMANDS_LIST_IS_WHITELIST = config.getBoolean("commands-list-is-whitelist", true);
+        COMMANDS_LIST = config.getStringList("commands-list");
+
+        RIDING_ENABLE_MOVE_EVENT = config.getBoolean("riding.enable-move-event", false);
+        RIDING_SADDLE_REQUIRE = config.getBoolean("riding.saddle.require", false);
+        RIDING_SADDLE_CONSUME = config.getBoolean("riding.saddle.consume", false);
 
         ConfigurationSection mobs = config.getConfigurationSection("mobs");
         BAT_ENABLED = mobs.getBoolean("bat", false);

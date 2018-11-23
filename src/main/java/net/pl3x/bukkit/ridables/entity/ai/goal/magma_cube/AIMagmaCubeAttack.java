@@ -5,7 +5,6 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLiving;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.entity.monster.slime.RidableMagmaCube;
-import net.pl3x.bukkit.ridables.entity.monster.slime.RidableSlime;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
 
@@ -71,6 +70,6 @@ public class AIMagmaCubeAttack extends PathfinderGoal {
     @Override
     public void e() {
         magmaCube.a(magmaCube.getGoalTarget(), 10.0F, 10.0F);
-        ((RidableSlime.SlimeWASDController) magmaCube.getControllerMove()).setDirection(magmaCube.yaw, magmaCube.canDamagePlayer());
+        ((RidableMagmaCube.MagmaCubeWASDController) magmaCube.getControllerMove()).setDirection(magmaCube.yaw, magmaCube.canDamagePlayer());
     }
 }

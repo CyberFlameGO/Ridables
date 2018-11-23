@@ -44,13 +44,13 @@ public class Ridables extends JavaPlugin {
         Lang.reload();
 
         // Paper only
-        /*try {
+        try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
         } catch (ClassNotFoundException e) {
             disabledReason = DisabledReason.UNSUPPORTED_SERVER_TYPE;
             disabledReason.printError();
             return;
-        }*/
+        }
 
         // 1.13.2 only!
         try {
@@ -58,6 +58,15 @@ public class Ridables extends JavaPlugin {
             Biomes.class.getDeclaredField("OCEAN"); // deobfuscated in 1.13.2
         } catch (ClassNotFoundException | NoSuchFieldException e) {
             disabledReason = DisabledReason.UNSUPPORTED_SERVER_VERSION;
+            disabledReason.printError();
+            return;
+        }
+
+        // check for recent build of Paper
+        try {
+            org.spigotmc.event.entity.EntityDismountEvent.class.getDeclaredMethod("isCancellable");
+        } catch (NoSuchMethodException e) {
+            disabledReason = DisabledReason.SERVER_VERSION_OUTDATED;
             disabledReason.printError();
             return;
         }

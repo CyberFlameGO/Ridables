@@ -3,7 +3,6 @@ package net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube;
 import com.destroystokyo.paper.event.entity.SlimeSwimEvent;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.entity.monster.slime.RidableMagmaCube;
-import net.pl3x.bukkit.ridables.entity.monster.slime.RidableSlime;
 import org.bukkit.entity.Slime;
 
 public class AIMagmaCubeSwim extends PathfinderGoal {
@@ -36,6 +35,6 @@ public class AIMagmaCubeSwim extends PathfinderGoal {
         if (magmaCube.getRandom().nextFloat() < 0.8F) {
             magmaCube.getControllerJump().a();
         }
-        ((RidableSlime.SlimeWASDController) magmaCube.getControllerMove()).setSpeed(1.2D);
+        ((RidableMagmaCube.MagmaCubeWASDController) magmaCube.getControllerMove()).setSpeed(1.2D);
     }
 }

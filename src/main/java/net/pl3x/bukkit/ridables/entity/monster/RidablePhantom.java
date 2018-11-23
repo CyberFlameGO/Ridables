@@ -19,7 +19,9 @@ import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDFlying;
 import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomAttack;
+import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomFindTotem;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomOrbitPoint;
+import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomOrbitTotem;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomPickAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomSweepAttack;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
@@ -38,6 +40,7 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     public Vec3D orbitOffset;
     public BlockPosition orbitPosition;
     public AttackPhase phase;
+    public BlockPosition totemPosition;
 
     public RidablePhantom(World world) {
         super(world);
@@ -80,8 +83,10 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     // initAI - override vanilla AI
     @Override
     protected void n() {
+        goalSelector.a(0, new AIPhantomFindTotem(this));
         goalSelector.a(1, new AIPhantomPickAttack(this));
         goalSelector.a(2, new AIPhantomSweepAttack(this));
+        goalSelector.a(3, new AIPhantomOrbitTotem(this));
         goalSelector.a(3, new AIPhantomOrbitPoint(this));
         targetSelector.a(1, new AIPhantomAttack(this));
     }
@@ -133,9 +138,13 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
     }
 
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        return super.removePassenger(passenger, notCancellable);
     }
 
     @Override
@@ -158,8 +167,18 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         return true;
     }
 
+    public void setTotemPosition(BlockPosition pos) {
+        if (CONFIG.AI_ENDER_CRYSTALS_ORBIT) {
+            totemPosition = pos;
+        }
+    }
+
+    public boolean isCirclingTotem() {
+        return totemPosition != null;
+    }
+
     public boolean canAttack() {
-        return CONFIG.AI_ATTACK_IN_SUNLIGHT || !isInDaylight();
+        return (CONFIG.AI_ATTACK_IN_SUNLIGHT || !isInDaylight()) && !isCirclingTotem();
     }
 
     // updatePhantomSize

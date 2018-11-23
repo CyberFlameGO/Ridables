@@ -4,6 +4,7 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityAnimal;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityLlama;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntityRabbit;
 import net.minecraft.server.v1_13_R2.EntitySheep;
 import net.minecraft.server.v1_13_R2.EntitySkeletonAbstract;
@@ -140,9 +141,17 @@ public class RidableWolf extends EntityWolf implements RidableEntity {
     }
 
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        if (super.removePassenger(passenger, notCancellable)) {
+            passenger.locY += 0.5; // dont let rider get stuck in a block
+            return true;
+        }
+        return false;
     }
 
     @Override

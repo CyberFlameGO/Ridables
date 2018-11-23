@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.monster.guardian;
 
 import net.minecraft.server.v1_13_R2.ControllerLook;
-import net.minecraft.server.v1_13_R2.CriterionTriggers;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityGuardian;
 import net.minecraft.server.v1_13_R2.EntityHuman;
@@ -10,14 +9,9 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySquid;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
-import net.minecraft.server.v1_13_R2.ItemStack;
-import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
-import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
-import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.GuardianConfig;
-import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDWater;
@@ -30,7 +24,6 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.ai.goal.guardian.AIGuardianAttack;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import net.pl3x.bukkit.ridables.util.Const;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -165,34 +158,14 @@ public class RidableGuardian extends EntityGuardian implements RidableEntity {
         return false;
     }
 
-    private boolean collectInWaterBucket(EntityHuman entityhuman, EnumHand hand) {
-        ItemStack itemstack = entityhuman.b(hand);
-        if (itemstack.getItem() != Items.WATER_BUCKET) {
-            return false;
-        }
-        Player player = (Player) entityhuman.getBukkitEntity();
-        if (!player.hasPermission("allow.collect.guardian")) {
-            Lang.send(player, Lang.COLLECT_NO_PERMISSION);
-            return true; // handled
-        }
-        ItemStack bucket = CraftItemStack.asNMSCopy(Bucket.GUARDIAN.getItemStack());
-        a(SoundEffects.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F); // playSound
-        itemstack.subtract(1);
-        // TODO set custom name
-        CriterionTriggers.j.a((EntityPlayer) entityhuman, bucket); // filled_bucket achievement
-        if (itemstack.isEmpty()) {
-            entityhuman.a(hand, bucket);
-        } else if (!entityhuman.inventory.pickup(bucket)) {
-            entityhuman.drop(bucket, false);
-        }
-        die();
-        return true; // handled
-    }
-
     @Override
-    public boolean removePassenger(Entity passenger) {
-        return (!(passenger instanceof Player) || passengers.isEmpty() || !passenger.equals(passengers.get(0))
-                || new RidableDismountEvent(this, (Player) passenger).callEvent()) && super.removePassenger(passenger);
+    public boolean removePassenger(Entity passenger, boolean notCancellable) {
+        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
+            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
+                return false; // cancelled
+            }
+        }
+        return super.removePassenger(passenger, notCancellable);
     }
 
     static class GuardianWASDController extends ControllerWASDWater {

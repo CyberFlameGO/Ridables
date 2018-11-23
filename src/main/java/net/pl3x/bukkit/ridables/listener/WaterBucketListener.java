@@ -5,6 +5,7 @@ import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +36,10 @@ public class WaterBucketListener implements Listener {
         }
 
         // spawn the creature
-        ridable.spawn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation());
+        Entity entity = ridable.spawn(event.getBlockClicked().getRelative(event.getBlockFace()).getLocation());
+        if (entity == null) {
+            return; // could not spawn entity
+        }
 
         // handle the bucket in hand
         itemStack.setAmount(Math.max(0, itemStack.getAmount() - 1));

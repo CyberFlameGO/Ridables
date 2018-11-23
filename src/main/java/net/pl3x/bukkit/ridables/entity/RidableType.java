@@ -3,9 +3,11 @@ package net.pl3x.bukkit.ridables.entity;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_13_R2.AttributeRanged;
 import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.IAttribute;
+import net.minecraft.server.v1_13_R2.IChatBaseComponent;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.MobConfig;
@@ -72,13 +74,18 @@ import net.pl3x.bukkit.ridables.util.RegistryHax;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
 
 public class RidableType {
     public final static Map<EntityType, RidableType> BY_BUKKIT_TYPE = Maps.newHashMap();
+    public final static Map<EntityTypes, RidableType> BY_NMS_TYPE = Maps.newHashMap();
 
     public static final RidableType BAT = inject(Config.BAT_ENABLED, "bat", EntityTypes.BAT, RidableBat.class, RidableBat::new);
     public static final RidableType BLAZE = inject(Config.BLAZE_ENABLED, "blaze", EntityTypes.BLAZE, RidableBlaze.class, RidableBlaze::new);
@@ -142,31 +149,60 @@ public class RidableType {
     public static final IAttribute RIDING_MAX_Y = (new AttributeRanged(null, "generic.rideMaxY", 256.0D, 0.0D, 1024.0D)).a("Ride Max Y").a(true);
 
     /**
-     * Gets a ridable entity of the specified type
+     * Get all ridable types that are loaded
+     *
+     * @return All loaded ridable types
+     */
+    public Collection<RidableType> getAllRidableTypes() {
+        return new HashSet<>(BY_BUKKIT_TYPE.values());
+    }
+
+    /**
+     * Gets a ridable type from a Bukkit type
      *
      * @param bukkitType Entity type
-     * @return RidableType if one is set/loaded, otherwise null
+     * @return RidableType
      */
+    @Nullable
     public static RidableType getRidableType(EntityType bukkitType) {
         return BY_BUKKIT_TYPE.get(bukkitType);
     }
 
+    /**
+     * Get a ridable type from an NMS type
+     *
+     * @param nmsType Entity type
+     * @return RidableType
+     */
+    @Nullable
+    public static RidableType getRidableType(EntityTypes nmsType) {
+        return BY_NMS_TYPE.get(nmsType);
+    }
+
+    /**
+     * Get a ridable entity from a Bukkit entity
+     *
+     * @param entity Bukkit entity
+     * @return RidableEntity
+     */
+    @Nullable
     public static RidableEntity getRidable(org.bukkit.entity.Entity entity) {
         net.minecraft.server.v1_13_R2.Entity craftEntity = ((CraftEntity) entity).getHandle();
         return craftEntity instanceof RidableEntity ? (RidableEntity) craftEntity : null;
     }
 
-    private static RidableType inject(boolean enabled, String name, EntityTypes nmsTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function) {
-        return inject(enabled, name, nmsTypes, clazz, function, null);
+    private static RidableType inject(boolean enabled, String name, EntityTypes nmsType, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function) {
+        return inject(enabled, name, nmsType, clazz, function, null);
     }
 
-    private static RidableType inject(boolean enabled, String name, EntityTypes entityTypes, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function, Bucket waterBucket) {
+    private static RidableType inject(boolean enabled, String name, EntityTypes nmsType, Class<? extends RidableEntity> clazz, Function<? super World, ? extends RidableEntity> function, Bucket waterBucket) {
         if (enabled) {
-            if (RegistryHax.injectReplacementEntityTypes(entityTypes, clazz, function)) {
+            if (RegistryHax.injectReplacementEntityTypes(nmsType, clazz, function)) {
                 Logger.info("Successfully injected replacement entity: &a" + name);
-                RidableType ridableTypes = new RidableType(name, entityTypes, clazz, waterBucket);
-                BY_BUKKIT_TYPE.put(EntityType.fromName(name), ridableTypes);
-                return ridableTypes;
+                RidableType ridableType = new RidableType(name, nmsType, clazz, waterBucket);
+                BY_BUKKIT_TYPE.put(EntityType.fromName(name), ridableType);
+                BY_NMS_TYPE.put(nmsType, ridableType);
+                return ridableType;
             }
             Logger.error("Failed to inject replacement entity: &e" + name);
         } else {
@@ -196,6 +232,11 @@ public class RidableType {
         return name;
     }
 
+    /**
+     * Get mob's configuration for this ridable type
+     *
+     * @return MobConfig
+     */
     public MobConfig getConfig() {
         try {
             return (MobConfig) clazz.getDeclaredField("CONFIG").get(null);
@@ -212,6 +253,7 @@ public class RidableType {
      *
      * @return Bucket if one is set, null otherwise
      */
+    @Nullable
     public Bucket getWaterBucket() {
         return waterBucket;
     }
@@ -220,10 +262,56 @@ public class RidableType {
      * Spawn this ridable entity in the world at given location
      *
      * @param loc Location to spawn at
-     * @return The spawned entity
+     * @return Entity that was spawned, or null if entity could not be spawned
      */
+    @Nullable
     public Entity spawn(Location loc) {
-        return entityTypes.a(((CraftWorld) loc.getWorld()).getHandle(), null, null, null,
-                new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), true, false);
+        return spawn(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    /**
+     * Spawn this ridable entity in the world at given coordinates
+     *
+     * @param world World to spawn in
+     * @param x     X coordinate
+     * @param y     Y coordinate
+     * @param z     Z coordinate
+     * @return Entity that was spawned, or null if entity could not be spawned
+     */
+    @Nullable
+    public Entity spawn(org.bukkit.World world, int x, int y, int z) {
+        return spawn(((CraftWorld) world).getHandle(), x, y, z);
+    }
+
+    /**
+     * Spawn this ridable entity in the world at given coordinates
+     *
+     * @param world World to spawn in
+     * @param x     X coordinate
+     * @param y     Y coordinate
+     * @param z     Z coordinate
+     * @return Entity that was spawned, or null if entity could not be spawned
+     */
+    @Nullable
+    public Entity spawn(World world, int x, int y, int z) {
+        return spawn(world, null, null, null, new BlockPosition(x, y, z), true, false);
+    }
+
+    /**
+     * Spawns entity
+     *
+     * @param world  World to spawn in
+     * @param nbt    EntityTag NBT
+     * @param name   Custom entity name
+     * @param player Player reference, used to check OP status for applying EntityTag NBT
+     * @param pos    Position to spawn at
+     * @param center Center entity on position and correct Y for entity height
+     * @param fixY   Not exactly sure yet. Alters the Y position. This is only ever true when using a spawn egg and clicked block face is UP.
+     * @return Entity that was spawned, or null if entity could not be spawned
+     */
+    @Nullable
+    public Entity spawn(World world, @Nullable NBTTagCompound nbt, @Nullable IChatBaseComponent name, @Nullable EntityHuman player, BlockPosition pos, boolean center, boolean fixY) {
+        net.minecraft.server.v1_13_R2.Entity nmsEntity = entityTypes.a(world, nbt, name, player, pos, center, fixY); // spawn
+        return nmsEntity == null ? null : nmsEntity.getBukkitEntity();
     }
 }

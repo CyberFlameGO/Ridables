@@ -1,14 +1,17 @@
 package net.pl3x.bukkit.ridables.entity;
 
 import net.minecraft.server.v1_13_R2.ControllerMove;
+import net.minecraft.server.v1_13_R2.CriterionTriggers;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
+import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
 import net.pl3x.bukkit.ridables.event.RidableMountEvent;
 import org.bukkit.Bukkit;
@@ -16,6 +19,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -45,6 +49,14 @@ public interface RidableEntity {
         return controller instanceof ControllerWASD ? ((ControllerWASD) controller).rider : null;
     }
 
+    /**
+     * Try to mount player to this ridable.
+     *
+     * @param entityhuman   Player to add as passenger
+     * @param requireSaddle Saddle required in hand
+     * @param consumeSaddle Saddle in hand is consumed
+     * @return True if action was handled
+     */
     default boolean tryRide(EntityHuman entityhuman, boolean requireSaddle, boolean consumeSaddle) {
         Player player = (Player) entityhuman.getBukkitEntity();
         ItemStack itemstack = entityhuman.b(EnumHand.MAIN_HAND);
@@ -57,25 +69,33 @@ public interface RidableEntity {
         }
         if (!player.hasPermission("allow.ride." + getType().getName())) {
             Lang.send(player, Lang.RIDE_NO_PERMISSION);
-            return true; // handled
+            return true; // handled (no perms)
         }
         if (!new RidableMountEvent(this, player).callEvent()) {
-            return true; // handled
+            return true; // handled (plugin cancelled)
         }
         if (requireSaddle && consumeSaddle) {
             itemstack.subtract(1);
         }
         entityhuman.startRiding((EntityInsentient) this);
         entityhuman.o(false); // setJumping - fixes jump on mount
-        return true; // handled
+        return true; // handled (mounted)
     }
 
+    /**
+     * Internal method used to fire PlayerMoveEvent when ridable was moved by rider
+     * <p>
+     * <b>DO NOT</b> call this method yourself! It could potentially break other
+     * plugins that are listening to that event and/or add to the lag!
+     * <p>
+     * This method is disabled by default for all mobs.
+     */
     default void checkMove() {
-        if (getRider() == null) {
-            return; // no rider
-        }
         if (!Config.RIDING_ENABLE_MOVE_EVENT) {
             return; // feature disabled
+        }
+        if (getRider() == null) {
+            return; // no rider
         }
         EntityInsentient entity = (EntityInsentient) this;
         if (entity.locX == entity.lastX && entity.locY == entity.lastY && entity.locZ == entity.lastZ) {
@@ -89,6 +109,41 @@ public interface RidableEntity {
         if (event.isCancelled() || !to.equals(event.getTo())) {
             entity.ejectPassengers();
         }
+    }
+
+    /**
+     * Collect entity in a water bucket
+     *
+     * @param entityhuman Player collecting the mob
+     * @param hand        Hand used to collect
+     * @return True if action was handled, otherwise false
+     */
+    default boolean collectInWaterBucket(EntityHuman entityhuman, EnumHand hand) {
+        Bucket bucket = getType().getWaterBucket();
+        if (bucket == null) {
+            return false; // no water bucket defined for type
+        }
+        EntityInsentient entity = (EntityInsentient) this;
+        ItemStack itemstack = entityhuman.b(hand);
+        if (itemstack.getItem() != Items.WATER_BUCKET) {
+            return false; // not holding water bucket
+        }
+        Player player = (Player) entityhuman.getBukkitEntity();
+        if (!player.hasPermission("allow.collect." + getType().getName())) {
+            Lang.send(player, Lang.COLLECT_NO_PERMISSION);
+            return true; // handled (no perms)
+        }
+        ItemStack bucketItem = CraftItemStack.asNMSCopy(bucket.getItemStack());
+        entity.a(SoundEffects.ITEM_BUCKET_FILL_FISH, 1.0F, 1.0F); // playSound
+        itemstack.subtract(1);
+        CriterionTriggers.j.a((EntityPlayer) entityhuman, bucketItem); // filled_bucket achievement
+        if (itemstack.isEmpty()) {
+            entityhuman.a(hand, bucketItem);
+        } else if (!entityhuman.inventory.pickup(bucketItem)) {
+            entityhuman.drop(bucketItem, false);
+        }
+        entity.die();
+        return true; // handled (collected)
     }
 
     /**
@@ -141,6 +196,15 @@ public interface RidableEntity {
         return false;
     }
 
+    /**
+     * This method is called when the current rider performs any type of click action
+     * <p>
+     * This is called <b>before</b> all other click action methods are fired.
+     * <p>
+     * This is used internally for triggering click events on the creature. It is advised to not use this method
+     *
+     * @return True if click was handled
+     */
     default boolean onClick() {
         return false;
     }

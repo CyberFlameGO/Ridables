@@ -15,8 +15,13 @@ public enum DisabledReason {
     ),
     UNSUPPORTED_SERVER_VERSION(
             "#       This server is unsupported!        #",
-            "#    Only 1.13.1 servers are supported!    #",
-            "# Download Ridables v2.35 for 1.13 support #"
+            "#    Only 1.13.2 servers are supported!    #",
+            "#   See downloads page for version info    #"
+    ),
+    SERVER_VERSION_OUTDATED(
+            "#      Your server build is outdated!      #",
+            "#     Please update your Paper software    #",
+            "#    See downloads page for version info   #"
     ),
     ALL_ENTITIES_DISABLED(
             "#        All entities are disabled!        #",

@@ -3,7 +3,6 @@ package net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube;
 import com.destroystokyo.paper.event.entity.SlimeWanderEvent;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.entity.monster.slime.RidableMagmaCube;
-import net.pl3x.bukkit.ridables.entity.monster.slime.RidableSlime;
 import org.bukkit.entity.Slime;
 
 public class AIMagmaCubeHop extends PathfinderGoal {
@@ -32,6 +31,6 @@ public class AIMagmaCubeHop extends PathfinderGoal {
     // tick
     @Override
     public void e() {
-        ((RidableSlime.SlimeWASDController) magmaCube.getControllerMove()).setSpeed(1.0D);
+        ((RidableMagmaCube.MagmaCubeWASDController) magmaCube.getControllerMove()).setSpeed(1.0D);
     }
 }
