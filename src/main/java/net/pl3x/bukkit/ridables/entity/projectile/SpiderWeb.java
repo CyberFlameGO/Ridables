@@ -6,11 +6,13 @@ import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityFallingBlock;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.EnumMoveType;
 import net.minecraft.server.v1_13_R2.IBlockData;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
+import org.bukkit.craftbukkit.v1_13_R2.block.CraftBlockState;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -114,7 +116,11 @@ public class SpiderWeb extends EntityFallingBlock implements CustomProjectile {
             return; // let the piston push the web
         }
         die();
-        if (state.getMaterial().isReplaceable() && !CraftEventFactory.callEntityChangeBlockEvent(this, pos, WEB).isCancelled()) {
+        boolean cancelled = CraftEventFactory.callEntityChangeBlockEvent((EntityInsentient) ridable, pos, WEB).isCancelled();
+        if (!cancelled && rider != null) {
+            cancelled = CraftEventFactory.callBlockPlaceEvent(world, rider, EnumHand.MAIN_HAND, CraftBlockState.getBlockState(world, pos), pos.getX(), pos.getY(), pos.getZ()).isCancelled();
+        }
+        if (state.getMaterial().isReplaceable() && !cancelled) {
             world.setTypeAndData(pos, WEB, 3);
         }
     }
