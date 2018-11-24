@@ -164,7 +164,7 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
         }
 
         Vector direction = player.getEyeLocation().getDirection()
-                .normalize().multiply(25).add(new Vector(0, 2.5, 0)).normalize().multiply(25);
+                .normalize().multiply(25).add(new Vector(0, 10, 0)).normalize().multiply(25);
 
         a(SoundEffects.ENTITY_SPIDER_STEP, 1.0F, 1.0F);
 

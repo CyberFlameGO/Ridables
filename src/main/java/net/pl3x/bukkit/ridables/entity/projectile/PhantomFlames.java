@@ -19,6 +19,8 @@ import net.pl3x.bukkit.ridables.entity.monster.RidablePhantom;
 import net.pl3x.bukkit.ridables.util.Const;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
 
 public class PhantomFlames extends EntityLlamaSpit implements IProjectile, CustomProjectile {
     private RidablePhantom phantom;
@@ -123,7 +125,11 @@ public class PhantomFlames extends EntityLlamaSpit implements IProjectile, Custo
         if (hitEntity != null && rider != null) {
             if (RidablePhantom.CONFIG.RIDING_SHOOT_DAMAGE > 0) {
                 hitEntity.damageEntity(DamageSource.a(this, rider).c(), RidablePhantom.CONFIG.RIDING_SHOOT_DAMAGE);
-                hitEntity.setOnFire(100);
+                EntityCombustEvent combustEvent = new EntityCombustByEntityEvent(phantom.getBukkitEntity(), hitEntity.getBukkitEntity(), 100);
+                world.getServer().getPluginManager().callEvent(combustEvent);
+                if (!combustEvent.isCancelled()) {
+                    hitEntity.setOnFire(combustEvent.getDuration());
+                }
             }
             die();
         }

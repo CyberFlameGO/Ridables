@@ -68,8 +68,12 @@ public class SpiderWeb extends EntityFallingBlock implements CustomProjectile {
         move(EnumMoveType.SELF, motX, motY, motZ);
 
         if (!onGround) {
-            if (D) { // collided
-                trySetAsBlock(new BlockPosition(this).up());
+            if (D) { // collided (horizontally or vertically)
+                if (C) { // collidedVertically
+                    trySetAsBlock();
+                } else if (positionChanged) { // collidedHorizontally
+                    trySetAsBlock();
+                }
             } else {
                 for (Entity entity : world.getEntities(this, getBoundingBox())) {
                     if (entity != ridable && entity != rider) {
@@ -80,7 +84,7 @@ public class SpiderWeb extends EntityFallingBlock implements CustomProjectile {
                 }
             }
         } else {
-            trySetAsBlock(new BlockPosition(this));
+            trySetAsBlock();
         }
 
         motX *= (double) 0.98F;
@@ -94,21 +98,34 @@ public class SpiderWeb extends EntityFallingBlock implements CustomProjectile {
         // do nothing
     }
 
-    private void trySetAsBlock(BlockPosition pos) {
+    // setInWeb
+    @Override
+    public void bh() {
+        F = false; // isInWeb
+    }
+
+    public void trySetAsBlock() {
+        trySetAsBlock(getPosition());
+    }
+
+    public void trySetAsBlock(BlockPosition pos) {
         IBlockData state = world.getType(pos);
-        if (state.getBlock() != Blocks.MOVING_PISTON) {
-            die();
-            if (state.getMaterial().isReplaceable() && !CraftEventFactory.callEntityChangeBlockEvent(this, pos, WEB).isCancelled()) {
-                world.setTypeAndData(pos, WEB, 3);
-            }
+        if (state.getBlock() == Blocks.MOVING_PISTON) {
+            return; // let the piston push the web
+        }
+        die();
+        if (state.getMaterial().isReplaceable() && !CraftEventFactory.callEntityChangeBlockEvent(this, pos, WEB).isCancelled()) {
+            world.setTypeAndData(pos, WEB, 3);
         }
     }
 
-    private void trySetAsBlock(Entity entity) {
-        BlockPosition pos = new BlockPosition(entity);
+    public void trySetAsBlock(Entity target) {
+        BlockPosition pos = getPosition(target);
         trySetAsBlock(pos);
-        trySetAsBlock(pos.up());
-        entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        if (target.getHeadHeight() > 1.5F) {
+            trySetAsBlock(pos.up());
+        }
+        target.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
     }
 
     public void shoot(double x, double y, double z, double speed) {
@@ -116,5 +133,13 @@ public class SpiderWeb extends EntityFallingBlock implements CustomProjectile {
         motX = x / distance * speed;
         motY = y / distance * speed;
         motZ = z / distance * speed;
+    }
+
+    public BlockPosition getPosition() {
+        return getPosition(this);
+    }
+
+    public BlockPosition getPosition(Entity entity) {
+        return new BlockPosition((int) Math.round(entity.locX - 0.5D), (int) Math.round(entity.locY - 0.5D), (int) Math.round(entity.locZ - 0.5D));
     }
 }
