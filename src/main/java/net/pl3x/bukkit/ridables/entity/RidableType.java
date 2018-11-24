@@ -221,6 +221,7 @@ public class RidableType {
         this.waterBucket = waterBucket;
         this.name = name;
         this.clazz = clazz;
+        getConfig(); // force configs to load on startup
     }
 
     /**

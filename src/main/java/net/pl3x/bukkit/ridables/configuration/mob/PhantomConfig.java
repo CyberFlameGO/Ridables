@@ -13,7 +13,7 @@ public class PhantomConfig extends MobConfig {
     public boolean AI_ENDER_CRYSTALS_ORBIT = false;
     public int AI_ENDER_CRYSTALS_BEAM_TICKS = 60;
     public int AI_ENDER_CRYSTALS_IDLE_COOLDOWN = 60;
-    public float AI_ENDER_CRYSTALS_DAMAGE = 10.0F;
+    public float AI_ENDER_CRYSTALS_DAMAGE = 1.0F;
     public int AI_ENDER_CRYSTALS_DAMAGE_COOLDOWN = 20;
     public double RIDING_SPEED = 0.7D;
     public float RIDING_GRAVITY = 0.04F;

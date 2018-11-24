@@ -144,8 +144,12 @@ public class RidableSpider extends EntitySpider implements RidableEntity {
 
     @Override
     public boolean onClick() {
+        EntityPlayer rider = getRider();
+        if (!rider.b(EnumHand.MAIN_HAND).isEmpty()) {
+            return false; // must have empty hands to shoot
+        }
         if (shootCooldown == 0) {
-            return shoot(getRider());
+            return shoot(rider);
         }
         return false;
     }
