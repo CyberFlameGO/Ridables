@@ -9,9 +9,10 @@ logger:
 # Commands allowed (or disallowed) to be used while riding a mob
 commands-list-is-whitelist: true  # Use false for blacklist
 commands-list:
-- "whisper"
+- "tell"
 - "msg"
 - "pm"
+- "w"
 
 # Delete this section if you want to fine-tune these options per entity
 riding:

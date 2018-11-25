@@ -1,12 +1,18 @@
 package net.pl3x.bukkit.ridables.configuration;
 
 import net.pl3x.bukkit.ridables.Ridables;
+import net.pl3x.bukkit.ridables.util.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_13_R2.command.VanillaCommandWrapper;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
@@ -17,7 +23,7 @@ public class Config {
     public static boolean LOGGER_DEBUG = false;
 
     public static boolean COMMANDS_LIST_IS_WHITELIST = true;
-    public static List<String> COMMANDS_LIST = new ArrayList<>();
+    public static Set<String> COMMANDS_LIST = new HashSet<>();
 
     public static boolean RIDING_ENABLE_MOVE_EVENT = false;
     public static boolean RIDING_SADDLE_REQUIRE = false;
@@ -86,8 +92,8 @@ public class Config {
     public static File getMobsDirectory() {
         if (mobsDir == null) {
             mobsDir = new File(Ridables.getInstance().getDataFolder(), "mobs");
-            if (!mobsDir.exists()) {
-                mobsDir.mkdirs();
+            if (mobsDir.mkdirs()) {
+                Logger.debug("Created new mob config directory");
             }
         }
         return mobsDir;
@@ -108,9 +114,6 @@ public class Config {
         LOGGER_WARN = config.getBoolean("logger.warn", true);
         LOGGER_ERROR = config.getBoolean("logger.error", true);
         LOGGER_DEBUG = config.getBoolean("logger.debug", false);
-
-        COMMANDS_LIST_IS_WHITELIST = config.getBoolean("commands-list-is-whitelist", true);
-        COMMANDS_LIST = config.getStringList("commands-list");
 
         RIDING_ENABLE_MOVE_EVENT = config.getBoolean("riding.enable-move-event", false);
         RIDING_SADDLE_REQUIRE = config.getBoolean("riding.saddle.require", false);
@@ -174,5 +177,36 @@ public class Config {
         ZOMBIE_HORSE_ENABLED = mobs.getBoolean("zombie_horse", false);
         ZOMBIE_PIGMAN_ENABLED = mobs.getBoolean("zombie_pigman", false);
         ZOMBIE_VILLAGER_ENABLED = mobs.getBoolean("zombie_villager", false);
+
+        reloadCommandsList(config);
+    }
+
+    public static void reloadCommandsList(FileConfiguration config) {
+        COMMANDS_LIST_IS_WHITELIST = config.getBoolean("commands-list-is-whitelist", true);
+        COMMANDS_LIST.clear();
+
+        Set<String> toAdd = new HashSet<>();                   // use Set to prevent duplicates
+        for (String command : config.getStringList("commands-list")) {
+            toAdd.clear();                                     // clear previous command's entries
+            toAdd.add(command);                                // add raw command from config
+            Command bukkitCmd = Bukkit.getCommandMap().getCommand(command);
+            if (bukkitCmd != null) {
+                toAdd.add(bukkitCmd.getLabel());               // add bukkit's command label (includes vanilla's label)
+                toAdd.addAll(bukkitCmd.getAliases());          // add bukkit's command aliases (vanilla has no concept of aliases)
+                if (bukkitCmd instanceof PluginCommand) {
+                    String pluginName = ((PluginCommand) bukkitCmd).getPlugin().getName();
+                    toAdd.addAll(toAdd.stream()                // add bukkit's fallback commands and aliases
+                            .map(cmd -> pluginName + ":" + cmd)
+                            .collect(Collectors.toList()));
+                } else if (bukkitCmd instanceof VanillaCommandWrapper) {
+                    toAdd.addAll(toAdd.stream()                // add vanilla's fallback commands
+                            .map(cmd -> "minecraft:" + cmd)
+                            .collect(Collectors.toList()));
+                }
+            }
+            COMMANDS_LIST.addAll(toAdd.stream()
+                    .map(String::toLowerCase)                  // lowercase _everything_
+                    .collect(Collectors.toSet()));
+        }
     }
 }

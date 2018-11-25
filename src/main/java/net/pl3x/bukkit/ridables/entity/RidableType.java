@@ -180,6 +180,17 @@ public class RidableType {
     }
 
     /**
+     * Get a ridable type from an NMS type
+     *
+     * @param nmsType Entity type
+     * @return RidableType
+     */
+    @Nullable
+    public static RidableType getRidableType(org.bukkit.entity.Entity entity) {
+        return entity == null ? null : BY_BUKKIT_TYPE.get(entity.getType());
+    }
+
+    /**
      * Get a ridable entity from a Bukkit entity
      *
      * @param entity Bukkit entity

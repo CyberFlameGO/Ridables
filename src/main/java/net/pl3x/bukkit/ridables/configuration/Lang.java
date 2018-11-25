@@ -19,7 +19,7 @@ public class Lang {
 
     public static String RIDE_REQUIRES_SADDLE;
 
-    public static String DISABLED_COMMANDS_WHILE_RIDING;
+    public static String DISABLED_COMMAND_WHILE_RIDING;
 
     public static String WATER_BUCKET_NAME;
     public static final List<String> WATER_BUCKET_LORE = new ArrayList<>();
@@ -50,7 +50,7 @@ public class Lang {
 
         RIDE_REQUIRES_SADDLE = config.getString("ride-requires-saddle", "&cRiding this mob requires a saddle!");
 
-        DISABLED_COMMANDS_WHILE_RIDING = config.getString("disabled-commands-while-riding", "&cCommands are disabled while riding!");
+        DISABLED_COMMAND_WHILE_RIDING = config.getString("disabled-command-while-riding", "&cThat command is disabled while riding!");
 
         WATER_BUCKET_NAME = config.getString("bucket-name", "&bBucket of {creature}");
         String lore = config.getString("bucket-lore", "This bucket contains a {creature}!\nRight click in water to place");

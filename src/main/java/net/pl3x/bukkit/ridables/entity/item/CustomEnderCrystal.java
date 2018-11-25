@@ -7,7 +7,13 @@ import net.minecraft.server.v1_13_R2.EntityPhantom;
 import net.minecraft.server.v1_13_R2.World;
 import net.pl3x.bukkit.ridables.entity.monster.RidablePhantom;
 
+import java.util.function.Predicate;
+
 public class CustomEnderCrystal extends EntityEnderCrystal {
+    public static final Predicate<EntityEnderCrystal> IS_END_CRYSTAL = (crystal) -> crystal != null && crystal.isAlive();
+    public static final Predicate<EntityEnderCrystal> IS_VANILLA_CRYSTAL = (crystal) ->
+            IS_END_CRYSTAL.test(crystal) && !(crystal instanceof CustomEnderCrystal);
+
     private EntityPhantom targetPhantom;
     private int phantomBeamTicks = 0;
     private int phantomDamageCooldown = 0;
@@ -55,6 +61,10 @@ public class CustomEnderCrystal extends EntityEnderCrystal {
             } else {
                 forgetPhantom(); // attacked long enough
             }
+        }
+
+        for (EntityEnderCrystal crystal : world.a(EntityEnderCrystal.class, getBoundingBox(), IS_VANILLA_CRYSTAL)) {
+            crystal.die(); // kill any crystals already on this spot
         }
     }
 

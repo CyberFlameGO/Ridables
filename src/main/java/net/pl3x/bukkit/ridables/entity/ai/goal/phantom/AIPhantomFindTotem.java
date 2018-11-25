@@ -21,30 +21,26 @@ public class AIPhantomFindTotem extends PathfinderGoal {
     // shouldExecute
     @Override
     public boolean a() {
+        if (phantom.getRider() != null) {
+            return false;
+        }
+        if (!RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_ORBIT) {
+            return false;
+        }
         double range = maxTargetRange();
-        List<EntityEnderCrystal> crystals = phantom.world.a(EntityEnderCrystal.class, phantom.getBoundingBox().grow(range, range * 2, range));
+        List<EntityEnderCrystal> crystals = phantom.world.a(EntityEnderCrystal.class, phantom.getBoundingBox().grow(range, range * 2, range), CustomEnderCrystal.IS_END_CRYSTAL);
         if (crystals.isEmpty()) {
             return false;
         }
         totem = crystals.get(phantom.getRandom().nextInt(crystals.size()));
-        if (RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_DAMAGE > 0.0F && !(totem instanceof CustomEnderCrystal)) {
-            CustomEnderCrystal newTotem = new CustomEnderCrystal(totem.world, totem.locX, totem.locY, totem.locZ);
-            newTotem.setShowingBottom(totem.isShowingBottom());
-            totem.world.addEntity(newTotem);
-            totem.die();
-            totem = newTotem;
-        }
-        if (phantom.getRider() != null) {
-            totem = null;
-            return false;
-        }
         if (phantom.h(totem) > range * range) {
             totem = null;
             return false;
         }
-        if (!RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_ORBIT) {
-            totem = null;
-            return false;
+        if (RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_DAMAGE > 0.0F && !(totem instanceof CustomEnderCrystal)) {
+            CustomEnderCrystal newTotem = new CustomEnderCrystal(totem.world, totem.locX, totem.locY, totem.locZ);
+            newTotem.setShowingBottom(totem.isShowingBottom());
+            totem.world.addEntity(newTotem);
         }
         return true;
     }

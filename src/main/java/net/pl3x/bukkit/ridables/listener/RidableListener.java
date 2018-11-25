@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.listener;
 
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
@@ -15,12 +16,12 @@ import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -99,23 +100,30 @@ public class RidableListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (true/*!Config.CANCEL_COMMANDS_WHILE_RIDING*/) { // TODO finish this
+        if (Config.COMMANDS_LIST.isEmpty()) {
             return; // disabled feature
         }
 
-        Player player = event.getPlayer();
-        Entity vehicle = player.getVehicle();
-        if (vehicle == null) {
-            return; // not riding a creature
+        if (RidableType.getRidableType(event.getPlayer().getVehicle()) == null) {
+            return; // not riding a ridable
         }
 
-        if (RidableType.getRidableType(vehicle.getType()) == null) {
-            return; // not a valid creature
-        }
+        String command = event.getMessage()
+                .split(" ")[0]    // ignore command arguments
+                .substring(1)     // ignore beginning slash
+                .toLowerCase();   // ignore casing
+        boolean matchCommand = Config.COMMANDS_LIST.contains(command);
 
-        // disable commands while riding
-        Lang.send(player, Lang.DISABLED_COMMANDS_WHILE_RIDING);
-        event.setCancelled(true);
+        if (Config.COMMANDS_LIST_IS_WHITELIST != matchCommand) {
+            Lang.send(event.getPlayer(), Lang.DISABLED_COMMAND_WHILE_RIDING);
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        // ensure player unmounts creature so they dont glitch
+        event.getEntity().leaveVehicle();
     }
 
     @EventHandler

@@ -25,11 +25,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static net.pl3x.bukkit.ridables.data.DisabledReason.SERVER_SHUTTING_DOWN;
 
-public class Ridables extends JavaPlugin {
+public class Ridables extends JavaPlugin implements Listener {
     private static Ridables instance;
 
     private DisabledReason disabledReason = null;
@@ -123,6 +127,7 @@ public class Ridables extends JavaPlugin {
             return;
         }
 
+        getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new ClickListener(), this);
         getServer().getPluginManager().registerEvents(new RidableListener(), this);
         getServer().getPluginManager().registerEvents(new WaterBucketListener(), this);
@@ -152,5 +157,11 @@ public class Ridables extends JavaPlugin {
      */
     public static Ridables getInstance() {
         return instance;
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onServerLoaded(ServerLoadEvent event) {
+        // ensure all blacklisted commands are loaded
+        Config.reloadCommandsList(getConfig());
     }
 }
