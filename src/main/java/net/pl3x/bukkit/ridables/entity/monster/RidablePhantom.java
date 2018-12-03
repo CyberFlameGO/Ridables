@@ -1,6 +1,7 @@
 package net.pl3x.bukkit.ridables.entity.monster;
 
 import net.minecraft.server.v1_13_R2.BlockPosition;
+import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.DifficultyDamageScaler;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
@@ -9,6 +10,8 @@ import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.GroupDataEntity;
+import net.minecraft.server.v1_13_R2.ItemStack;
+import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import net.minecraft.server.v1_13_R2.Vec3D;
@@ -24,6 +27,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomOrbitPoint;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomOrbitTotem;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomPickAttack;
 import net.pl3x.bukkit.ridables.entity.ai.goal.phantom.AIPhantomSweepAttack;
+import net.pl3x.bukkit.ridables.entity.item.CustomEnderCrystal;
 import net.pl3x.bukkit.ridables.entity.projectile.PhantomFlames;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import net.pl3x.bukkit.ridables.util.Const;
@@ -204,6 +208,18 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
         nbt.setInt("AX", orbitPosition.getX());
         nbt.setInt("AY", orbitPosition.getY());
         nbt.setInt("AZ", orbitPosition.getZ());
+    }
+
+    // dropLoot
+    @Override
+    protected void a(boolean wasRecentlyHit, int lootingModifier, DamageSource damagesource) {
+        if (killer == null && damagesource.getEntity() instanceof CustomEnderCrystal) {
+            if (random.nextInt(5) < 1) { // 1 out of 5 chance (20%)
+                a_(new ItemStack(Items.PHANTOM_MEMBRANE));
+            }
+        } else {
+            super.a(wasRecentlyHit, lootingModifier, damagesource); // dropLoot
+        }
     }
 
     @Override

@@ -53,7 +53,7 @@ public class CustomEnderCrystal extends EntityEnderCrystal {
                 if (targetPhantom.hasLineOfSight(this)) {
                     if (phantomDamageCooldown <= 0) {
                         phantomDamageCooldown = RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_DAMAGE_COOLDOWN;
-                        targetPhantom.damageEntity(DamageSource.MAGIC, RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_DAMAGE);
+                        targetPhantom.damageEntity(DamageSource.c(this, this), RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_DAMAGE);
                     }
                 } else {
                     forgetPhantom(); // no longer in sight
