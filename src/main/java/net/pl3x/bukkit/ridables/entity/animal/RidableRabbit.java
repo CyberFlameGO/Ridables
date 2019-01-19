@@ -218,9 +218,8 @@ public class RidableRabbit extends EntityRabbit implements RidableEntity {
         return super.removePassenger(passenger, notCancellable);
     }
 
-    // createChild
     @Override
-    public RidableRabbit b(EntityAgeable entity) {
+    public RidableRabbit createChild(EntityAgeable entity) {
         int type;
         if (random.nextInt(20) == 0) {
             type = getRandomRabbitType(); // 5% new rabbit type

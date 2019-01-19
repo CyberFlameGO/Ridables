@@ -84,9 +84,9 @@ public class RidableVex extends EntityVex implements RidableEntity {
     }
 
     @Override
-    public void k() {
+    public void movementTick() {
         noclip = getRider() == null || CONFIG.RIDING_NO_CLIP;
-        super.k();
+        super.movementTick();
     }
 
     // travel

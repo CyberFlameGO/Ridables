@@ -83,7 +83,7 @@ public class AIDolphinSwimToTreasure extends PathfinderGoal {
             }
             if (vec3d != null) {
                 BlockPosition pos1 = new BlockPosition(vec3d);
-                if (!dolphin.world.b(pos1).a(TagsFluid.WATER) || !dolphin.world.getType(pos1).a(dolphin.world, pos1, PathMode.WATER)) {
+                if (!dolphin.world.getFluid(pos1).a(TagsFluid.WATER) || !dolphin.world.getType(pos1).a(dolphin.world, pos1, PathMode.WATER)) {
                     vec3d = RandomPositionGenerator.a(dolphin, 8, 5, new Vec3D((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()));
                 }
             }

@@ -90,7 +90,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
         goalSelector.a(11, new AIEndermanTakeBlock(this));
         targetSelector.a(1, new AIEndermanFindPlayer(this));
         targetSelector.a(2, new AIHurtByTarget(this, false));
-        targetSelector.a(3, new AIAttackNearest<>(this, EntityEndermite.class, 10, true, false, EntityEndermite::l));
+        targetSelector.a(3, new AIAttackNearest<>(this, EntityEndermite.class, 10, true, false, EntityEndermite::isPlayerSpawned));
     }
 
     // canBeRiddenInWater
@@ -197,7 +197,7 @@ public class RidableEnderman extends EntityEnderman implements RidableEntity {
         if (rayTrace == null) {
             return false; // no target block in range (shouldn't happen?)
         }
-        if (rayTrace.a().equals(pos)) {
+        if (rayTrace.getBlockPosition().equals(pos)) {
             return false; // block in the way
         }
         if (CraftEventFactory.callEntityChangeBlockEvent(this, pos, Blocks.AIR.getBlockData()).isCancelled()) {

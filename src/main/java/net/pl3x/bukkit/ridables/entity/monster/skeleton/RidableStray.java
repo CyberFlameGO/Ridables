@@ -108,9 +108,9 @@ public class RidableStray extends EntitySkeletonStray implements RidableEntity {
 
     // livingTick
     @Override
-    public void k() {
+    public void movementTick() {
         burnInDayLight = getRider() == null ? CONFIG.AI_BURN_IN_DAYLIGHT : CONFIG.RIDING_BURN_IN_DAYLIGHT;
-        super.k();
+        super.movementTick();
         burnInDayLight = true;
     }
 

@@ -56,7 +56,7 @@ public class AISquidFlee extends PathfinderGoal {
         Vec3D dir = new Vec3D(squid.locX - target.locX, squid.locY - target.locY, squid.locZ - target.locZ);
         BlockPosition pos = new BlockPosition(squid.locX + dir.x, squid.locY + dir.y, squid.locZ + dir.z);
         IBlockData state = squid.world.getType(pos);
-        if (squid.world.b(pos).a(TagsFluid.WATER) || state.isAir()) { // getFluidState isTagged
+        if (squid.world.getFluid(pos).a(TagsFluid.WATER) || state.isAir()) { // getFluidState isTagged
             double length = dir.b(); // length
             if (length > 0) {
                 dir.a(); // normalize

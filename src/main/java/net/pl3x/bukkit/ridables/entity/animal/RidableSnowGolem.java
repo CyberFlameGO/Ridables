@@ -108,8 +108,8 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
 
     // onLivingUpdate
     @Override
-    public void k() {
-        super.k();
+    public void movementTick() {
+        super.movementTick();
         boolean hasRider = getRider() != null;
         if (ap()) { // isWet
             if (hasRider && CONFIG.RIDING_DAMAGE_WHEN_WET > 0.0F) {
@@ -121,7 +121,7 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
         int x = MathHelper.floor(locX);
         int y = MathHelper.floor(locY);
         int z = MathHelper.floor(locZ);
-        if (world.getBiome(new BlockPosition(x, 0, z)).c(new BlockPosition(x, y, z)) > 1.0F) { // biome.getTemperature(pos)
+        if (world.getBiome(new BlockPosition(x, 0, z)).getAdjustedTemperature(new BlockPosition(x, y, z)) > 1.0F) { // biome.getTemperature(pos)
             if (hasRider && CONFIG.RIDING_DAMAGE_WHEN_HOT > 0.0F) {
                 damageEntity(CraftEventFactory.MELTING, CONFIG.RIDING_DAMAGE_WHEN_HOT);
             } else if (!hasRider && CONFIG.AI_DAMAGE_WHEN_HOT > 0.0F) {
@@ -142,7 +142,7 @@ public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
                     MathHelper.floor(locY),
                     MathHelper.floor(locZ + (double) ((float) (l / 2 % 2 * 2 - 1) * 0.25F)));
             if (world.getType(pos).isAir() && block.canPlace(world, pos)) {
-                float temp = world.getBiome(pos).c(pos); // biome.getTemperature(pos)
+                float temp = world.getBiome(pos).getAdjustedTemperature(pos); // biome.getTemperature(pos)
                 if (hasRider && temp < CONFIG.RIDING_SNOW_TRAIL_MAX_TEMP) {
                     CraftEventFactory.handleBlockFormEvent(world, pos, block, this);
                 } else if (!hasRider && temp < CONFIG.AI_SNOW_TRAIL_MAX_TEMP) {

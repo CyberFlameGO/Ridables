@@ -109,8 +109,8 @@ public class CustomSnowball extends EntitySnowball implements CustomProjectile {
             mop = new MovingObjectPosition(hitEntity);
         }
         if (mop != null) {
-            if (mop.type == MovingObjectPosition.EnumMovingObjectType.BLOCK && world.getType(mop.a()).getBlock() == Blocks.NETHER_PORTAL) {
-                e(mop.a()); // setPortal getBlockPos
+            if (mop.type == MovingObjectPosition.EnumMovingObjectType.BLOCK && world.getType(mop.getBlockPosition()).getBlock() == Blocks.NETHER_PORTAL) {
+                e(mop.getBlockPosition()); // setPortal getBlockPos
             } else {
                 a(mop); // onImpact
             }

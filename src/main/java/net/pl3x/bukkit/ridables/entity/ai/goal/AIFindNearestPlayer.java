@@ -83,8 +83,8 @@ public class AIFindNearestPlayer extends PathfinderGoal {
         if (target == null || !target.isAlive() || (target instanceof EntityHuman && ((EntityHuman) target).abilities.isInvulnerable)) {
             return false;
         }
-        ScoreboardTeamBase team = entity.be();
-        if (team != null && team == target.be()) {
+        ScoreboardTeamBase team = entity.getScoreboardTeam();
+        if (team != null && team == target.getScoreboardTeam()) {
             return false;
         }
         double range = maxTargetRange();

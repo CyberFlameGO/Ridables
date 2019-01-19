@@ -200,7 +200,7 @@ public class RidableCreeper extends EntityCreeper implements RidableEntity {
             return;
         }
 
-        aX = true; // isDying
+        killed = true; // isDying
         world.createExplosion(this, locX, locY, locZ, event.getRadius(), event.getFire(),
                 hasRider ? CONFIG.RIDING_EXPLOSION_GRIEF : (CONFIG.AI_EXPLOSION_GRIEF && world.getGameRules().getBoolean("mobGriefing")));
         die();

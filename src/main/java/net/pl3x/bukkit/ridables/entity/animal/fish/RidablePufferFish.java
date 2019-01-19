@@ -134,7 +134,7 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
 
     // onLivingUpdate
     @Override
-    public void k() {
+    public void movementTick() {
         if (spacebarCooldown > 0) {
             spacebarCooldown--;
         }
@@ -156,7 +156,7 @@ public class RidablePufferFish extends EntityPufferFish implements RidableEntity
                     });
         }
         fakePuffState = true;
-        super.k();
+        super.movementTick();
         fakePuffState = false;
     }
 

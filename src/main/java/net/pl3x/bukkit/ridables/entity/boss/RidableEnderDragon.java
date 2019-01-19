@@ -107,7 +107,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     // onLivingUpdate
     @Override
-    public void k() {
+    public void movementTick() {
         boolean hasRider = getRider() != null;
         if (hasRider) {
             if (!hadRider) {
@@ -126,12 +126,12 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
             motZ *= 0.9F;
 
             // control wing flap speed on client
-            getDragonControllerManager().setControllerPhase(motX * motX + motZ * motZ < 0.005F ? DragonControllerPhase.k : DragonControllerPhase.a);
+            getDragonControllerManager().setControllerPhase(motX * motX + motZ * motZ < 0.005F ? DragonControllerPhase.HOVER : DragonControllerPhase.HOLDING_PATTERN);
         } else if (hadRider) {
             hadRider = false;
             noclip = true;
             setSize(16.0F, 8.0F);
-            getDragonControllerManager().setControllerPhase(DragonControllerPhase.a); // HoldingPattern
+            getDragonControllerManager().setControllerPhase(DragonControllerPhase.HOLDING_PATTERN); // HoldingPattern
         }
         super_k(hasRider);
     }
@@ -310,8 +310,8 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
                     0.0F, 0.0F);
         }
         bN = !hasRider && destroyBlocks(bD.getBoundingBox()) | destroyBlocks(bE.getBoundingBox()) | destroyBlocks(bF.getBoundingBox()); // slowed head neck body
-        if (getBattleManager() != null) {
-            getBattleManager().b(this); // dragonUpdate
+        if (getEnderDragonBattle() != null) {
+            getEnderDragonBattle().b(this); // dragonUpdate
         }
         for (int k = 0; k < children.length; ++k) {
             children[k].lastX = dragonParts[k].x;
@@ -468,10 +468,5 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     public double[] getMovementOffsets(int i, float j) {
         return a(i, j); // getMovementOffsets
-    }
-
-    @Nullable
-    public EnderDragonBattle getBattleManager() {
-        return ds(); // getBattleManager
     }
 }

@@ -103,8 +103,8 @@ public class RidablePhantom extends EntityPhantom implements RidableEntity {
 
     // onLivingUpdate
     @Override
-    public void k() {
-        super.k();
+    public void movementTick() {
+        super.movementTick();
         boolean hasRider = getRider() != null;
         if ((hasRider && !CONFIG.RIDING_BURN_IN_SUNLIGHT) || (!hasRider && !CONFIG.AI_BURN_IN_SUNLIGHT)) {
             extinguish(); // dont burn in sunlight

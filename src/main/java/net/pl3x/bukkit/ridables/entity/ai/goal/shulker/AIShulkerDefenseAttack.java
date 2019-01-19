@@ -22,7 +22,7 @@ public class AIShulkerDefenseAttack extends PathfinderGoalNearestAttackableTarge
         if (shulker.getRider() != null) {
             return false;
         }
-        if (e.be() == null) {
+        if (e.getScoreboardTeam() == null) {
             return false;
         }
         return super.a();

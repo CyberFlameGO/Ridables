@@ -125,11 +125,11 @@ public class RidableCod extends EntityCod implements RidableEntity, RidableFishS
 
     // onLivingUpdate
     @Override
-    public void k() {
+    public void movementTick() {
         if (getRider() != null) {
             motY += 0.005D;
         }
-        super.k();
+        super.movementTick();
     }
 
     // processInteract

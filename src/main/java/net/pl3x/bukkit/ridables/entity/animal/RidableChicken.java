@@ -126,7 +126,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
 
     // onLivingUpdate
     @Override
-    public void k() {
+    public void movementTick() {
         bI = 6000; // disable vanilla timeUntilNextEgg tick counter;
         if (getRider() == null || CONFIG.RIDING_DROP_EGGS) {
             timeUntilNextEgg--;
@@ -142,7 +142,7 @@ public class RidableChicken extends EntityChicken implements RidableEntity {
             }
             calculateNewTimeUntilNextEgg();
         }
-        super.k();
+        super.movementTick();
     }
 
     // processInteract
