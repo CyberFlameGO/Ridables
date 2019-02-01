@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.GenericAttributes;
 import net.minecraft.server.v1_13_R2.PathfinderGoal;
 import net.pl3x.bukkit.ridables.entity.item.CustomEnderCrystal;
 import net.pl3x.bukkit.ridables.entity.monster.RidablePhantom;
+import org.bukkit.World;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class AIPhantomFindTotem extends PathfinderGoal {
         if (!RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_ORBIT) {
             return false;
         }
+        if (phantom.getBukkitEntity().getWorld().getEnvironment() != World.Environment.NORMAL) {
+            return false;
+        }
         double range = maxTargetRange();
         List<EntityEnderCrystal> crystals = phantom.world.a(EntityEnderCrystal.class, phantom.getBoundingBox().grow(range, range * 2, range), CustomEnderCrystal.IS_END_CRYSTAL);
         if (crystals.isEmpty()) {
@@ -41,6 +45,8 @@ public class AIPhantomFindTotem extends PathfinderGoal {
             CustomEnderCrystal newTotem = new CustomEnderCrystal(totem.world, totem.locX, totem.locY, totem.locZ);
             newTotem.setShowingBottom(totem.isShowingBottom());
             totem.world.addEntity(newTotem);
+            totem.die();
+            totem = newTotem;
         }
         return true;
     }
@@ -62,7 +68,6 @@ public class AIPhantomFindTotem extends PathfinderGoal {
     @Override
     public void c() {
         phantom.setTotemPosition(new BlockPosition(totem).add(0, phantom.getRandom().nextInt(10) + 10, 0));
-        super.c();
     }
 
     // resetTask
@@ -70,7 +75,7 @@ public class AIPhantomFindTotem extends PathfinderGoal {
     public void d() {
         totem = null;
         phantom.setTotemPosition(null);
-        super.c();
+        super.d();
     }
 
     private double maxTargetRange() {

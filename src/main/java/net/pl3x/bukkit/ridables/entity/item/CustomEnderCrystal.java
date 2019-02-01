@@ -31,6 +31,10 @@ public class CustomEnderCrystal extends EntityEnderCrystal {
     public void tick() {
         super.tick();
 
+        for (EntityEnderCrystal crystal : world.a(EntityEnderCrystal.class, getBoundingBox(), IS_VANILLA_CRYSTAL)) {
+            crystal.die(); // kill any crystals already on this spot
+        }
+
         if (RidablePhantom.CONFIG.AI_ENDER_CRYSTALS_DAMAGE <= 0.0F) {
             return; // do not attack phantoms
         }
@@ -61,10 +65,6 @@ public class CustomEnderCrystal extends EntityEnderCrystal {
             } else {
                 forgetPhantom(); // attacked long enough
             }
-        }
-
-        for (EntityEnderCrystal crystal : world.a(EntityEnderCrystal.class, getBoundingBox(), IS_VANILLA_CRYSTAL)) {
-            crystal.die(); // kill any crystals already on this spot
         }
     }
 

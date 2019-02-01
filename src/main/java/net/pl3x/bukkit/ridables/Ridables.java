@@ -7,6 +7,7 @@ import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.data.DisabledReason;
 import net.pl3x.bukkit.ridables.entity.RidableType;
+import net.pl3x.bukkit.ridables.entity.item.CustomEnderCrystal;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomEvokerFangs;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomFireball;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomShulkerBullet;
@@ -93,6 +94,7 @@ public class Ridables extends JavaPlugin implements Listener {
         }
 
         // inject new custom entities
+        RegistryHax.injectNewEntityTypes("custom_ender_crystal", "ender_crystal", CustomEnderCrystal.class, CustomEnderCrystal::new);
         RegistryHax.injectNewEntityTypes("custom_evoker_fangs", "evoker_fangs", CustomEvokerFangs.class, CustomEvokerFangs::new);
         RegistryHax.injectNewEntityTypes("custom_fireball", "large_fireball", CustomFireball.class, CustomFireball::new);
         RegistryHax.injectNewEntityTypes("custom_shulker_bullet", "shulker_bullet", CustomShulkerBullet.class, CustomShulkerBullet::new);
