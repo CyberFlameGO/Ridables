@@ -2,6 +2,7 @@ command-no-permission: "&cYou do not have permission for that command!"
 collect-no-permission: "&cYou do not have permission to collect that creature!"
 ride-no-permission: "&cYou do not have permission to ride that creature!"
 shoot-no-permission: "&cYou do not have permission to shoot!"
+ride-requires-saddle: "&cRiding this mob requires a saddle!"
 disabled-commands-while-riding: "&cCommands are disabled while riding!"
 
 # WARNING! Changing these bucket values will make all old buckets invalid!
