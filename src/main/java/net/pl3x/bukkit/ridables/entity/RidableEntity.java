@@ -6,6 +6,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityInsentient;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EnumHand;
+import net.minecraft.server.v1_13_R2.Item;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.SoundEffects;
@@ -58,11 +59,15 @@ public interface RidableEntity {
      * @return True if action was handled
      */
     default boolean tryRide(EntityHuman entityhuman, boolean requireSaddle, boolean consumeSaddle) {
-        Player player = (Player) entityhuman.getBukkitEntity();
         ItemStack itemstack = entityhuman.b(EnumHand.MAIN_HAND);
-        if (requireSaddle && (itemstack == null || itemstack.getItem() != Items.SADDLE)) {
+        Item item = itemstack == null ? null : itemstack.getItem();
+        if (item != null && (item == Items.BOW || item == Items.TRIDENT)) {
+            return false; // do not ride if holding bow/trident
+        }
+        Player player = (Player) entityhuman.getBukkitEntity();
+        if (requireSaddle && (item == null || item != Items.SADDLE)) {
             itemstack = entityhuman.b(EnumHand.OFF_HAND);
-            if (itemstack == null || itemstack.getItem() != Items.SADDLE) {
+            if (itemstack == null || item != Items.SADDLE) {
                 Lang.send(player, Lang.RIDE_REQUIRES_SADDLE);
                 return false; // not handled - saddle is required
             }
