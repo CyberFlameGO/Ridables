@@ -182,7 +182,7 @@ public class RidableType {
     /**
      * Get a ridable type from an NMS type
      *
-     * @param nmsType Entity type
+     * @param entity Entity type
      * @return RidableType
      */
     @Nullable
