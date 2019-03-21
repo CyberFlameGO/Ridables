@@ -1,5 +1,6 @@
 package net.pl3x.bukkit.ridables.entity.animal;
 
+import com.destroystokyo.paper.MaterialSetTag;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.DamageSource;
@@ -19,9 +20,9 @@ import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.MathHelper;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.World;
+import net.pl3x.bukkit.ridables.Ridables;
 import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.SnowGolemConfig;
-import net.pl3x.bukkit.ridables.data.MaterialSetTag;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
@@ -34,6 +35,7 @@ import net.pl3x.bukkit.ridables.entity.ai.goal.AIWatchClosest;
 import net.pl3x.bukkit.ridables.entity.projectile.CustomSnowball;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -44,8 +46,9 @@ import org.bukkit.util.Vector;
 
 public class RidableSnowGolem extends EntitySnowman implements RidableEntity {
     public static final SnowGolemConfig CONFIG = new SnowGolemConfig();
-    public static final MaterialSetTag PUMPKIN = new MaterialSetTag()
-            .add(Material.CARVED_PUMPKIN, Material.JACK_O_LANTERN, Material.PUMPKIN);
+    public static final MaterialSetTag PUMPKIN = new MaterialSetTag(
+            new NamespacedKey(Ridables.getInstance(), "pumpkins"),
+            Material.CARVED_PUMPKIN, Material.JACK_O_LANTERN, Material.PUMPKIN);
 
     private int shootCooldown;
 

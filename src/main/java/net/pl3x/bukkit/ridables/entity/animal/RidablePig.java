@@ -259,7 +259,7 @@ public class RidablePig extends EntityPig implements RidableEntity {
                 motY = 0.3D;
             }
         } else {
-            try (BlockPosition.b pos = BlockPosition.b.d(locX, getBoundingBox().minY - 1.0D, locZ)) {
+            try (BlockPosition.PooledBlockPosition pos = BlockPosition.PooledBlockPosition.d(locX, getBoundingBox().minY - 1.0D, locZ)) {
                 float friction = onGround ? world.getType(pos).getBlock().n() * 0.91F : 0.91F;
                 float speed = onGround ? cK() * (0.16277137F / (friction * friction * friction)) : aU;
                 a(strafe, vertical, forward, speed);
