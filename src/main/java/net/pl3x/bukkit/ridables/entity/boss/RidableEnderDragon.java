@@ -7,7 +7,6 @@ import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.Blocks;
 import net.minecraft.server.v1_13_R2.DamageSource;
 import net.minecraft.server.v1_13_R2.DragonControllerPhase;
-import net.minecraft.server.v1_13_R2.EnderDragonBattle;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityComplexPart;
 import net.minecraft.server.v1_13_R2.EntityEnderCrystal;
@@ -40,7 +39,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class RidableEnderDragon extends EntityEnderDragon implements RidableEntity {
@@ -51,8 +49,8 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     public RidableEnderDragon(World world) {
         super(world);
-        moveController = new ControllerWASDFlying(this);
-        lookController = new LookController(this);
+        moveController = new EnderDragonWASDController(this);
+        lookController = new EnderDragonLookController(this);
     }
 
     @Override
@@ -108,6 +106,10 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
     // onLivingUpdate
     @Override
     public void movementTick() {
+        // ender dragon doesnt use the controllers so call manually
+        moveController.a();
+        lookController.a();
+
         boolean hasRider = getRider() != null;
         if (hasRider) {
             if (!hadRider) {
@@ -116,9 +118,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
                 setSize(4.0F, 2.0F);
             }
 
-            moveController.a(); // ender dragon doesnt use the controller so call manually
-
-            a(-bh, bi, -bj, getAttributeInstance(RidableType.RIDING_SPEED).getValue() * 0.1F); // moveRelative
+            a(-bh, bi, -bj, (float) getAttributeInstance(RidableType.RIDING_SPEED).getValue() * 0.1F); // moveRelative
             move(EnumMoveType.PLAYER, motX, motY, motZ);
 
             motX *= 0.9F;
@@ -133,7 +133,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
             setSize(16.0F, 8.0F);
             getDragonControllerManager().setControllerPhase(DragonControllerPhase.HOLDING_PATTERN); // HoldingPattern
         }
-        super_k(hasRider);
+        super_movementTick(hasRider);
     }
 
     @Override
@@ -165,7 +165,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
     }
 
     // onLivingUpdate (modified from super class)
-    private void super_k(boolean hasRider) {
+    private void super_movementTick(boolean hasRider) {
         bL = bM; // prevAnimTime = animTime
         if (getHealth() <= 0.0F) {
             if (hasRider) {
@@ -211,7 +211,7 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
                 phase.c(); // serverTick
             }
             Vec3D targetLoc = phase.g(); // getTargetLocation
-            if (targetLoc != null /*&& phase.getControllerPhase() != DragonControllerPhase.k*/) { // CB cancels movement if in hover phase, lets revert that
+            if (targetLoc != null && phase.getControllerPhase() != DragonControllerPhase.HOVER) {
                 double x = targetLoc.x - locX;
                 double y = targetLoc.y - locY;
                 double z = targetLoc.z - locZ;
@@ -468,5 +468,32 @@ public class RidableEnderDragon extends EntityEnderDragon implements RidableEnti
 
     public double[] getMovementOffsets(int i, float j) {
         return a(i, j); // getMovementOffsets
+    }
+
+    class EnderDragonLookController extends LookController {
+        EnderDragonLookController(RidableEntity ridable) {
+            super(ridable);
+        }
+
+        @Override
+        public void tick() {
+            // dragon doesn't use the controller. do nothing
+        }
+
+        @Override
+        public void tick(EntityPlayer rider) {
+            setYawPitch(rider.yaw - 180F, rider.pitch * 0.5F);
+        }
+    }
+
+    class EnderDragonWASDController extends ControllerWASDFlying {
+        EnderDragonWASDController(RidableEnderDragon dragon) {
+            super(dragon);
+        }
+
+        @Override
+        public void tick() {
+            // dragon doesn't use the controller. do nothing
+        }
     }
 }
