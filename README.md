@@ -2,7 +2,7 @@
 
 Ride any mob! \o/
 
-https://www.spigotmc.org/resources/58985/
+https://papermc.io/forums/t/ridables/102
 
 
 Special Thanks To:
