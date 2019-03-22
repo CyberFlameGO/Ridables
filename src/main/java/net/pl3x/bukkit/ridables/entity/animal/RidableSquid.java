@@ -1,31 +1,25 @@
 package net.pl3x.bukkit.ridables.entity.animal;
 
-import net.minecraft.server.v1_13_R2.CriterionTriggers;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.EntitySquid;
 import net.minecraft.server.v1_13_R2.EnumHand;
 import net.minecraft.server.v1_13_R2.GenericAttributes;
-import net.minecraft.server.v1_13_R2.ItemStack;
-import net.minecraft.server.v1_13_R2.Items;
 import net.minecraft.server.v1_13_R2.Particles;
 import net.minecraft.server.v1_13_R2.SoundEffects;
 import net.minecraft.server.v1_13_R2.Vec3D;
 import net.minecraft.server.v1_13_R2.World;
 import net.minecraft.server.v1_13_R2.WorldServer;
-import net.pl3x.bukkit.ridables.configuration.Lang;
 import net.pl3x.bukkit.ridables.configuration.mob.SquidConfig;
-import net.pl3x.bukkit.ridables.data.Bucket;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
 import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASDWater;
 import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
 import net.pl3x.bukkit.ridables.entity.ai.goal.squid.AISquidFlee;
-import net.pl3x.bukkit.ridables.entity.ai.goal.squid.AISquidMoveRandom;
+import net.pl3x.bukkit.ridables.entity.ai.goal.squid.AISquidMove;
 import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
 import net.pl3x.bukkit.ridables.util.Const;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 public class RidableSquid extends EntitySquid implements RidableEntity {
@@ -68,7 +62,7 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
     // initAI - override vanilla AI
     @Override
     protected void n() {
-        goalSelector.a(0, new AISquidMoveRandom(this));
+        goalSelector.a(0, new AISquidMove(this));
         goalSelector.a(1, new AISquidFlee(this));
     }
 
@@ -102,8 +96,8 @@ public class RidableSquid extends EntitySquid implements RidableEntity {
     }
 
     public void squirtInk() {
-        a(SoundEffects.ENTITY_SQUID_SQUIRT, 0.4F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F); // playSound
-        Vec3D pos = applyCurrentRotation(new Vec3D(locX, locY - 1.0D, locZ));
+        a(SoundEffects.ENTITY_SQUID_SQUIRT, getDeathSoundVolume(), getDeathSoundPitch()); // playSound
+        Vec3D pos = applyCurrentRotation(new Vec3D(0.0D, -1.0D, 0.0D)).add(locX, locY, locZ);
         for (int i = 0; i < 30; ++i) {
             Vec3D offset = applyCurrentRotation(new Vec3D(random.nextDouble() * 0.6D - 0.3D, -1.0D, random.nextDouble() * 0.6D - 0.3D)).a(random.nextDouble() * 2.0D + 0.3D); // scale
             ((WorldServer) world).a(Particles.V, pos.x, pos.y + 0.5D, pos.z, 0, offset.x, offset.y, offset.z, 0.1D); // spawnParticle SQUID_INK
