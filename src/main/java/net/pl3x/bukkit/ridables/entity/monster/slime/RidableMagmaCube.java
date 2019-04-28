@@ -1,40 +1,44 @@
 package net.pl3x.bukkit.ridables.entity.monster.slime;
 
-import net.minecraft.server.v1_13_R2.ControllerMove;
-import net.minecraft.server.v1_13_R2.Entity;
-import net.minecraft.server.v1_13_R2.EntityHuman;
-import net.minecraft.server.v1_13_R2.EntityIronGolem;
-import net.minecraft.server.v1_13_R2.EntityMagmaCube;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
-import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.GenericAttributes;
-import net.minecraft.server.v1_13_R2.World;
+import net.minecraft.server.v1_14_R1.ControllerMove;
+import net.minecraft.server.v1_14_R1.EntityHuman;
+import net.minecraft.server.v1_14_R1.EntityIronGolem;
+import net.minecraft.server.v1_14_R1.EntityLiving;
+import net.minecraft.server.v1_14_R1.EntityMagmaCube;
+import net.minecraft.server.v1_14_R1.EntityTypes;
+import net.minecraft.server.v1_14_R1.EnumHand;
+import net.minecraft.server.v1_14_R1.GenericAttributes;
+import net.minecraft.server.v1_14_R1.MobEffects;
+import net.minecraft.server.v1_14_R1.PathfinderGoal;
+import net.minecraft.server.v1_14_R1.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_14_R1.Vec3D;
+import net.minecraft.server.v1_14_R1.World;
 import net.pl3x.bukkit.ridables.configuration.mob.MagmaCubeConfig;
 import net.pl3x.bukkit.ridables.entity.RidableEntity;
 import net.pl3x.bukkit.ridables.entity.RidableType;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.entity.ai.controller.LookController;
-import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestEntity;
-import net.pl3x.bukkit.ridables.entity.ai.goal.AIFindNearestPlayer;
-import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeAttack;
-import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeFaceRandom;
-import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeHop;
-import net.pl3x.bukkit.ridables.entity.ai.goal.magma_cube.AIMagmaCubeSwim;
-import net.pl3x.bukkit.ridables.event.RidableDismountEvent;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
+import net.pl3x.bukkit.ridables.entity.controller.LookController;
 import net.pl3x.bukkit.ridables.util.Const;
-import org.bukkit.entity.Player;
+
+import java.util.EnumSet;
 
 public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
-    public static final MagmaCubeConfig CONFIG = new MagmaCubeConfig();
+    private static MagmaCubeConfig config;
+
+    private final MagmaCubeControllerWASD controllerWASD;
 
     private int spacebarCharge = 0;
     private int prevSpacebarCharge = 0;
     private float fallDistanceCharge = 0;
 
-    public RidableMagmaCube(World world) {
-        super(world);
-        moveController = new MagmaCubeWASDController(this);
+    public RidableMagmaCube(EntityTypes<? extends EntityMagmaCube> entitytypes, World world) {
+        super(entitytypes, world);
+        moveController = controllerWASD = new MagmaCubeControllerWASD(this);
         lookController = new LookController(this);
+
+        if (config == null) {
+            config = getConfig();
+        }
     }
 
     @Override
@@ -42,47 +46,142 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
         return RidableType.MAGMA_CUBE;
     }
 
-    // canDespawn
     @Override
-    public boolean isTypeNotPersistent() {
-        return !hasCustomName() && !isLeashed();
+    public MagmaCubeControllerWASD getController() {
+        return controllerWASD;
     }
 
     @Override
-    protected void initAttributes() {
-        super.initAttributes();
-        getAttributeMap().b(RidableType.RIDING_SPEED); // registerAttribute
-        reloadAttributes();
+    public MagmaCubeConfig getConfig() {
+        return (MagmaCubeConfig) getType().getConfig();
     }
 
     @Override
-    public void reloadAttributes() {
-        getAttributeInstance(RidableType.RIDING_SPEED).setValue(CONFIG.RIDING_SPEED);
-        getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(CONFIG.BASE_SPEED);
-        getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(CONFIG.AI_FOLLOW_RANGE);
+    public double getRidingSpeed() {
+        return config.RIDING_SPEED;
     }
 
-    // initAI - override vanilla AI
     @Override
-    protected void n() {
-        goalSelector.a(1, new AIMagmaCubeSwim(this));
-        goalSelector.a(2, new AIMagmaCubeAttack(this));
-        goalSelector.a(3, new AIMagmaCubeFaceRandom(this));
-        goalSelector.a(5, new AIMagmaCubeHop(this));
-        targetSelector.a(1, new AIFindNearestPlayer(this));
-        targetSelector.a(3, new AIFindNearestEntity(this, EntityIronGolem.class));
+    protected void initPathfinder() {
+        PathfinderGoal aiSlimeSwim = new PathfinderGoal() {
+            public boolean a() {
+                return (isInWater() || aC()) && getControllerMove() instanceof RidableSlime.SlimeControllerWASD; // isInLava
+            }
+
+            public void e() { // tick
+                if (random.nextFloat() < 0.8F) {
+                    getControllerJump().jump();
+                }
+                getController().setSpeed(1.2D);
+            }
+        };
+        aiSlimeSwim.a(EnumSet.of(PathfinderGoal.Type.JUMP, PathfinderGoal.Type.MOVE));
+        getNavigation().d(true); // setCanSwim
+        goalSelector.a(1, aiSlimeSwim);
+        PathfinderGoal aiSlimeFindNearestPlayer = new PathfinderGoal() {
+            private EntityLiving target;
+            private int targetTimer;
+
+            public boolean a() { // shouldExecute
+                target = getGoalTarget();
+                if (getRider() != null) {
+                    return false;
+                }
+                if (target == null || !target.isAlive()) {
+                    return false;
+                }
+                if (target instanceof EntityHuman && ((EntityHuman) target).abilities.isInvulnerable) {
+                    return false;
+                }
+                return getControllerMove() instanceof RidableSlime.SlimeControllerWASD;
+            }
+
+            public boolean b() { // shouldContinueExecuting
+                if (target == null || !target.isAlive()) {
+                    return false;
+                }
+                if (getRider() != null) {
+                    return false;
+                }
+                if (target instanceof EntityHuman && ((EntityHuman) target).abilities.isInvulnerable) {
+                    return false;
+                }
+                return --targetTimer > 0;
+            }
+
+            public void c() { // startExecuting
+                this.targetTimer = 300;
+                super.c();
+            }
+
+            public void e() { // tick
+                RidableMagmaCube.this.a(target, 10.0F, 10.0F);
+                getController().setDirection(yaw, dV()); // canDamagePlayer
+            }
+        };
+        aiSlimeFindNearestPlayer.a(EnumSet.of(PathfinderGoal.Type.LOOK));
+        goalSelector.a(2, aiSlimeFindNearestPlayer);
+        PathfinderGoal aiSlimeFaceRandom = new PathfinderGoal() {
+            private float chosenYaw;
+            private int faceTimer;
+
+            public boolean a() { // shouldExecute
+                return getRider() == null && getGoalTarget() == null && (onGround || isInWater() || aC() || hasEffect(MobEffects.LEVITATION)) && getControllerMove() instanceof RidableSlime.SlimeControllerWASD; // isInLava
+            }
+
+            public void e() { // tick
+                if (--faceTimer <= 0) {
+                    faceTimer = 40 + random.nextInt(60);
+                    chosenYaw = (float) random.nextInt(360);
+                }
+                getController().setDirection(chosenYaw, false);
+            }
+        };
+        aiSlimeFaceRandom.a(EnumSet.of(PathfinderGoal.Type.LOOK));
+        goalSelector.a(3, aiSlimeFaceRandom);
+        PathfinderGoal aiSlimeHop = new PathfinderGoal() {
+            public boolean a() { // shouldExecute
+                return getRider() == null && !isPassenger();
+            }
+
+            @Override
+            public void e() { // tick
+                getController().setSpeed(1.0D);
+            }
+        };
+        aiSlimeHop.a(EnumSet.of(PathfinderGoal.Type.JUMP, PathfinderGoal.Type.MOVE));
+        goalSelector.a(5, aiSlimeHop);
+        targetSelector.a(1, new PathfinderGoalNearestAttackableTarget<EntityHuman>(this, EntityHuman.class, 10, true, false,
+                (entityliving) -> Math.abs(entityliving.locY - this.locY) <= 4.0D) {
+            public boolean a() { // shouldExecute
+                return getRider() == null && super.a();
+            }
+
+            public boolean b() { // shouldContinueExecuting
+                return getRider() == null && super.b();
+            }
+        });
+        targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<EntityIronGolem>(this, EntityIronGolem.class, true) {
+            public boolean a() { // shouldExecute
+                return getRider() == null && super.a();
+            }
+
+            public boolean b() { // shouldContinueExecuting
+                return getRider() == null && super.b();
+            }
+        });
     }
 
     // canBeRiddenInWater
     @Override
-    public boolean aY() {
-        return CONFIG.RIDING_RIDE_IN_WATER;
+    public boolean be() {
+        return config.RIDING_RIDE_IN_WATER;
     }
 
     // getJumpUpwardsMotion
     @Override
-    protected float cG() {
-        return getRider() == null ? CONFIG.AI_JUMP_POWER : (CONFIG.RIDING_JUMP_POWER * getJumpCharge());
+    protected float cW() {
+        return getRider() == null ? super.cW() : (config.RIDING_JUMP_POWER * getJumpCharge());
     }
 
     public boolean canDamagePlayer() {
@@ -100,8 +199,8 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
 
     // travel
     @Override
-    public void a(float strafe, float vertical, float forward) {
-        super.a(strafe, vertical, forward);
+    public void e(Vec3D motion) {
+        super.e(motion);
         checkMove();
     }
 
@@ -117,11 +216,11 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
 
     // fall
     @Override
-    public void c(float distance, float damageMultiplier) {
+    public void b(float distance, float damageMultiplier) {
         if (getRider() != null && fallDistanceCharge > 0) {
             distance = distance - fallDistanceCharge;
         }
-        super.c(distance, damageMultiplier);
+        super.b(distance, damageMultiplier);
     }
 
     // processInteract
@@ -131,24 +230,14 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
             return true; // handled by vanilla action
         }
         if (hand == EnumHand.MAIN_HAND && !entityhuman.isSneaking() && passengers.isEmpty() && !entityhuman.isPassenger()) {
-            return tryRide(entityhuman, CONFIG.RIDING_SADDLE_REQUIRE, CONFIG.RIDING_SADDLE_CONSUME);
+            return tryRide(entityhuman, config.RIDING_SADDLE_REQUIRE, config.RIDING_SADDLE_CONSUME);
         }
         return false;
     }
 
     @Override
-    public boolean removePassenger(Entity passenger, boolean notCancellable) {
-        if (passenger instanceof EntityPlayer && !passengers.isEmpty() && passenger == passengers.get(0)) {
-            if (!new RidableDismountEvent(this, (Player) passenger.getBukkitEntity(), notCancellable).callEvent() && !notCancellable) {
-                return false; // cancelled
-            }
-        }
-        return super.removePassenger(passenger, notCancellable);
-    }
-
-    @Override
     public boolean onSpacebar() {
-        if (getRider().getBukkitEntity().hasPermission("allow.special.magma_cube")) {
+        if (getRider().getBukkitEntity().hasPermission("ridables.special.magma_cube")) {
             spacebarCharge++;
             if (spacebarCharge > 50) {
                 spacebarCharge -= 2;
@@ -157,47 +246,14 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
         return false;
     }
 
-    // getAttackStrength
-    @Override
-    protected int du() {
-        // 1-  = small
-        // 2-3 = medium
-        // 4+  = large
-        int size = getSize();
-        if (size < 2) {
-            return CONFIG.AI_MELEE_DAMAGE_SMALL;
-        } else if (size < 4) {
-            return CONFIG.AI_MELEE_DAMAGE_MEDIUM;
-        } else {
-            return CONFIG.AI_MELEE_DAMAGE_LARGE;
-        }
-    }
-
-    @Override
-    public void setSize(int i, boolean resetHealth) {
-        super.setSize(i, resetHealth);
-        int size = getSize();
-        double maxHealth;
-        if (size < 2) {
-            maxHealth = CONFIG.MAX_HEALTH_SMALL;
-        } else if (size < 4) {
-            maxHealth = CONFIG.MAX_HEALTH_MEDIUM;
-        } else {
-            maxHealth = CONFIG.MAX_HEALTH_LARGE;
-        }
-        getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
-        if (resetHealth) {
-            setHealth(getMaxHealth());
-        }
-    }
-
-    public static class MagmaCubeWASDController extends ControllerWASD {
+    // exact copy of SlimeControllerWASD because of protected and ambiguous fields
+    static class MagmaCubeControllerWASD extends ControllerWASD {
         private final RidableMagmaCube magmaCube;
         private float yRot;
         private int jumpDelay;
         private boolean isAggressive;
 
-        public MagmaCubeWASDController(RidableMagmaCube magmaCube) {
+        MagmaCubeControllerWASD(RidableMagmaCube magmaCube) {
             super(magmaCube);
             this.magmaCube = magmaCube;
             yRot = magmaCube.yaw * Const.RAD2DEG_FLOAT;
@@ -215,7 +271,7 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
 
         @Override
         public void tick() {
-            magmaCube.aQ = magmaCube.aS = magmaCube.yaw = a(magmaCube.yaw, yRot, 90.0F);
+            magmaCube.aK = magmaCube.aM = magmaCube.yaw = a(magmaCube.yaw, yRot, 90.0F);
             if (h != ControllerMove.Operation.MOVE_TO) {
                 magmaCube.r(0.0F); // forward
                 return;
@@ -224,17 +280,17 @@ public class RidableMagmaCube extends EntityMagmaCube implements RidableEntity {
             if (magmaCube.onGround) {
                 magmaCube.o((float) (e * a.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue()));
                 if (jumpDelay-- <= 0) {
-                    jumpDelay = magmaCube.dr(); // getJumpDelay
+                    jumpDelay = magmaCube.dT(); // getJumpDelay
                     if (isAggressive) {
                         jumpDelay /= 3;
                     }
-                    magmaCube.getControllerJump().a(); // setJumping
-                    if (magmaCube.dz()) { // makeSoundOnJump
-                        magmaCube.a(magmaCube.dw(), magmaCube.cD(), ((magmaCube.getRandom().nextFloat() - magmaCube.getRandom().nextFloat()) * 0.2F + 1.0F) * 0.8F); // playSound
+                    magmaCube.getControllerJump().jump(); // setJumping
+                    if (magmaCube.eb()) { // makeSoundOnJump
+                        magmaCube.a(magmaCube.getSoundJump(), magmaCube.getSoundVolume(), ((magmaCube.getRandom().nextFloat() - magmaCube.getRandom().nextFloat()) * 0.2F + 1.0F) * 0.8F); // playSound
                     }
                 } else {
-                    magmaCube.bh = 0.0F; // moveStrafing
-                    magmaCube.bj = 0.0F; // moveForward
+                    magmaCube.t(0.0F); // moveStrafing
+                    magmaCube.r(0.0F); // moveForward
                     magmaCube.o(0.0F); // setSpeed
                 }
                 return;

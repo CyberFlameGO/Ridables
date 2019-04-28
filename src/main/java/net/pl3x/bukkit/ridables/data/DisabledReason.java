@@ -10,18 +10,23 @@ import java.util.List;
 public enum DisabledReason {
     UNSUPPORTED_SERVER_TYPE(
             "#       This server is unsupported!        #",
-            "#    Only Paper servers are supported!     #",
+            "#     Paper is a minimum requirement!      #",
             "#  Visit http://papermc.io/ for more info  #"
     ),
     UNSUPPORTED_SERVER_VERSION(
             "#       This server is unsupported!        #",
-            "#    Only 1.13.2 servers are supported!    #",
+            "#     Only 1.14 servers are supported!     #",
             "#   See downloads page for version info    #"
     ),
     SERVER_VERSION_OUTDATED(
             "#      Your server build is outdated!      #",
             "#     Please update your Paper software    #",
             "#    See downloads page for version info   #"
+    ),
+    NMS_MISMATCH(
+            "#        Incorrect server version!         #",
+            "#   Check the graph for compatibilities    #",
+            "#     See downloads page for more info     #"
     ),
     ALL_ENTITIES_DISABLED(
             "#        All entities are disabled!        #",

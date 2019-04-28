@@ -1,26 +1,25 @@
 package net.pl3x.bukkit.ridables.entity;
 
-import net.minecraft.server.v1_13_R2.ControllerMove;
-import net.minecraft.server.v1_13_R2.CriterionTriggers;
-import net.minecraft.server.v1_13_R2.EntityHuman;
-import net.minecraft.server.v1_13_R2.EntityInsentient;
-import net.minecraft.server.v1_13_R2.EntityPlayer;
-import net.minecraft.server.v1_13_R2.EnumHand;
-import net.minecraft.server.v1_13_R2.Item;
-import net.minecraft.server.v1_13_R2.ItemStack;
-import net.minecraft.server.v1_13_R2.Items;
-import net.minecraft.server.v1_13_R2.SoundEffects;
+import net.minecraft.server.v1_14_R1.CriterionTriggers;
+import net.minecraft.server.v1_14_R1.EntityHuman;
+import net.minecraft.server.v1_14_R1.EntityInsentient;
+import net.minecraft.server.v1_14_R1.EntityPlayer;
+import net.minecraft.server.v1_14_R1.EnumHand;
+import net.minecraft.server.v1_14_R1.Item;
+import net.minecraft.server.v1_14_R1.ItemStack;
+import net.minecraft.server.v1_14_R1.Items;
+import net.minecraft.server.v1_14_R1.SoundEffects;
 import net.pl3x.bukkit.ridables.configuration.Config;
 import net.pl3x.bukkit.ridables.configuration.Lang;
+import net.pl3x.bukkit.ridables.configuration.MobConfig;
 import net.pl3x.bukkit.ridables.data.Bucket;
-import net.pl3x.bukkit.ridables.entity.ai.controller.ControllerWASD;
-import net.pl3x.bukkit.ridables.event.RidableMountEvent;
+import net.pl3x.bukkit.ridables.entity.controller.ControllerWASD;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -34,9 +33,18 @@ public interface RidableEntity {
     RidableType getType();
 
     /**
-     * Reload the mob's attributes
+     * Get this entity's WASD move controller
+     *
+     * @return ControllerWASD
      */
-    void reloadAttributes();
+    ControllerWASD getController();
+
+    /**
+     * Get the mob configuration
+     *
+     * @return Mob configuration
+     */
+    MobConfig getConfig();
 
     /**
      * Get the rider of this entity
@@ -46,9 +54,10 @@ public interface RidableEntity {
      * @return Current rider, otherwise null
      */
     default EntityPlayer getRider() {
-        ControllerMove controller = ((EntityInsentient) this).getControllerMove();
-        return controller instanceof ControllerWASD ? ((ControllerWASD) controller).rider : null;
+        return getController().rider;
     }
+
+    double getRidingSpeed();
 
     /**
      * Try to mount player to this ridable.
@@ -62,7 +71,7 @@ public interface RidableEntity {
         ItemStack itemstack = entityhuman.b(EnumHand.MAIN_HAND);
         Item item = itemstack == null ? null : itemstack.getItem();
         if (item != null && (item == Items.BOW || item == Items.TRIDENT)) {
-            return false; // do not ride if holding bow/trident
+            return false; // not handled - do not ride if holding bow/trident
         }
         Player player = (Player) entityhuman.getBukkitEntity();
         if (requireSaddle && (item == null || item != Items.SADDLE)) {
@@ -72,12 +81,9 @@ public interface RidableEntity {
                 return false; // not handled - saddle is required
             }
         }
-        if (!player.hasPermission("allow.ride." + getType().getName())) {
+        if (!player.hasPermission("ridables.ride." + getType().getName())) {
             Lang.send(player, Lang.RIDE_NO_PERMISSION);
             return true; // handled (no perms)
-        }
-        if (!new RidableMountEvent(this, player).callEvent()) {
-            return true; // handled (plugin cancelled)
         }
         if (requireSaddle && consumeSaddle) {
             itemstack.subtract(1);
@@ -134,7 +140,7 @@ public interface RidableEntity {
             return false; // not holding water bucket
         }
         Player player = (Player) entityhuman.getBukkitEntity();
-        if (!player.hasPermission("allow.collect." + getType().getName())) {
+        if (!player.hasPermission("ridables.collect." + getType().getName())) {
             Lang.send(player, Lang.COLLECT_NO_PERMISSION);
             return true; // handled (no perms)
         }
